@@ -1,0 +1,6 @@
+# Ignorer tous les rapports de qualité générés automatiquement
+*.json
+*.md
+
+# Garder uniquement ce fichier .gitignore
+!.gitignore
