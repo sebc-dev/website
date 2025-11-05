@@ -1,0 +1,6 @@
+# Claude Code Configuration Directory
+# This directory contains Claude Code framework extensions:
+# - commands/: Custom Slash Commands
+# - skills/: Agent Skills for autonomous execution
+# - agents/: Subagents for delegated tasks
+# - validation-config.yaml: Configuration for validation framework

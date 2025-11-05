@@ -1,0 +1,367 @@
+# Document Validation Framework Configuration
+# Version: 1.0
+# Purpose: Define standards for document validation across all projects
+# Framework Location: .claude/skills/doc-validation-framework/
+
+---
+
+validation_framework:
+  version: "1.0"
+  name: "Generic Document Validation Framework"
+  description: "Systematic methodology for validating technical documentation"
+
+  # Overall configuration
+  config:
+    mode: "checklist-generation"  # Phase 1: Generate checklists; Future: external-research, full-automation
+    output_format: "markdown"      # Standard Markdown for portability
+    include_metadata: true         # Include generated date, version, etc.
+    include_quick_reference: true  # Include Quick Reference table
+    include_research_section: true # Include Research Sources section
+    include_notes_section: true    # Include Notes & Findings section
+
+  # Document analysis settings
+  analysis:
+    concepts:
+      min_extraction: 30
+      max_extraction: 50
+      target: 40
+
+    properties:
+      min_identification: 80
+      max_identification: 150
+      target: 120
+
+    sources:
+      min_sources: 15
+      max_sources: 30
+      target: 20
+
+    domains:
+      target_domains: 8-15
+      standard_domains: 12
+
+  # Eight property types (classification system)
+  property_types:
+    - id: "type-1"
+      name: "Version"
+      description: "Claims about specific versions of technologies"
+      example: "Next.js 15.0+"
+      validation_question: "Is this version current? Has a newer version been released?"
+      distribution_target: "15-20%"
+
+    - id: "type-2"
+      name: "Availability/Status"
+      description: "Claims about feature or product availability (GA, Beta, Alpha)"
+      example: "Feature is Generally Available"
+      validation_question: "What is the current status? Any breaking changes?"
+      distribution_target: "10-15%"
+
+    - id: "type-3"
+      name: "Support/Compatibility"
+      description: "Claims about what components support what"
+      example: "Next.js supports WebAssembly"
+      validation_question: "Is this still supported? Any limitations?"
+      distribution_target: "15-20%"
+
+    - id: "type-4"
+      name: "Recommendations/Best Practices"
+      description: "Claims about what is recommended"
+      example: "Server Components are the recommended approach"
+      validation_question: "Is this still best practice? Any caveats?"
+      distribution_target: "15-20%"
+
+    - id: "type-5"
+      name: "Deprecation/Obsolescence"
+      description: "Claims about deprecated or outdated approaches"
+      example: "Class components are being phased out"
+      validation_question: "When will they be removed? Migration path available?"
+      distribution_target: "10-15%"
+
+    - id: "type-6"
+      name: "Limitations/Constraints"
+      description: "Claims about limits or constraints"
+      example: "Maximum 2MB bundle size"
+      validation_question: "What are the exact current limits?"
+      distribution_target: "10-15%"
+
+    - id: "type-7"
+      name: "Patterns/Approaches"
+      description: "Claims about architectural patterns"
+      example: "Server-first rendering approach"
+      validation_question: "Is this pattern still recommended? Alternatives?"
+      distribution_target: "10-15%"
+
+    - id: "type-8"
+      name: "Integration/Chains"
+      description: "Claims about multi-component interactions"
+      example: "Next.js → Cloudflare Workers → D1 Database"
+      validation_question: "Does this integration still work? Breaking changes?"
+      distribution_target: "10-15%"
+
+  # Three criticality levels
+  criticality_levels:
+    fundamental:
+      id: "fundamental"
+      name: "Fundamental"
+      description: "Core architecture, affects everything"
+      examples:
+        - "Framework choice (Next.js, React, etc.)"
+        - "Database strategy and technology"
+        - "Authentication approach"
+        - "Deployment platform"
+      distribution_target: "15-20%"
+      priority: "HIGH"
+
+    major:
+      id: "major"
+      name: "Major"
+      description: "Important components with significant impact"
+      examples:
+        - "Specific libraries and ORM choices"
+        - "Styling approach and frameworks"
+        - "Testing framework selection"
+        - "CI/CD pipeline configuration"
+      distribution_target: "30-40%"
+      priority: "MEDIUM"
+
+    secondary:
+      id: "secondary"
+      name: "Secondary"
+      description: "Optimizations, nice-to-haves, and optional features"
+      examples:
+        - "Performance tuning techniques"
+        - "Optional libraries and integrations"
+        - "Development tools selection"
+        - "Optional features and add-ons"
+      distribution_target: "40-55%"
+      priority: "LOW"
+
+  # Twelve standard domains for technical documents
+  standard_domains:
+    - id: "domain-1"
+      name: "Framework & Runtime"
+      description: "Framework versions, runtimes, adapters, core environment"
+      examples:
+        - "Next.js version and features"
+        - "React version and paradigm shifts"
+        - "Cloudflare Workers runtime"
+        - "OpenNext Adapter compatibility"
+
+    - id: "domain-2"
+      name: "Database & ORM"
+      description: "Database technology, ORM library, migrations, schema"
+      examples:
+        - "Cloudflare D1 (SQLite)"
+        - "Drizzle ORM or other ORMs"
+        - "Database schema design"
+        - "Migration strategies"
+
+    - id: "domain-3"
+      name: "Storage & Media"
+      description: "File storage, CDN, image handling, asset management"
+      examples:
+        - "Cloudflare R2 or other storage"
+        - "CDN selection and configuration"
+        - "Image optimization strategies"
+        - "Media asset management"
+
+    - id: "domain-4"
+      name: "Authentication & Security"
+      description: "Auth methods, security practices, encryption, compliance"
+      examples:
+        - "Authentication strategy (OAuth, JWT, etc.)"
+        - "Security headers and configuration"
+        - "HTTPS and TLS settings"
+        - "Compliance requirements (GDPR, etc.)"
+
+    - id: "domain-5"
+      name: "Internationalization (i18n)"
+      description: "i18n library, localization strategy, multi-language support"
+      examples:
+        - "i18n library choice"
+        - "Language switching mechanism"
+        - "Translation management"
+        - "Regional customization"
+
+    - id: "domain-6"
+      name: "Content & Rendering"
+      description: "Rendering strategies, content sources, SSR vs CSR"
+      examples:
+        - "Server-Side Rendering (SSR)"
+        - "Client-Side Rendering (CSR)"
+        - "Static Site Generation (SSG)"
+        - "Content sources (CMS, database, files)"
+
+    - id: "domain-7"
+      name: "UI & Styling"
+      description: "CSS approach, component libraries, design system"
+      examples:
+        - "CSS approach (Tailwind, CSS modules, etc.)"
+        - "Component library choice"
+        - "Design system implementation"
+        - "Dark mode and theming"
+
+    - id: "domain-8"
+      name: "Testing"
+      description: "Test frameworks, testing strategy, coverage goals"
+      examples:
+        - "Unit test framework"
+        - "Integration test approach"
+        - "E2E testing tool"
+        - "Test coverage targets"
+
+    - id: "domain-9"
+      name: "Deployment & CI/CD"
+      description: "Deployment platforms, CI/CD pipelines, release process"
+      examples:
+        - "Deployment platform (Vercel, Cloudflare, etc.)"
+        - "CI/CD tool (GitHub Actions, GitLab CI, etc.)"
+        - "Environment management (dev, staging, prod)"
+        - "Release automation"
+
+    - id: "domain-10"
+      name: "Infrastructure & Monitoring"
+      description: "Infrastructure setup, monitoring, logging, observability"
+      examples:
+        - "Monitoring tools and services"
+        - "Logging infrastructure"
+        - "Error tracking (Sentry, etc.)"
+        - "Performance monitoring"
+
+    - id: "domain-11"
+      name: "Performance & Web Vitals"
+      description: "Performance targets, Web Vitals, optimization strategies"
+      examples:
+        - "Core Web Vitals targets"
+        - "Bundle size limits"
+        - "Load time targets"
+        - "Optimization strategies"
+
+    - id: "domain-12"
+      name: "Architecture Patterns"
+      description: "Design patterns, architectural decisions, system design"
+      examples:
+        - "Microservices vs monolith"
+        - "API design patterns"
+        - "State management approach"
+        - "Component architecture"
+
+  # Checklist output structure
+  checklist_output:
+    sections:
+      - section: "Header"
+        includes:
+          - document_title
+          - document_path
+          - generation_date
+          - framework_version
+
+      - section: "Quick Reference Table"
+        includes:
+          - criticality_distribution
+          - total_item_count
+          - percentages
+
+      - section: "Validation Checklist by Domain"
+        includes:
+          - all_domains
+          - items_by_criticality
+          - checkboxes
+          - item_type
+          - source_urls
+          - research_hints
+
+      - section: "Research Sources"
+        includes:
+          - technology_names
+          - official_documentation_urls
+          - github_repositories
+          - blog_posts
+          - status_pages
+          - release_notes
+
+      - section: "Notes & Findings"
+        includes:
+          - items_requiring_updates
+          - version_changes_detected
+          - breaking_changes_found
+          - deprecated_features
+          - recommendations
+
+      - section: "Validation Summary"
+        includes:
+          - total_items_generated
+          - fundamental_count
+          - major_count
+          - secondary_count
+          - domains_covered
+          - sources_identified
+
+  # Quality standards
+  quality_standards:
+    minimum_items: 80
+    maximum_items: 150
+    preferred_items: 120
+
+    minimum_domains: 8
+    maximum_domains: 15
+    preferred_domains: 12
+
+    minimum_sources: 15
+    maximum_sources: 30
+    preferred_sources: 20
+
+    minimum_completion: 90%
+    property_type_coverage: "all 8 types represented"
+    criticality_distribution: "all 3 levels represented"
+    markdown_format: "plain Markdown, no proprietary tools"
+    external_readiness: "ready for Gemini, ChatGPT, and other agents"
+
+  # Integration with Claude Code ecosystem
+  claude_code_integration:
+    skill: "doc-validation-framework"
+    skill_location: ".claude/skills/doc-validation-framework/"
+
+    subagent: "checklist-generator"
+    subagent_location: ".claude/agents/checklist-generator.md"
+
+    command: "generate-checklist"
+    command_location: ".claude/commands/generate-checklist.md"
+
+    configuration: "validation-config.yaml"
+    configuration_location: ".claude/validation-config.yaml"
+
+    references_location: ".claude/skills/doc-validation-framework/references/"
+    scripts_location: ".claude/skills/doc-validation-framework/scripts/"
+
+  # Evolution phases
+  phases:
+    phase_1:
+      name: "Checklist Generation"
+      status: "ACTIVE"
+      deliverable: "Structured 80-150 item checklists"
+      timeline: "Current"
+      automation_level: "Manual (user invokes /generate-checklist)"
+
+    phase_2:
+      name: "Semi-Automated Research"
+      status: "PLANNED"
+      deliverable: "Automated research + human review"
+      timeline: "2-3 weeks"
+      automation_level: "Partial (agent researches critical items)"
+
+    phase_3:
+      name: "Full Automation"
+      status: "PLANNED"
+      deliverable: "End-to-end validation with reports"
+      timeline: "1-2 months"
+      automation_level: "Complete (100% automated validation)"
+
+  # Metadata
+  metadata:
+    created_date: "2025-11-05"
+    version: "1.0"
+    framework_location: "docs/frameworks/GENERIC_VALIDATION_FRAMEWORK.md"
+    implementation_plan: "docs/frameworks/IMPLEMENTATION_PLAN.md"
+    author: "Document Validation Framework Team"
+    status: "Production Ready"

@@ -1,12 +1,12 @@
 ---
 created: 2025-11-02T00:00
-updated: 2025-11-02T00:00
+updated: 2025-11-05T00:00
 status: v1-adapted
-stack: SvelteKit 5 + Cloudflare Workers
+stack: Next.js 15 + Cloudflare Workers
 ---
 
 # UX/UI Specification — sebc.dev V1
-## Adaptation pour SvelteKit 5 + Cloudflare Stack
+## Adaptation pour Next.js 15 + Cloudflare Stack
 
 ---
 
@@ -14,7 +14,7 @@ stack: SvelteKit 5 + Cloudflare Workers
 
 Ce document définit les objectifs UX, l'architecture de l'information, les parcours utilisateurs et les spécifications de conception visuelle pour **sebc.dev V1**.
 
-**sebc.dev** est un blog technique bilingue (FR/EN) construit sur **SvelteKit 5 + Cloudflare Workers**, explorant l'intersection de l'IA, l'UX et l'ingénierie logicielle. Cette spécification établit les fondations pour une expérience utilisateur centrée sur l'efficacité, la clarté et l'accessibilité, dès le départ.
+**sebc.dev** est un blog technique bilingue (FR/EN) construit sur **Next.js 15 + React 19 Server Components + Cloudflare Workers** (via adaptateur OpenNext), explorant l'intersection de l'IA, l'UX et l'ingénierie logicielle. Cette spécification établit les fondations pour une expérience utilisateur centrée sur l'efficacité, la clarté et l'accessibilité, dès le départ.
 
 ---
 
@@ -49,7 +49,7 @@ Ce document définit les objectifs UX, l'architecture de l'information, les parc
 
 1. **Clarté avant tout** : Hiérarchie visuelle stricte, communication précise
 2. **Divulgation Progressive** : Ne montrer que nécessaire, au moment opportun
-3. **Cohérence des Patterns** : Composants shadcn-svelte homogènes
+3. **Cohérence des Patterns** : Composants shadcn/ui homogènes
 4. **Feedback Immédiat** : Chaque action utilisateur → réponse système visible
 5. **Accessibilité par Défaut** : Navigation clavier, lecteurs d'écran, WCAG AA
 
@@ -192,7 +192,7 @@ Minimaliste, toujours visible, adaptée mobile-first :
 - **Articles** : Lien vers `/[lang]/articles` (Hub de Recherche)
 - **Catégories** : Menu déroulant → clique catégorie → Hub avec filtre `category=X`
 - **Niveaux** : Menu déroulant → clique niveau → Hub avec filtre `complexity=X`
-- **Sélecteur langue** : FR/EN avec persistance cookie (Paraglide-JS)
+- **Sélecteur langue** : FR/EN avec persistance cookie (next-intl)
 
 ### 4.2 Fil d'Ariane (Breadcrumbs)
 
@@ -208,7 +208,7 @@ S'affiche sous la navigation, reflète le contexte de filtrage :
 
 Toutes les URLs sont préfixées `/fr` ou `/en` :
 - Détection automatique via `Accept-Language` (cookie override)
-- Paraglide-JS gère le `reroute` hook pour routing
+- next-intl gère le routing via middleware et route groups `/[lang]/`
 - Balises `hreflang` pour SEO
 - Badge de langue si contenu partiellement traduit
 
@@ -241,8 +241,8 @@ graph TD
 ```
 
 **Critères de succès** :
-- Filtres s'appliquent sans rechargement de page (URL Search Params)
-- Résultats mis à jour instantanément via load function SvelteKit
+- Filtres s'appliquent sans rechargement de page (URL Search Params gérés via `next/navigation`)
+- Résultats mis à jour instantanément via Server Component réexécuté avec `searchParams`
 - URL reste partageable (`/fr/articles?category=tutorial&level=beginner`)
 - Empty state avec suggestions de critères moins restrictifs
 
@@ -253,15 +253,16 @@ graph TD
 
 ```mermaid
 graph TD
-    A["Clique lien article"] --> B["Chargement page"]
-    B --> C["Affichage:<br/>- Contenu MDsveX<br/>- Table des matières<br/>- Barre progression"]
+    A["Clique lien article"] --> B["Server Component charge<br/>article depuis D1"]
+    B --> C["Affichage:<br/>- Contenu MDX rendu<br/>- Table des matières<br/>- Barre progression"]
     C --> D["Utilisateur<br/>fait défiler"]
-    D --> E["Mise à jour<br/>barre progression"]
+    D --> E["Mise à jour<br/>barre progression (Client)"]
     E --> D
-    F["Clique entrée TOC"] --> G["Défilement auto<br/>vers section"]
+    F["Clique entrée TOC"] --> G["Défilement smooth scroll<br/>vers section (Client)"]
     C -.-> F
     G --> D
 
+    style B fill:#fff4e6
     style C fill:#e6fffa
 ```
 
@@ -381,7 +382,7 @@ Utilisation TailwindCSS 4 standard :
 │      ├──────────────┤
 │      │              │
 │  TOC │   Contenu    │
-│ sticky│   MDsveX    │
+│ sticky│   MDX       │
 │(right)│              │
 └──────┴──────────────┘
 ```
@@ -396,7 +397,7 @@ Utilisation TailwindCSS 4 standard :
 │   (Vide)    ├──────────────┤   TOC       │
 │             │              │   sticky    │
 │             │   Contenu    │  (right)    │
-│             │   MDsveX     │             │
+│             │   MDX        │             │
 │             │              │             │
 └─────────────┴──────────────┴─────────────┘
 ```
@@ -477,20 +478,20 @@ Exemple 9 catégories :
   - Tablette : 24px (1.5rem)
   - Desktop : 32px (2rem)
 
-### 7.5 Composants shadcn-svelte
+### 7.5 Composants shadcn/ui
 
-**Utilisation complète** :
+**Utilisation complète (composants React copy-paste)** :
 
-- **Button** : Variantes `primary` (accent), `secondary`, `ghost`, `link`
+- **Button** : Variantes `default`, `secondary`, `ghost`, `link`, `destructive`
 - **Card** : Conteneurs articles, résultats
 - **Badge** : Catégories, tags, niveaux de complexité
 - **Input** : Recherche, filtres texte
-- **Sheet** : Panneau filtres mobile
-- **Dialog/Modal** : Confirmations, TOC mobile
+- **Sheet** : Panneau filtres mobile (via Radix UI Dialog)
+- **Dialog** : Confirmations, TOC mobile (via Radix UI Dialog)
 - **Progress** : Barre progression lecture
-- **Tooltip** : Infos supplémentaires hover
+- **Tooltip** : Infos supplémentaires hover (via Radix UI Tooltip)
 - **Pagination** : Navigation résultats (24 par page)
-- **Select** : Dropdowns catégories/niveaux
+- **Select** : Dropdowns catégories/niveaux (via Radix UI Select)
 
 ---
 
@@ -500,7 +501,7 @@ Exemple 9 catégories :
 
 Affichage homogène dans toutes les listes (Hub, catégories, articles connexes) :
 
-```svelte
+```tsx
 <ArticleCard
   title="Article Title"
   excerpt="Short excerpt..."
@@ -530,9 +531,9 @@ Affichage homogène dans toutes les listes (Hub, catégories, articles connexes)
 
 ### 8.2 Composant TableOfContents
 
-Auto-généré depuis headings MDsveX, cliquable, avec temps de lecture par section :
+Auto-généré depuis headings MDX, cliquable, avec temps de lecture par section :
 
-```svelte
+```tsx
 <TableOfContents
   headings={[
     { id: 'intro', text: 'Introduction', level: 2, readingTime: 2 },
@@ -557,17 +558,17 @@ Table des Matières
 
 Barre de progression sticky top, mise à jour au scroll :
 
-```svelte
+```tsx
 <ReadingProgressBar progress={45} />
 ```
 
-Affiche progression visuelle (0-100%) via largeur bar, couleur accent (#14B8A6).
+Affiche progression visuelle (0-100%) via largeur bar, couleur accent (#14B8A6). Utilise hooks React pour détecter le scroll.
 
 ### 8.4 Composant ComplexityBadge
 
-Badge avec icône et label, traductions via Paraglide :
+Badge avec icône et label, traductions via next-intl :
 
-```svelte
+```tsx
 <ComplexityBadge level="intermediate" />
 ```
 
@@ -580,7 +581,7 @@ Variantes :
 
 Filtres combinables pour Hub de Recherche :
 
-```svelte
+```tsx
 <SearchFilters
   categories={categories}
   tags={tags}
@@ -684,14 +685,14 @@ Filtres combinables pour Hub de Recherche :
 
 ---
 
-## 12. Multilingue (i18n) avec Paraglide-JS
+## 12. Multilingue (i18n) avec next-intl
 
 ### 12.1 Architecture
 
-- **Détection** : URL `/fr` ou `/en` + cookie override + Accept-Language fallback
-- **Fichiers messages** : `messages/fr.json`, `messages/en.json` (compilés, tree-shakable)
-- **Hook reroute** : `src/hooks.ts` gère `deLocalizeUrl()` de Paraglide
-- **Contenu** : MDsveX stocké en D1 avec colonne `language` ('fr' | 'en')
+- **Détection** : URL `/fr` ou `/en` (route groups) + Accept-Language fallback + cookie (persistance)
+- **Fichiers messages** : `messages/fr.json`, `messages/en.json` (compilés, tree-shakable, typesafe via next-intl)
+- **Middleware** : `src/middleware.ts` gère routing dynamique et initialisation locale next-intl
+- **Contenu** : MDX stocké en D1 avec colonne `language` ('fr' | 'en'), requêté via Drizzle en Server Component
 
 ### 12.2 Fallback de Contenu
 
@@ -701,6 +702,8 @@ Si traduction manquante :
 3. Bouton "Voir en Anglais" (link vers EN si dispo)
 
 ### 12.3 SEO hreflang & Canonical
+
+Gérés via Next.js Metadata API dans les composants serveur :
 
 ```html
 <!-- Page FR -->
@@ -736,20 +739,22 @@ L'état du Hub de Recherche est **persisté dans l'URL** via `URLSearchParams` :
 
 ### 13.2 Mise à Jour sans Rechargement
 
-**Flux SvelteKit** :
+**Flux Next.js** :
 1. Utilisateur interagit avec filtre
-2. URL mise à jour via `goto(newUrl)` (client-side)
-3. Load function SvelteKit réexécutée (données pré-chargées serveur)
-4. Composants mise à jour via réactivité Svelte 5 (Runes)
+2. URL mise à jour via `router.push(newUrl)` (client-side)
+3. Server Component Next.js réexécuté (données pré-chargées serveur)
+4. Composants mise à jour via React state
 
 ```typescript
-// src/routes/[lang]/articles/+page.server.ts
-export const load = async ({ url, locals }) => {
-  const q = url.searchParams.get('q') ?? '';
-  const category = url.searchParams.get('category');
+// app/[lang]/articles/page.tsx
+export default async function ArticlesPage({ searchParams }: { 
+  searchParams: { q?: string; category?: string }
+}) {
+  const q = searchParams.q ?? '';
+  const category = searchParams.category;
   // ... fetch articles with filters
-  return { articles, filters, totalCount };
-};
+  return <ArticlesList articles={articles} filters={filters} />;
+}
 ```
 
 ### 13.3 Facettes Dynamiques
@@ -790,7 +795,7 @@ Les options de filtrage (catégories, tags) sont **recalculées** selon résulta
 │        ◉ Intermediate      │
 │        ◉ Advanced          │
 │ Excerpt: [______________]  │
-│ Content (MDsveX):          │
+│ Content (MDX):             │
 │ [Rich Editor / Markdown]   │
 │                            │
 │ [Preview] [Save Draft]     │
@@ -805,18 +810,19 @@ Article **ne peut être publié que si** :
 - ✅ Slug FR + EN
 - ✅ Excerpt FR + EN
 - ✅ Catégorie assignée
-- ✅ Contenu MDsveX FR + EN
+- ✅ Contenu MDX FR + EN
 - ✅ Niveau complexité défini
 
-Validation via `sveltekit-superforms` + Zod schemas (générés par drizzle-zod) dans Form Actions.
+Validation via `react-hook-form` + Zod schemas (générés par drizzle-zod) dans Server Actions.
 
 ### 14.3 Mode Prévisualisation
 
 Bouton "Prévisualiser" ouvre `/fr/articles/[slug]?preview=true` :
 - Affiche article en mode draft (avant publication)
-- Protégé par Cloudflare Access (authentification admin)
-- Badge "MODE PRÉVISUALISATION" visible
-- Accessible seulement à l'auteur (vérification `locals.user`)
+- Protégé par **Better Auth** (authentification) + **Cloudflare Access** (niveau infrastructure)
+- Badge "MODE PRÉVISUALISATION" visible en haut page
+- Accessible seulement à l'auteur (vérification session Better Auth dans Server Component)
+- URL non partageable (token de preview expirable via Better Auth)
 
 ---
 
@@ -824,32 +830,39 @@ Bouton "Prévisualiser" ouvre `/fr/articles/[slug]?preview=true` :
 
 ### 15.1 Meta Tags
 
-Générés dynamiquement dans load functions pour chaque page :
+Générés dynamiquement via Next.js Metadata API dans chaque page :
 
 ```typescript
-// src/routes/[lang]/articles/[slug]/+page.server.ts
-export const load = async ({ params, locals, url }) => {
-  const article = await locals.db.select().from(articles)...;
+// app/[lang]/articles/[slug]/page.tsx
+export async function generateMetadata({ params }: { 
+  params: { slug: string; lang: string }
+}): Promise<Metadata> {
+  const article = await db.select().from(articles)...;
 
   return {
-    article,
-    metadata: {
+    title: article.seoTitle,
+    description: article.seoDescription,
+    openGraph: {
       title: article.seoTitle,
       description: article.seoDescription,
-      canonical: url.href,
-      ogImage: buildCloudflareImageUrl(article.heroImage, { width: 1200 }),
-      hreflang: {
-        fr: `https://sebc.dev/fr/articles/${article.slug}`,
-        en: `https://sebc.dev/en/articles/${article.slug}`
+      images: [buildCloudflareImageUrl(article.heroImage, { width: 1200 })],
+      url: `https://sebc.dev/${params.lang}/articles/${article.slug}`,
+      type: 'article',
+    },
+    alternates: {
+      canonical: `https://sebc.dev/${params.lang}/articles/${article.slug}`,
+      languages: {
+        'fr': `https://sebc.dev/fr/articles/${article.slug}`,
+        'en': `https://sebc.dev/en/articles/${article.slug}`
       }
     }
   };
-};
+}
 ```
 
 ### 15.2 Sitemap Dynamique
 
-Route `+server.ts` génère sitemap XML :
+Route Handler `route.ts` génère sitemap XML :
 - Toutes pages publiées
 - Priorités : articles récents (1.0), anciens (0.8)
 - Fréquences : récents weekly, anciens monthly
@@ -857,18 +870,7 @@ Route `+server.ts` génère sitemap XML :
 
 ### 15.3 Open Graph & Twitter Cards
 
-```html
-<meta property="og:title" content="{metadata.title}" />
-<meta property="og:description" content="{metadata.description}" />
-<meta property="og:image" content="{metadata.ogImage}" />
-<meta property="og:url" content="{metadata.canonical}" />
-<meta property="og:type" content="article" />
-
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="{metadata.title}" />
-<meta name="twitter:description" content="{metadata.description}" />
-<meta name="twitter:image" content="{metadata.ogImage}" />
-```
+Générés automatiquement par Next.js Metadata API (voir section 15.1). Next.js gère automatiquement la génération des balises Open Graph et Twitter Cards à partir de l'objet `Metadata` retourné par `generateMetadata`.
 
 ---
 
@@ -950,41 +952,147 @@ Palette :
 
 ---
 
-## 18. Considérations Techniques SvelteKit 5
+## 18. Stratégie de Testing (Hybrid Testing Strategy)
 
-### 18.1 Patterns Utilisés
+### 18.1 Modèle de Testing Imposé par l'Architecture RSC
 
-1. **Form Actions** (`export const actions`) : Création/édition articles
-2. **Load Functions** (`export const load`) : Pré-chargement données, SEO
-3. **Hooks** (`src/hooks.server.ts`) : Authentification Cloudflare Access
-4. **Reroute** (`src/hooks.ts`) : I18n Paraglide-JS
-5. **Endpoints API** (`+server.ts`) : Presigned URLs R2, sitemap
-6. **Runes** (`$state`, `$derived`, `$effect`) : Réactivité Svelte 5
+L'architecture **React Server Components (RSC) + Next.js 15** impose un **modèle de testing hybride obligatoire**. Les Server Components async ne peuvent PAS être unit-testés de manière fiable dans un environnement JSDOM moqué. Le Validation Checklist (Section 9.2) confirme que "**Async Server Components *cannot be unit-tested* in the traditional sense.**"
 
-### 18.2 Optimisations
+### 18.2 Stratégie Détaillée
 
-- **Streaming** : HTML streamed via SvelteKit (pas de blocs render)
-- **Adaptatrice Cloudflare** : `@sveltejs/adapter-cloudflare` mode Workers
-- **Bindings D1** : Accès via `event.platform.env` (pas de `$env` serveur)
-- **Cache headers** : Configurés dans routes `+server.ts`
+#### **Pour les Client Components et Fonctions Utilitaires (Vitest + React Testing Library)**
+
+**Scope** : Unit tests pour :
+- Composants marqués `'use client'` (filtres, boutons, modales)
+- Fonctions utilitaires (formatage dates, validation formulaires)
+- Hooks React custom ('use client')
+- Server Actions simples (sans dépendances réseau)
+
+**Outils** :
+- **Vitest** : Test runner (faster than Jest, ESM native)
+- **React Testing Library** : Rendu composants + assertions user-centric
+- **@testing-library/user-event** : Simulations interactions utilisateur
+
+**Exemple** :
+```typescript
+// __tests__/components/SearchFilters.test.tsx
+import { render, screen } from '@testing-library/react';
+import { SearchFilters } from '@/components/SearchFilters';
+
+describe('SearchFilters', () => {
+  it('applies filter on category selection', async () => {
+    render(<SearchFilters onFilterChange={vi.fn()} />);
+    // ... test client-side filter logic
+  });
+});
+```
+
+#### **Pour les Pages Data-Driven et Flows Utilisateur (Playwright E2E Obligatoire)**
+
+**Scope** : E2E tests obligatoires pour :
+- **Pages avec RSC async** : Hub de Recherche, page article (MDX rendering server-side)
+- **Auth flows** : Login → Redirection → Protected routes → Logout
+- **Admin flows** : Créer/éditer/publier articles
+- **Server Actions** : Formulaires soumis via Server Actions
+
+**Raison** : Les Server Components async executent le data-fetching côté serveur et rendent le HTML initial. Le **seul** moyen de tester ce cycle complet est de lancer l'application en environnement production-like et tester le HTML/DOM final.
+
+**Outils** :
+- **Playwright** : E2E automation + assertions sur HTML rendu
+- **npm run build && npm run start** : Environnement production-like
+
+**Exemple** :
+```typescript
+// e2e/articles-hub.spec.ts
+import { test, expect } from '@playwright/test';
+
+test('search articles with filters', async ({ page }) => {
+  await page.goto('/fr/articles');
+  await page.click('text=Filtrer');
+  await page.selectOption('[name=category]', 'tutorial');
+
+  // Attend mise à jour Server Component (re-fetch + re-render)
+  await expect(page.locator('[data-testid=article-card]')).toHaveCount(5);
+});
+
+test('auth flow: login → protected route → logout', async ({ page }) => {
+  // Test complet : middleware, session, RSC avec auth context
+  await page.goto('/fr/admin/articles');
+  // Expect redirect to login (middleware intercept)
+  expect(page.url()).toContain('/sign-in');
+
+  // Login flow
+  // ... assertions
+});
+```
+
+### 18.3 Configuration Recommandée
+
+**package.json** :
+```json
+{
+  "devDependencies": {
+    "vitest": "^latest",
+    "@testing-library/react": "^14",
+    "@testing-library/user-event": "^14",
+    "@playwright/test": "^latest"
+  },
+  "scripts": {
+    "test": "vitest",
+    "test:e2e": "playwright test"
+  }
+}
+```
+
+**vitest.config.ts** : Configuration pour unit tests (JSDOM)
+**playwright.config.ts** : Configuration pour E2E (production build + start)
+
+### 18.4 Critères de Couverture (V1)
+
+- **Unit Tests** : 60%+ couverture Client Components + utilitaires
+- **E2E Tests** : 100% coverage des flows critiques (auth, Hub recherche, article page, admin CRUD)
+- **Performance** : Lighthouse CI ≥ 90 (accessibility, best practices)
+
+---
+
+## 19. Considérations Techniques Next.js 15
+
+### 19.1 Patterns Utilisés (Next.js 15 App Router)
+
+1. **Server Actions** (fonctions async dans Server Components) : Création/édition articles via formulaires avec validation Zod
+2. **Server Components** (async components dans `app/` directory) : Pré-chargement données D1, SEO, rendu @next/mdx
+3. **Middleware** (`src/middleware.ts`) : Authentification Better Auth + Cloudflare Access (admin protégé), validation JWT via `jose`
+4. **Better Auth Integration** : Authentification utilisateurs, gestion sessions via Drizzle + D1, support MFA/WebAuthn
+5. **next-intl Middleware** : I18n avec route groups `/[lang]/` et contexte locale (chaining auth → i18n)
+6. **Route Handlers** (`app/api/*/route.ts`) : Presigned URLs R2, sitemap dynamique, health checks
+7. **Client Components** ('use client') avec hooks React : Interactivité client (filtres, scroll, TOC, useActionState pour formes)
+8. **React Query / SWR** (optionnel) : Côté client pour refresh données sans rechargement page
+
+### 19.2 Optimisations
+
+- **Streaming & Progressive Enhancement** : HTML streamed via React Server Components
+- **Adaptateur OpenNext** : `@opennextjs/cloudflare` transforme Next.js en Worker bundle
+- **Bindings Cloudflare** : Accès à D1, R2, KV via `wrangler.toml` (source unique vérité)
+- **Cache OpenNext** : Architecture complète avec R2 (ISR), Durable Objects (queue), D1 (tags), KV
 
 ---
 
 ## 19. Rollout Plan (V1)
 
 ### Phase 1 : Socle Technique (EPIC 0)
-- Initialisation C3, TailwindCSS 4, Drizzle, D1, wrangler.toml
+- Initialisation Next.js 15, TailwindCSS 4, Drizzle, D1, wrangler.toml
+- Configuration OpenNext adapter
 - CI/CD GitHub Actions
 - Cloudflare Access `/admin`
 
 ### Phase 2 : Articles & Taxonomie (EPIC 1, 2)
-- Schéma D1, Form Actions, Admin panel
-- Rendu MDsveX, TOC, progression
+- Schéma D1, Server Actions, Admin panel
+- Rendu MDX, TOC, progression
 - Catégories, tags, complexité
 
 ### Phase 3 : Hub Recherche (EPIC 3, 4)
 - Page recherche avancée, filtres combinés
-- Paraglide-JS i18n
+- next-intl i18n
 - URL Search Params
 
 ### Phase 4 : SEO & Performance (EPIC 5, 8)
@@ -995,28 +1103,29 @@ Palette :
 ### Phase 5 : Sécurité & Monitoring (EPIC 6, 7)
 - Validations Zod, CSP, WAF
 - Health checks, Web Analytics
-- Tests Vitest + Playwright
+- Tests hybrid: **Vitest + React Testing Library** pour Client Components et fonctions utilitaires; **Playwright E2E obligatoire** pour toutes les pages avec RSC async (data-driven pages, auth flows, Server Actions)
 
 ---
 
 ## 20. Post-V1 Extensions
 
-- **Commentaires** : Authentification Better Auth + système commentaires
-- **Newsletter** : Resend API + templates Svelte
-- **Wiki** : Section distincte avec versionning + historique
-- **Analytics avancés** : Plausible ou Segment
-- **Cache avancé** : R2 Incremental + D1 Tags
+- **Commentaires** : Authentification Better Auth avec adaptateur `better-auth-cloudflare` (D1 + Drizzle + KV) + système commentaires
+- **Newsletter** : Cloudflare Email Service (binding natif Workers) + templates react-email
+- **Wiki** : Section distincte avec versionning + historique (possible Cloudflare Durable Objects)
+- **Analytics avancés** : Plausible ou intégration Segment (privacy-first)
+- **Cache avancé Optimisé** : Architecture OpenNext complète configurée (R2 pour ISR, Durable Objects pour queue, D1 pour tag cache, KV pour fast access)
 
 ---
 
 ## Conclusion
 
-Cette spécification UX/UI adapte les objectifs fondamentaux du blog (efficacité, clarté, apprentissage) à la nouvelle stack moderne **SvelteKit 5 + Cloudflare**.
+Cette spécification UX/UI adapte les objectifs fondamentaux du blog (efficacité, clarté, apprentissage) à la stack moderne **Next.js 15 + React 19 Server Components + Cloudflare Workers**.
 
 L'architecture préserve l'expérience utilisateur tout en bénéficiant de :
-- **Latence minimale** via Edge network Cloudflare
-- **Serverless scalabilité** sans gestion infrastructure
-- **DX optimisée** avec SvelteKit 5 + composants réutilisables
-- **Accessibilité native** WCAG AA dès V1
+- **Latence minimale** via Edge network Cloudflare (300+ datacenters)
+- **Serverless scalabilité** sans gestion infrastructure ou ops
+- **DX optimisée** avec Next.js 15 App Router + React 19 Server Components + shadcn/ui
+- **Accessibilité native** WCAG 2.1 AA dès V1
+- **Performance optimale** avec OpenNext caching strategy et Cloudflare Images
 
-Le projet reste **ambitieux mais réaliste** avec une V1 livrée fin novembre et extensions progressives post-V1.
+Le projet reste **ambitieux mais réaliste** avec une V1 livrée fin novembre/décembre et extensions progressives post-V1.
