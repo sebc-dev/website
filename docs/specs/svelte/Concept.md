@@ -1,6 +1,6 @@
 ---
 created: 2025-11-01T07:59
-updated: 2025-11-02T00:00
+updated: 2025-11-05T00:00
 ---
 
 # Vision Globale du projet sebc.dev
@@ -64,11 +64,11 @@ Articles ciblés sur les technologies utilisées dans la pratique quotidienne, d
 - **Java/Spring** : backend enterprise, API REST, sécurité
 - **JavaScript/TypeScript** : développement moderne, tooling, bonnes pratiques
 - **React** : composants, state management, patterns avancés
-- **Svelte/SvelteKit** : réactivité, architecture moderne, performance
+- **Next.js** : SSR/SSG, App Router, Server Components
 - **Tauri** : applications desktop cross-platform
 - **Autres technologies** selon les besoins et explorations du moment
 
-Ces articles documentent les apprentissages réels en format MDsveX avec un format transparent : contexte d'apprentissage, processus, découvertes, application pratique, et questions ouvertes. Support avancé de blocs de contenu flexibles et réutilisables.
+Ces articles documentent les apprentissages réels en format MDX avec un format transparent : contexte d'apprentissage, processus, découvertes, application pratique, et questions ouvertes. Support avancé de blocs de contenu flexibles et réutilisables.
 
 # Méthodologie de Production
 
@@ -98,72 +98,77 @@ La cohérence éditoriale et la qualité du contenu sont garanties par cette sup
 ## V1 - Fondations (Q1 2025)
 
 ### Contenu & Rendu
-- Blog bilingue (FR/EN) avec support **MDsveX** et blocs de contenu flexibles réutilisables
-- **Internationalisation** avec **Paraglide-JS** :
-  - Hook `reroute` pour gestion des préfixes `/fr` et `/en`
-  - Traductions compilées (tree-shakable) dans `messages/fr.json` et `messages/en.json`
-  - Détection automatique de langue (URL, cookie)
+- Blog bilingue (FR/EN) avec support **MDX** et blocs de contenu flexibles réutilisables
+- **Internationalisation** avec **next-intl** :
+  - Middleware pour gestion des préfixes `/fr` et `/en`
+  - Traductions dans `messages/fr.json` et `messages/en.json`
+  - Détection automatique de langue (URL, cookie, Accept-Language header)
+  - Support complet du Next.js App Router
 
 ### Hub de Recherche Avancée
 - Recherche textuelle + filtres taxonomiques dynamiques
 - Filtres multi-critères : mots-clés, 9 catégories, tags, niveau de complexité, durée de lecture, date
 - État maintenu dans l'URL via **URL Search Params**, mise à jour sans rechargement de page
-- Utilisation de **load functions** pour pré-chargement des données côté serveur
+- Utilisation de **React Server Components** pour pré-chargement des données côté serveur
 
 ### Système de Taxonomie
 - 9 catégories avec identité visuelle distincte (icônes, couleurs, badges)
 - Indicateurs de niveau de complexité (Débutant/Intermédiaire/Avancé)
 - Tags et navigation dédiée
-- Métadonnées de frontmatter YAML typées dans les fichiers `.svx`
+- Métadonnées de frontmatter YAML typées dans les fichiers `.mdx`
 
 ### Expérience de Lecture Optimisée
 - Table des matières auto-générée avec temps de lecture par section
-- Indicateur de progression de lecture (composant Svelte réactif)
+- Indicateur de progression de lecture (composant React avec hooks)
 - Optimisation images via **Cloudflare Images** (transformation runtime, format=auto pour AVIF/WebP)
 - Time-to-value < 60s, pattern discovery < 3min
 - Core Web Vitals : optimisation LCP et CLS
+- Utilisation de **next/image** avec loader Cloudflare
 
 ### Administration & Gestion de Contenu
 - **Panneau d'administration "from scratch"** construit avec :
-  - **SvelteKit Form Actions** (`+page.server.ts` avec `export const actions`)
-  - **sveltekit-superforms** pour validation (Zod schemas générés par drizzle-zod)
-  - **shadcn-svelte** pour les composants UI
-  - Amélioration progressive via `use:enhance`
-- Upload de médias vers **R2** via **Presigned URLs** (endpoints `+server.ts`)
-- Sécurisé par **Cloudflare Access** (validation JWT dans `hooks.server.ts`)
+  - **Next.js Server Actions** (fonctions async dans composants serveur)
+  - **react-hook-form** + **Zod** pour validation
+  - **shadcn/ui** pour les composants UI
+  - Progressive enhancement via transitions React
+- Upload de médias vers **R2** via **Presigned URLs** (Route Handlers API)
+- Sécurisé par **Cloudflare Access** (validation JWT dans middleware Next.js)
 
 ### Design & Interface
 - Design UI dark mode (vert canard #14B8A6 sur anthracite #1A1D23)
-- **TailwindCSS 4** avec plugin Vite natif
-- Composants **shadcn-svelte** (copy-paste, contrôle total)
+- **TailwindCSS 4** avec configuration Next.js
+- Composants **shadcn/ui** (copy-paste, contrôle total)
 - Responsive design et accessibilité
 
 ### Architecture & Infrastructure
-- **Architecture Full Stack SvelteKit 5** déployée sur **Cloudflare Workers**
-- Scaffolding via **C3** : `pnpm create cloudflare@latest --framework=svelte --platform=workers`
-- Plugin Vite Cloudflare pour développement unifié (HMR + bindings locaux)
-- Base de données **D1** avec migrations Drizzle → Wrangler
-- Configuration centralisée dans `wrangler.toml` (avec `compatibility_flags = ["nodejs_compat"]`)
+- **Architecture Full Stack Next.js** (App Router) déployée sur **Cloudflare Workers**
+- **Adaptateur** : **@opennextjs/cloudflare** (adaptateur OpenNext communautaire)
+- Base de données **D1** avec migrations **Drizzle ORM**
+- Configuration dans `wrangler.toml` pour bindings (D1, R2, KV, Durable Objects)
+- Variables d'environnement via `.dev.vars` (local) et `wrangler secret` (production)
+- Compatibilité Node.js via `nodejs_compat` flag dans wrangler.toml (obligatoire)
+- Développement local unifié : `wrangler dev -- npx next dev` (HMR + bindings)
 
 ### Qualité & Tests
-- Tests composants avec **Vitest Browser Mode** (exécution dans Chromium réel)
-- Tests E2E avec **Playwright** et fixtures de base de données (seeding/reset)
+- Tests composants avec **Vitest** + **@testing-library/react**
+- Tests E2E avec **Playwright** et fixtures de base de données (seeding via `wrangler d1 execute DB --local --file=./seed.sql`)
 - CI/CD avec **GitHub Actions** :
   1. Tests (composants + E2E)
-  2. Build
-  3. Migrations D1 (`wrangler d1 migrations apply DB --remote`)
+  2. Migrations D1 (`wrangler d1 migrations apply DB --remote`)
+  3. Build Next.js via OpenNext
   4. Déploiement (`wrangler deploy`)
 
 ### SEO & Performance
-- Meta tags optimisés (Open Graph, Twitter Cards)
+- Meta tags optimisés (Open Graph, Twitter Cards) via Next.js Metadata API
 - Sitemap généré automatiquement
 - Affichage public sans interactions utilisateur (V1)
+- Support SSR/SSG selon les besoins (articles en SSG, recherche en SSR)
 
 ## Post-V1 - Fonctionnalités Communautaires
 
 - Système de commentaires avec authentification utilisateurs
-- Inscriptions et profils utilisateurs via **Better Auth** + D1
-- **Newsletter (via Resend)** avec templates Svelte personnalisés
+- Inscriptions et profils utilisateurs via **Better Auth** (avec adaptateur `better-auth-cloudflare` pour D1/Drizzle)
+- **Newsletter via Cloudflare Email Service** (binding natif Workers) avec templates React personnalisés (react-email)
 - Wiki "Dev Resources" avancé :
   - Versionning et historique des modifications
   - Index et glossaire
@@ -173,67 +178,91 @@ La cohérence éditoriale et la qualité du contenu sont garanties par cette sup
 # Stack Technique
 
 ## Framework & Runtime
-- **Framework** : **SvelteKit 5** (avec Svelte 5 et Runes)
-- **Adaptateur** : **@sveltejs/adapter-cloudflare** (mode Workers)
+- **Framework** : **Next.js 15** (App Router avec React Server Components)
+- **Adaptateur** : **@opennextjs/cloudflare** (OpenNext adapter - remplace l'ancien @cloudflare/next-on-pages obsolète)
 - **Runtime** : **Cloudflare Workers** (workerd)
-- **Outil de Build** : **Vite** avec **@cloudflare/vite-plugin** (développement unifié avec HMR + bindings)
+- **Outil de Build** : **Next.js** + OpenNext pour transformation vers Workers
+- **Prérequis** : Flag `nodejs_compat` obligatoire pour compatibilité Node.js APIs
 
 ## Base de Données & ORM
-- **Base de Données** : **Cloudflare D1** (SQLite serverless)
+- **Base de Données** : **Cloudflare D1** (SQLite serverless, mature en production 2025)
 - **ORM** : **Drizzle ORM** (avec drizzle-orm/d1)
 - **Migrations** : **Drizzle Kit** + **Wrangler** (workflow en deux étapes)
-- **Validation** : **Drizzle Schema → drizzle-zod → Zod → sveltekit-superforms** (source de vérité unique)
+- **Validation** : **Drizzle Schema → drizzle-zod → Zod → react-hook-form** (source de vérité unique)
+- **Backups** : **D1 Time Travel** (Point-in-Time Recovery sur 30 jours)
+- **Performance** : Réplication globale en lecture (beta) pour latence optimale
 
 ## Interface Utilisateur
-- **UI** : **TailwindCSS 4** (plugin Vite natif) + **shadcn-svelte** (composants copy-paste)
-- **Rendu Contenu** : **MDsveX** (Markdown + composants Svelte)
-- **Internationalisation** : **Paraglide-JS** (compiler-based, tree-shakable)
+- **UI** : **TailwindCSS 4** + **shadcn/ui** (composants copy-paste)
+- **Rendu Contenu** : **MDX** (Markdown + composants React) via **next-mdx-remote** ou **@next/mdx**
+- **Internationalisation** : **next-intl** (optimisé pour App Router, typesafe)
 
 ## CMS & Gestion de Contenu
-- **CMS** : **Panneau d'administration personnalisé** (construit avec SvelteKit Form Actions et `shadcn-svelte`)
-- **Formulaires** : **sveltekit-superforms** (avec amélioration progressive via `use:enhance`)
-- **Stockage Média** : **Cloudflare R2** (via Presigned URLs générées par +server.ts endpoints)
+- **CMS** : **Panneau d'administration personnalisé** (construit avec Next.js Server Actions et shadcn/ui)
+- **Formulaires** : **react-hook-form** + **Zod** (avec progressive enhancement)
+- **Stockage Média** : **Cloudflare R2** (via Presigned URLs générées par Route Handlers)
 
 ## Authentification & Sécurité
-- **Authentification (Admin V1)** : **Cloudflare Access** (Zero Trust) avec validation JWT (Cf-Access-Jwt-Assertion) via `jose` dans `hooks.server.ts`
-- **Authentification (Utilisateurs Post-V1)** : **Better Auth** (compatible D1 et Drizzle)
+- **Authentification (Admin V1)** : **Cloudflare Access** (Zero Trust) avec validation JWT `Cf-Access-Jwt-Assertion` via middleware Next.js (bibliothèque `jose`)
+- **Authentification (Utilisateurs Post-V1)** : **Better Auth** avec adaptateur `better-auth-cloudflare` (intégration native D1 + Drizzle + KV pour rate limiting)
 - **Sécurité (Réseau)** : **Cloudflare WAF** (Web Application Firewall)
 
 ## Infrastructure Cloudflare
 - **Configuration** : **wrangler.toml** (source de vérité pour bindings et infrastructure)
-- **Secrets** : `.dev.vars` (local) + `wrangler secret` (production) - **exclusivement via `event.platform.env`**
-- **Cache** : **Cloudflare KV** (cache distribué) + **Cloudflare Durable Objects** (état stateful si nécessaire)
-- **Images** : **Cloudflare Images** (transformation runtime via cdn-cgi/image)
+  - `compatibility_flags = ["nodejs_compat"]` (obligatoire)
+  - `compatibility_date = "2025-03-25"` (date récente requise)
+- **Secrets** : `.dev.vars` (local) + `wrangler secret` (production)
+- **Cache OpenNext** : Architecture multi-composants
+  - **R2** : Cache incrémental (pages SSG/ISR) via binding `NEXT_INC_CACHE_R2_BUCKET`
+  - **Durable Objects** : File d'attente révalidation (ISR) via `DOQueueHandler`
+  - **D1** : Cache de tags pour `revalidateTag()` via binding `NEXT_TAG_CACHE_D1`
+  - **Binding requis** : `WORKER_SELF_REFERENCE` pour communication inter-composants
+- **Images** : **Cloudflare Images** (transformation runtime via cdn-cgi/image avec loader personnalisé)
+- **Développement local** : `wrangler dev -- npx next dev` (HMR + bindings via Miniflare)
 
 ## Monitoring & Analytics
-- **Monitoring V1** : **Cloudflare Health Checks** + **Workers Metrics** & **Log Explorer**
+- **Monitoring V1** : **Cloudflare Health Checks** + **Workers Metrics** & **Workers Logs**
+- **Observabilité** : Logs structurés JSON activés via `[observability]` dans wrangler.toml
+  - `enabled = true`
+  - `head_sampling_rate = 1.0` (100% des requêtes loggées)
+  - Best practice : Logs JSON structurés avec `console.log({ level, context, data })`
 - **Analytics V1** : **Cloudflare Web Analytics** (privacy-first, sans cookies)
-- **Backups** : **Cloudflare D1 Time Travel** (Point-in-Time Recovery)
+- **Backups** : **D1 Time Travel** (PITR sur 30 jours)
 
 ## Communication (Post-V1)
-- **Newsletter** : **Resend** (API email transactionnel)
-- **Templates Email** : **Templates Svelte personnalisés** (rendus en HTML)
+- **Newsletter** : **Cloudflare Email Service** (service natif Workers, annoncé septembre 2025)
+  - Binding natif dans wrangler.toml : `env.SEND_EMAIL.send(...)`
+  - Configuration DNS automatique (SPF, DKIM, DMARC)
+  - Compatible react-email pour templating
+- **Templates Email** : **Templates React personnalisés** (rendus en HTML avec react-email)
 
 # Hébergement & Déploiement
 
-- **Plateforme** : **Cloudflare Workers** (hébergement Full Stack SvelteKit)
-- **Déploiement** : CI/CD avec **GitHub Actions** vers la plateforme Cloudflare
+- **Plateforme** : **Cloudflare Workers** (hébergement Full Stack Next.js)
+- **Déploiement** : CI/CD avec **GitHub Actions** via `wrangler deploy`
 - **Sécurité (Périmètre)** : **Cloudflare Access** (Zero Trust) sécurise la route `/admin` au niveau du réseau, avant que la requête n'atteigne l'application
 - **Sécurité (Applicative)** : **Cloudflare WAF** protège contre les menaces web courantes (XSS, injection SQL, etc.)
-- **Réseau** : Géré par l'infrastructure mondiale "Edge" de Cloudflare, remplaçant la gestion manuelle de VPS, Docker et `iptables-nft`
-- **Monitoring** : **Cloudflare Health Checks** configurés pour surveiller le endpoint `/health` de l'application SvelteKit, avec alertes via les **Cloudflare Alerts**
+- **Réseau** : Géré par l'infrastructure mondiale "Edge" de Cloudflare (déploiement sur 300+ datacenters)
+- **Monitoring** : **Cloudflare Health Checks** configurés pour surveiller le endpoint `/health`, avec alertes via les **Cloudflare Alerts**
 - **Analytics** : **Cloudflare Web Analytics** intégré pour le suivi des visiteurs et performances (privacy-first, sans cookies)
 
 # Principes Architecturaux Clés
 
-Basés sur le plan de recherche SvelteKit/Cloudflare, ces principes guident toutes les décisions techniques :
+Basés sur les best practices Next.js/Cloudflare Workers validées en 2025, ces principes guident toutes les décisions techniques :
 
-1. **Scaffolding C3 Obligatoire** : Utiliser `pnpm create cloudflare@latest --framework=svelte --platform=workers` pour configuration initiale correcte
-2. **Plugin Vite Unifié** : Le plugin Vite Cloudflare (configuré par C3) fusionne développement local (HMR) et runtime Workers (bindings)
-3. **platform.env comme Source de Vérité** : Abandonner les modules `$env` côté serveur, utiliser exclusivement `event.platform.env`
-4. **Chaîne de Validation Intégrée** : Drizzle Schema → drizzle-zod → Zod → sveltekit-superforms pour type-safety de bout en bout
-5. **Stockage R2 via URLs Pré-signées** : Téléversements contournent le Worker pour éviter les limites de taille
-6. **Authentification via Cloudflare Access** : Validation JWT `Cf-Access-Jwt-Assertion` dans `hooks.server.ts` avec `jose`
-7. **i18n avec Paraglide-JS** : Solution moderne, compilée, tree-shakable (typesafe-i18n n'est plus maintenu)
-8. **Tests Haute-Fidélité** : Vitest Browser Mode (vs JSDOM) + Playwright avec fixtures DB
-9. **Déploiement en Deux Étapes** : Migrations DB d'abord (`wrangler d1 migrations apply --remote`), puis déploiement code
+1. **Adaptateur OpenNext** : Utiliser `@opennextjs/cloudflare` (l'ancien `@cloudflare/next-on-pages` est obsolète et archivé)
+2. **Configuration Wrangler** : Utiliser `wrangler.toml` comme source de vérité pour tous les bindings (D1, R2, KV, Durable Objects)
+3. **nodejs_compat Flag** : Activer `compatibility_flags = ["nodejs_compat"]` (prérequis non négociable pour Next.js)
+4. **Développement Local Unifié** : Utiliser `wrangler dev -- npx next dev` pour HMR + bindings (friction historique résolue en 2025)
+5. **Cache OpenNext Complet** : Configurer tous les bindings requis pour ISR/revalidateTag (R2, Durable Objects, D1, WORKER_SELF_REFERENCE)
+6. **Chaîne de Validation Intégrée** : Drizzle Schema → drizzle-zod → Zod → react-hook-form pour type-safety de bout en bout
+7. **Stockage R2 via URLs Pré-signées** : Téléversements directs depuis le client pour éviter les limites de taille des Workers
+8. **Authentification via Cloudflare Access** : Validation JWT `Cf-Access-Jwt-Assertion` dans middleware Next.js (bibliothèque `jose`)
+9. **Better Auth avec Adaptateur Cloudflare** : Utiliser `better-auth-cloudflare` pour intégration native D1/Drizzle/KV
+10. **Email Service Natif** : Utiliser Cloudflare Email Service (binding natif) au lieu de Resend (incompatibilités runtime Workers)
+11. **i18n avec next-intl** : Solution de référence pour App Router, typesafe, avec support RSC
+12. **Tests Haute-Fidélité** : Vitest + Testing Library pour composants, Playwright avec seeding D1 (`wrangler d1 execute --local --file=seed.sql`)
+13. **Déploiement en Deux Étapes** : Migrations DB d'abord (`wrangler d1 migrations apply --remote`), puis déploiement Worker
+14. **Logs Structurés JSON** : Activer `[observability]` dans wrangler.toml et utiliser `console.log({ level, context, data })`
+15. **Server Components First** : Privilégier React Server Components pour data fetching, utiliser Client Components uniquement pour interactivité
+16. **Edge-First Architecture** : Concevoir pour le runtime Workers (pas de filesystem, APIs asynchrones, limites CPU)
