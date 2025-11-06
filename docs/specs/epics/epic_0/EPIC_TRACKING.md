@@ -40,14 +40,14 @@ This epic contains **10 stories** as defined in the PRD:
 |-------|-------|-------------|--------|--------|----------|
 | 0.1 | Initialiser le projet Next.js 15 | Next.js 15.4.7 + React 19 + TypeScript 5 + App Router | ✅ COMPLETED | 3 | 3/3 |
 | 0.2 | Configurer adaptateur OpenNext | `@opennextjs/cloudflare` v1.3.0 installé et configuré | ✅ COMPLETED | - | ✅ |
-| 0.3 | Configurer TailwindCSS 4 + shadcn/ui | TailwindCSS 4 installé, shadcn/ui manquant, palette non appliquée | 🚧 IN PROGRESS | - | 60% |
+| 0.3 | Configurer TailwindCSS 4 + shadcn/ui | TailwindCSS 4 + shadcn/ui + palette projet (teal #14B8A6) | ✅ COMPLETED | - | ✅ |
 | 0.4 | Configurer Drizzle ORM + Cloudflare D1 | Schéma initial + migrations setup | 📋 NOT STARTED | - | 0% |
 | 0.5 | Configurer wrangler.toml avec bindings | Config de base OK, bindings D1/R2/KV/DO manquants | 🚧 IN PROGRESS | - | 40% |
 | 0.6 | Configurer compatibility flags | `nodejs_compat` + `compatibility_date: 2025-03-01` | ✅ COMPLETED | - | ✅ |
 | 0.7 | Mettre en place CI/CD GitHub Actions | Pipeline de tests, build OpenNext, migrations D1, déploiement | 📋 NOT STARTED | - | 0% |
 | 0.8 | Configurer Cloudflare Access | Protection routes `/admin/*` avec Zero Trust | 📋 NOT STARTED | - | 0% |
 | 0.9 | Configurer Cloudflare WAF | Sécurité de base contre menaces web | 📋 NOT STARTED | - | 0% |
-| 0.10 | Base tests & linting | ESLint OK, Vitest et Playwright manquants | 🚧 IN PROGRESS | - | 33% |
+| 0.10 | Base tests & linting | ESLint + Vitest (avec tests) + Playwright configurés | ✅ COMPLETED | - | ✅ |
 
 **Columns Explained**:
 - **Story**: Reference ID (e.g., 0.1, 0.2)
@@ -103,14 +103,14 @@ cat docs/specs/epics/epic_0/EPIC_TRACKING.md
 ### Progress Summary
 
 - **Stories Started**: 6 / 10
-- **Stories Completed**: 3 / 10
-- **Stories In Progress**: 3 / 10
+- **Stories Completed**: 5 / 10 ✅
+- **Stories In Progress**: 1 / 10
 - **Stories Not Started**: 4 / 10
 - **Total Phases**: 3 (Story 0.1 planned)
 - **Phases Completed**: 3 / 3 (Story 0.1)
 
-**Epic Completion**: 30% (3 stories complétées / 10 total)
-**Weighted Progress**: ~45% (incluant les stories partielles)
+**Epic Completion**: 50% (5 stories complétées / 10 total)
+**Weighted Progress**: ~54% (incluant la story partielle 0.5)
 
 ### Timeline
 
@@ -163,6 +163,12 @@ Track epic-level milestones here:
 - [ ] **Milestone 5**: All tests passing and Epic 0 complete - Target: Week 2
 
 ### Recent Updates
+
+**2025-11-06 (Late Evening)**: Stories 0.3 et 0.10 complétées à 100% ! 🎉
+- ✅ Story 0.3 : shadcn/ui installé + palette projet appliquée (teal + typographies Nunito Sans/JetBrains Mono)
+- ✅ Story 0.10 : Vitest configuré avec scripts + tests unitaires + Playwright E2E
+- **Epic Completion** : **50%** (5 stories complètes / 10 total)
+- **Weighted Progress** : ~54%
 
 **2025-11-06 (Evening)**: État des lieux complet effectué. Mise à jour du tracking pour refléter l'état réel du projet :
 - ✅ Stories 0.1, 0.2, 0.6 **COMPLÉTÉES** (30%)
