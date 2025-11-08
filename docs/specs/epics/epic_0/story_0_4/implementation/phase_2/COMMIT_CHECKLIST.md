@@ -465,7 +465,7 @@ Part of Phase 2 - Commit 5/6"
   - [x] Test: Articles with publishedAt timestamp work
   - [x] Test: Articles with cover image work
   - [x] Test: Articles with categoryId reference work
-- [x] **Test Suite 3: Article Translations Table Schema (9 tests)**
+- [x] **Test Suite 3: Article Translations Table Schema (10 tests)**
   - [x] Test: Article translations table properly defined
   - [x] Test: All 10 required fields defined
   - [x] Test: id is primary key
@@ -475,13 +475,14 @@ Part of Phase 2 - Commit 5/6"
   - [x] Test: Multilingual content (FR and EN) supported
   - [x] Test: All content fields required (title, slug, excerpt, SEO, contentMdx)
   - [x] Test: MDX content format supported
+  - [x] Test: Timestamp fields (createdAt, updatedAt) defined
 - [x] **Test Suite 4: Schema Relations and Constraints (5 tests)**
   - [x] Test: Foreign key from article_translations to articles defined
   - [x] Test: One-to-many relationship (article to translations)
   - [x] Test: Unique constraint on (articleId, language) enforced
   - [x] Test: Unique constraint on slug enforced
   - [x] Test: CASCADE delete behavior defined
-- [x] **Test Suite 5: Complete Schema Validation (4 tests)**
+- [x] **Test Suite 5: Complete Schema Validation (3 tests)**
   - [x] Test: Create complete article with bilingual translations
   - [x] Test: All schema constraints in place
   - [x] Test: Data consistency across schema
@@ -530,7 +531,7 @@ pnpm lint
 - [x] Nullable fields work correctly
 - [x] Articles with different configurations work
 
-#### Test Suite 3: Article Translations Table Schema (9 tests)
+#### Test Suite 3: Article Translations Table Schema (10 tests)
 - [x] Table properly defined
 - [x] All 10 required fields defined and tested
 - [x] Type inference for ArticleTranslation records works
@@ -538,6 +539,7 @@ pnpm lint
 - [x] Multilingual content (FR and EN) supported
 - [x] MDX content format supported
 - [x] All content fields required
+- [x] Timestamp fields (createdAt, updatedAt) defined
 
 #### Test Suite 4: Schema Relations and Constraints (5 tests)
 - [x] Foreign key relationship defined
@@ -546,7 +548,7 @@ pnpm lint
 - [x] Unique constraint validation (slug)
 - [x] CASCADE delete behavior documented
 
-#### Test Suite 5: Complete Schema Validation (4 tests)
+#### Test Suite 5: Complete Schema Validation (3 tests)
 - [x] Complete article with bilingual translations
 - [x] Schema constraints in place
 - [x] Data consistency across schema

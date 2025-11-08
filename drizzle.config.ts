@@ -5,7 +5,8 @@ function getRequiredEnv(key: string): string {
 	if (!value) {
 		throw new Error(
 			`Missing required environment variable: ${key}\n` +
-			`Please copy .env.example to .env.local and fill in your values.`
+			`Please copy .env.example to .env and fill in your values.\n` +
+			`See docs/environment-setup.md for detailed configuration guide.`
 		);
 	}
 	return value;
