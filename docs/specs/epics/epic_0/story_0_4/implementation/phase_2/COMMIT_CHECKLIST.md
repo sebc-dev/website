@@ -74,19 +74,19 @@ Part of Phase 2 - Commit 1/6"
 
 ### Implementation Tasks
 
-- [ ] Import `sqliteTable`, `text`, `integer` from `drizzle-orm/sqlite-core`
-- [ ] Define `articles` table using `sqliteTable()` helper
-- [ ] Add `id` field: text UUID primary key
-- [ ] Add `categoryId` field: text UUID nullable (FK placeholder for Phase 3)
-- [ ] Add `complexity` field: text with ENUM constraint (ComplexityEnum)
-- [ ] Add `status` field: text with ENUM constraint (StatusEnum)
-- [ ] Add `publishedAt` field: integer timestamp nullable
-- [ ] Add `coverImage` field: text nullable
-- [ ] Add `createdAt` field: integer timestamp with default now
-- [ ] Add `updatedAt` field: integer timestamp with default now
-- [ ] Add indexes: `categoryId_idx`, `status_idx`, `publishedAt_idx`
-- [ ] Export table definition
-- [ ] Export inferred TypeScript type: `export type Article = typeof articles.$inferSelect`
+- [x] Import `sqliteTable`, `text`, `integer` from `drizzle-orm/sqlite-core`
+- [x] Define `articles` table using `sqliteTable()` helper
+- [x] Add `id` field: text UUID primary key
+- [x] Add `categoryId` field: text UUID nullable (FK placeholder for Phase 3)
+- [x] Add `complexity` field: text with ENUM constraint (ComplexityEnum)
+- [x] Add `status` field: text with ENUM constraint (StatusEnum)
+- [x] Add `publishedAt` field: integer timestamp nullable
+- [x] Add `coverImage` field: text nullable
+- [x] Add `createdAt` field: integer timestamp with default now
+- [x] Add `updatedAt` field: integer timestamp with default now
+- [x] Add indexes: `categoryId_idx`, `status_idx`, `publishedAt_idx`
+- [x] Export table definition
+- [x] Export inferred TypeScript type: `export type Article = typeof articles.$inferSelect`
 
 ### Validation
 
