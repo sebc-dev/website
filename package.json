@@ -21,6 +21,7 @@
     "db:migrate:remote": "npm run db:check && dotenv -e .env -- wrangler d1 migrations apply DB --remote",
     "db:studio": "dotenv -e .env -- drizzle-kit studio",
     "db:push": "dotenv -e .env -- drizzle-kit push",
+    "db:seed": "wrangler d1 execute DB --local --file=./drizzle/seeds/categories.sql",
     "db:seed:articles": "wrangler d1 execute DB --local --file=./drizzle/seeds/sample-articles.sql",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
