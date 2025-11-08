@@ -1,0 +1,178 @@
+/**
+ * Database Schema Definitions
+ *
+ * This file defines the complete database schema for the sebc.dev blog platform using Drizzle ORM.
+ * Schemas are organized by domain:
+ * - ENUMs: Reusable type definitions
+ * - Articles: Core article metadata
+ * - Translations: Multilingual content
+ *
+ * @see https://orm.drizzle.team/docs/column-types/sqlite
+ */
+
+import { sqliteTable, text, integer, index, unique } from 'drizzle-orm/sqlite-core';
+
+// ============================================================================
+// ENUM Definitions
+// ============================================================================
+
+/**
+ * Article complexity levels
+ *
+ * Indicates the technical difficulty and target audience for an article.
+ * - 'beginner': Introductory content, assumes no prior knowledge
+ * - 'intermediate': Moderate difficulty, assumes basic understanding
+ * - 'advanced': Complex topics, requires strong foundation
+ */
+export const ComplexityEnum = ['beginner', 'intermediate', 'advanced'] as const;
+export type Complexity = (typeof ComplexityEnum)[number];
+
+/**
+ * Article publication status
+ *
+ * Controls article visibility and workflow state.
+ * - 'draft': Work in progress, not visible to public
+ * - 'published': Live article, visible to all users
+ */
+export const StatusEnum = ['draft', 'published'] as const;
+export type Status = (typeof StatusEnum)[number];
+
+// ============================================================================
+// Articles Table
+// ============================================================================
+
+/**
+ * Articles table - Core article metadata shared across translations
+ *
+ * This table stores language-agnostic metadata for blog articles.
+ * Each article can have multiple translations (article_translations table).
+ * Supports bilingual content (FR/EN) with proper foreign key relations.
+ *
+ * Relationships:
+ * - One article -> Many translations (article_translations)
+ * - One article -> One category (categories, created in Phase 3)
+ *
+ * @field id - Unique identifier (UUID or text)
+ * @field categoryId - Foreign key to categories table (nullable until Phase 3)
+ * @field complexity - Technical difficulty level (beginner, intermediate, advanced)
+ * @field status - Publication status (draft, published)
+ * @field publishedAt - Publication timestamp (null for drafts)
+ * @field coverImage - Cover image path/URL (nullable)
+ * @field createdAt - Record creation timestamp
+ * @field updatedAt - Last modification timestamp
+ */
+export const articles = sqliteTable(
+	'articles',
+	{
+		id: text('id').primaryKey(),
+		categoryId: text('category_id'), // Nullable FK placeholder for Phase 3
+		complexity: text('complexity', { enum: ComplexityEnum }).notNull(),
+		status: text('status', { enum: StatusEnum }).notNull().default('draft'),
+		publishedAt: integer('published_at', { mode: 'timestamp' }),
+		coverImage: text('cover_image'),
+		createdAt: integer('created_at', { mode: 'timestamp' })
+			.notNull()
+			.$defaultFn(() => new Date()),
+		updatedAt: integer('updated_at', { mode: 'timestamp' })
+			.notNull()
+			.$defaultFn(() => new Date())
+			.$onUpdate(() => new Date())
+	},
+	(table) => ({
+		// Indexes for query performance
+		categoryIdIdx: index('articles_category_id_idx').on(table.categoryId),
+		statusIdx: index('articles_status_idx').on(table.status),
+		publishedAtIdx: index('articles_published_at_idx').on(table.publishedAt)
+	})
+);
+
+/**
+ * TypeScript type inference for Article records
+ *
+ * Use this type when working with article data in application code.
+ * Automatically inferred from the schema definition above.
+ */
+export type Article = typeof articles.$inferSelect;
+
+// ============================================================================
+// Article Translations Table
+// ============================================================================
+
+/**
+ * Supported languages for article translations
+ *
+ * Platform currently supports bilingual content:
+ * - 'fr': French (primary language)
+ * - 'en': English
+ */
+export const LanguageEnum = ['fr', 'en'] as const;
+export type Language = (typeof LanguageEnum)[number];
+
+/**
+ * Article Translations table - Language-specific content for articles
+ *
+ * This table stores multilingual content for blog articles. Each article in
+ * the articles table can have multiple translations (one per language).
+ *
+ * Relationships:
+ * - Many translations -> One article (foreign key with CASCADE delete)
+ *
+ * Constraints:
+ * - Unique (articleId, language): One translation per language per article
+ * - Unique slug: URL-friendly slugs must be globally unique
+ *
+ * @field id - Unique identifier (UUID or text)
+ * @field articleId - Foreign key to articles.id (CASCADE on delete)
+ * @field language - Content language ('fr' or 'en')
+ * @field title - Article title in this language
+ * @field slug - URL-friendly slug for routing (must be unique)
+ * @field excerpt - Short summary/preview text
+ * @field seoTitle - SEO-optimized title for meta tags
+ * @field seoDescription - SEO meta description
+ * @field contentMdx - Full article content in MDX format
+ * @field createdAt - Record creation timestamp
+ * @field updatedAt - Last modification timestamp
+ */
+export const article_translations = sqliteTable(
+	'article_translations',
+	{
+		id: text('id').primaryKey(),
+		articleId: text('article_id')
+			.notNull()
+			.references(() => articles.id, { onDelete: 'cascade' }),
+		language: text('language', { enum: LanguageEnum }).notNull(),
+		title: text('title').notNull(),
+		slug: text('slug').notNull(),
+		excerpt: text('excerpt').notNull(),
+		seoTitle: text('seo_title').notNull(),
+		seoDescription: text('seo_description').notNull(),
+		contentMdx: text('content_mdx').notNull(),
+		createdAt: integer('created_at', { mode: 'timestamp' })
+			.notNull()
+			.$defaultFn(() => new Date()),
+		updatedAt: integer('updated_at', { mode: 'timestamp' })
+			.notNull()
+			.$defaultFn(() => new Date())
+			.$onUpdate(() => new Date())
+	},
+	(table) => ({
+		// Indexes for query performance
+		articleIdIdx: index('article_translations_article_id_idx').on(table.articleId),
+		languageIdx: index('article_translations_language_idx').on(table.language),
+		slugIdx: index('article_translations_slug_idx').on(table.slug),
+		// Unique constraints
+		uniqueArticleLanguage: unique('article_translations_unique_article_language').on(
+			table.articleId,
+			table.language
+		),
+		uniqueSlug: unique('article_translations_unique_slug').on(table.slug)
+	})
+);
+
+/**
+ * TypeScript type inference for ArticleTranslation records
+ *
+ * Use this type when working with article translation data in application code.
+ * Automatically inferred from the schema definition above.
+ */
+export type ArticleTranslation = typeof article_translations.$inferSelect;

@@ -22,12 +22,21 @@
 	 * D1 Database Binding
 	 * Binds the sebc-dev-db D1 database to env.DB
 	 * Created for Phase 1 - Drizzle ORM Setup
+	 *
+	 * Note: database_id is environment-specific and hardcoded here because:
+	 * 1. Wrangler does not support environment variables in wrangler.jsonc
+	 * 2. This ID is a Cloudflare resource UUID (not a secret credential)
+	 * 3. For multi-environment setup, use separate wrangler files or git branches
+	 *
+	 * IMPORTANT: This database_id must match CLOUDFLARE_DATABASE_ID in your .env file
+	 * See docs/environment-setup.md for complete configuration guide
 	 */
 	"d1_databases": [
 		{
 			"binding": "DB",
 			"database_name": "sebc-dev-db",
-			"database_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+			"database_id": "6615b6d8-2522-46dc-9051-bc0813b42240",
+			"migrations_dir": "drizzle/migrations"
 		}
 	]
 	/**

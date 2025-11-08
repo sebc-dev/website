@@ -1,7 +1,7 @@
 # Phase 2 - Core Database Schema (Articles & Translations)
 
-**Status**: 📋 NOT STARTED
-**Started**: TBD
+**Status**: 🚧 IN PROGRESS
+**Started**: 2025-11-08
 **Target Completion**: TBD
 
 ---
