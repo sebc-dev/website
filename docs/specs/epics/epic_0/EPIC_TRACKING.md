@@ -41,7 +41,7 @@ This epic contains **10 stories** as defined in the PRD:
 | 0.1 | Initialiser le projet Next.js 15 | Next.js 15.4.7 + React 19 + TypeScript 5 + App Router | ✅ COMPLETED | 3 | 3/3 |
 | 0.2 | Configurer adaptateur OpenNext | `@opennextjs/cloudflare` v1.3.0 installé et configuré | ✅ COMPLETED | - | ✅ |
 | 0.3 | Configurer TailwindCSS 4 + shadcn/ui | TailwindCSS 4 + shadcn/ui + palette projet (teal #14B8A6) | ✅ COMPLETED | - | ✅ |
-| 0.4 | Configurer Drizzle ORM + Cloudflare D1 | Schéma initial + migrations setup | 📋 PLANNED | 5 | 0/5 |
+| 0.4 | Configurer Drizzle ORM + Cloudflare D1 | Schéma initial + migrations setup | 📋 PLANNED | 5 | 📋 Phase 2 docs ready |
 | 0.5 | Configurer wrangler.toml avec bindings | Config de base OK, bindings D1/R2/KV/DO manquants | 🚧 IN PROGRESS | - | 40% |
 | 0.6 | Configurer compatibility flags | `nodejs_compat` + `compatibility_date: 2025-03-01` | ✅ COMPLETED | - | ✅ |
 | 0.7 | Mettre en place CI/CD GitHub Actions | Pipeline de tests, build OpenNext, migrations D1, déploiement | 📋 NOT STARTED | - | 0% |
@@ -164,6 +164,20 @@ Track epic-level milestones here:
 - [ ] **Milestone 5**: All tests passing and Epic 0 complete - Target: Week 2
 
 ### Recent Updates
+
+**2025-11-08 (Evening)**: Phase 2 documentation generated for Story 0.4! 📚
+- ✅ **Phase 2 (Core Schema) documentation complete**: 7 files, ~3,700 lines generated
+  - INDEX.md: Navigation hub (~300 lines)
+  - IMPLEMENTATION_PLAN.md: 6 atomic commits strategy (~500 lines)
+  - COMMIT_CHECKLIST.md: Per-commit detailed checklist (~600 lines)
+  - ENVIRONMENT_SETUP.md: Setup guide (~400 lines)
+  - guides/REVIEW.md: Code review guide (~650 lines)
+  - guides/TESTING.md: Integration testing strategy (~550 lines)
+  - validation/VALIDATION_CHECKLIST.md: Final validation (~700 lines)
+- **Atomic commits**: 6 commits (ENUMs → Articles → Translations → Migration → Data → Tests)
+- **Estimated time**: 4.5-6h implementation + 2-3h review
+- **Tech stack**: Next.js 15 + Drizzle ORM + Cloudflare D1 + Vitest
+- Ready for Phase 2 implementation!
 
 **2025-11-08**: Story 0.4 planned via story-phase-planner skill ! 📋
 - ✅ Story 0.4 : Drizzle ORM + Cloudflare D1 planifiée en 5 phases (11 jours estimés)

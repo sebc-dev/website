@@ -101,6 +101,19 @@ This project uses a comprehensive 5-level specification workflow system for mana
 
 These commands are available in `/.claude/commands/` and automate the spec-to-implementation workflow.
 
+## Gitmoji Convention
+
+**IMPORTANT**: Vous devez impérativement utiliser Gitmoji pour tous vos commits. Chaque commit doit commencer par un emoji approprié suivi d'un message descriptif.
+
+La liste complète des emojis disponibles et leurs descriptions se trouve dans le fichier `/docs/gitmoji.md`.
+
+Exemples de commits valides:
+- ✨ Introduce new features
+- 🐛 Fix a bug
+- 📝 Add or update documentation
+- 🔧 Add or update configuration files
+- ♻️ Refactor code
+
 ## Development Notes
 
 - The project is configured for deployment to Cloudflare Workers, not traditional Node.js hosting
