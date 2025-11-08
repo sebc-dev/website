@@ -1,0 +1,2 @@
+-- Empty migration - placeholder for migration journal consistency
+-- This migration was referenced but missing from the repository

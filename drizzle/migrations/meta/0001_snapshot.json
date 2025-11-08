@@ -1,68 +1,9 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "c0e03874-6f2c-4957-b0f6-f1ceb3da619b",
-  "prevId": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "id": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "prevId": "b958f735-35c6-4d0a-91f2-dceb3dae22f8",
   "tables": {
-    "article_tags": {
-      "name": "article_tags",
-      "columns": {
-        "article_id": {
-          "name": "article_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "tag_id": {
-          "name": "tag_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "article_tags_article_id_articles_id_fk": {
-          "name": "article_tags_article_id_articles_id_fk",
-          "tableFrom": "article_tags",
-          "tableTo": "articles",
-          "columnsFrom": [
-            "article_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "article_tags_tag_id_tags_id_fk": {
-          "name": "article_tags_tag_id_tags_id_fk",
-          "tableFrom": "article_tags",
-          "tableTo": "tags",
-          "columnsFrom": [
-            "tag_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "article_tags_article_id_tag_id_pk": {
-          "columns": [
-            "article_id",
-            "tag_id"
-          ],
-          "name": "article_tags_article_id_tag_id_pk"
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
     "article_translations": {
       "name": "article_translations",
       "columns": {
@@ -211,13 +152,6 @@
           "notNull": true,
           "autoincrement": false
         },
-        "category_id": {
-          "name": "category_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
         "complexity": {
           "name": "complexity",
           "type": "text",
@@ -263,13 +197,6 @@
         }
       },
       "indexes": {
-        "articles_category_id_idx": {
-          "name": "articles_category_id_idx",
-          "columns": [
-            "category_id"
-          ],
-          "isUnique": false
-        },
         "articles_status_idx": {
           "name": "articles_status_idx",
           "columns": [
@@ -285,132 +212,6 @@
           "isUnique": false
         }
       },
-      "foreignKeys": {
-        "articles_category_id_categories_id_fk": {
-          "name": "articles_category_id_categories_id_fk",
-          "tableFrom": "articles",
-          "tableTo": "categories",
-          "columnsFrom": [
-            "category_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
-    "categories": {
-      "name": "categories",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "key": {
-          "name": "key",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "name_fr": {
-          "name": "name_fr",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "name_en": {
-          "name": "name_en",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "slug_fr": {
-          "name": "slug_fr",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "slug_en": {
-          "name": "slug_en",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "icon": {
-          "name": "icon",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "color": {
-          "name": "color",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {
-        "categories_key_unique": {
-          "name": "categories_key_unique",
-          "columns": [
-            "key"
-          ],
-          "isUnique": true
-        }
-      },
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
-    "tags": {
-      "name": "tags",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "name_fr": {
-          "name": "name_fr",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "name_en": {
-          "name": "name_en",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        }
-      },
-      "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
