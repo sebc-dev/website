@@ -156,24 +156,24 @@ Part of Phase 2 - Commit 2/6"
 
 ### Implementation Tasks
 
-- [ ] Define `article_translations` table using `sqliteTable()`
-- [ ] Add `id` field: text UUID primary key
-- [ ] Add `articleId` field: text UUID with FK to `articles.id`, ON DELETE CASCADE
-- [ ] Add `language` field: text with values 'fr' | 'en'
-- [ ] Add `title` field: text required
-- [ ] Add `slug` field: text required
-- [ ] Add `excerpt` field: text required
-- [ ] Add `seoTitle` field: text required
-- [ ] Add `seoDescription` field: text required
-- [ ] Add `contentMdx` field: text required
-- [ ] Add `createdAt` field: integer timestamp with default now
-- [ ] Add `updatedAt` field: integer timestamp with default now
-- [ ] Add unique constraint on `(articleId, language)` composite
-- [ ] Add unique index on `slug` field
-- [ ] Add foreign key relation with `references(() => articles.id, { onDelete: 'cascade' })`
-- [ ] Add indexes: `articleId_idx`, `language_idx`, `slug_idx`
-- [ ] Export table definition
-- [ ] Export inferred TypeScript type: `export type ArticleTranslation = typeof article_translations.$inferSelect`
+- [x] Define `article_translations` table using `sqliteTable()`
+- [x] Add `id` field: text UUID primary key
+- [x] Add `articleId` field: text UUID with FK to `articles.id`, ON DELETE CASCADE
+- [x] Add `language` field: text with values 'fr' | 'en'
+- [x] Add `title` field: text required
+- [x] Add `slug` field: text required
+- [x] Add `excerpt` field: text required
+- [x] Add `seoTitle` field: text required
+- [x] Add `seoDescription` field: text required
+- [x] Add `contentMdx` field: text required
+- [x] Add `createdAt` field: integer timestamp with default now
+- [x] Add `updatedAt` field: integer timestamp with default now
+- [x] Add unique constraint on `(articleId, language)` composite
+- [x] Add unique index on `slug` field
+- [x] Add foreign key relation with `references(() => articles.id, { onDelete: 'cascade' })`
+- [x] Add indexes: `articleId_idx`, `language_idx`, `slug_idx`
+- [x] Export table definition
+- [x] Export inferred TypeScript type: `export type ArticleTranslation = typeof article_translations.$inferSelect`
 
 ### Validation
 
