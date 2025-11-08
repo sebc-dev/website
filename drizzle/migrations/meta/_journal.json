@@ -8,6 +8,20 @@
       "when": 1762597616721,
       "tag": "0000_right_sleepwalker",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1762622681039,
+      "tag": "0001_oval_stardust",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1762622783090,
+      "tag": "0002_mushy_photon",
+      "breakpoints": true
     }
   ]
 }
