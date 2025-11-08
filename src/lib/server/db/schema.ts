@@ -76,6 +76,7 @@ export const articles = sqliteTable(
 		updatedAt: integer('updated_at', { mode: 'timestamp' })
 			.notNull()
 			.$defaultFn(() => new Date())
+			.$onUpdate(() => new Date())
 	},
 	(table) => ({
 		// Indexes for query performance
@@ -152,6 +153,7 @@ export const article_translations = sqliteTable(
 		updatedAt: integer('updated_at', { mode: 'timestamp' })
 			.notNull()
 			.$defaultFn(() => new Date())
+			.$onUpdate(() => new Date())
 	},
 	(table) => ({
 		// Indexes for query performance
