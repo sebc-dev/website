@@ -52,3 +52,4 @@ node_modules/
 /playwright/.cache/
 /playwright/.auth/
 /.scd/
+/.env
