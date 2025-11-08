@@ -41,7 +41,7 @@ This epic contains **10 stories** as defined in the PRD:
 | 0.1 | Initialiser le projet Next.js 15 | Next.js 15.4.7 + React 19 + TypeScript 5 + App Router | ✅ COMPLETED | 3 | 3/3 |
 | 0.2 | Configurer adaptateur OpenNext | `@opennextjs/cloudflare` v1.3.0 installé et configuré | ✅ COMPLETED | - | ✅ |
 | 0.3 | Configurer TailwindCSS 4 + shadcn/ui | TailwindCSS 4 + shadcn/ui + palette projet (teal #14B8A6) | ✅ COMPLETED | - | ✅ |
-| 0.4 | Configurer Drizzle ORM + Cloudflare D1 | Schéma initial + migrations setup | 📋 NOT STARTED | - | 0% |
+| 0.4 | Configurer Drizzle ORM + Cloudflare D1 | Schéma initial + migrations setup | 📋 PLANNED | 5 | 0/5 |
 | 0.5 | Configurer wrangler.toml avec bindings | Config de base OK, bindings D1/R2/KV/DO manquants | 🚧 IN PROGRESS | - | 40% |
 | 0.6 | Configurer compatibility flags | `nodejs_compat` + `compatibility_date: 2025-03-01` | ✅ COMPLETED | - | ✅ |
 | 0.7 | Mettre en place CI/CD GitHub Actions | Pipeline de tests, build OpenNext, migrations D1, déploiement | 📋 NOT STARTED | - | 0% |
@@ -104,10 +104,11 @@ cat docs/specs/epics/epic_0/EPIC_TRACKING.md
 
 - **Stories Started**: 6 / 10
 - **Stories Completed**: 5 / 10 ✅
+- **Stories Planned**: 1 / 10 (Story 0.4)
 - **Stories In Progress**: 1 / 10
-- **Stories Not Started**: 4 / 10
-- **Total Phases**: 3 (Story 0.1 planned)
-- **Phases Completed**: 3 / 3 (Story 0.1)
+- **Stories Not Started**: 3 / 10
+- **Total Phases**: 8 (Story 0.1: 3 phases, Story 0.4: 5 phases)
+- **Phases Completed**: 3 / 8 (Story 0.1: 3/3, Story 0.4: 0/5)
 
 **Epic Completion**: 50% (5 stories complétées / 10 total)
 **Weighted Progress**: ~54% (incluant la story partielle 0.5)
@@ -164,6 +165,17 @@ Track epic-level milestones here:
 
 ### Recent Updates
 
+**2025-11-08**: Story 0.4 planned via story-phase-planner skill ! 📋
+- ✅ Story 0.4 : Drizzle ORM + Cloudflare D1 planifiée en 5 phases (11 jours estimés)
+  - Phase 1: Drizzle Config & D1 Setup (2d)
+  - Phase 2: Core Schema - Articles + Translations (3d)
+  - Phase 3: Taxonomy Schema - Categories, Tags (2d)
+  - Phase 4: Validation Chain - drizzle-zod (2d)
+  - Phase 5: Access Layer + Integration Tests (2d)
+- **Total Phases**: 8 (Story 0.1: 3, Story 0.4: 5)
+- Documentation complète générée: story spec + PHASES_PLAN.md (~1200 lines)
+- Prêt pour génération de docs détaillées par phase avec /generate-phase-doc
+
 **2025-11-06 (Late Evening)**: Stories 0.3 et 0.10 complétées à 100% ! 🎉
 - ✅ Story 0.3 : shadcn/ui installé + palette projet appliquée (teal + typographies Nunito Sans/JetBrains Mono)
 - ✅ Story 0.10 : Vitest configuré avec scripts + tests unitaires + Playwright E2E
@@ -197,7 +209,8 @@ Track epic-level milestones here:
 - Story 0.10: `docs/specs/epics/epic_0/story_0_10/story_0.10.md` (created via /plan-story)
 
 ### Phase Plans
-- Story 0.1: `docs/specs/epics/epic_0/story_0_1/implementation/PHASES_PLAN.md` ✅ PLANNED
+- Story 0.1: `docs/specs/epics/epic_0/story_0_1/implementation/PHASES_PLAN.md` ✅ PLANNED (3 phases)
+- Story 0.4: `docs/specs/epics/epic_0/story_0_4/implementation/PHASES_PLAN.md` ✅ PLANNED (5 phases)
 - Links for other stories will be added as they are planned
 
 ### Related Documentation
