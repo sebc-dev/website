@@ -60,26 +60,34 @@ export const insertArticleSchema = createInsertSchema(articles)
  * - seoDescription: Max 160 characters (Google description limit)
  */
 const baseArticleTranslationSchema = createInsertSchema(article_translations)
+
+// Type assertion needed because drizzle-zod schemas don't expose .shape in their type definitions
+// but it's available at runtime
+type SchemaWithShape = typeof baseArticleTranslationSchema & {
+	shape: {
+		slug: z.ZodString
+		title: z.ZodString
+		excerpt: z.ZodString
+		seoTitle: z.ZodString
+		seoDescription: z.ZodString
+	}
+}
+
 export const insertArticleTranslationSchema = baseArticleTranslationSchema.extend({
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	slug: (baseArticleTranslationSchema as any).shape.slug
+	slug: (baseArticleTranslationSchema as SchemaWithShape).shape.slug
 		.min(1, 'Slug is required')
 		.max(200, 'Slug must be 200 characters or less')
 		.regex(/^[a-z0-9-]+$/, 'Slug must be lowercase alphanumeric with hyphens only'),
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	title: (baseArticleTranslationSchema as any).shape.title
+	title: (baseArticleTranslationSchema as SchemaWithShape).shape.title
 		.min(1, 'Title is required')
 		.max(200, 'Title must be 200 characters or less'),
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	excerpt: (baseArticleTranslationSchema as any).shape.excerpt
+	excerpt: (baseArticleTranslationSchema as SchemaWithShape).shape.excerpt
 		.min(1, 'Excerpt is required')
 		.max(500, 'Excerpt must be 500 characters or less'),
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	seoTitle: (baseArticleTranslationSchema as any).shape.seoTitle
+	seoTitle: (baseArticleTranslationSchema as SchemaWithShape).shape.seoTitle
 		.min(1, 'SEO title is required')
 		.max(60, 'SEO title should be 60 characters or less for optimal display'),
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	seoDescription: (baseArticleTranslationSchema as any).shape.seoDescription
+	seoDescription: (baseArticleTranslationSchema as SchemaWithShape).shape.seoDescription
 		.min(1, 'SEO description is required')
 		.max(160, 'SEO description should be 160 characters or less for optimal display')
 })
@@ -158,6 +166,13 @@ export const updateArticleTranslationSchema = insertArticleTranslationSchema.par
 // ============================================================================
 
 /**
+ * Helper type to infer types from drizzle-zod schemas
+ * drizzle-zod schemas are runtime-compatible with Zod but don't satisfy
+ * the ZodType constraint at compile-time, so we use this workaround
+ */
+type InferDrizzleZod<T> = T extends { _output: infer O } ? O : never
+
+/**
  * TypeScript type for inserting articles
  * Automatically inferred from insertArticleSchema
  *
@@ -170,85 +185,73 @@ export const updateArticleTranslationSchema = insertArticleTranslationSchema.par
  * }
  * ```
  */
-// @ts-expect-error - drizzle-zod schema types don't perfectly align with Zod's ZodType
-export type InsertArticle = z.infer<typeof insertArticleSchema>
+export type InsertArticle = InferDrizzleZod<typeof insertArticleSchema>
 
 /**
  * TypeScript type for selecting articles
  * Automatically inferred from selectArticleSchema
  */
-// @ts-expect-error - drizzle-zod schema types don't perfectly align with Zod's ZodType
-export type SelectArticle = z.infer<typeof selectArticleSchema>
+export type SelectArticle = InferDrizzleZod<typeof selectArticleSchema>
 
 /**
  * TypeScript type for inserting article translations
  * Automatically inferred from insertArticleTranslationSchema
  */
-// @ts-expect-error - drizzle-zod schema types don't perfectly align with Zod's ZodType
-export type InsertArticleTranslation = z.infer<typeof insertArticleTranslationSchema>
+export type InsertArticleTranslation = InferDrizzleZod<typeof insertArticleTranslationSchema>
 
 /**
  * TypeScript type for selecting article translations
  * Automatically inferred from selectArticleTranslationSchema
  */
-// @ts-expect-error - drizzle-zod schema types don't perfectly align with Zod's ZodType
-export type SelectArticleTranslation = z.infer<typeof selectArticleTranslationSchema>
+export type SelectArticleTranslation = InferDrizzleZod<typeof selectArticleTranslationSchema>
 
 /**
  * TypeScript type for inserting categories
  * Automatically inferred from insertCategorySchema
  */
-// @ts-expect-error - drizzle-zod schema types don't perfectly align with Zod's ZodType
-export type InsertCategory = z.infer<typeof insertCategorySchema>
+export type InsertCategory = InferDrizzleZod<typeof insertCategorySchema>
 
 /**
  * TypeScript type for selecting categories
  * Automatically inferred from selectCategorySchema
  */
-// @ts-expect-error - drizzle-zod schema types don't perfectly align with Zod's ZodType
-export type SelectCategory = z.infer<typeof selectCategorySchema>
+export type SelectCategory = InferDrizzleZod<typeof selectCategorySchema>
 
 /**
  * TypeScript type for inserting tags
  * Automatically inferred from insertTagSchema
  */
-// @ts-expect-error - drizzle-zod schema types don't perfectly align with Zod's ZodType
-export type InsertTag = z.infer<typeof insertTagSchema>
+export type InsertTag = InferDrizzleZod<typeof insertTagSchema>
 
 /**
  * TypeScript type for selecting tags
  * Automatically inferred from selectTagSchema
  */
-// @ts-expect-error - drizzle-zod schema types don't perfectly align with Zod's ZodType
-export type SelectTag = z.infer<typeof selectTagSchema>
+export type SelectTag = InferDrizzleZod<typeof selectTagSchema>
 
 /**
  * TypeScript type for inserting article tags
  * Automatically inferred from insertArticleTagSchema
  */
-// @ts-expect-error - drizzle-zod schema types don't perfectly align with Zod's ZodType
-export type InsertArticleTag = z.infer<typeof insertArticleTagSchema>
+export type InsertArticleTag = InferDrizzleZod<typeof insertArticleTagSchema>
 
 /**
  * TypeScript type for selecting article tags
  * Automatically inferred from selectArticleTagSchema
  */
-// @ts-expect-error - drizzle-zod schema types don't perfectly align with Zod's ZodType
-export type SelectArticleTag = z.infer<typeof selectArticleTagSchema>
+export type SelectArticleTag = InferDrizzleZod<typeof selectArticleTagSchema>
 
 /**
  * TypeScript type for updating articles
  * All fields optional - automatically inferred from updateArticleSchema
  */
-// @ts-expect-error - drizzle-zod schema types don't perfectly align with Zod's ZodType
-export type UpdateArticle = z.infer<typeof updateArticleSchema>
+export type UpdateArticle = InferDrizzleZod<typeof updateArticleSchema>
 
 /**
  * TypeScript type for updating article translations
  * All fields optional - automatically inferred from updateArticleTranslationSchema
  */
-// @ts-expect-error - drizzle-zod schema types don't perfectly align with Zod's ZodType
-export type UpdateArticleTranslation = z.infer<typeof updateArticleTranslationSchema>
+export type UpdateArticleTranslation = InferDrizzleZod<typeof updateArticleTranslationSchema>
 
 // ============================================================================
 // VALIDATION HELPERS
@@ -272,13 +275,11 @@ export type UpdateArticleTranslation = z.infer<typeof updateArticleTranslationSc
  * }
  * ```
  */
-export function validateData<T>(
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	schema: any,
+export function validateData<TSchema extends z.ZodTypeAny>(
+	schema: TSchema,
 	data: unknown
-): { success: true; data: T } | { success: false; errors: z.ZodError } {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const result = schema.safeParse(data) as any
+): { success: true; data: z.infer<TSchema> } | { success: false; errors: z.ZodError } {
+	const result = schema.safeParse(data)
 
 	if (result.success) {
 		return { success: true, data: result.data }
@@ -303,7 +304,8 @@ export function validateData<T>(
  * ```
  */
 export function validateArticleInsert(data: unknown) {
-	return validateData<InsertArticle>(insertArticleSchema, data)
+	// drizzle-zod schemas are runtime-compatible with Zod
+	return validateData(insertArticleSchema as unknown as z.ZodTypeAny, data)
 }
 
 /**
@@ -327,7 +329,8 @@ export function validateArticleInsert(data: unknown) {
  * ```
  */
 export function validateTranslationInsert(data: unknown) {
-	return validateData<InsertArticleTranslation>(insertArticleTranslationSchema, data)
+	// drizzle-zod schemas are runtime-compatible with Zod
+	return validateData(insertArticleTranslationSchema as unknown as z.ZodTypeAny, data)
 }
 
 /**
@@ -345,7 +348,8 @@ export function validateTranslationInsert(data: unknown) {
  * ```
  */
 export function validateArticleUpdate(data: unknown) {
-	return validateData<UpdateArticle>(updateArticleSchema, data)
+	// drizzle-zod schemas are runtime-compatible with Zod
+	return validateData(updateArticleSchema as unknown as z.ZodTypeAny, data)
 }
 
 /**
@@ -363,7 +367,8 @@ export function validateArticleUpdate(data: unknown) {
  * ```
  */
 export function validateTranslationUpdate(data: unknown) {
-	return validateData<UpdateArticleTranslation>(updateArticleTranslationSchema, data)
+	// drizzle-zod schemas are runtime-compatible with Zod
+	return validateData(updateArticleTranslationSchema as unknown as z.ZodTypeAny, data)
 }
 
 /**
@@ -385,13 +390,11 @@ export function validateTranslationUpdate(data: unknown) {
 export function formatZodErrors(errors: z.ZodError): Record<string, string> {
 	const formatted: Record<string, string> = {}
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const errorArray = (errors as any).errors || []
-	errorArray.forEach((error: any) => {
-		const path = (error.path || []).join('.')
+	errors.issues.forEach((issue: z.ZodIssue) => {
+		const path = issue.path.join('.')
 		// Only store the first error per field
 		if (!formatted[path]) {
-			formatted[path] = error.message || 'Validation error'
+			formatted[path] = issue.message
 		}
 	})
 
