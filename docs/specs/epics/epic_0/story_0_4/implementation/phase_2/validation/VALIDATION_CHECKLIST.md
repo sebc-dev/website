@@ -26,6 +26,7 @@ Complete validation checklist before marking Phase 2 as complete.
 - [ ] TypeScript autocomplete works for all table fields
 
 **Validation**:
+
 ```bash
 pnpm tsc --noEmit
 ```
@@ -45,6 +46,7 @@ pnpm tsc --noEmit
 - [ ] Error handling is robust (in tests)
 
 **Validation**:
+
 ```bash
 pnpm lint
 ```
@@ -56,6 +58,7 @@ pnpm lint
 ## ✅ 4. Database Schema
 
 ### Articles Table
+
 - [ ] `articles` table defined with 8 fields
 - [ ] `id` field: text UUID primary key
 - [ ] `categoryId` field: text UUID nullable (comment explains Phase 3 dependency)
@@ -68,6 +71,7 @@ pnpm lint
 - [ ] Indexes on categoryId, status, publishedAt
 
 ### Article Translations Table
+
 - [ ] `article_translations` table defined with 10 fields
 - [ ] `id` field: text UUID primary key
 - [ ] `articleId` field: text UUID with FK to articles.id, ON DELETE CASCADE
@@ -79,6 +83,7 @@ pnpm lint
 - [ ] Indexes on articleId, language, slug
 
 **Validation**:
+
 ```bash
 # Verify schema file exists
 ls src/lib/server/db/schema.ts
@@ -103,6 +108,7 @@ pnpm tsc --noEmit
 - [ ] Tables exist and are queryable
 
 **Validation**:
+
 ```bash
 # Generate migration (if not already done)
 pnpm db:generate
@@ -130,6 +136,7 @@ wrangler d1 execute DB --local --command="SELECT name FROM sqlite_master WHERE t
 - [ ] Data inserted correctly (1 article, 2 translations)
 
 **Validation**:
+
 ```bash
 # Run seed
 pnpm db:seed:articles
@@ -160,6 +167,7 @@ wrangler d1 execute DB --local --command="SELECT * FROM article_translations WHE
 - [ ] Database reset works in beforeEach
 
 **Validation**:
+
 ```bash
 # Run all integration tests
 pnpm test tests/integration/articles-schema.test.ts
@@ -180,6 +188,7 @@ pnpm test:coverage tests/integration/articles-schema.test.ts
 - [ ] Imports are organized (Drizzle imports at top, etc.)
 
 **Validation**:
+
 ```bash
 # Linting
 pnpm lint
@@ -216,6 +225,7 @@ pnpm format:check
 - [ ] Schema file location matches drizzle.config.ts (`src/lib/server/db/schema.ts`)
 
 **Integration Tests**:
+
 ```bash
 # Verify Drizzle config
 cat drizzle.config.ts | grep "schema.*src/lib/server/db/schema.ts"
@@ -231,12 +241,14 @@ cat package.json | grep "db:seed:articles"
 ## ✅ 11. Security and Performance
 
 ### Security
+
 - [ ] No sensitive data in seed file
 - [ ] No hardcoded credentials or tokens
 - [ ] SQL injection prevented (using Drizzle ORM, not raw SQL)
 - [ ] Proper use of parameterized queries in tests
 
 ### Performance
+
 - [ ] Indexes added for common query patterns (categoryId, status, publishedAt, articleId, language, slug)
 - [ ] No unnecessary indexes (only those that improve query performance)
 - [ ] Foreign key relations properly indexed
@@ -252,6 +264,7 @@ cat package.json | grep "db:seed:articles"
 - [ ] No hardcoded database paths or connection strings
 
 **Validation**:
+
 ```bash
 # Verify local D1 works
 wrangler d1 execute DB --local --command="SELECT 1;"
@@ -331,16 +344,16 @@ pnpm test:coverage tests/integration/articles-schema.test.ts
 
 ## 📊 Success Metrics
 
-| Metric | Target | Actual | Status |
-|--------|--------|--------|--------|
-| Commits | 6 | - | ⏳ |
-| Type Coverage | 100% | - | ⏳ |
-| Test Coverage | >80% | - | ⏳ |
-| Linting Status | ✅ Pass | - | ⏳ |
-| Migration Status | ✅ Applied | - | ⏳ |
-| Integration Tests | ✅ Pass (15+) | - | ⏳ |
-| Tables Created | 2 (articles, article_translations) | - | ⏳ |
-| Seed Data | 1 article + 2 translations | - | ⏳ |
+| Metric            | Target                             | Actual | Status |
+| ----------------- | ---------------------------------- | ------ | ------ |
+| Commits           | 6                                  | -      | ⏳     |
+| Type Coverage     | 100%                               | -      | ⏳     |
+| Test Coverage     | >80%                               | -      | ⏳     |
+| Linting Status    | ✅ Pass                            | -      | ⏳     |
+| Migration Status  | ✅ Applied                         | -      | ⏳     |
+| Integration Tests | ✅ Pass (15+)                      | -      | ⏳     |
+| Tables Created    | 2 (articles, article_translations) | -      | ⏳     |
+| Seed Data         | 1 article + 2 translations         | -      | ⏳     |
 
 ---
 
@@ -359,6 +372,7 @@ Select one:
 ## 📝 Next Steps
 
 ### If Approved ✅
+
 1. [ ] Update INDEX.md status to ✅ COMPLETED
 2. [ ] Update phase completion date in INDEX.md
 3. [ ] Update EPIC_TRACKING.md (Phase 2 complete, 2/5 phases done)
@@ -368,12 +382,14 @@ Select one:
 7. [ ] Proceed to Phase 3: Taxonomy Schemas (Categories, Tags, ArticleTags)
 
 ### If Changes Requested 🔧
+
 1. [ ] Address all feedback items listed above
 2. [ ] Re-run validation commands
 3. [ ] Update relevant documentation if needed
 4. [ ] Request re-review
 
 ### If Rejected ❌
+
 1. [ ] Document all major issues clearly
 2. [ ] Schedule discussion with tech lead
 3. [ ] Plan rework strategy (may need to adjust commits)

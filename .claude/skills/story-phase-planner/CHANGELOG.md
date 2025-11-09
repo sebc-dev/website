@@ -65,12 +65,14 @@ This version removes the arbitrary "3-7 phases" limitation and introduces intell
 ### Philosophy Shift
 
 **Before (1.0.0)**:
+
 - Recommended 3-7 phases per story
 - Teams might artificially combine or split work to fit this range
 - Less flexibility for very simple or very complex stories
 - "Goldilocks sizing" was too prescriptive
 
 **After (1.1.0)**:
+
 - Adaptive sizing based on actual story complexity
 - 1 phase for tiny stories, 10+ for very complex epics
 - Focus on phase quality (independence, value, testability)
@@ -80,12 +82,14 @@ This version removes the arbitrary "3-7 phases" limitation and introduces intell
 ### Migration Notes (from 1.0.0 to 1.1.0)
 
 **Automatic Migration**:
+
 - ✅ No action required for existing projects
 - ✅ Existing PHASES_PLAN.md documents still valid
 - ✅ Generated documentation format unchanged
 - ✅ All functionality preserved and enhanced
 
 **Behavioral Changes**:
+
 - Skill may now generate plans with fewer than 3 phases (for simple stories)
 - Skill may now generate plans with more than 7 phases (for complex stories)
 - Phase count will better match actual story complexity
@@ -93,6 +97,7 @@ This version removes the arbitrary "3-7 phases" limitation and introduces intell
 - Skill may suggest splitting very complex stories (10+ phases) into multiple stories
 
 **Benefits of Upgrading**:
+
 - ✅ More realistic story planning
 - ✅ Better adaptation to actual project requirements
 - ✅ Less artificial splitting or combining of phases
@@ -151,12 +156,14 @@ This is the inaugural release of the **story-phase-planner** skill, designed to 
 ### Features
 
 #### Story Analysis
+
 - Reads story specifications from markdown files
 - Extracts objectives, acceptance criteria, features
 - Identifies technical requirements and constraints
 - Assesses user value and business impact
 
 #### Phase Decomposition
+
 - Breaks down stories into 3-7 implementable phases
 - Applies proven phase patterns:
   1. Foundation (types, schemas, config)
@@ -168,18 +175,21 @@ This is the inaugural release of the **story-phase-planner** skill, designed to 
   7. Polish (performance, accessibility, docs)
 
 #### Dependency Analysis
+
 - Creates dependency graphs showing phase relationships
 - Identifies critical path for sequential phases
 - Highlights parallelization opportunities
 - Documents blocking dependencies clearly
 
 #### Risk Assessment
+
 - Assesses risk level for each phase (🟢 Low / 🟡 Medium / 🔴 High)
 - Identifies risk factors (technical unknowns, performance, security)
 - Provides mitigation strategies
 - Documents contingency plans
 
 #### Estimation
+
 - Duration estimates in days (based on complexity)
 - Commit count estimates (typically 3-7 per phase)
 - Resource requirements (developers, reviewers, DevOps)
@@ -188,6 +198,7 @@ This is the inaugural release of the **story-phase-planner** skill, designed to 
 ### Generated Output
 
 **PHASES_PLAN.md** includes:
+
 - Story overview with original spec reference
 - Phase breakdown strategy rationale
 - Detailed summary for each phase (objective, scope, deliverables, dependencies, estimates, risks)
@@ -203,16 +214,19 @@ This is the inaugural release of the **story-phase-planner** skill, designed to 
 **Two-Tier Documentation Strategy**:
 
 **Tier 1 - Strategic (this skill)**:
+
 - `PHASES_PLAN.md`: High-level overview, cross-phase coordination
 - Story-level success criteria
 - Overall timeline and dependencies
 
 **Tier 2 - Tactical ([phase-doc-generator](../phase-doc-generator/))**:
+
 - 7 detailed docs per phase
 - Commit-by-commit implementation
 - Specific technical validations
 
 **Complete Workflow**:
+
 ```
 Story Spec → [story-phase-planner] → PHASES_PLAN.md
     ↓
@@ -224,18 +238,21 @@ Implementation → Validation → Next phase
 ### Examples Included
 
 #### Example 1: E-Commerce Product Catalog
+
 - **Story**: Browse and search products by category with filters
 - **Phases**: 5 (data models, APIs, search logic, UI, tests)
 - **Duration**: 15 days, ~25 commits
 - **Key risks**: Search performance (Phase 3 - High risk)
 
 #### Example 2: User Authentication
+
 - **Story**: Sign up, log in, manage profile securely
 - **Phases**: 4 (schema, JWT service, API endpoints, UI)
 - **Duration**: 12 days, ~20 commits
 - **Key risks**: Security implementation (Phase 2 - High risk)
 
 #### Example 3: Real-time Chat
+
 - **Story**: Send and receive real-time messages
 - **Phases**: 6 (WebSocket, models, service, UI, presence, tests)
 - **Duration**: 16 days, ~30 commits
@@ -244,12 +261,14 @@ Implementation → Validation → Next phase
 ### Configuration
 
 **Default Settings**:
+
 - Output directory: `docs/implementation/story_X_Y/`
 - Phase count: 3-7 (optimal range)
 - Phase duration: 2-5 days each
 - Phase commits: 3-7 per phase
 
 **Adaptive Behavior**:
+
 - Adjusts phase count based on story complexity
 - Considers tech stack for dependency analysis
 - Adapts estimates to team size when provided
@@ -258,18 +277,21 @@ Implementation → Validation → Next phase
 ### Use Cases
 
 **For Product Owners**:
+
 - Understand implementation complexity
 - See value delivery progression
 - Plan releases around phases
 - Track progress at phase granularity
 
 **For Tech Leads**:
+
 - Structure work into reviewable chunks
 - Identify technical dependencies early
 - Assess and mitigate risks
 - Plan resource allocation
 
 **For Developers**:
+
 - Clear roadmap from story to implementation
 - Understand "big picture" before diving in
 - Know what depends on what
@@ -278,6 +300,7 @@ Implementation → Validation → Next phase
 ### Technical Details
 
 **YAML Frontmatter Structure**:
+
 ```yaml
 ---
 name: story-phase-planner
@@ -293,6 +316,7 @@ allowed-tools: Read, Write, Glob, Grep, Bash
 ```
 
 **Why These Choices**:
+
 1. **Trigger Keywords**: Enables automatic discovery when users need story planning
 2. **Tool Restrictions**: Ensures skill only reads specs and writes plans (no code modification)
 3. **Model-Invoked**: Natural workflow - user describes need, Claude activates skill
@@ -305,16 +329,19 @@ allowed-tools: Read, Write, Glob, Grep, Bash
 ### [1.1.0] - Planned
 
 **Enhanced Analysis**:
+
 - Automatic detection of story anti-patterns (too large, too vague)
 - Suggestions for splitting oversized stories
 - Story completeness validation (missing acceptance criteria, etc.)
 
 **Better Visualizations**:
+
 - ASCII dependency diagrams in PHASES_PLAN.md
 - Gantt-style timeline representation
 - Resource utilization charts
 
 **Template Customization**:
+
 - Project-specific phase patterns
 - Custom risk assessment criteria
 - Configurable estimation models
@@ -322,11 +349,13 @@ allowed-tools: Read, Write, Glob, Grep, Bash
 ### [1.2.0] - Planned
 
 **Integration Enhancements**:
+
 - Automatic cross-referencing with existing phases
 - Dependency detection across stories
 - Epic-level planning (multiple stories)
 
 **AI-Powered Insights**:
+
 - Suggest phase breakdown based on similar past stories
 - Predict risks based on project history
 - Recommend optimal phase ordering
@@ -334,12 +363,14 @@ allowed-tools: Read, Write, Glob, Grep, Bash
 ### [2.0.0] - Future
 
 **Advanced Features**:
+
 - Multi-story epic planning
 - Resource leveling across concurrent stories
 - Critical path method (CPM) analysis
 - Monte Carlo duration estimation
 
 **Collaboration Features**:
+
 - Team capacity planning
 - Skill-based phase assignment
 - Parallel work optimization
@@ -352,6 +383,7 @@ allowed-tools: Read, Write, Glob, Grep, Bash
 ### From Manual Story Planning
 
 **Before (Manual)**:
+
 - Read story spec
 - Brainstorm phase breakdown (2-4 hours)
 - Write rough notes
@@ -359,12 +391,14 @@ allowed-tools: Read, Write, Glob, Grep, Bash
 - Estimates frequently wrong
 
 **After (story-phase-planner)**:
+
 - Provide story spec path (30 seconds)
 - Get comprehensive PHASES_PLAN.md (5-10 minutes)
 - Includes dependencies, risks, estimates automatically
 - Professional format, ready to share with team
 
 **Benefits**:
+
 - ✅ Time saved: 2-4 hours per story
 - ✅ Consistent structure across all stories
 - ✅ Fewer missed dependencies
@@ -381,6 +415,7 @@ If you're already using `phase-doc-generator`:
 4. **Better coordination**: Understand cross-phase dependencies
 
 **Workflow Enhancement**:
+
 ```
 Before:
 Story Spec → [manual planning] → [phase-doc-generator] × N
@@ -422,6 +457,7 @@ If you encounter problems or have suggestions:
    **Solution**: Include challenges, constraints, and concerns in story spec
 
 For feature requests or bug reports, document:
+
 - Story specification used
 - Generated PHASES_PLAN.md
 - Expected vs actual output

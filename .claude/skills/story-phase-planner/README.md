@@ -9,6 +9,7 @@ A Claude Code **Agent Skill** that analyzes user stories and creates strategic i
 ## 🎯 What It Does
 
 Analyzes a user story specification and creates a **strategic phases breakdown plan** that:
+
 - Decomposes story into optimal number of phases (adaptive sizing: 1-20+ based on complexity)
 - Identifies technical dependencies and parallelization opportunities
 - Provides realistic estimates for duration, complexity, and risk
@@ -47,6 +48,7 @@ Just describe what you need using trigger keywords:
 ```
 
 Claude will automatically detect and invoke the skill based on these keywords:
+
 - "plan story phases"
 - "break down story"
 - "story planning"
@@ -68,6 +70,7 @@ Spec location: docs/specs/epics/epic_1/story_1_1.md
 ```
 
 The skill will ask you for:
+
 1. Story reference (e.g., "Epic 1 Story 1.1")
 2. PRD path (default: `docs/specs/PRD.md`)
 3. Output directory (default: `docs/specs/epics/epic_X/story_X_Y/`)
@@ -80,6 +83,7 @@ The skill will ask you for:
 ### Model-Invoked Skill Architecture
 
 This is a **model-invoked skill**, meaning Claude autonomously decides when to use it based on:
+
 1. **Trigger keywords** in your request
 2. **Context matching** with the skill's capabilities
 3. **Task requirements** aligning with story planning
@@ -98,6 +102,7 @@ This is a **model-invoked skill**, meaning Claude autonomously decides when to u
 The skill extracts stories directly from your PRD located at `docs/specs/PRD.md`.
 
 Your PRD should contain:
+
 - **Epic sections**: Organized list of epics
 - **Story descriptions**: For each story within an epic
 - **Acceptance Criteria**: Referenced as EF (Functional) and ENF (Non-Functional) requirements
@@ -112,8 +117,10 @@ Your PRD should contain:
 ## Exigences Fonctionnelles
 
 ### EF1 — Feature Name
+
 **Description**: Feature description
 **Critères d'acceptation**:
+
 - CA1: Criterion 1
 - CA2: Criterion 2
 
@@ -142,6 +149,7 @@ docs/specs/epics/epic_X/story_X_Y/
 ### story_X.Y.md Contents
 
 **Story specification extracted from PRD**:
+
 - Story description and user value
 - Acceptance criteria (EF/ENF references)
 - Technical requirements
@@ -151,11 +159,13 @@ docs/specs/epics/epic_X/story_X_Y/
 ### PHASES_PLAN.md Contents
 
 **Strategic Overview**:
+
 - Story objectives and acceptance criteria
 - Phase breakdown rationale
 - Overall timeline and resources
 
 **Per-Phase Details**:
+
 - Objective and scope
 - Key deliverables and files affected
 - Dependencies (requires, blocks)
@@ -164,6 +174,7 @@ docs/specs/epics/epic_X/story_X_Y/
 - Technical notes
 
 **Coordination**:
+
 - Dependency graph
 - Implementation order
 - Parallelization opportunities
@@ -178,17 +189,20 @@ docs/specs/epics/epic_X/story_X_Y/
 ### The "Goldilocks" Phase Size
 
 **Too Small** (<1 day, <3 commits):
+
 - ❌ Too much overhead
 - ❌ Context switching costs
 - ❌ Review fatigue
 
 **Too Large** (>7 days, >15 commits):
+
 - ❌ Hard to review
 - ❌ Risky to roll back
 - ❌ Delayed integration
 - ❌ Merge conflicts
 
 **Typically Optimal** (2-5 days, adaptive commit count):
+
 - ✅ Focused and reviewable
 - ✅ Safe rollback scope
 - ✅ Progressive integration
@@ -198,6 +212,7 @@ docs/specs/epics/epic_X/story_X_Y/
 ### Phase Independence Test
 
 A good phase should answer "yes" to:
+
 1. Can this phase be tested independently?
 2. Can this phase be reviewed in <2 hours?
 3. Does this phase deliver tangible value?
@@ -268,9 +283,11 @@ A good phase should answer "yes" to:
 ### Two-Tier Documentation Strategy
 
 **Tier 1 - Strategic (this skill)**:
+
 ```
 PRD → [story-phase-planner] → story_X.Y.md + PHASES_PLAN.md
 ```
+
 - Extract story from PRD
 - Create story specification
 - High-level phase overview
@@ -279,9 +296,11 @@ PRD → [story-phase-planner] → story_X.Y.md + PHASES_PLAN.md
 - Story-level success criteria
 
 **Tier 2 - Tactical (phase-doc-generator)**:
+
 ```
 PHASES_PLAN.md → [phase-doc-generator] × N → Phase docs (7 files each)
 ```
+
 - Commit-by-commit implementation
 - Specific technical validations
 - Phase-level success criteria
@@ -321,6 +340,7 @@ PHASES_PLAN.md → [phase-doc-generator] × N → Phase docs (7 files each)
 ```
 
 **Key File**: `SKILL.md` contains:
+
 - **YAML Frontmatter**: Metadata (name, description, version, allowed-tools)
 - **Instructions**: Complete agent workflow and templates
 - **Examples**: Concrete use cases
@@ -335,6 +355,7 @@ Phase commits: Adaptive per phase (1-20+ based on phase complexity)
 ### Customization
 
 The skill adapts based on:
+
 - Story complexity (more phases for complex stories)
 - Tech stack (considers framework-specific dependencies)
 - Team size (adjusts parallelization suggestions)
@@ -372,12 +393,14 @@ The skill adapts based on:
 These two skills work together:
 
 **story-phase-planner** (this skill):
+
 - Strategic planning
 - Phase decomposition
 - High-level estimates
 - Dependency analysis
 
 **phase-doc-generator**:
+
 - Tactical implementation
 - Atomic commit breakdown
 - Detailed checklists
@@ -386,6 +409,7 @@ These two skills work together:
 **Together**: Complete documentation from strategy to execution.
 
 **Workflow**:
+
 1. Start with `story-phase-planner` to create PHASES_PLAN.md
 2. For each phase in the plan, use `phase-doc-generator` to create detailed docs
 3. Implement phase by phase following the detailed documentation

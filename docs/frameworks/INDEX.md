@@ -177,16 +177,16 @@ START → QUICK_START.md
 
 **Lecteur cible:** Tout le monde (vue d'ensemble)
 
-| Section | Contenu |
-|---------|---------|
-| Overview | Qu'est-ce que c'est, pourquoi ça existe |
-| Documents | Résumé des 5 fichiers |
-| Workflow | 3 scénarios d'utilisation |
-| Lecture | Parcours recommandés par role |
-| Concepts | Les 8 types de propriétés |
-| Cas d'usage | 3 exemples d'utilisation |
-| Config | YAML pour agents IA |
-| Prochaines étapes | Court/moyen/long terme |
+| Section           | Contenu                                 |
+| ----------------- | --------------------------------------- |
+| Overview          | Qu'est-ce que c'est, pourquoi ça existe |
+| Documents         | Résumé des 5 fichiers                   |
+| Workflow          | 3 scénarios d'utilisation               |
+| Lecture           | Parcours recommandés par role           |
+| Concepts          | Les 8 types de propriétés               |
+| Cas d'usage       | 3 exemples d'utilisation                |
+| Config            | YAML pour agents IA                     |
+| Prochaines étapes | Court/moyen/long terme                  |
 
 **Temps de lecture:** 15-20 minutes
 
@@ -196,20 +196,20 @@ START → QUICK_START.md
 
 **Lecteur cible:** Architectes, développeurs d'agents
 
-| Section | Contenu |
-|---------|---------|
-| Principes | 4 principes fondamentaux |
-| Extraction | Processus 3 étapes pour identifier domaines |
-| Template | Template générique pour TOUTE section |
-| Propriétés | 8 types avec exemples |
-| Processus | 4 phases d'implémentation agent |
-| Output | Format attendu |
-| Structure | Sections obligatoires |
-| Critères | Checklist de qualité |
-| Workflow | Manuel vs agent |
-| Exemples | Domaines typiques |
-| Gabarit YAML | Config pour agents |
-| Métriques | KPIs de validation |
+| Section      | Contenu                                     |
+| ------------ | ------------------------------------------- |
+| Principes    | 4 principes fondamentaux                    |
+| Extraction   | Processus 3 étapes pour identifier domaines |
+| Template     | Template générique pour TOUTE section       |
+| Propriétés   | 8 types avec exemples                       |
+| Processus    | 4 phases d'implémentation agent             |
+| Output       | Format attendu                              |
+| Structure    | Sections obligatoires                       |
+| Critères     | Checklist de qualité                        |
+| Workflow     | Manuel vs agent                             |
+| Exemples     | Domaines typiques                           |
+| Gabarit YAML | Config pour agents                          |
+| Métriques    | KPIs de validation                          |
 
 **Temps de lecture:** 45-60 minutes
 
@@ -221,20 +221,20 @@ START → QUICK_START.md
 
 **Lecteur cible:** Développeurs Python/JavaScript/Go
 
-| Section | Contenu |
-|---------|---------|
-| Architecture | Diagram du système |
-| Prompt Système | 200+ lignes pour guider IA |
+| Section           | Contenu                    |
+| ----------------- | -------------------------- |
+| Architecture      | Diagram du système         |
+| Prompt Système    | 200+ lignes pour guider IA |
 | Prompt Invocation | Template pour utilisateurs |
-| Workflow | 5 étapes d'implémentation |
-| Configuration | YAML pour sources externes |
-| Patterns | Regex pour extraction NLP |
-| Web Research | Module de recherche |
-| Output Formatter | Code pour générer Markdown |
-| Pseudocode | Classes & methods Python |
-| CI/CD | Workflow GitHub Actions |
-| Monitoring | Métriques & health checks |
-| Considérations | Caching, errors, i18n |
+| Workflow          | 5 étapes d'implémentation  |
+| Configuration     | YAML pour sources externes |
+| Patterns          | Regex pour extraction NLP  |
+| Web Research      | Module de recherche        |
+| Output Formatter  | Code pour générer Markdown |
+| Pseudocode        | Classes & methods Python   |
+| CI/CD             | Workflow GitHub Actions    |
+| Monitoring        | Métriques & health checks  |
+| Considérations    | Caching, errors, i18n      |
 
 **Temps de lecture:** 60-90 minutes
 
@@ -246,21 +246,21 @@ START → QUICK_START.md
 
 **Lecteur cible:** Tout le monde (démonstration)
 
-| Section | Contenu |
-|---------|---------|
-| Overview | Qu'on va montrer |
-| Étape 1-2 | Analyse du document |
-| Extraction | 45 concepts trouvés |
-| Catégorisation | 12 domaines identifiés |
-| Propriétés | 127 propriétés mappées |
-| Sources | 25+ sources trouvées |
-| Questions | Comment générer questions |
-| Domaine Complet | Exemple détaillé (Internationalization) |
-| Section Recherche | Sources compilées |
-| Summary Tables | Vue d'ensemble rapide |
-| Résumé | Les 11 étapes du processus |
-| Utilisation | Manuel vs auto |
-| Fichiers | Output generés |
+| Section           | Contenu                                 |
+| ----------------- | --------------------------------------- |
+| Overview          | Qu'on va montrer                        |
+| Étape 1-2         | Analyse du document                     |
+| Extraction        | 45 concepts trouvés                     |
+| Catégorisation    | 12 domaines identifiés                  |
+| Propriétés        | 127 propriétés mappées                  |
+| Sources           | 25+ sources trouvées                    |
+| Questions         | Comment générer questions               |
+| Domaine Complet   | Exemple détaillé (Internationalization) |
+| Section Recherche | Sources compilées                       |
+| Summary Tables    | Vue d'ensemble rapide                   |
+| Résumé            | Les 11 étapes du processus              |
+| Utilisation       | Manuel vs auto                          |
+| Fichiers          | Output generés                          |
 
 **Temps de lecture:** 45-60 minutes
 
@@ -272,20 +272,20 @@ START → QUICK_START.md
 
 **Lecteur cible:** Utilisateurs finaux (validation)
 
-| Section | Contenu |
-|---------|---------|
-| 3 Étapes | Résumé exécutif |
-| Stats | Métriques du document |
-| Domaines | List des 12 à couvrir |
-| Où Chercher | Par type de question |
-| Workflow Temps Réel | Timing par item & domaine |
-| Pro Tips | DO/DON'T |
-| Stratégie | Par ordre de criticité |
-| Tracking | Template de suivi |
-| Exemple Domaine | Validation complète d'un domaine |
-| Issues Communes | Solutions aux problèmes |
-| Completion | Checklist de fin |
-| Output | Fichiers à créer |
+| Section             | Contenu                          |
+| ------------------- | -------------------------------- |
+| 3 Étapes            | Résumé exécutif                  |
+| Stats               | Métriques du document            |
+| Domaines            | List des 12 à couvrir            |
+| Où Chercher         | Par type de question             |
+| Workflow Temps Réel | Timing par item & domaine        |
+| Pro Tips            | DO/DON'T                         |
+| Stratégie           | Par ordre de criticité           |
+| Tracking            | Template de suivi                |
+| Exemple Domaine     | Validation complète d'un domaine |
+| Issues Communes     | Solutions aux problèmes          |
+| Completion          | Checklist de fin                 |
+| Output              | Fichiers à créer                 |
 
 **Temps de lecture:** 15-20 minutes
 
@@ -332,14 +332,14 @@ START → QUICK_START.md
 
 ## 📈 Taille & Complexité
 
-| Document | Taille | Complexité | Densité Info | Temps Lecture |
-|----------|--------|------------|-------------|---------------|
-| README | 14 KB | Moyen | Moyenne | 15-20 min |
-| Framework | 16 KB | Très Haut | Haute | 45-60 min |
-| Agent Guide | 21 KB | Très Haut | Très Haute | 60-90 min |
-| Example | 24 KB | Moyen | Très Haute | 45-60 min |
-| Quick Start | 14 KB | Bas | Haute | 15-20 min |
-| **TOTAL** | **89 KB** | **Varié** | **Haute** | **3-5h total** |
+| Document    | Taille    | Complexité | Densité Info | Temps Lecture  |
+| ----------- | --------- | ---------- | ------------ | -------------- |
+| README      | 14 KB     | Moyen      | Moyenne      | 15-20 min      |
+| Framework   | 16 KB     | Très Haut  | Haute        | 45-60 min      |
+| Agent Guide | 21 KB     | Très Haut  | Très Haute   | 60-90 min      |
+| Example     | 24 KB     | Moyen      | Très Haute   | 45-60 min      |
+| Quick Start | 14 KB     | Bas        | Haute        | 15-20 min      |
+| **TOTAL**   | **89 KB** | **Varié**  | **Haute**    | **3-5h total** |
 
 ---
 

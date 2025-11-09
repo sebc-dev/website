@@ -28,12 +28,8 @@
           "name": "article_tags_article_id_articles_id_fk",
           "tableFrom": "article_tags",
           "tableTo": "articles",
-          "columnsFrom": [
-            "article_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["article_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -41,22 +37,15 @@
           "name": "article_tags_tag_id_tags_id_fk",
           "tableFrom": "article_tags",
           "tableTo": "tags",
-          "columnsFrom": [
-            "tag_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tag_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
         "article_tags_article_id_tag_id_pk": {
-          "columns": [
-            "article_id",
-            "tag_id"
-          ],
+          "columns": ["article_id", "tag_id"],
           "name": "article_tags_article_id_tag_id_pk"
         }
       },
@@ -147,38 +136,27 @@
       "indexes": {
         "article_translations_article_id_idx": {
           "name": "article_translations_article_id_idx",
-          "columns": [
-            "article_id"
-          ],
+          "columns": ["article_id"],
           "isUnique": false
         },
         "article_translations_language_idx": {
           "name": "article_translations_language_idx",
-          "columns": [
-            "language"
-          ],
+          "columns": ["language"],
           "isUnique": false
         },
         "article_translations_slug_idx": {
           "name": "article_translations_slug_idx",
-          "columns": [
-            "slug"
-          ],
+          "columns": ["slug"],
           "isUnique": false
         },
         "article_translations_unique_article_language": {
           "name": "article_translations_unique_article_language",
-          "columns": [
-            "article_id",
-            "language"
-          ],
+          "columns": ["article_id", "language"],
           "isUnique": true
         },
         "article_translations_unique_slug": {
           "name": "article_translations_unique_slug",
-          "columns": [
-            "slug"
-          ],
+          "columns": ["slug"],
           "isUnique": true
         }
       },
@@ -187,12 +165,8 @@
           "name": "article_translations_article_id_articles_id_fk",
           "tableFrom": "article_translations",
           "tableTo": "articles",
-          "columnsFrom": [
-            "article_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["article_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -265,23 +239,17 @@
       "indexes": {
         "articles_category_id_idx": {
           "name": "articles_category_id_idx",
-          "columns": [
-            "category_id"
-          ],
+          "columns": ["category_id"],
           "isUnique": false
         },
         "articles_status_idx": {
           "name": "articles_status_idx",
-          "columns": [
-            "status"
-          ],
+          "columns": ["status"],
           "isUnique": false
         },
         "articles_published_at_idx": {
           "name": "articles_published_at_idx",
-          "columns": [
-            "published_at"
-          ],
+          "columns": ["published_at"],
           "isUnique": false
         }
       },
@@ -290,12 +258,8 @@
           "name": "articles_category_id_categories_id_fk",
           "tableFrom": "articles",
           "tableTo": "categories",
-          "columnsFrom": [
-            "category_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["category_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -367,9 +331,7 @@
       "indexes": {
         "categories_key_unique": {
           "name": "categories_key_unique",
-          "columns": [
-            "key"
-          ],
+          "columns": ["key"],
           "isUnique": true
         }
       },

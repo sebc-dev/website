@@ -45,6 +45,7 @@ pnpm install --loglevel warn
 ### Review Checklist
 
 #### Dependencies
+
 - [ ] `drizzle-orm` added to `dependencies` (not devDependencies)
 - [ ] `drizzle-kit` added to `devDependencies`
 - [ ] `better-sqlite3` added to `devDependencies`
@@ -52,6 +53,7 @@ pnpm install --loglevel warn
 - [ ] No security vulnerabilities reported by `pnpm audit`
 
 #### Code Quality
+
 - [ ] `pnpm-lock.yaml` updated and committed
 - [ ] No unnecessary packages added
 - [ ] Package versions are compatible with project (Next.js 15, React 19)
@@ -128,11 +130,13 @@ grep -A3 "d1_databases" wrangler.toml
 ### Review Checklist
 
 #### D1 Database
+
 - [ ] Database created successfully (visible in `wrangler d1 list`)
 - [ ] Database name is `sebc-dev-db`
 - [ ] Database ID copied correctly (UUID format)
 
 #### Wrangler Configuration
+
 - [ ] `[[d1_databases]]` section added to wrangler.toml
 - [ ] Binding name is `DB` (will be accessed as `env.DB` in code)
 - [ ] `database_name` matches created database
@@ -140,12 +144,14 @@ grep -A3 "d1_databases" wrangler.toml
 - [ ] TOML syntax is valid (no linter errors)
 
 #### Environment Variables
+
 - [ ] `.env.example` updated with all required variables
 - [ ] Comments explain what each variable is for
 - [ ] Placeholder values are clear (e.g., `your_account_id_here`)
 - [ ] Database ID in `.env.example` matches wrangler.toml
 
 #### Git Ignore
+
 - [ ] `.wrangler/state/d1/` in .gitignore
 - [ ] `.dev.vars` in .gitignore
 - [ ] `.env.local` in .gitignore (if not already)
@@ -178,6 +184,7 @@ Part of Phase 1 - Commit 2/5"
 
 - [ ] Create `drizzle.config.ts` at project root
   - Content:
+
     ```typescript
     import type { Config } from 'drizzle-kit';
 
@@ -193,8 +200,10 @@ Part of Phase 1 - Commit 2/5"
       },
     } satisfies Config;
     ```
+
   - Use TypeScript for type safety
   - Point schema to future location (will be created in Phase 2)
+
 - [ ] Add npm scripts to `package.json`
   - Add to `scripts` section:
     ```json
@@ -238,6 +247,7 @@ pnpm db:migrate:local --help
 ### Review Checklist
 
 #### Drizzle Configuration
+
 - [ ] `drizzle.config.ts` created at project root
 - [ ] Uses `sqlite` dialect (correct for D1)
 - [ ] Driver is `d1-http` (for remote D1 access)
@@ -248,6 +258,7 @@ pnpm db:migrate:local --help
 - [ ] No TypeScript errors
 
 #### NPM Scripts
+
 - [ ] `db:generate` script added (generates migrations from schema)
 - [ ] `db:migrate:local` script added (applies migrations to local D1)
 - [ ] `db:migrate:remote` script added (applies migrations to remote D1)
@@ -256,6 +267,7 @@ pnpm db:migrate:local --help
 - [ ] All scripts use correct commands and flags
 
 #### Directory Structure
+
 - [ ] `src/lib/server/db/` directory created
 - [ ] `drizzle/migrations/` directory created
 - [ ] `.gitkeep` files added to empty directories
@@ -289,7 +301,8 @@ Part of Phase 1 - Commit 3/5"
 
 - [ ] Create `src/lib/server/db/index.ts`
   - Content:
-    ```typescript
+
+    ````typescript
     import { drizzle } from 'drizzle-orm/d1';
     import type { DrizzleD1Database } from 'drizzle-orm/d1';
 
@@ -321,8 +334,8 @@ Part of Phase 1 - Commit 3/5"
       if (!env.DB) {
         throw new Error(
           'DB binding is not available. ' +
-          'Ensure wrangler.toml is configured correctly and ' +
-          'you are running in the Cloudflare Workers runtime.'
+            'Ensure wrangler.toml is configured correctly and ' +
+            'you are running in the Cloudflare Workers runtime.',
         );
       }
 
@@ -343,10 +356,12 @@ Part of Phase 1 - Commit 3/5"
      * ```
      */
     export type Db = DrizzleD1Database;
-    ```
+    ````
+
   - Add comprehensive JSDoc comments
   - Include usage examples in comments
   - Add defensive error handling
+
 - [ ] Verify TypeScript compilation
   - Command: `pnpm type-check`
   - Should compile without errors
@@ -374,6 +389,7 @@ pnpm lint
 ### Review Checklist
 
 #### Function Implementation
+
 - [ ] `getDb()` function exported
 - [ ] Accepts `env` parameter with `DB: D1Database` type
 - [ ] Returns `DrizzleD1Database` type
@@ -382,6 +398,7 @@ pnpm lint
 - [ ] Error message is clear and actionable
 
 #### Type Safety
+
 - [ ] Function parameter types are correct
 - [ ] Return type is explicit (`DrizzleD1Database`)
 - [ ] No use of `any` types
@@ -389,6 +406,7 @@ pnpm lint
 - [ ] All imports have correct types
 
 #### Documentation
+
 - [ ] JSDoc comment on `getDb()` function
 - [ ] JSDoc includes `@param` for env parameter
 - [ ] JSDoc includes `@returns` for return value
@@ -398,6 +416,7 @@ pnpm lint
 - [ ] Comments explain server-side only restriction
 
 #### Code Quality
+
 - [ ] File location is `src/lib/server/db/` (server-only)
 - [ ] No client-side code can import this (path restriction)
 - [ ] Error messages are helpful for debugging
@@ -433,6 +452,7 @@ Part of Phase 1 - Commit 4/5"
   - Command: `mkdir -p tests/integration`
 - [ ] Create `tests/integration/db-connection.test.ts`
   - Content:
+
     ```typescript
     import { describe, it, expect } from 'vitest';
     import { getDb } from '@/lib/server/db';
@@ -467,9 +487,7 @@ Part of Phase 1 - Commit 4/5"
       it('should throw error when DB binding is missing', () => {
         const emptyEnv = {} as any;
 
-        expect(() => getDb(emptyEnv)).toThrow(
-          'DB binding is not available'
-        );
+        expect(() => getDb(emptyEnv)).toThrow('DB binding is not available');
       });
 
       it('should throw error with helpful message', () => {
@@ -480,6 +498,7 @@ Part of Phase 1 - Commit 4/5"
       });
     });
     ```
+
 - [ ] Configure Vitest for integration tests (if not done)
   - Update `vitest.config.ts` to include integration tests
   - Configure Miniflare for D1 simulation
@@ -508,6 +527,7 @@ ls -la tests/integration/db-connection.test.ts
 ### Review Checklist
 
 #### Test Implementation
+
 - [ ] Test file created in `tests/integration/`
 - [ ] Uses Vitest syntax (`describe`, `it`, `expect`)
 - [ ] Imports `getDb` from correct path (`@/lib/server/db`)
@@ -515,6 +535,7 @@ ls -la tests/integration/db-connection.test.ts
 - [ ] All test cases are meaningful and not trivial
 
 #### Test Coverage
+
 - [ ] Happy path tested (connection works)
 - [ ] Query execution tested (SELECT 1)
 - [ ] Error path tested (missing binding)
@@ -522,12 +543,14 @@ ls -la tests/integration/db-connection.test.ts
 - [ ] All code paths in `getDb()` covered
 
 #### Test Configuration
+
 - [ ] Tests run successfully with `pnpm test:integration`
 - [ ] Miniflare provides D1 binding in test environment
 - [ ] Tests use `global.DB` or mock D1Database appropriately
 - [ ] Tests are isolated (no shared state between tests)
 
 #### Test Quality
+
 - [ ] Assertions are specific (not just truthy checks)
 - [ ] Test names describe what they validate
 - [ ] Tests would catch regression if `getDb()` breaks
@@ -557,6 +580,7 @@ Part of Phase 1 - Commit 5/5"
 After all 5 commits:
 
 ### Complete Phase Checklist
+
 - [ ] All 5 commits completed and pushed
 - [ ] All TypeScript code compiles (`pnpm type-check`)
 - [ ] All tests pass (`pnpm test:integration`)
@@ -590,6 +614,7 @@ pnpm db:studio --help
 ## 🚀 Next Steps
 
 After Phase 1 completion:
+
 1. [ ] Update EPIC_TRACKING.md: Set Story 0.4 Phase 1 to ✅ COMPLETED
 2. [ ] Update INDEX.md: Change status to ✅ COMPLETED
 3. [ ] Review with team (if applicable)

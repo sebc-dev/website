@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test('homepage loads successfully', async ({ page }) => {
   await page.goto('/');
@@ -20,5 +20,5 @@ test('page responds to navigation', async ({ page }) => {
 
   // Verify basic page structure
   const html = page.locator('html');
-  await expect(html).toBeTruthy();
+  expect(html).toBeDefined();
 });

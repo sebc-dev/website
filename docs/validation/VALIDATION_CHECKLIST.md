@@ -14,6 +14,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
 ## 1. Framework & Runtime (Next.js 15 + Cloudflare Workers)
 
 ### 1.1 Next.js 15 - Spécifications
+
 - [ ] **Version actuelle** : Vérifier que Next.js 15.0+ est la dernière version stable
   - Source: https://nextjs.org/releases
   - À vérifier: Dernière release, breaking changes
@@ -35,6 +36,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
   - À vérifier: Sécurité CSRF, validation, error handling
 
 ### 1.2 Cloudflare Workers - Spécifications
+
 - [ ] **Runtime workerd** : Version compatible avec Node.js polyfills
   - Source: https://developers.cloudflare.com/workers/
   - À vérifier: Dernier runtime, limitations, updates
@@ -48,6 +50,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
   - À vérifier: Limitations, features, recommendations
 
 ### 1.3 Adaptateur OpenNext
+
 - [ ] **@opennextjs/cloudflare version** : Latest stable
   - Source: https://github.com/opennextjs/opennext
   - À vérifier: Dernière release, changelog, issues connues
@@ -72,6 +75,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
 ## 2. Base de Données (Cloudflare D1 + Drizzle)
 
 ### 2.1 Cloudflare D1
+
 - [ ] **Maturity status** : Production-ready en 2025?
   - Source: https://developers.cloudflare.com/d1/
   - À vérifier: Release status, SLA, limitations
@@ -95,6 +99,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
   - À vérifier: Availability, when GA, regions
 
 ### 2.2 Drizzle ORM
+
 - [ ] **Version actuelle** : Latest stable
   - Source: https://orm.drizzle.team/
   - À vérifier: Release notes, breaking changes
@@ -115,6 +120,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
   - À vérifier: Local workflow, remote workflow avec Wrangler
 
 ### 2.3 drizzle-zod Integration
+
 - [ ] **drizzle-zod availability** : Package exists & maintained?
   - Source: https://github.com/drizzle-team/drizzle-orm/tree/main/drizzle-zod
   - À vérifier: Status, usage, examples
@@ -127,6 +133,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
 ## 3. Stockage & Média (R2 + Cloudflare Images)
 
 ### 3.1 Cloudflare R2
+
 - [ ] **Production-ready** : Status en 2025?
   - Source: https://developers.cloudflare.com/r2/
   - À vérifier: Features, pricing, SLA
@@ -139,6 +146,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
   - À vérifier: Expiration, security, patterns
 
 ### 3.2 Cloudflare Images
+
 - [ ] **Image transformation support** : Runtime transformation working?
   - Source: https://developers.cloudflare.com/images/transform-images/
   - À vérifier: Formats, quality, performance
@@ -154,6 +162,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
 ## 4. Authentification & Sécurité
 
 ### 4.1 Cloudflare Access (Admin V1)
+
 - [ ] **Zero Trust model** : Still recommended best practice?
   - Source: https://developers.cloudflare.com/cloudflare-one/
   - À vérifier: Features, limitations, pricing
@@ -169,6 +178,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
   - À vérifier: Next.js middleware patterns, execution order
 
 ### 4.2 Better Auth (Post-V1)
+
 - [ ] **better-auth version** : Latest stable?
   - Source: https://www.better-auth.com/
   - À vérifier: Features, D1 support status
@@ -181,6 +191,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
   - À vérifier: User storage, session management, rate limiting
 
 ### 4.3 Sécurité Générale
+
 - [ ] **CSRF protection** : Next.js native CSRF pour Server Actions?
   - Source: https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations#security-considerations
   - À vérifier: Automatic or manual configuration?
@@ -193,6 +204,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
 ## 5. Internationalisation (next-intl)
 
 ### 5.1 next-intl Library
+
 - [ ] **Version actuelle** : Latest stable
   - Source: https://next-intl-docs.vercel.app/
   - À vérifier: Latest release, breaking changes
@@ -207,6 +219,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
   - À vérifier: Folder structure, middleware configuration
 
 ### 5.2 i18n Architecture
+
 - [ ] **messages/fr.json et messages/en.json** : Correct location?
   - À vérifier: File format, structure, compilation
 
@@ -222,6 +235,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
 ## 6. Contenu & Rendering (MDX)
 
 ### 6.1 MDX Processing
+
 - [ ] **@next/mdx availability** : Recommended approach?
   - Source: https://nextjs.org/docs/app/building-your-application/configuring/mdx
   - À vérifier: Features, limitations
@@ -234,6 +248,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
   - À vérifier: Component scope, styling, best practices
 
 ### 6.2 Content Delivery
+
 - [ ] **SSR vs SSG** : Strategy per route correct?
   - À vérifier: Article pages SSG? Hub de Recherche SSR? Rationale?
 
@@ -245,6 +260,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
 ## 7. UI & Styling
 
 ### 7.1 TailwindCSS 4
+
 - [ ] **Version actuelle** : TailwindCSS 4.0+ released?
   - Source: https://tailwindcss.com/
   - À vérifier: Release date, major changes
@@ -253,6 +269,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
   - À vérifier: Configuration, PostCSS
 
 ### 7.2 shadcn/ui
+
 - [ ] **React version support** : Works with React 19?
   - Source: https://ui.shadcn.com/
   - À vérifier: Component library maturity, React 19 compatibility
@@ -268,6 +285,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
 ## 8. Testing
 
 ### 8.1 Vitest
+
 - [ ] **Version** : Latest stable
   - Source: https://vitest.dev/
   - À vérifier: Features, performance
@@ -277,6 +295,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
   - À vérifier: Best practices, patterns
 
 ### 8.2 Playwright
+
 - [ ] **Version & maturity** : E2E testing standard?
   - Source: https://playwright.dev/
   - À vérifier: Features, browser support, performance
@@ -293,6 +312,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
 ## 9. Déploiement & CI/CD
 
 ### 9.1 GitHub Actions
+
 - [ ] **Workflow syntax** : Current syntax correct?
   - Source: https://docs.github.com/en/actions
   - À vérifier: Latest features, deprecations
@@ -302,6 +322,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
   - À vérifier: D1 migrations command, deploy command, current syntax
 
 ### 9.2 Pipeline Steps
+
 - [ ] **tests → migrations → build → deploy** : Order obligatoire?
   - À vérifier: Why this order? Can steps be parallel?
 
@@ -313,6 +334,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
 ## 10. Infrastructure & Monitoring
 
 ### 10.1 wrangler.toml
+
 - [ ] **Configuration format** : TOML syntax correct?
   - Source: https://developers.cloudflare.com/workers/wrangler/configuration/
   - À vérifier: All required fields, format validation
@@ -328,6 +350,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
   - À vérifier: `compatibility_flags = ["nodejs_compat"]` exact syntax
 
 ### 10.2 Observabilité
+
 - [ ] **Cloudflare Health Checks** : `/health` endpoint recommended?
   - Source: https://developers.cloudflare.com/workers/observability/health-checks/
   - À vérifier: Configuration, intervals
@@ -341,6 +364,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
   - À vérifier: Features, data retention
 
 ### 10.3 Backups & Recovery
+
 - [ ] **D1 Time Travel (PITR)** : 30-day retention standard?
   - À vérifier: Recovery process, cost, limitations
 
@@ -349,6 +373,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
 ## 11. Performance & Core Web Vitals
 
 ### 11.1 Metrics
+
 - [ ] **LCP < 2.5s** : Realistic target pour Edge deployment?
   - À vérifier: Benchmark, optimization strategies
 
@@ -359,6 +384,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
   - À vérifier: Image sizing, font loading, animations
 
 ### 11.2 Optimization Strategies
+
 - [ ] **Edge caching** : Cloudflare caching headers recommended?
   - À vérifier: Cache-Control directives, revalidation
 
@@ -373,6 +399,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
 ## 12. Architecture Patterns & Best Practices
 
 ### 12.1 Server Components Strategy
+
 - [ ] **Server Components default** : Recommended for all components?
   - Source: https://nextjs.org/docs/app/building-your-application/rendering/server-components
   - À vérifier: Trade-offs, when to use Client Components
@@ -381,6 +408,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
   - À vérifier: Suspense boundaries, fallbacks
 
 ### 12.2 State Management
+
 - [ ] **React Context** : Sufficient pour app complexity?
   - À vérifier: Performance considerations, alternatives (Zustand, Redux)
 
@@ -388,6 +416,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
   - À vérifier: URLSearchParams API support, serialization
 
 ### 12.3 Data Fetching
+
 - [ ] **Server Components for data fetching** : Primary pattern?
   - À vérifier: No client-side data fetch unless necessary
 
@@ -399,6 +428,7 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
 ## 13. Validation Externe - Recherches à Faire
 
 ### 13.1 Official Documentation Review
+
 - [ ] Next.js 15 official docs (https://nextjs.org/docs)
 - [ ] React 19 docs (https://react.dev)
 - [ ] Cloudflare Workers docs (https://developers.cloudflare.com/workers/)
@@ -408,18 +438,21 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
 - [ ] shadcn/ui docs (https://ui.shadcn.com/)
 
 ### 13.2 Breaking Changes & Deprecations
+
 - [ ] Check Next.js 15 release notes for breaking changes
 - [ ] Check Cloudflare Workers changelogs
 - [ ] Check OpenNext issues & PRs for reported problems
 - [ ] Check React 19 migration guide
 
 ### 13.3 Community & Issues
+
 - [ ] GitHub OpenNext issues (https://github.com/opennextjs/opennext/issues)
 - [ ] GitHub Next.js issues (https://github.com/vercel/next.js/issues)
 - [ ] Cloudflare Community (https://community.cloudflare.com/)
 - [ ] Stack Overflow tags: next.js, cloudflare-workers, drizzle-orm
 
 ### 13.4 Blog Posts & Tutorials
+
 - [ ] Cloudflare blog for recent announcements
 - [ ] Vercel blog for Next.js 15 updates
 - [ ] Community tutorials on Next.js + Cloudflare stack
@@ -430,7 +463,9 @@ Ce document énumère **tous les points techniques** à vérifier pour valider q
 ## 14. Version Pinning & Stability
 
 ### 14.1 Package Versions
+
 Document current versions and check periodically:
+
 - [ ] next@15.x.x (specify exact minor)
 - [ ] react@19.x.x
 - [ ] @opennextjs/cloudflare@latest
@@ -444,6 +479,7 @@ Document current versions and check periodically:
 - [ ] wrangler@latest
 
 ### 14.2 Stability Monitoring
+
 - [ ] Set up dependabot or similar for updates
 - [ ] Regular review of breaking changes
 - [ ] Test major version upgrades in dedicated branch
@@ -454,20 +490,20 @@ Document current versions and check periodically:
 
 ### Quick Reference Table
 
-| Domaine | Points critiques | Status |
-|---------|-----------------|--------|
-| **Framework** | Next.js 15, App Router, OpenNext | [ ] |
-| **Runtime** | Cloudflare Workers, nodejs_compat | [ ] |
-| **Database** | D1 maturity, Drizzle, migrations | [ ] |
-| **Auth** | Cloudflare Access, JWT, Better Auth | [ ] |
-| **i18n** | next-intl, route groups, messages | [ ] |
-| **UI** | shadcn/ui, TailwindCSS 4 | [ ] |
-| **Content** | MDX handling, SSR/SSG strategy | [ ] |
-| **Testing** | Vitest, Playwright, D1 seeding | [ ] |
-| **Déploiement** | GitHub Actions, Wrangler, pipeline | [ ] |
-| **Monitoring** | Health checks, logs, analytics | [ ] |
-| **Performance** | Core Web Vitals, optimization | [ ] |
-| **Security** | CSRF, validation, WAF | [ ] |
+| Domaine         | Points critiques                    | Status |
+| --------------- | ----------------------------------- | ------ |
+| **Framework**   | Next.js 15, App Router, OpenNext    | [ ]    |
+| **Runtime**     | Cloudflare Workers, nodejs_compat   | [ ]    |
+| **Database**    | D1 maturity, Drizzle, migrations    | [ ]    |
+| **Auth**        | Cloudflare Access, JWT, Better Auth | [ ]    |
+| **i18n**        | next-intl, route groups, messages   | [ ]    |
+| **UI**          | shadcn/ui, TailwindCSS 4            | [ ]    |
+| **Content**     | MDX handling, SSR/SSG strategy      | [ ]    |
+| **Testing**     | Vitest, Playwright, D1 seeding      | [ ]    |
+| **Déploiement** | GitHub Actions, Wrangler, pipeline  | [ ]    |
+| **Monitoring**  | Health checks, logs, analytics      | [ ]    |
+| **Performance** | Core Web Vitals, optimization       | [ ]    |
+| **Security**    | CSRF, validation, WAF               | [ ]    |
 
 ---
 
@@ -476,6 +512,7 @@ Document current versions and check periodically:
 ### Dernière mise à jour: 2025-11-05
 
 **À faire dès que possible:**
+
 1. Vérifier Next.js 15 release notes official
 2. Vérifier OpenNext changelog & issues
 3. Vérifier D1 status & limitations actuelles
@@ -484,6 +521,7 @@ Document current versions and check periodically:
 6. Benchmark Core Web Vitals sur déploiement réel
 
 **Ressources clés:**
+
 - Cloudflare official announcements: https://blog.cloudflare.com/
 - GitHub releases pour tous les packages
 - Official documentation (sources listées ci-dessus)

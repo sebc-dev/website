@@ -6,13 +6,13 @@ Cloudflare Email Service est le service email natif pour Cloudflare Workers. C'e
 
 ## Avantages par rapport à Resend
 
-| Aspect | Cloudflare Email | Resend |
-|--------|------------------|--------|
-| **Intégration** | Binding natif (env.SEND_EMAIL) | Clé API externe |
-| **Bundling** | Aucun problème | Erreurs avec @react-email/render |
-| **Latence** | Edge (très bas) | API externe |
-| **Prix** | Inclus dans le plan | Paiement par email |
-| **Dépendances** | Minimal | React, React Email |
+| Aspect          | Cloudflare Email               | Resend                           |
+| --------------- | ------------------------------ | -------------------------------- |
+| **Intégration** | Binding natif (env.SEND_EMAIL) | Clé API externe                  |
+| **Bundling**    | Aucun problème                 | Erreurs avec @react-email/render |
+| **Latence**     | Edge (très bas)                | API externe                      |
+| **Prix**        | Inclus dans le plan            | Paiement par email               |
+| **Dépendances** | Minimal                        | React, React Email               |
 
 ## Configuration
 
@@ -27,6 +27,7 @@ service = "send-email"
 ### 2. Créer une Rule de Routage
 
 Dans Cloudflare Dashboard :
+
 1. Allez à **Email Routing**
 2. Configurez une **Destination Address** (exemple : admin@yourdomain.com)
 3. Cette adresse recevra les emails
@@ -37,9 +38,9 @@ Dans un Server Action :
 
 ```typescript
 // src/app/actions.ts
-"use server";
+'use server';
 
-import type { MailMessage } from "@cloudflare/workers-types";
+import type { MailMessage } from '@cloudflare/workers-types';
 
 interface CloudflareEnv {
   SEND_EMAIL: any; // Service de Cloudflare
@@ -48,7 +49,7 @@ interface CloudflareEnv {
 export async function sendWelcomeEmail(
   env: CloudflareEnv,
   recipientEmail: string,
-  recipientName: string
+  recipientName: string,
 ) {
   try {
     await env.SEND_EMAIL.send({
@@ -58,13 +59,13 @@ export async function sendWelcomeEmail(
         },
       ],
       from: {
-        email: "noreply@yourdomain.com",
-        name: "Mon Blog",
+        email: 'noreply@yourdomain.com',
+        name: 'Mon Blog',
       },
-      subject: "Bienvenue!",
+      subject: 'Bienvenue!',
       content: [
         {
-          type: "text/html",
+          type: 'text/html',
           value: `
             <h1>Bienvenue ${recipientName}!</h1>
             <p>Merci de vous être inscrit.</p>
@@ -76,8 +77,8 @@ export async function sendWelcomeEmail(
 
     return { success: true };
   } catch (error) {
-    console.error("Failed to send email:", error);
-    throw new Error("Email delivery failed");
+    console.error('Failed to send email:', error);
+    throw new Error('Email delivery failed');
   }
 }
 ```
@@ -88,17 +89,17 @@ export async function sendWelcomeEmail(
 
 ```typescript
 await env.SEND_EMAIL.send({
-  personalizations: [{ to: [{ email: "user@example.com" }] }],
-  from: { email: "noreply@yourdomain.com" },
-  subject: "Subject",
+  personalizations: [{ to: [{ email: 'user@example.com' }] }],
+  from: { email: 'noreply@yourdomain.com' },
+  subject: 'Subject',
   content: [
     {
-      type: "text/plain",
-      value: "Plain text version",
+      type: 'text/plain',
+      value: 'Plain text version',
     },
     {
-      type: "text/html",
-      value: "<h1>HTML version</h1>",
+      type: 'text/html',
+      value: '<h1>HTML version</h1>',
     },
   ],
 });
@@ -108,20 +109,20 @@ await env.SEND_EMAIL.send({
 
 ```typescript
 await env.SEND_EMAIL.send({
-  personalizations: [{ to: [{ email: "user@example.com" }] }],
-  from: { email: "noreply@yourdomain.com" },
-  subject: "Invoice",
+  personalizations: [{ to: [{ email: 'user@example.com' }] }],
+  from: { email: 'noreply@yourdomain.com' },
+  subject: 'Invoice',
   content: [
     {
-      type: "text/html",
-      value: "<p>Your invoice is attached</p>",
+      type: 'text/html',
+      value: '<p>Your invoice is attached</p>',
     },
   ],
   attachments: [
     {
-      filename: "invoice.pdf",
-      type: "application/pdf",
-      content: Buffer.from(pdfData).toString("base64"),
+      filename: 'invoice.pdf',
+      type: 'application/pdf',
+      content: Buffer.from(pdfData).toString('base64'),
     },
   ],
 });
@@ -135,17 +136,17 @@ await env.SEND_EMAIL.send({
 export async function sendWelcomeEmail(
   env: CloudflareEnv,
   email: string,
-  verifyToken: string
+  verifyToken: string,
 ) {
   const verifyUrl = `https://yourdomain.com/verify?token=${verifyToken}`;
 
   await env.SEND_EMAIL.send({
     personalizations: [{ to: [{ email }] }],
-    from: { email: "noreply@yourdomain.com", name: "sebc.dev" },
-    subject: "Vérifiez votre email",
+    from: { email: 'noreply@yourdomain.com', name: 'sebc.dev' },
+    subject: 'Vérifiez votre email',
     content: [
       {
-        type: "text/html",
+        type: 'text/html',
         value: `
           <h2>Bienvenue sur sebc.dev!</h2>
           <p>Cliquez sur le lien ci-dessous pour vérifier votre email:</p>
@@ -169,19 +170,19 @@ export async function notifyNewComment(
   env: CloudflareEnv,
   articleAuthorEmail: string,
   articleTitle: string,
-  commentAuthor: string
+  commentAuthor: string,
 ) {
   await env.SEND_EMAIL.send({
     personalizations: [{ to: [{ email: articleAuthorEmail }] }],
-    from: { email: "noreply@yourdomain.com" },
+    from: { email: 'noreply@yourdomain.com' },
     subject: `Nouveau commentaire sur "${articleTitle}"`,
     content: [
       {
-        type: "text/html",
+        type: 'text/html',
         value: `
           <p>${commentAuthor} a commenté votre article:</p>
           <h3>${articleTitle}</h3>
-          <a href="https://yourdomain.com/articles/${articleTitle.toLowerCase().replace(/\\s/g, "-")}#comments">
+          <a href="https://yourdomain.com/articles/${articleTitle.toLowerCase().replace(/\\s/g, '-')}#comments">
             Voir le commentaire
           </a>
         `,
@@ -208,7 +209,7 @@ Implémentez un système de rate limiting pour éviter les abus :
 export async function sendEmailWithRateLimit(
   env: CloudflareEnv,
   email: string,
-  template: "welcome" | "reset" | "notification"
+  template: 'welcome' | 'reset' | 'notification',
 ) {
   const key = `email:${template}:${email}`;
   const limit = 5; // 5 emails max par jour
@@ -217,7 +218,7 @@ export async function sendEmailWithRateLimit(
   // Vérifier le rate limit
   const count = await env.KV.get(key);
   if (count && parseInt(count) >= limit) {
-    throw new Error("Too many emails sent. Please try again later.");
+    throw new Error('Too many emails sent. Please try again later.');
   }
 
   // Envoyer l'email
@@ -226,7 +227,7 @@ export async function sendEmailWithRateLimit(
   });
 
   // Incrémenter le counter
-  await env.KV.put(key, (parseInt(count || "0") + 1).toString(), {
+  await env.KV.put(key, (parseInt(count || '0') + 1).toString(), {
     expirationTtl: ttl,
   });
 }
@@ -247,6 +248,7 @@ export async function sendEmailWithRateLimit(
 ## Alternatives Futures
 
 Si les besoins changent :
+
 - **SendGrid** : Alternative établie avec plus de fonctionnalités
 - **Postmark** : Excellente API pour emails transactionnels
 - **D1 Vectorize Email** : Fonction native si disponible

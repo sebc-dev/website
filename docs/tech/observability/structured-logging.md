@@ -22,7 +22,7 @@ enabled = true
 ```typescript
 // src/lib/logger.ts
 interface LogEntry {
-  level: "debug" | "info" | "warn" | "error";
+  level: 'debug' | 'info' | 'warn' | 'error';
   timestamp: string;
   context: string; // Contexte du log (fonction, module)
   data?: Record<string, any>;
@@ -38,17 +38,17 @@ export function log(entry: LogEntry) {
 
 export const logger = {
   debug: (context: string, data?: any) => {
-    log({ level: "debug", timestamp: new Date().toISOString(), context, data });
+    log({ level: 'debug', timestamp: new Date().toISOString(), context, data });
   },
   info: (context: string, data?: any) => {
-    log({ level: "info", timestamp: new Date().toISOString(), context, data });
+    log({ level: 'info', timestamp: new Date().toISOString(), context, data });
   },
   warn: (context: string, data?: any) => {
-    log({ level: "warn", timestamp: new Date().toISOString(), context, data });
+    log({ level: 'warn', timestamp: new Date().toISOString(), context, data });
   },
   error: (context: string, error: Error, data?: any) => {
     log({
-      level: "error",
+      level: 'error',
       timestamp: new Date().toISOString(),
       context,
       data,
@@ -67,23 +67,20 @@ export const logger = {
 
 ```typescript
 // src/app/actions.ts
-"use server";
+'use server';
 
-import { logger } from "@/lib/logger";
-import { getDrizzle } from "@/db";
+import { logger } from '@/lib/logger';
+import { getDrizzle } from '@/db';
 
-export async function createArticle(
-  env: CloudflareEnv,
-  formData: FormData
-) {
-  const context = "createArticle";
+export async function createArticle(env: CloudflareEnv, formData: FormData) {
+  const context = 'createArticle';
 
   try {
-    const title = formData.get("title") as string;
-    const slug = formData.get("slug") as string;
+    const title = formData.get('title') as string;
+    const slug = formData.get('slug') as string;
 
     logger.info(context, {
-      action: "creating_article",
+      action: 'creating_article',
       title,
       slug,
     });
@@ -95,7 +92,7 @@ export async function createArticle(
         id: crypto.randomUUID(),
         title,
         slug,
-        content: formData.get("content") as string,
+        content: formData.get('content') as string,
         createdAt: new Date(),
         updatedAt: new Date(),
         published: false,
@@ -103,18 +100,18 @@ export async function createArticle(
       .returning();
 
     logger.info(context, {
-      action: "article_created",
+      action: 'article_created',
       articleId: result[0].id,
     });
 
     return { success: true, article: result[0] };
   } catch (error) {
     logger.error(context, error as Error, {
-      action: "create_article_failed",
+      action: 'create_article_failed',
       formData: Object.fromEntries(formData),
     });
 
-    throw new Error("Failed to create article");
+    throw new Error('Failed to create article');
   }
 }
 ```
@@ -123,19 +120,19 @@ export async function createArticle(
 
 ```typescript
 // src/app/api/articles/route.ts
-import { logger } from "@/lib/logger";
+import { logger } from '@/lib/logger';
 
 export async function GET(request: Request) {
-  const context = "GET /api/articles";
+  const context = 'GET /api/articles';
 
   logger.info(context, {
     url: request.url,
-    method: "GET",
+    method: 'GET',
   });
 
   try {
     const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get("page") || "1");
+    const page = parseInt(searchParams.get('page') || '1');
 
     logger.debug(context, {
       pagination: { page, perPage: 10 },
@@ -145,7 +142,7 @@ export async function GET(request: Request) {
     const articles = []; // ... fetch logic
 
     logger.info(context, {
-      action: "articles_fetched",
+      action: 'articles_fetched',
       count: articles.length,
     });
 
@@ -153,8 +150,8 @@ export async function GET(request: Request) {
   } catch (error) {
     logger.error(context, error as Error);
     return Response.json(
-      { error: "Failed to fetch articles" },
-      { status: 500 }
+      { error: 'Failed to fetch articles' },
+      { status: 500 },
     );
   }
 }
@@ -219,8 +216,8 @@ error.message: *Database* OR error.message: *constraint*
 
 ```typescript
 // Tracker les performances
-logger.info("serverAction", {
-  action: "get_articles",
+logger.info('serverAction', {
+  action: 'get_articles',
   duration_ms: Date.now() - startTime,
   count: articles.length,
   cached: false,
@@ -232,11 +229,13 @@ logger.info("serverAction", {
 Dans Cloudflare Dashboard → Alerts :
 
 1. **Erreurs en Production** :
+
    ```
    Status: error AND Environment: production
    ```
 
 2. **Performance Dégradée** :
+
    ```
    data.duration_ms > 5000 AND Timestamp >= -1h
    ```
@@ -249,6 +248,7 @@ Dans Cloudflare Dashboard → Alerts :
 ## Considérations de Performance
 
 ⚠️ **Logging a un coût** :
+
 - Chaque log consomme une requête
 - Les logs volumineux ralentissent l'application
 - L'indexation prend du temps
@@ -269,14 +269,15 @@ Dans Cloudflare Dashboard → Alerts :
 Pour une architecture multi-tenant (Post-V1) :
 
 ```typescript
-logger.info("createArticle", {
-  action: "article_created",
+logger.info('createArticle', {
+  action: 'article_created',
   tenantId: env.TENANT_ID, // Ajouter le tenant
   articleId: article.id,
 });
 ```
 
 Cela permet de :
+
 - Filtrer les logs par tenant
 - Alerter sur le trafic anormal d'un tenant
 - Analyser les performances par tenant

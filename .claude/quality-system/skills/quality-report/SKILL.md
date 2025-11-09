@@ -1,5 +1,5 @@
 ---
-name: "quality-report"
+name: 'quality-report'
 description: "Génère un rapport complet de qualité du code incluant les vérifications TypeScript, Biome (lint/format), les tests et la couverture de code. Utilise ce skill quand l'utilisateur demande un rapport de qualité, un audit de code, ou veut vérifier l'état général du projet."
 ---
 
@@ -48,6 +48,7 @@ Ce skill exécute une suite complète de vérifications de qualité du code et g
 **Entrée utilisateur :** "Peux-tu me générer un rapport de qualité du code ?"
 
 **Actions du skill :**
+
 1. Exécuter `scripts/generate-quality-report.sh`
 2. Lire le JSON de résultats
 3. Formater selon le template Markdown
@@ -57,35 +58,42 @@ Ce skill exécute une suite complète de vérifications de qualité du code et g
 
 ```markdown
 # 📊 Rapport de Qualité du Code
+
 **Date :** 2025-10-29 14:30:00
 **Projet :** sebc.dev
 
 ## Résumé Exécutif
+
 ✅ Score global : 85/100
 
 ## Détails des Vérifications
 
 ### ✓ TypeScript Type Check
+
 - Status: ✅ Passed
 - Durée: 2.3s
 - Aucune erreur de type détectée
 
 ### ⚠ Biome Linting
+
 - Status: ⚠️ Warning
 - Durée: 1.1s
 - 3 warnings détectés dans apps/web/src/components/Button.tsx
 
 ### ✓ Tests Unitaires
+
 - Status: ✅ Passed
 - Tests: 42 passed, 0 failed
 - Durée: 5.7s
 
 ### ✓ Couverture de Code
+
 - Status: ✅ Passed
 - Coverage: 87.5% (seuil: 80%)
 - Fichiers non couverts: 2
 
 ## Recommandations
+
 1. Corriger les 3 warnings Biome dans Button.tsx
 2. Améliorer la couverture pour les fichiers: utils/api.ts, hooks/useAuth.ts
 ```
@@ -95,6 +103,7 @@ Ce skill exécute une suite complète de vérifications de qualité du code et g
 **Entrée utilisateur :** "J'ai modifié le composant Login, vérifie que tout est OK"
 
 **Actions du skill :**
+
 1. Identifier les fichiers modifiés (Login.tsx, Login.test.tsx)
 2. Exécuter les vérifications ciblées
 3. Générer un rapport focalisé
@@ -105,11 +114,15 @@ Ce skill exécute une suite complète de vérifications de qualité du code et g
 # 📊 Rapport de Qualité - Composant Login
 
 ## Vérifications Ciblées
+
 - Fichiers analysés: Login.tsx, Login.test.tsx
 
 ### ✓ TypeScript : OK
+
 ### ✓ Linting : OK
+
 ### ✓ Format : OK
+
 ### ✓ Tests : 8/8 passed
 
 ✅ Tous les contrôles sont passés pour le composant Login

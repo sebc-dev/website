@@ -46,20 +46,21 @@ Set up drizzle-zod integration to auto-generate Zod schemas from Drizzle schemas
 
 ## 📚 Available Documents
 
-| Document | Description | For Who | Duration |
-|----------|-------------|---------|----------|
-| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)** | Atomic strategy in 5 commits | Developer | 15 min |
-| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)** | Detailed checklist per commit | Developer | Reference |
-| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)** | Environment variables & setup | DevOps/Dev | 5 min |
-| **[guides/REVIEW.md](./guides/REVIEW.md)** | Code review guide | Reviewer | 30 min |
-| **[guides/TESTING.md](./guides/TESTING.md)** | Testing guide (unit tests) | QA/Dev | 20 min |
-| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist | Tech Lead | 25 min |
+| Document                                                                       | Description                   | For Who    | Duration  |
+| ------------------------------------------------------------------------------ | ----------------------------- | ---------- | --------- |
+| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)**                         | Atomic strategy in 5 commits  | Developer  | 15 min    |
+| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)**                               | Detailed checklist per commit | Developer  | Reference |
+| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)**                             | Environment variables & setup | DevOps/Dev | 5 min     |
+| **[guides/REVIEW.md](./guides/REVIEW.md)**                                     | Code review guide             | Reviewer   | 30 min    |
+| **[guides/TESTING.md](./guides/TESTING.md)**                                   | Testing guide (unit tests)    | QA/Dev     | 20 min    |
+| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist    | Tech Lead  | 25 min    |
 
 ---
 
 ## 🔄 Implementation Workflow
 
 ### Step 1: Initial Setup
+
 ```bash
 # Read the PHASES_PLAN.md
 cat docs/specs/epics/epic_0/story_0_4/implementation/PHASES_PLAN.md
@@ -72,6 +73,7 @@ cat docs/specs/epics/epic_0/story_0_4/implementation/phase_4/ENVIRONMENT_SETUP.m
 ```
 
 ### Step 2: Atomic Implementation (5 commits)
+
 ```bash
 # Commit 1: Install drizzle-zod
 cat docs/specs/epics/epic_0/story_0_4/implementation/phase_4/COMMIT_CHECKLIST.md  # Section Commit 1
@@ -90,6 +92,7 @@ cat docs/specs/epics/epic_0/story_0_4/implementation/phase_4/COMMIT_CHECKLIST.md
 ```
 
 ### Step 3: Validation
+
 ```bash
 # Run tests
 pnpm test src/lib/server/db/validation.test.ts
@@ -109,28 +112,36 @@ cat docs/specs/epics/epic_0/story_0_4/implementation/phase_4/validation/VALIDATI
 ## 🎯 Use Cases by Profile
 
 ### 🧑‍💻 Developer
+
 **Goal**: Implement the validation chain step-by-step
+
 1. Read IMPLEMENTATION_PLAN.md (15 min)
 2. Follow COMMIT_CHECKLIST.md for each commit
 3. Validate after each commit (pnpm tsc + pnpm test)
 4. Use TESTING.md to write comprehensive tests
 
 ### 👀 Code Reviewer
+
 **Goal**: Review the implementation efficiently
+
 1. Read IMPLEMENTATION_PLAN.md to understand strategy (15 min)
 2. Use guides/REVIEW.md for commit-by-commit review (30 min)
 3. Verify type inference works and no `any` types
 4. Check validation tests cover edge cases
 
 ### 📊 Tech Lead / Project Manager
+
 **Goal**: Track progress and quality
+
 1. Check INDEX.md for status
 2. Review IMPLEMENTATION_PLAN.md for metrics
 3. Use VALIDATION_CHECKLIST.md for final approval
 4. Ensure validation chain is documented for team
 
 ### 🏗️ Architect / Senior Dev
+
 **Goal**: Ensure architectural consistency
+
 1. Review IMPLEMENTATION_PLAN.md for design decisions
 2. Validate single source of truth principle (Drizzle → Zod)
 3. Ensure validation helpers follow project patterns
@@ -140,15 +151,15 @@ cat docs/specs/epics/epic_0/story_0_4/implementation/phase_4/validation/VALIDATI
 
 ## 📊 Metrics
 
-| Metric | Target | Actual |
-|--------|--------|--------|
-| **Total Commits** | 5 | - |
-| **Implementation Time** | 3-4h | - |
-| **Review Time** | 1.5-2h | - |
-| **Test Coverage** | >85% | - |
-| **Type Safety** | 100% | - |
-| **Lines of Code** | ~400 | - |
-| **Unit Tests** | 15+ | - |
+| Metric                  | Target | Actual |
+| ----------------------- | ------ | ------ |
+| **Total Commits**       | 5      | -      |
+| **Implementation Time** | 3-4h   | -      |
+| **Review Time**         | 1.5-2h | -      |
+| **Test Coverage**       | >85%   | -      |
+| **Type Safety**         | 100%   | -      |
+| **Lines of Code**       | ~400   | -      |
+| **Unit Tests**          | 15+    | -      |
 
 ---
 
@@ -212,24 +223,27 @@ A: Commit 5 includes comprehensive test cases for both valid and invalid data. U
 ### Common Patterns
 
 **Insert Validation**:
+
 ```typescript
 const insertArticleSchema = createInsertSchema(articles).extend({
   slug: z.string().regex(/^[a-z0-9-]+$/, 'Slug must be lowercase with hyphens'),
-})
+});
 
 // In Server Action
-const validated = insertArticleSchema.parse(formData)
+const validated = insertArticleSchema.parse(formData);
 ```
 
 **Select Validation** (query results):
+
 ```typescript
-const selectArticleSchema = createSelectSchema(articles)
-type Article = z.infer<typeof selectArticleSchema>
+const selectArticleSchema = createSelectSchema(articles);
+type Article = z.infer<typeof selectArticleSchema>;
 ```
 
 **Partial Updates**:
+
 ```typescript
-const updateArticleSchema = insertArticleSchema.partial()
+const updateArticleSchema = insertArticleSchema.partial();
 ```
 
 ---

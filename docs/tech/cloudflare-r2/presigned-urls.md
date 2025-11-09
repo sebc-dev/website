@@ -9,15 +9,17 @@ Les presigned URLs permettent aux clients de télécharger des fichiers **direct
 ### Limites des Workers
 
 Un Worker Cloudflare a des limites strictes :
+
 - **CPU Time** : ~50ms de calcul pur (limité)
 - **Mémoire** : Peu disponible
 - **Connexion** : Timeout sur les uploads longs
 
 Essayer de recevoir un fichier volumineux via un Server Action échouerait :
+
 ```typescript
 // ❌ Ceci échouera pour les gros fichiers
 export async function uploadFile(formData: FormData) {
-  const file = formData.get("file") as File;
+  const file = formData.get('file') as File;
   const buffer = await file.arrayBuffer(); // CPU time exceeded!
   // ...
 }
@@ -28,6 +30,7 @@ export async function uploadFile(formData: FormData) {
 Les presigned URLs déplacent la **charge de transfert** du calcul (Worker limité) vers le **stockage** (R2, conçu pour cela).
 
 **Architecture** :
+
 1. **Client** → (demande URL) → **Worker** (Server Action)
 2. **Worker** → (génère presigned URL) → **Client**
 3. **Client** → (upload directement) → **R2** (bypass Worker)
@@ -38,20 +41,17 @@ Les presigned URLs déplacent la **charge de transfert** du calcul (Worker limit
 
 ```typescript
 // src/app/actions.ts
-"use server";
+'use server';
 
-import { s3Client } from "@/lib/s3";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { s3Client } from '@/lib/s3';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
-export async function getUploadUrl(
-  filename: string,
-  contentType: string
-) {
+export async function getUploadUrl(filename: string, contentType: string) {
   const key = `uploads/${Date.now()}-${filename}`;
 
   const command = new PutObjectCommand({
-    Bucket: "your-r2-bucket",
+    Bucket: 'your-r2-bucket',
     Key: key,
     ContentType: contentType,
   });
@@ -69,14 +69,14 @@ export async function getUploadUrl(
 
 ```typescript
 // lib/s3.ts
-import { S3Client } from "@aws-sdk/client-s3";
+import { S3Client } from '@aws-sdk/client-s3';
 
 export const s3Client = new S3Client({
-  region: "auto",
+  region: 'auto',
   endpoint: `https://${process.env.CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
   credentials: {
-    accessKeyId: process.env.R2_ACCESS_KEY_ID || "",
-    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || "",
+    accessKeyId: process.env.R2_ACCESS_KEY_ID || '',
+    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || '',
   },
 });
 ```
@@ -159,6 +159,7 @@ R2_SECRET_ACCESS_KEY = "..."
 ```
 
 Définissez les secrets :
+
 ```bash
 wrangler secret put R2_ACCESS_KEY_ID --env production
 wrangler secret put R2_SECRET_ACCESS_KEY --env production
@@ -195,6 +196,7 @@ wrangler r2 bucket cors update your-bucket \
 ### Durée d'Expiration
 
 Les presigned URLs expirent après un délai configuré. Utilisez :
+
 - **Court terme** (15 min) : Plus sécurisé, meilleur si le client upload immédiatement
 - **Moyen terme** (1 heure) : Balance sécurité/UX
 - **Long terme** (24h) : Permet des uploads repris
@@ -202,6 +204,7 @@ Les presigned URLs expirent après un délai configuré. Utilisez :
 ### Permissions Granulaires
 
 La presigned URL n'expose que :
+
 - Un bucket R2 spécifique
 - Une clé (chemin) spécifique
 - Une opération (PUT pour upload)
@@ -227,9 +230,7 @@ Les credentials du Worker ne sont **jamais exposés** au client.
 
 ```typescript
 export async function getMultipleUploadUrls(files: FileInfo[]) {
-  return Promise.all(
-    files.map((f) => getUploadUrl(f.name, f.type))
-  );
+  return Promise.all(files.map((f) => getUploadUrl(f.name, f.type)));
 }
 ```
 
@@ -239,7 +240,7 @@ Pour vérifier l'intégrité, ajoutez un checksum :
 
 ```typescript
 const command = new PutObjectCommand({
-  Bucket: "your-r2-bucket",
+  Bucket: 'your-r2-bucket',
   Key: key,
   ContentType: contentType,
   Metadata: {

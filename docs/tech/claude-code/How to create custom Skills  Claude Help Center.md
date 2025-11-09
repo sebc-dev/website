@@ -2,15 +2,17 @@
 created: 2025-10-25T18:36:38 (UTC +02:00)
 tags: []
 source: https://support.claude.com/en/articles/12512198-how-to-create-custom-skills
-author: 
+author:
 ---
 
 # How to create custom Skills | Claude Help Center
 
 > ## Excerpt
+>
 > Custom Skills let you enhance Claude with specialized knowledge and workflows specific to your organization or personal work style. This article explains how to create, structure, and test your own Skills.
 
 ---
+
 Custom Skills let you enhance Claude with specialized knowledge and workflows specific to your organization or personal work style. This article explains how to create, structure, and test your own Skills.
 
 Skills can be as simple as a few lines of instructions or as complex as multi-file packages with executable code. The best Skills:
@@ -109,7 +111,7 @@ my-Skill.zip
 
 ## Example Skills to Reference
 
-___
+---
 
 Related Articles
 

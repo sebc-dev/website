@@ -29,19 +29,17 @@ When activated, collect these inputs from the user:
 3. **Phase Name** (optional - can infer from PHASES_PLAN.md, e.g., "i18n Infrastructure")
 
 **Smart Path Detection**:
+
 - **Input format**: "Epic 1 Story 1.1 Phase 2"
 - **Auto-detects**: `docs/specs/epics/epic_1/story_1_1/implementation/PHASES_PLAN.md`
 - **Output**: `docs/specs/epics/epic_1/story_1_1/implementation/phase_2/`
 
 No need to specify full paths - the agent auto-resolves them.
 
-Optional configuration:
-4. **Project Tech Stack** (e.g., "SvelteKit 5 + Cloudflare", can infer from PHASES_PLAN)
-5. **Package Manager** (pnpm, npm, yarn, default: pnpm)
-6. **Test Framework** (Vitest, Jest, pytest, default: Vitest)
-7. **Linter** (ESLint, Biome, pylint, default: ESLint)
+Optional configuration: 4. **Project Tech Stack** (e.g., "SvelteKit 5 + Cloudflare", can infer from PHASES_PLAN) 5. **Package Manager** (pnpm, npm, yarn, default: pnpm) 6. **Test Framework** (Vitest, Jest, pytest, default: Vitest) 7. **Linter** (ESLint, Biome, pylint, default: ESLint)
 
 **Context Documents** (read for implementation details):
+
 - **PHASES_PLAN.md**: Phase specification (from story planning)
 - **Frontend_Specification.md**: `docs/specs/Frontend_Specification.md` - Technical architecture and patterns
 - **UX_UI_Spec.md**: `docs/specs/UX_UI_Spec.md` - User experience and design requirements
@@ -71,6 +69,7 @@ docs/specs/epics/epic_X/story_X_Y/implementation/phase_X/
 **Key Principle**: The number of commits should reflect the actual work, not fit an arbitrary template.
 
 **Flexibility Examples**:
+
 - **1 commit**: Tiny fix or configuration change
 - **2-3 commits**: Simple feature (types + logic + tests)
 - **4-8 commits**: Standard feature (optimal range for most work)
@@ -78,18 +77,21 @@ docs/specs/epics/epic_X/story_X_Y/implementation/phase_X/
 - **15+ commits**: Very complex feature (consider splitting phase)
 
 **What Matters Most**:
+
 1. **Independence**: Can each commit be reviewed and understood separately?
 2. **Value**: Does each commit represent meaningful progress?
 3. **Safety**: Can we rollback individual commits if needed?
 4. **Reviewability**: Is each commit digestible (typically 15-90 min review)?
 
 **Red Flags**:
+
 - ❌ Combining unrelated changes to hit a target count
 - ❌ Splitting work artificially to avoid "too many commits"
 - ❌ Commits that can't compile/run independently (when they should)
 - ❌ Commits larger than 1000 lines (unless justified: migrations, generated code, etc.)
 
 **Green Lights**:
+
 - ✅ Each commit tells a clear story
 - ✅ Commit progression is logical
 - ✅ Each commit can be validated independently
@@ -101,7 +103,7 @@ docs/specs/epics/epic_X/story_X_Y/implementation/phase_X/
 
 ### 1. INDEX.md Template
 
-```markdown
+````markdown
 # Phase {N} - {Phase Name}
 
 **Status**: 🚧 NOT STARTED | IN PROGRESS | ✅ COMPLETED
@@ -115,16 +117,16 @@ docs/specs/epics/epic_X/story_X_Y/implementation/phase_X/
 ### Documentation Structure
 
 \```
-phase_{N}/
+phase\_{N}/
 ├── INDEX.md (this file)
 ├── IMPLEMENTATION_PLAN.md (atomic strategy + commits)
 ├── COMMIT_CHECKLIST.md (checklist per commit)
 ├── ENVIRONMENT_SETUP.md (environment setup)
 ├── validation/
-│   └── VALIDATION_CHECKLIST.md
+│ └── VALIDATION_CHECKLIST.md
 └── guides/
-    ├── REVIEW.md (code review guide)
-    └── TESTING.md (testing guide)
+├── REVIEW.md (code review guide)
+└── TESTING.md (testing guide)
 \```
 
 ---
@@ -144,55 +146,71 @@ phase_{N}/
 
 ## 📚 Available Documents
 
-| Document | Description | For Who | Duration |
-|----------|-------------|---------|----------|
-| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)** | Atomic strategy in {N} commits | Developer | 15 min |
-| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)** | Detailed checklist per commit | Developer | Reference |
-| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)** | Environment variables & setup | DevOps/Dev | 10 min |
-| **[guides/REVIEW.md](./guides/REVIEW.md)** | Code review guide | Reviewer | 20 min |
-| **[guides/TESTING.md](./guides/TESTING.md)** | Testing guide (unit + integration) | QA/Dev | 20 min |
-| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist | Tech Lead | 30 min |
+| Document                                                                       | Description                        | For Who    | Duration  |
+| ------------------------------------------------------------------------------ | ---------------------------------- | ---------- | --------- |
+| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)**                         | Atomic strategy in {N} commits     | Developer  | 15 min    |
+| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)**                               | Detailed checklist per commit      | Developer  | Reference |
+| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)**                             | Environment variables & setup      | DevOps/Dev | 10 min    |
+| **[guides/REVIEW.md](./guides/REVIEW.md)**                                     | Code review guide                  | Reviewer   | 20 min    |
+| **[guides/TESTING.md](./guides/TESTING.md)**                                   | Testing guide (unit + integration) | QA/Dev     | 20 min    |
+| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist         | Tech Lead  | 30 min    |
 
 ---
 
 ## 🔄 Implementation Workflow
 
 ### Step 1: Initial Setup
+
 \```bash
+
 # Read the PHASES_PLAN.md
+
 cat docs/specs/epics/epic_X/story_X_Y/implementation/PHASES_PLAN.md
 
 # Read the atomic implementation plan for this phase
-cat docs/specs/epics/epic_X/story_X_Y/implementation/phase_{N}/IMPLEMENTATION_PLAN.md
+
+cat docs/specs/epics/epic*X/story_X_Y/implementation/phase*{N}/IMPLEMENTATION_PLAN.md
 
 # Setup environment
-cat docs/specs/epics/epic_X/story_X_Y/implementation/phase_{N}/ENVIRONMENT_SETUP.md
+
+cat docs/specs/epics/epic*X/story_X_Y/implementation/phase*{N}/ENVIRONMENT_SETUP.md
 \```
 
 ### Step 2: Atomic Implementation ({N} commits)
+
 \```bash
+
 # Commit 1: [Description]
-cat docs/specs/epics/epic_X/story_X_Y/implementation/phase_{N}/COMMIT_CHECKLIST.md  # Section Commit 1
+
+cat docs/specs/epics/epic*X/story_X_Y/implementation/phase*{N}/COMMIT_CHECKLIST.md # Section Commit 1
 
 # Commit 2: [Description]
-cat docs/specs/epics/epic_X/story_X_Y/implementation/phase_{N}/COMMIT_CHECKLIST.md  # Section Commit 2
+
+cat docs/specs/epics/epic*X/story_X_Y/implementation/phase*{N}/COMMIT_CHECKLIST.md # Section Commit 2
 
 # ... [repeat for all commits]
+
 \```
 
 ### Step 3: Validation
+
 \```bash
+
 # Run tests
+
 [test command based on stack]
 
 # Type-checking (if applicable)
+
 [typecheck command]
 
 # Code review
-cat docs/specs/epics/epic_X/story_X_Y/implementation/phase_{N}/guides/REVIEW.md
+
+cat docs/specs/epics/epic*X/story_X_Y/implementation/phase*{N}/guides/REVIEW.md
 
 # Final validation
-cat docs/specs/epics/epic_X/story_X_Y/implementation/phase_{N}/validation/VALIDATION_CHECKLIST.md
+
+cat docs/specs/epics/epic*X/story_X_Y/implementation/phase*{N}/validation/VALIDATION_CHECKLIST.md
 \```
 
 ---
@@ -200,26 +218,34 @@ cat docs/specs/epics/epic_X/story_X_Y/implementation/phase_{N}/validation/VALIDA
 ## 🎯 Use Cases by Profile
 
 ### 🧑‍💻 Developer
+
 **Goal**: Implement the phase step-by-step
+
 1. Read IMPLEMENTATION_PLAN.md (15 min)
 2. Follow COMMIT_CHECKLIST.md for each commit
 3. Validate after each commit
 4. Use TESTING.md to write tests
 
 ### 👀 Code Reviewer
+
 **Goal**: Review the implementation efficiently
+
 1. Read IMPLEMENTATION_PLAN.md to understand strategy
 2. Use guides/REVIEW.md for commit-by-commit review
 3. Verify against VALIDATION_CHECKLIST.md
 
 ### 📊 Tech Lead / Project Manager
+
 **Goal**: Track progress and quality
+
 1. Check INDEX.md for status
 2. Review IMPLEMENTATION_PLAN.md for metrics
 3. Use VALIDATION_CHECKLIST.md for final approval
 
 ### 🏗️ Architect / Senior Dev
+
 **Goal**: Ensure architectural consistency
+
 1. Review IMPLEMENTATION_PLAN.md for design decisions
 2. Check ENVIRONMENT_SETUP.md for dependencies
 3. Validate against project standards
@@ -228,13 +254,13 @@ cat docs/specs/epics/epic_X/story_X_Y/implementation/phase_{N}/validation/VALIDA
 
 ## 📊 Metrics
 
-| Metric | Target | Actual |
-|--------|--------|--------|
-| **Total Commits** | {N} | - |
-| **Implementation Time** | {X-Y}h | - |
-| **Review Time** | {X-Y}h | - |
-| **Test Coverage** | >80% | - |
-| **Type Safety** | 100% | - |
+| Metric                  | Target | Actual |
+| ----------------------- | ------ | ------ |
+| **Total Commits**       | {N}    | -      |
+| **Implementation Time** | {X-Y}h | -      |
+| **Review Time**         | {X-Y}h | -      |
+| **Test Coverage**       | >80%   | -      |
+| **Type Safety**         | 100%   | -      |
 
 ---
 
@@ -260,13 +286,13 @@ A: No. Tests ensure each commit is validated and safe.
 - [Technical Specification]([path to spec])
 - [Previous Phase]([if applicable])
 - [Next Phase]([if applicable])
-```
+````
 
 ---
 
 ### 2. IMPLEMENTATION_PLAN.md Template
 
-```markdown
+````markdown
 # Phase {N} - Atomic Implementation Plan
 
 **Objective**: {Phase objective in one sentence}
@@ -289,9 +315,9 @@ The implementation is split into **{N} independent commits** to:
 
 \```
 [Stage 1] → [Stage 2] → [Stage 3] → [Stage 4] → [Stage 5]
-    ↓           ↓           ↓           ↓           ↓
-  100%        100%        100%        100%        100%
-  [metric]    [metric]    tested      [metric]    coverage
+↓ ↓ ↓ ↓ ↓
+100% 100% 100% 100% 100%
+[metric] [metric] tested [metric] coverage
 \```
 
 ---
@@ -299,16 +325,19 @@ The implementation is split into **{N} independent commits** to:
 ## 📦 The {N} Atomic Commits
 
 ### Commit 1: {Title}
+
 **Files**: [list of files]
 **Size**: ~XXX lines
 **Duration**: XX-XX min (implementation) + XX-XX min (review)
 
 **Content**:
+
 - [Bullet point 1]
 - [Bullet point 2]
 - [Bullet point 3]
 
 **Why it's atomic**:
+
 - [Reason 1: single responsibility]
 - [Reason 2: no external dependencies or lists them]
 - [Reason 3: can be validated independently]
@@ -321,6 +350,7 @@ The implementation is split into **{N} independent commits** to:
 **Expected Result**: [what should happen]
 
 **Review Criteria**:
+
 - [ ] [Criterion 1]
 - [ ] [Criterion 2]
 - [ ] [Criterion 3]
@@ -328,6 +358,7 @@ The implementation is split into **{N} independent commits** to:
 ---
 
 ### Commit 2: {Title}
+
 [Repeat structure for each commit]
 
 ---
@@ -349,10 +380,15 @@ The implementation is split into **{N} independent commits** to:
 
 After each commit:
 \```bash
+
 # [Typecheck command if applicable]
+
 # [Lint command]
+
 # [Test command]
+
 # [Build command if applicable]
+
 \```
 
 All must pass before moving to next commit.
@@ -361,28 +397,31 @@ All must pass before moving to next commit.
 
 ## 📊 Commit Metrics
 
-| Commit | Files | Lines | Implementation | Review | Total |
-|--------|-------|-------|----------------|--------|-------|
-| 1. [Title] | X | ~XXX | XX min | XX min | XX min |
-| 2. [Title] | X | ~XXX | XX min | XX min | XX min |
-| ... | ... | ... | ... | ... | ... |
-| **TOTAL** | **XX** | **~XXXX** | **X-Xh** | **X-Xh** | **X-Xh** |
+| Commit     | Files  | Lines     | Implementation | Review   | Total    |
+| ---------- | ------ | --------- | -------------- | -------- | -------- |
+| 1. [Title] | X      | ~XXX      | XX min         | XX min   | XX min   |
+| 2. [Title] | X      | ~XXX      | XX min         | XX min   | XX min   |
+| ...        | ...    | ...       | ...            | ...      | ...      |
+| **TOTAL**  | **XX** | **~XXXX** | **X-Xh**       | **X-Xh** | **X-Xh** |
 
 ---
 
 ## ✅ Atomic Approach Benefits
 
 ### For Developers
+
 - 🎯 **Clear focus**: One thing at a time
 - 🧪 **Testable**: Each commit validated
 - 📝 **Documented**: Clear commit messages
 
 ### For Reviewers
+
 - ⚡ **Fast review**: 15-60 min per commit
 - 🔍 **Focused**: Single responsibility to check
 - ✅ **Quality**: Easier to spot issues
 
 ### For the Project
+
 - 🔄 **Rollback-safe**: Revert without breaking
 - 📚 **Historical**: Clear progression in git history
 - 🏗️ **Maintainable**: Easy to understand later
@@ -409,6 +448,7 @@ Types: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`
 ### Review Checklist
 
 Before committing:
+
 - [ ] Code follows project style guide
 - [ ] All tests pass
 - [ ] Types are correct (if applicable)
@@ -420,12 +460,14 @@ Before committing:
 ## ⚠️ Important Points
 
 ### Do's
+
 - ✅ Follow the commit order (dependencies)
 - ✅ Validate after each commit
 - ✅ Write tests alongside code
 - ✅ Use provided commit messages as template
 
 ### Don'ts
+
 - ❌ Skip commits or combine them
 - ❌ Commit without running validations
 - ❌ Change files from previous commits (unless fixing a bug)
@@ -446,13 +488,13 @@ A: Only if dependencies allow. Update this plan if needed.
 
 **Q: What if tests fail?**
 A: Don't commit until they pass. Fix the code or update tests.
-```
+````
 
 ---
 
 ### 3. COMMIT_CHECKLIST.md Template
 
-```markdown
+````markdown
 # Phase {N} - Checklist per Commit
 
 This document provides a detailed checklist for each atomic commit of Phase {N}.
@@ -474,8 +516,11 @@ This document provides a detailed checklist for each atomic commit of Phase {N}.
 ### Validation
 
 \```bash
+
 # [Validation command 1]
+
 # [Validation command 2]
+
 \```
 
 **Expected Result**: [what should happen]
@@ -483,14 +528,17 @@ This document provides a detailed checklist for each atomic commit of Phase {N}.
 ### Review Checklist
 
 #### [Section 1]
+
 - [ ] [Check 1]
 - [ ] [Check 2]
 
 #### [Section 2]
+
 - [ ] [Check 1]
 - [ ] [Check 2]
 
 #### Code Quality
+
 - [ ] No `any` types (unless justified and documented) [if TypeScript]
 - [ ] Clear naming
 - [ ] No commented code
@@ -512,6 +560,7 @@ Part of Phase {N} - Commit 1/{N}"
 ---
 
 ## 📋 Commit 2: {Title}
+
 [Repeat structure for each commit]
 
 ---
@@ -521,6 +570,7 @@ Part of Phase {N} - Commit 1/{N}"
 After all commits:
 
 ### Complete Phase Checklist
+
 - [ ] All {N} commits completed
 - [ ] All tests pass
 - [ ] [Typecheck passes if applicable]
@@ -532,20 +582,25 @@ After all commits:
 ### Final Validation Commands
 
 \```bash
+
 # [Run all tests]
+
 # [Run linter]
+
 # [Run typecheck if applicable]
+
 # [Run build if applicable]
+
 \```
 
 **Phase {N} is complete when all checkboxes are checked! 🎉**
-```
+````
 
 ---
 
 ### 4. ENVIRONMENT_SETUP.md Template
 
-```markdown
+````markdown
 # Phase {N} - Environment Setup
 
 This guide covers all environment setup needed for Phase {N}.
@@ -555,15 +610,18 @@ This guide covers all environment setup needed for Phase {N}.
 ## 📋 Prerequisites
 
 ### Previous Phases
+
 - [ ] [Phase X completed and validated]
 - [ ] [Phase Y completed and validated]
 
 ### Tools Required
+
 - [ ] [Tool 1] (version X.Y.Z+)
 - [ ] [Tool 2] (version X.Y.Z+)
 - [ ] [Package manager] installed
 
 ### Services Required
+
 - [ ] [Service 1] (e.g., Database, API) running
 - [ ] [Service 2] accessible
 
@@ -578,6 +636,7 @@ This guide covers all environment setup needed for Phase {N}.
 \```
 
 **Packages added**:
+
 - `[package-1]` - [purpose]
 - `[package-2]` - [purpose]
 
@@ -596,20 +655,23 @@ This guide covers all environment setup needed for Phase {N}.
 Create or update `.env.local` (or appropriate env file):
 
 \```env
+
 # [Category 1]
+
 VAR_NAME_1=value_description
 VAR_NAME_2=value_description
 
 # [Category 2]
+
 VAR_NAME_3=value_description
 \```
 
 ### Variable Descriptions
 
-| Variable | Description | Example | Required |
-|----------|-------------|---------|----------|
-| `VAR_NAME_1` | [Description] | `example_value` | Yes |
-| `VAR_NAME_2` | [Description] | `example_value` | No |
+| Variable     | Description   | Example         | Required |
+| ------------ | ------------- | --------------- | -------- |
+| `VAR_NAME_1` | [Description] | `example_value` | Yes      |
+| `VAR_NAME_2` | [Description] | `example_value` | No       |
 
 ---
 
@@ -620,6 +682,7 @@ VAR_NAME_3=value_description
 **Purpose**: [Why this service is needed]
 
 **Setup Steps**:
+
 1. [Step 1]
 2. [Step 2]
 3. [Step 3]
@@ -648,6 +711,7 @@ VAR_NAME_3=value_description
 \```
 
 **Fields**:
+
 - `field1`: [type] - [description]
 - `field2`: [type] - [description]
 
@@ -678,10 +742,12 @@ VAR_NAME_3=value_description
 ### Issue: [Common Problem 1]
 
 **Symptoms**:
+
 - [Symptom 1]
 - [Symptom 2]
 
 **Solutions**:
+
 1. [Solution 1]
 2. [Solution 2]
 
@@ -710,13 +776,13 @@ Complete this checklist before starting implementation:
 - [ ] No errors in logs
 
 **Environment is ready! 🚀**
-```
+````
 
 ---
 
 ### 5. guides/REVIEW.md Template
 
-```markdown
+````markdown
 # Phase {N} - Code Review Guide
 
 Complete guide for reviewing the Phase {N} implementation.
@@ -726,6 +792,7 @@ Complete guide for reviewing the Phase {N} implementation.
 ## 🎯 Review Objective
 
 Validate that the implementation:
+
 - ✅ [Objective 1 based on phase goals]
 - ✅ [Objective 2]
 - ✅ [Objective 3]
@@ -740,11 +807,13 @@ Validate that the implementation:
 Phase {N} is split into **{N} atomic commits**. You can:
 
 **Option A: Commit-by-commit review** (recommended)
+
 - Easier to digest (15-60 min per commit)
 - Progressive validation
 - Targeted feedback
 
 **Option B: Global review at once**
+
 - Faster (X-Xh total)
 - Immediate overview
 - Requires more focus
@@ -763,14 +832,17 @@ Phase {N} is split into **{N} atomic commits**. You can:
 #### Review Checklist
 
 ##### [Section 1]
+
 - [ ] [Check 1]
 - [ ] [Check 2]
 
 ##### [Section 2]
+
 - [ ] [Check 1]
 - [ ] [Check 2]
 
 ##### Code Quality
+
 - [ ] No `any` types (unless justified) [if applicable]
 - [ ] Clear and consistent naming
 - [ ] Documented where needed
@@ -793,6 +865,7 @@ Phase {N} is split into **{N} atomic commits**. You can:
 ---
 
 ### Commit 2: {Title}
+
 [Repeat for each commit]
 
 ---
@@ -802,39 +875,46 @@ Phase {N} is split into **{N} atomic commits**. You can:
 After reviewing all commits:
 
 ### Architecture & Design
+
 - [ ] Follows established patterns
 - [ ] Proper separation of concerns
 - [ ] Reusable components/functions
 - [ ] No code duplication
 
 ### Code Quality
+
 - [ ] Consistent style
 - [ ] Clear naming
 - [ ] Appropriate comments
 - [ ] No dead code
 
 ### Testing
+
 - [ ] All features tested
 - [ ] Edge cases covered
 - [ ] [Coverage > X%]
 - [ ] Tests are meaningful
 
 ### [Type Safety - if applicable]
+
 - [ ] No `any` (unless justified)
 - [ ] Proper type inference
 - [ ] Interfaces/types documented
 
 ### Performance
+
 - [ ] No obvious bottlenecks
 - [ ] Efficient algorithms
 - [ ] [Framework-specific optimizations]
 
 ### Security
+
 - [ ] No sensitive data exposed
 - [ ] Input validation
 - [ ] Error handling doesn't leak info
 
 ### Documentation
+
 - [ ] README updated if needed
 - [ ] API documented
 - [ ] Complex logic explained
@@ -846,6 +926,7 @@ After reviewing all commits:
 Use this template for feedback:
 
 \```markdown
+
 ## Review Feedback - Phase {N}
 
 **Reviewer**: [Name]
@@ -886,16 +967,19 @@ Use this template for feedback:
 ## 🎯 Review Actions
 
 ### If Approved ✅
+
 1. Merge the commits
 2. Update phase status to COMPLETED
 3. Archive review notes
 
 ### If Changes Requested 🔧
+
 1. Create detailed feedback (use template)
 2. Discuss with developer
 3. Re-review after fixes
 
 ### If Rejected ❌
+
 1. Document major issues
 2. Schedule discussion
 3. Plan rework strategy
@@ -915,13 +999,13 @@ A: Specific enough to be actionable. Include file, line, and suggestion.
 
 **Q: Can I approve with minor comments?**
 A: Yes, mark as approved and note that comments are optional improvements.
-```
+````
 
 ---
 
 ### 6. guides/TESTING.md Template
 
-```markdown
+````markdown
 # Phase {N} - Testing Guide
 
 Complete testing strategy for Phase {N}.
@@ -950,16 +1034,21 @@ Test individual functions/components in isolation.
 ### Running Unit Tests
 
 \```bash
+
 # Run all unit tests
+
 [test command]
 
 # Run specific test file
+
 [test command for specific file]
 
 # Watch mode (during development)
+
 [watch command]
 
 # Coverage report
+
 [coverage command]
 \```
 
@@ -1005,16 +1094,21 @@ Test that [components/services/modules] work together correctly.
 
 **Option A: With Real Dependencies**
 \```bash
+
 # Start dependencies
+
 [start command]
 
 # Run integration tests
+
 [test command]
 \```
 
 **Option B: With Mocked Dependencies**
 \```bash
+
 # Run with mocks
+
 [test command with mock flag]
 \```
 
@@ -1060,21 +1154,26 @@ Test that [components/services/modules] work together correctly.
 ### View Coverage
 
 \```bash
+
 # Terminal report
+
 [terminal coverage]
 
 # HTML report
+
 [HTML coverage command]
+
 # Open [path to HTML]
+
 \```
 
 ### Coverage Goals
 
-| Area | Target | Current |
-|------|--------|---------|
-| [Module 1] | >80% | - |
-| [Module 2] | >90% | - |
-| Overall | >80% | - |
+| Area       | Target | Current |
+| ---------- | ------ | ------- |
+| [Module 1] | >80%   | -       |
+| [Module 2] | >90%   | -       |
+| Overall    | >80%   | -       |
 
 ---
 
@@ -1085,22 +1184,27 @@ Test that [components/services/modules] work together correctly.
 #### Issue: Tests fail locally but pass in CI
 
 **Solutions**:
+
 1. [Solution 1]
 2. [Solution 2]
 
 #### Issue: Tests are flaky
 
 **Solutions**:
+
 1. [Solution 1]
 2. [Solution 2]
 
 ### Debug Commands
 
 \```bash
+
 # Run single test in verbose mode
+
 [debug command]
 
 # Run with debugger
+
 [debugger command]
 \```
 
@@ -1111,6 +1215,7 @@ Test that [components/services/modules] work together correctly.
 ### GitHub Actions (or other CI)
 
 Tests run automatically on:
+
 - [ ] Pull requests
 - [ ] Push to main branch
 - [ ] [Other triggers]
@@ -1124,6 +1229,7 @@ Tests run automatically on:
 ### Required Checks
 
 All PRs must:
+
 - [ ] Pass all unit tests
 - [ ] Pass all integration tests
 - [ ] Meet coverage threshold (>80%)
@@ -1149,12 +1255,14 @@ Before merging:
 ### Writing Tests
 
 ✅ **Do**:
+
 - Test behavior, not implementation
 - Use descriptive test names
 - One assertion per test (when possible)
 - Test edge cases
 
 ❌ **Don't**:
+
 - Test framework internals
 - Over-mock (test real code)
 - Write flaky tests
@@ -1181,13 +1289,13 @@ A: Run only affected tests during dev, full suite before commit.
 
 **Q: Can I skip tests?**
 A: No. Tests ensure quality and prevent regressions.
-```
+````
 
 ---
 
 ### 7. validation/VALIDATION_CHECKLIST.md Template
 
-```markdown
+````markdown
 # Phase {N} - Final Validation Checklist
 
 Complete validation checklist before marking Phase {N} as complete.
@@ -1314,6 +1422,7 @@ Complete validation checklist before marking Phase {N} as complete.
 ## ✅ 9. Security and Performance
 
 ### Security
+
 - [ ] No sensitive data exposed
 - [ ] Environment variables used correctly
 - [ ] Input validation implemented
@@ -1321,6 +1430,7 @@ Complete validation checklist before marking Phase {N} as complete.
 - [ ] [Authentication/authorization if applicable]
 
 ### Performance
+
 - [ ] No obvious bottlenecks
 - [ ] [Database queries optimized if applicable]
 - [ ] [Appropriate caching if applicable]
@@ -1370,22 +1480,29 @@ Complete validation checklist before marking Phase {N} as complete.
 Run all these commands before final approval:
 
 \```bash
+
 # Install/update dependencies
+
 [install command]
 
 # Type-checking
+
 [typecheck command]
 
 # Linting
+
 [lint command]
 
 # Tests
+
 [test command]
 
 # Coverage
+
 [coverage command]
 
 # Build
+
 [build command]
 \```
 
@@ -1395,13 +1512,13 @@ Run all these commands before final approval:
 
 ## 📊 Success Metrics
 
-| Metric | Target | Actual | Status |
-|--------|--------|--------|--------|
-| Commits | {N} | - | ⏳ |
-| Type Coverage | 100% | - | ⏳ |
-| Test Coverage | >80% | - | ⏳ |
-| Build Status | ✅ | - | ⏳ |
-| Lint Status | ✅ | - | ⏳ |
+| Metric        | Target | Actual | Status |
+| ------------- | ------ | ------ | ------ |
+| Commits       | {N}    | -      | ⏳     |
+| Type Coverage | 100%   | -      | ⏳     |
+| Test Coverage | >80%   | -      | ⏳     |
+| Build Status  | ✅     | -      | ⏳     |
+| Lint Status   | ✅     | -      | ⏳     |
 
 ---
 
@@ -1420,6 +1537,7 @@ Select one:
 ## 📝 Next Steps
 
 ### If Approved ✅
+
 1. [ ] Update INDEX.md status to ✅ COMPLETED
 2. [ ] Merge phase branch to main
 3. [ ] Create git tag: `phase-{N}-complete`
@@ -1427,11 +1545,13 @@ Select one:
 5. [ ] Prepare for next phase
 
 ### If Changes Requested 🔧
+
 1. [ ] Address all feedback items
 2. [ ] Re-run validation
 3. [ ] Request re-review
 
 ### If Rejected ❌
+
 1. [ ] Document issues
 2. [ ] Plan rework
 3. [ ] Schedule review
@@ -1441,7 +1561,7 @@ Select one:
 **Validation completed by**: [Name]
 **Date**: [Date]
 **Notes**: [Additional notes]
-```
+````
 
 ---
 
@@ -1450,6 +1570,7 @@ Select one:
 ### Step 1: Collect Inputs
 
 Ask the user for:
+
 1. **Story Reference** (e.g., "Epic 1 Story 1.1") - auto-detects path
 2. **Phase Number** (e.g., "1", "2", "3")
 3. **Phase Name** (optional - will auto-extract from PHASES_PLAN.md)
@@ -1458,6 +1579,7 @@ Ask the user for:
 ### Step 1b: Smart Path Detection
 
 Parse the story reference and auto-resolve paths:
+
 - Story Reference "Epic 1 Story 1.1" → `docs/specs/epics/epic_1/story_1_1/`
 - PHASES_PLAN location: `docs/specs/epics/epic_1/story_1_1/implementation/PHASES_PLAN.md`
 - Output directory: `docs/specs/epics/epic_1/story_1_1/implementation/phase_N/`
@@ -1466,6 +1588,7 @@ Parse the story reference and auto-resolve paths:
 ### Step 2: Analyze Specification
 
 Read the specification file and extract:
+
 - Objective and scope
 - Features to implement
 - Files to create/modify
@@ -1482,31 +1605,36 @@ Break down the implementation into the **optimal number of atomic commits** base
 **Complexity Assessment**:
 
 🟢 **Simple Phase** (1-3 commits):
+
 - Single component or small feature
 - Minimal dependencies
 - <200 lines of code
 - Example: "Add validation to form field"
 
 🟡 **Medium Phase** (4-8 commits):
+
 - Multiple related components
 - Some dependencies
 - 200-800 lines of code
 - Example: "Create user profile page"
 
 🟠 **Complex Phase** (9-15 commits):
+
 - Many interrelated components
 - Significant dependencies
 - 800-2000 lines of code
 - Example: "Implement complete authentication flow"
 
 🔴 **Very Complex Phase** (15+ commits):
+
 - Extensive functionality
 - Heavy integration
-- >2000 lines of code
+- > 2000 lines of code
 - Example: "Build dashboard with analytics"
 - ⚠️ Consider: Should this be split into multiple phases?
 
 **Criteria for each atomic commit** (flexible guidelines):
+
 - **Single responsibility**: One clear purpose
 - **Independent**: Can be tested alone when possible
 - **Size**: Typically 50-300 lines, but can be 10-1000+ if justified
@@ -1514,11 +1642,14 @@ Break down the implementation into the **optimal number of atomic commits** base
 - **Reviewable**: 15-90 min review time
 
 **Common progression patterns** (use as inspiration):
+
 1. Types/Interfaces → 2. Configuration → 3. Core Logic → 4. Integration → 5. Tests
+
 - Or: Setup → Foundation → Features → Integration → Validation
 - Or: Data → Logic → UI → Tests
 
 **Estimate for each commit**:
+
 - Lines of code (flexible: 10-1000+)
 - Implementation time (15min - 4h, typically 30min - 2h)
 - Review time (10min - 2h, typically 15min - 1h)
@@ -1536,6 +1667,7 @@ Create the 7 documents using the templates above:
 7. **validation/VALIDATION_CHECKLIST.md**: Final validation
 
 **Adaptation rules**:
+
 - Replace `{N}`, `{Phase Name}`, etc. with actual values
 - Replace `[placeholders]` with spec-specific content
 - Adapt commands to tech stack (pnpm vs npm, Vitest vs Jest, etc.)
@@ -1553,6 +1685,7 @@ Write all 7 files to the appropriate locations.
 ### Step 6: Update EPIC_TRACKING.md
 
 After docs are generated, update the epic's tracking file:
+
 - Read current `EPIC_TRACKING.md`
 - Find the story row
 - Update the **Phases** column to indicate phase documentation created
@@ -1563,6 +1696,7 @@ After docs are generated, update the epic's tracking file:
 ### Step 7: Validate Generation
 
 Check:
+
 - [ ] All 7 files created
 - [ ] No placeholder text left (`[`, `{` not replaced)
 - [ ] All internal links work
@@ -1576,9 +1710,11 @@ Check:
 Output a summary using this format:
 
 \```markdown
+
 ## ✅ Documentation for Phase {N} Generated
 
 ### 📁 Files Created
+
 - INDEX.md (~XXX lines)
 - IMPLEMENTATION_PLAN.md (~XXX lines)
 - COMMIT_CHECKLIST.md (~XXX lines)
@@ -1590,18 +1726,22 @@ Output a summary using this format:
 **Total**: 7 files, ~XXXX lines of documentation
 
 ### 🎯 Atomic Breakdown
+
 {N} atomic commits identified:
+
 1. Commit 1 - {Title} (~XXX lines, XX min)
 2. Commit 2 - {Title} (~XXX lines, XX min)
-...
+   ...
 
 ### 📊 Metrics
+
 - Estimated implementation time: X-Xh
 - Estimated review time: X-Xh
 - Target test coverage: >80%
 - Estimated test count: XX+
 
 ### 🚀 Next Steps
+
 1. Read INDEX.md for navigation
 2. Follow IMPLEMENTATION_PLAN.md
 3. Use COMMIT_CHECKLIST.md during implementation
@@ -1615,6 +1755,7 @@ Output a summary using this format:
 ## 📐 Generation Principles
 
 ### Style and Tone
+
 - **Professional but accessible**
 - **Concise and actionable**
 - **Structured with clear hierarchy**
@@ -1624,6 +1765,7 @@ Output a summary using this format:
 - Interactive checklists `- [ ]`
 
 ### Atomic Commits
+
 - **Adaptive count**: Based on phase complexity (1-20+ commits as needed)
 - **Typical range**: 4-8 commits for most phases
 - **Simple phases**: 1-3 commits acceptable
@@ -1633,6 +1775,7 @@ Output a summary using this format:
 - **Testable**: Each commit compiles and passes tests when possible
 
 ### Commit Messages
+
 Standardized format:
 \```
 type(scope): short description (max 50 chars)
@@ -1647,13 +1790,17 @@ Part of Phase {N} - Commit X/{N}
 Types: feat, fix, refactor, test, docs, chore
 
 ### Time Estimates
+
 Provide realistic estimates:
+
 - Implementation per commit: 30min - 2h
 - Review per commit: 15min - 1h
 - Total phase: 4-8h implementation, 2-4h review
 
 ### Metrics
+
 Always include:
+
 - Number of files
 - Estimated lines of code
 - Number of tests
@@ -1665,6 +1812,7 @@ Always include:
 ## 🚨 Important Guidelines
 
 ### Do's
+
 - ✅ Follow template structure strictly
 - ✅ Adapt content to the specific spec
 - ✅ Be precise in estimates
@@ -1677,6 +1825,7 @@ Always include:
 - ✅ Extract phase names from PHASES_PLAN.md if not provided
 
 ### Don'ts
+
 - ❌ Invent features not in spec
 - ❌ Make commits too big (>500 lines)
 - ❌ Make commits too small (<20 useful lines)
@@ -1692,6 +1841,7 @@ Always include:
 ## 🔄 Iteration
 
 If the user requests adjustments:
+
 1. Identify which document(s) to modify
 2. Apply requested changes
 3. Verify consistency with other documents
@@ -1737,12 +1887,14 @@ If the user requests adjustments:
 **User Request**: "Generate documentation for Phase 3 - Authentication System"
 
 **Spec Summary**:
+
 - JWT-based authentication
 - User login/logout endpoints
 - Protected route middleware
 - Role-based permissions
 
 **Generated Output**:
+
 - 5 atomic commits (Types → Config → JWT Utils → Middleware → Tests)
 - ~3200 lines of documentation
 - Estimated 6-8h implementation time
@@ -1753,12 +1905,14 @@ If the user requests adjustments:
 **User Request**: "Create implementation docs for Phase 2 - Database"
 
 **Spec Summary**:
+
 - PostgreSQL setup
 - Prisma ORM integration
 - Database migrations
 - CRUD operations
 
 **Generated Output**:
+
 - 4 atomic commits (Schema → Config → Operations → Tests)
 - ~2800 lines of documentation
 - Estimated 4-6h implementation time
@@ -1769,12 +1923,14 @@ If the user requests adjustments:
 **User Request**: "Phase 4 docs - REST API endpoints"
 
 **Spec Summary**:
+
 - 5 REST endpoints for blog
 - OpenAPI/Swagger documentation
 - Request validation
 - Error handling
 
 **Generated Output**:
+
 - 6 atomic commits (Types → Validation → Endpoints → Error Handling → Docs → Tests)
 - ~3500 lines of documentation
 - Estimated 8-10h implementation time

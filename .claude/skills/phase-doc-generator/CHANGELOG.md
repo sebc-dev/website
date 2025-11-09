@@ -64,11 +64,13 @@ This version removes the arbitrary "3-7 commits" limitation and introduces intel
 ### Philosophy Shift
 
 **Before (2.1.0)**:
+
 - Recommended 3-7 commits per phase
 - Developers might artificially combine or split work to fit this range
 - Less flexibility for very simple or very complex phases
 
 **After (2.2.0)**:
+
 - Adaptive sizing based on actual work complexity
 - 1 commit for tiny fixes, 20+ for very complex features
 - Focus on commit quality (independence, value, safety, reviewability)
@@ -77,18 +79,21 @@ This version removes the arbitrary "3-7 commits" limitation and introduces intel
 ### Migration Notes (from 2.1.0 to 2.2.0)
 
 **Automatic Migration**:
+
 - ✅ No action required for existing projects
 - ✅ Existing documentation still valid
 - ✅ Generated documentation format unchanged
 - ✅ All functionality preserved and enhanced
 
 **Behavioral Changes**:
+
 - Skill may now generate plans with fewer than 3 commits (for simple phases)
 - Skill may now generate plans with more than 7 commits (for complex phases)
 - Commit count will better match actual work complexity
 - Documentation will include complexity assessment rationale
 
 **Benefits of Upgrading**:
+
 - ✅ More realistic commit planning
 - ✅ Better adaptation to actual work requirements
 - ✅ Less artificial splitting or combining of work
@@ -167,12 +172,14 @@ This version brings the skill into full compliance with [Claude Code Agent Skill
 ### Migration Notes (from 2.0.0 to 2.1.0)
 
 **Automatic Migration**:
+
 - ✅ No action required for existing projects
 - ✅ Old references to skill still work
 - ✅ Generated documentation format unchanged
 - ✅ All functionality preserved
 
 **What Changed Under the Hood**:
+
 ```
 Before (2.0.0):
 .claude/skills/phase-doc-generator/
@@ -188,6 +195,7 @@ After (2.1.0):
 ```
 
 **Benefits of Upgrading**:
+
 - ✅ Better auto-invocation through improved description
 - ✅ Safer execution with tool restrictions
 - ✅ Standards-compliant structure
@@ -197,6 +205,7 @@ After (2.1.0):
 ### Technical Details
 
 **YAML Frontmatter Structure**:
+
 ```yaml
 ---
 name: phase-doc-generator
@@ -297,6 +306,7 @@ This version makes the skill completely **project-agnostic** and **autonomous**.
 3. **Better portability**: Copy skill to any project, it just works
 
 **New workflow**:
+
 ```
 Before (1.0.0): Required Phase 1/2 docs as reference
 After (2.0.0): Completely autonomous, works anywhere
@@ -348,12 +358,14 @@ After (2.0.0): Completely autonomous, works anywhere
 ### [2.2.0] - Planned
 
 **Enhanced Customization**:
+
 - Configuration file support (`.phase-doc-gen.json`)
 - Custom template overrides
 - Project-specific defaults
 - User-defined commit message formats
 
 **Additional Features**:
+
 - Support for monorepo projects
 - Multi-language documentation (i18n)
 - Integration with project management tools
@@ -362,12 +374,14 @@ After (2.0.0): Completely autonomous, works anywhere
 ### [3.0.0] - Future
 
 **Advanced Features**:
+
 - AI-powered commit breakdown optimization
 - Automatic test generation templates
 - CI/CD pipeline generation
 - Diagram generation (architecture, flow charts)
 
 **Community Features**:
+
 - Template marketplace
 - Shared configurations
 - Community best practices library
@@ -397,6 +411,7 @@ If you encounter problems or have suggestions:
 4. Try regenerating with adjusted inputs
 
 For feature requests or bug reports, document the issue with:
+
 - Phase specification used
 - Tech stack specified
 - Expected vs actual output

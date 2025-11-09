@@ -3,70 +3,67 @@
  * https://developers.cloudflare.com/workers/wrangler/configuration/
  */
 {
-	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "website",
-	"main": ".open-next/worker.js",
-	"compatibility_date": "2025-03-01",
-	"compatibility_flags": [
-		"nodejs_compat",
-		"global_fetch_strictly_public"
-	],
-	"assets": {
-		"binding": "ASSETS",
-		"directory": ".open-next/assets"
-	},
-	"observability": {
-		"enabled": true
-	},
-	/**
-	 * D1 Database Binding
-	 * Binds the sebc-dev-db D1 database to env.DB
-	 * Created for Phase 1 - Drizzle ORM Setup
-	 *
-	 * Note: database_id is environment-specific and hardcoded here because:
-	 * 1. Wrangler does not support environment variables in wrangler.jsonc
-	 * 2. This ID is a Cloudflare resource UUID (not a secret credential)
-	 * 3. For multi-environment setup, use separate wrangler files or git branches
-	 *
-	 * IMPORTANT: This database_id must match CLOUDFLARE_DATABASE_ID in your .env file
-	 * See docs/environment-setup.md for complete configuration guide
-	 */
-	"d1_databases": [
-		{
-			"binding": "DB",
-			"database_name": "sebc-dev-db",
-			"database_id": "6615b6d8-2522-46dc-9051-bc0813b42240",
-			"migrations_dir": "drizzle/migrations"
-		}
-	]
-	/**
-	 * Smart Placement
-	 * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
-	 */
-	// "placement": { "mode": "smart" }
-	/**
-	 * Bindings
-	 * Bindings allow your Worker to interact with resources on the Cloudflare Developer Platform, including
-	 * databases, object storage, AI inference, real-time communication and more.
-	 * https://developers.cloudflare.com/workers/runtime-apis/bindings/
-	 */
-	/**
-	 * Environment Variables
-	 * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
-	 */
-	// "vars": { "MY_VARIABLE": "production_value" }
-	/**
-	 * Note: Use secrets to store sensitive data.
-	 * https://developers.cloudflare.com/workers/configuration/secrets/
-	 */
-	/**
-	 * Static Assets
-	 * https://developers.cloudflare.com/workers/static-assets/binding/
-	 */
-	// "assets": { "directory": "./public/", "binding": "ASSETS" }
-	/**
-	 * Service Bindings (communicate between multiple Workers)
-	 * https://developers.cloudflare.com/workers/wrangler/configuration/#service-bindings
-	 */
-	// "services": [{ "binding": "MY_SERVICE", "service": "my-service" }]
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "website",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2025-03-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "binding": "ASSETS",
+    "directory": ".open-next/assets",
+  },
+  "observability": {
+    "enabled": true,
+  },
+  /**
+   * D1 Database Binding
+   * Binds the sebc-dev-db D1 database to env.DB
+   * Created for Phase 1 - Drizzle ORM Setup
+   *
+   * Note: database_id is environment-specific and hardcoded here because:
+   * 1. Wrangler does not support environment variables in wrangler.jsonc
+   * 2. This ID is a Cloudflare resource UUID (not a secret credential)
+   * 3. For multi-environment setup, use separate wrangler files or git branches
+   *
+   * IMPORTANT: This database_id must match CLOUDFLARE_DATABASE_ID in your .env file
+   * See docs/environment-setup.md for complete configuration guide
+   */
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "sebc-dev-db",
+      "database_id": "6615b6d8-2522-46dc-9051-bc0813b42240",
+      "migrations_dir": "drizzle/migrations",
+    },
+  ],
+  /**
+   * Smart Placement
+   * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
+   */
+  // "placement": { "mode": "smart" }
+  /**
+   * Bindings
+   * Bindings allow your Worker to interact with resources on the Cloudflare Developer Platform, including
+   * databases, object storage, AI inference, real-time communication and more.
+   * https://developers.cloudflare.com/workers/runtime-apis/bindings/
+   */
+  /**
+   * Environment Variables
+   * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
+   */
+  // "vars": { "MY_VARIABLE": "production_value" }
+  /**
+   * Note: Use secrets to store sensitive data.
+   * https://developers.cloudflare.com/workers/configuration/secrets/
+   */
+  /**
+   * Static Assets
+   * https://developers.cloudflare.com/workers/static-assets/binding/
+   */
+  // "assets": { "directory": "./public/", "binding": "ASSETS" }
+  /**
+   * Service Bindings (communicate between multiple Workers)
+   * https://developers.cloudflare.com/workers/wrangler/configuration/#service-bindings
+   */
+  // "services": [{ "binding": "MY_SERVICE", "service": "my-service" }]
 }

@@ -41,6 +41,7 @@ pnpm db:generate --check
 ```
 
 **Expected Result**:
+
 - No TypeScript errors
 - Drizzle recognizes categories table
 - No migration generated yet (schema only)
@@ -48,6 +49,7 @@ pnpm db:generate --check
 ### Review Checklist
 
 #### Schema Structure
+
 - [ ] All 8 required fields present
 - [ ] Field names follow camelCase convention
 - [ ] `id` is primary key
@@ -55,6 +57,7 @@ pnpm db:generate --check
 - [ ] All fields are `text` type (SQLite best practice)
 
 #### Code Quality
+
 - [ ] No TypeScript errors
 - [ ] JSDoc comment is clear and comprehensive
 - [ ] Table exported correctly
@@ -115,6 +118,7 @@ pnpm db:generate --check
 ```
 
 **Expected Result**:
+
 - No TypeScript errors
 - Drizzle recognizes tags and articleTags tables
 - Foreign key relationships detected
@@ -123,12 +127,14 @@ pnpm db:generate --check
 ### Review Checklist
 
 #### Tags Table
+
 - [ ] All 4 fields present (id, nameFr, nameEn, createdAt)
 - [ ] `createdAt` uses timestamp mode with default now
 - [ ] Table exported correctly
 - [ ] JSDoc documents flexible taxonomy
 
 #### ArticleTags Junction Table
+
 - [ ] Both FK fields present (articleId, tagId)
 - [ ] Composite primary key defined correctly
 - [ ] FK to articles includes `onDelete: 'cascade'`
@@ -136,10 +142,12 @@ pnpm db:generate --check
 - [ ] JSDoc explains Many-to-Many relationship
 
 #### Articles Table Update
+
 - [ ] `categoryId` FK references `categories.id` (if not already done)
 - [ ] FK behavior appropriate (nullable or not, based on Phase 2)
 
 #### Code Quality
+
 - [ ] No TypeScript errors
 - [ ] No `any` types
 - [ ] Consistent formatting
@@ -205,6 +213,7 @@ wrangler d1 execute DB --local --command "SELECT name FROM sqlite_master WHERE t
 ```
 
 **Expected Result**:
+
 - Migration SQL generated successfully
 - Migration applies without errors
 - Query returns 3 rows: categories, tags, articleTags
@@ -213,6 +222,7 @@ wrangler d1 execute DB --local --command "SELECT name FROM sqlite_master WHERE t
 ### Review Checklist
 
 #### Migration SQL
+
 - [ ] CREATE TABLE statements for all 3 tables
 - [ ] Categories table has 8 columns
 - [ ] Tags table has 4 columns
@@ -223,12 +233,14 @@ wrangler d1 execute DB --local --command "SELECT name FROM sqlite_master WHERE t
 - [ ] No syntax errors
 
 #### Migration Execution
+
 - [ ] Migration applies successfully (no errors)
 - [ ] All 3 tables created in local D1
 - [ ] Previous tables still exist (articles, article_translations from Phase 2)
 - [ ] Migration number is sequential (e.g., 0002 if Phase 2 was 0001)
 
 #### Code Quality
+
 - [ ] Migration files committed (SQL + meta JSON)
 - [ ] No manual edits to generated SQL (breaks drizzle-kit)
 - [ ] Migration is reversible (can drop tables if needed)
@@ -302,6 +314,7 @@ pnpm db:seed
 ```
 
 **Expected Result**:
+
 - Seed script executes without errors
 - COUNT returns 9
 - All keys present (behind-scenes, case-study, deep-analysis, learning-path, news, quick-tips, retrospective, tool-test, tutorial)
@@ -310,6 +323,7 @@ pnpm db:seed
 ### Review Checklist
 
 #### Seed Script Content
+
 - [ ] All 9 canonical categories included
 - [ ] Each INSERT has all 8 fields (id, key, nameFr, nameEn, slugFr, slugEn, icon, color)
 - [ ] IDs are consistent ('cat-1' to 'cat-9')
@@ -323,11 +337,13 @@ pnpm db:seed
 - [ ] Uses `INSERT OR IGNORE` for idempotency
 
 #### Package.json
+
 - [ ] `db:seed` script added
 - [ ] Script uses correct path to SQL file
 - [ ] Script targets local D1 (`--local` flag)
 
 #### Execution
+
 - [ ] Seed script runs without errors
 - [ ] 9 categories inserted
 - [ ] Re-running script doesn't duplicate (idempotent)
@@ -365,7 +381,9 @@ Part of Phase 3 - Commit 4/5"
 - [ ] Add `beforeEach` hook to seed test database:
   ```typescript
   beforeEach(() => {
-    execSync('wrangler d1 execute DB --local --file=./drizzle/seeds/categories.sql');
+    execSync(
+      'wrangler d1 execute DB --local --file=./drizzle/seeds/categories.sql',
+    );
   });
   ```
 - [ ] Test Suite 1: Categories Operations
@@ -402,6 +420,7 @@ pnpm test:coverage tests/integration/taxonomy-schema.test.ts
 ```
 
 **Expected Result**:
+
 - All tests pass
 - Coverage >80% for taxonomy operations
 - No errors or warnings
@@ -410,6 +429,7 @@ pnpm test:coverage tests/integration/taxonomy-schema.test.ts
 ### Review Checklist
 
 #### Test Coverage
+
 - [ ] Tests cover categories table (query, structure, unique constraint)
 - [ ] Tests cover tags table (CRUD operations)
 - [ ] Tests cover articleTags junction (insert, query, constraints)
@@ -419,6 +439,7 @@ pnpm test:coverage tests/integration/taxonomy-schema.test.ts
 - [ ] Tests verify ON DELETE CASCADE behavior
 
 #### Test Quality
+
 - [ ] Uses local D1 database (not mocks)
 - [ ] `beforeEach` hook seeds data consistently
 - [ ] Tests are isolated (each starts with known state)
@@ -428,6 +449,7 @@ pnpm test:coverage tests/integration/taxonomy-schema.test.ts
 - [ ] Tests clean up after themselves (if needed)
 
 #### Code Quality
+
 - [ ] No TypeScript errors
 - [ ] No `any` types
 - [ ] Consistent formatting
@@ -457,6 +479,7 @@ Part of Phase 3 - Commit 5/5"
 After all 5 commits:
 
 ### Complete Phase Checklist
+
 - [ ] All 5 commits completed
 - [ ] All integration tests pass
 - [ ] Type-check passes (`pnpm tsc --noEmit`)
@@ -484,6 +507,7 @@ wrangler d1 execute DB --local --command "SELECT name FROM sqlite_master WHERE t
 ```
 
 **Expected Results**:
+
 - Type-check: ✅ No errors
 - Lint: ✅ No errors
 - Tests: ✅ All pass

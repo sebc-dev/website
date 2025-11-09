@@ -5,6 +5,7 @@ This command invokes the **phase-doc-generator** skill to automatically generate
 ## What This Does
 
 **Automatically creates 7 professional documentation files** for implementing a phase using atomic commits:
+
 1. INDEX.md - Navigation hub and overview
 2. IMPLEMENTATION_PLAN.md - Atomic commit strategy (adaptive sizing: 1-20+ commits)
 3. COMMIT_CHECKLIST.md - Detailed checklist per commit
@@ -18,6 +19,7 @@ This command invokes the **phase-doc-generator** skill to automatically generate
 ## How Invocation Works
 
 ⚡ **Model-invoked (Automatic)**: Claude can discover and use this skill automatically when you mention terms like:
+
 - "generate phase documentation"
 - "create implementation docs"
 - "phase planning"
@@ -73,6 +75,7 @@ When you use this command, the skill will guide you through generating documenta
 ### Step 1: Gather Information
 
 Ask the user for:
+
 1. **Story Reference** (e.g., "Epic 1 Story 1.1")
 2. **Phase Number** (e.g., "1", "2", "3")
 3. **Phase Name** (optional - can be auto-extracted from PHASES_PLAN.md)
@@ -93,6 +96,7 @@ Ask the user for:
 ### Step 3: Plan Atomic Commits
 
 Analyze the specification and break down into optimal number of atomic commits (adaptive sizing):
+
 - **Simple Phase** (1-3 commits): Configuration changes, small fixes
 - **Medium Phase** (4-8 commits): Standard features with types, logic, tests
 - **Complex Phase** (9-15 commits): Multi-component features with extensive integration
@@ -113,6 +117,7 @@ Analyze the specification and break down into optimal number of atomic commits (
 ### Step 4: Generate Documentation Files
 
 Create the complete documentation structure:
+
 ```
 docs/specs/epics/epic_X/story_X_Y/implementation/phase_X/
 ├── INDEX.md                          # Navigation hub (~300 lines)
@@ -129,6 +134,7 @@ docs/specs/epics/epic_X/story_X_Y/implementation/phase_X/
 **Total**: ~3400 lines of professional, actionable documentation
 
 The skill has built-in templates that are automatically adapted to:
+
 - Your tech stack (Next.js, Django, React, etc.)
 - Your tools (pnpm/npm, Vitest/Jest/pytest, Biome/ESLint)
 - Your project structure
@@ -137,6 +143,7 @@ The skill has built-in templates that are automatically adapted to:
 ### Step 5: Validate Generation
 
 The skill automatically validates that:
+
 - ✅ All 7 files created successfully
 - ✅ No placeholder text left (`[`, `{` not replaced)
 - ✅ All internal links work correctly
@@ -147,6 +154,7 @@ The skill automatically validates that:
 ### Step 6: Provide Summary
 
 The skill will provide a detailed summary including:
+
 - 📁 Files created (with line counts)
 - 🎯 Atomic commit breakdown (X commits with estimates)
 - 📊 Metrics (estimated implementation time, review time, coverage targets)
@@ -155,6 +163,7 @@ The skill will provide a detailed summary including:
 ## Quality Standards
 
 The generated documentation follows industry best practices:
+
 - **Clear and actionable**: Anyone can follow without questions
 - **Comprehensive checklists**: Nothing is forgotten
 - **Realistic estimates**: Time and effort based on commit size
@@ -164,16 +173,19 @@ The generated documentation follows industry best practices:
 ## Examples of Generated Documentation
 
 ### Example 1: Authentication Phase
+
 - **Input**: Phase 3 - JWT Authentication
 - **Output**: 5 atomic commits, ~3200 lines
 - **Commits**: Types → JWT Utils → Middleware → Endpoints → Tests
 
 ### Example 2: Database Integration
+
 - **Input**: Phase 2 - PostgreSQL + Prisma
 - **Output**: 4 atomic commits, ~2800 lines
 - **Commits**: Schema → Config → CRUD Operations → Tests
 
 ### Example 3: REST API
+
 - **Input**: Phase 4 - Blog API Endpoints
 - **Output**: 6 atomic commits, ~3500 lines
 - **Commits**: Types → Validation → Endpoints → Error Handling → Docs → Tests

@@ -27,6 +27,7 @@ The implementation is split into **5 independent commits** to:
 ```
 
 **Progression**:
+
 1. **Schema Definition** (Commits 1-2): Define all 3 taxonomy tables in Drizzle
 2. **Migration** (Commit 3): Generate SQL and apply to local D1
 3. **Data Population** (Commit 4): Create and execute seed script for canonical categories
@@ -37,11 +38,13 @@ The implementation is split into **5 independent commits** to:
 ## 📦 The 5 Atomic Commits
 
 ### Commit 1: Define categories table schema
+
 **Files**: `src/lib/server/db/schema.ts` (modified)
 **Size**: ~30 lines
 **Duration**: 30-45 min (implementation) + 20-30 min (review)
 
 **Content**:
+
 - Add `categories` table definition to `schema.ts`
 - Define 8 fields: `id`, `key`, `nameFr`, `nameEn`, `slugFr`, `slugEn`, `icon`, `color`
 - Add unique constraint on `key` field (unique identifier like 'news', 'tutorial')
@@ -49,12 +52,14 @@ The implementation is split into **5 independent commits** to:
 - Add JSDoc comments documenting table purpose and non-deletable nature
 
 **Why it's atomic**:
+
 - Single responsibility: Only defines categories table structure
 - No external dependencies (independent table, no FK yet)
 - Can be validated independently via TypeScript type inference
 - Small scope: ~30 lines, focused on one entity
 
 **Technical Validation**:
+
 ```bash
 # Type-check the schema definition
 pnpm tsc --noEmit
@@ -64,11 +69,13 @@ pnpm db:generate --check
 ```
 
 **Expected Result**:
+
 - TypeScript compiles without errors
 - Drizzle recognizes the new table definition
 - No migration generated yet (just schema added)
 
 **Review Criteria**:
+
 - [ ] All 8 required fields present (id, key, nameFr, nameEn, slugFr, slugEn, icon, color)
 - [ ] `key` field has unique constraint
 - [ ] Field types are appropriate (text for SQLite)
@@ -79,11 +86,13 @@ pnpm db:generate --check
 ---
 
 ### Commit 2: Define tags and articleTags junction tables
+
 **Files**: `src/lib/server/db/schema.ts` (modified)
 **Size**: ~40 lines
 **Duration**: 45-60 min (implementation) + 25-35 min (review)
 
 **Content**:
+
 - Add `tags` table definition (id, nameFr, nameEn, createdAt)
 - Add `articleTags` junction table (articleId FK, tagId FK)
 - Define composite primary key on `articleTags`: `[articleId, tagId]`
@@ -92,12 +101,14 @@ pnpm db:generate --check
 - Add JSDoc comments for both tables
 
 **Why it's atomic**:
+
 - Single responsibility: Complete Many-to-Many relationship definition
 - Dependencies: Requires categories table (Commit 1) and articles table (Phase 2)
 - Can be validated independently via type inference
 - Logical grouping: Tags and article-tag relationship belong together
 
 **Technical Validation**:
+
 ```bash
 # Type-check schema with all tables
 pnpm tsc --noEmit
@@ -107,12 +118,14 @@ pnpm db:generate --check
 ```
 
 **Expected Result**:
+
 - TypeScript compiles without errors
 - Drizzle recognizes tags and articleTags tables
 - Foreign key relationships are detected
 - Composite primary key defined correctly
 
 **Review Criteria**:
+
 - [ ] `tags` table has all required fields (id, nameFr, nameEn, createdAt)
 - [ ] `articleTags` junction table has composite primary key `[articleId, tagId]`
 - [ ] Both FKs reference correct tables (articles, tags)
@@ -124,11 +137,13 @@ pnpm db:generate --check
 ---
 
 ### Commit 3: Generate and apply taxonomy migration
+
 **Files**: `drizzle/migrations/0002_add_taxonomy_tables.sql` (generated), `drizzle/migrations/meta/` (updated)
 **Size**: ~80 lines (generated SQL)
 **Duration**: 20-30 min (implementation) + 15-20 min (review)
 
 **Content**:
+
 - Run `pnpm db:generate` to create migration SQL
 - Review generated SQL for correctness (CREATE TABLE statements, indexes, FKs)
 - Apply migration locally with `pnpm db:migrate:local`
@@ -136,12 +151,14 @@ pnpm db:generate --check
 - Commit generated migration files (SQL + metadata)
 
 **Why it's atomic**:
+
 - Single responsibility: Database migration for taxonomy tables
 - Dependencies: Requires schema definitions (Commits 1-2)
 - Independent: Can rollback migration without affecting schema files
 - Testable: Can verify tables exist after migration
 
 **Technical Validation**:
+
 ```bash
 # Generate migration
 pnpm db:generate
@@ -154,27 +171,31 @@ wrangler d1 execute DB --local --command "SELECT name FROM sqlite_master WHERE t
 ```
 
 **Expected Result**:
+
 - Migration SQL generated in `drizzle/migrations/0002_*`
 - Migration applies without errors
 - Query returns 3 rows (categories, tags, articleTags tables exist)
 
 **Review Criteria**:
+
 - [ ] Migration SQL includes CREATE TABLE for all 3 tables
 - [ ] Foreign keys are properly defined in SQL
 - [ ] Composite primary key syntax is correct for SQLite
 - [ ] Migration applies successfully to local D1
 - [ ] No errors in Wrangler output
 - [ ] Migration files committed (SQL + meta JSON)
-- [ ] Migration number is sequential (0002_* if Phase 2 was 0001_*)
+- [ ] Migration number is sequential (0002*\* if Phase 2 was 0001*\*)
 
 ---
 
 ### Commit 4: Create seed script for 9 canonical categories
+
 **Files**: `drizzle/seeds/categories.sql` (new), `package.json` (modified - add script)
 **Size**: ~60 lines (SQL) + 1 line (package.json)
 **Duration**: 45-60 min (implementation) + 20-30 min (review)
 
 **Content**:
+
 - Create `drizzle/seeds/categories.sql` with INSERT statements for 9 categories:
   1. Actualités (news) - Newspaper icon, blue color
   2. Analyse Approfondie (deep-analysis) - Microscope icon, purple color
@@ -191,12 +212,14 @@ wrangler d1 execute DB --local --command "SELECT name FROM sqlite_master WHERE t
 - Generate UUIDs or use consistent IDs (e.g., 'cat-1' to 'cat-9')
 
 **Why it's atomic**:
+
 - Single responsibility: Populate canonical category data
 - Dependencies: Requires categories table (migration applied)
 - Independent: Seed data separate from schema
 - Testable: Can query categories table to verify 9 rows
 
 **Technical Validation**:
+
 ```bash
 # Execute seed script
 pnpm db:seed
@@ -209,11 +232,13 @@ wrangler d1 execute DB --local --command "SELECT key FROM categories ORDER BY ke
 ```
 
 **Expected Result**:
+
 - Seed script executes without errors
 - COUNT query returns 9
 - All category keys present (news, deep-analysis, learning-path, etc.)
 
 **Review Criteria**:
+
 - [ ] All 9 canonical categories included in seed script
 - [ ] Each category has all required fields (id, key, nameFr, nameEn, slugFr, slugEn, icon, color)
 - [ ] Icon names match Lucide React icon library (e.g., 'Newspaper', 'Microscope')
@@ -225,6 +250,7 @@ wrangler d1 execute DB --local --command "SELECT key FROM categories ORDER BY ke
 - [ ] Seed script is re-runnable without errors
 
 **Seed Data Reference**:
+
 ```sql
 INSERT OR IGNORE INTO categories (id, key, nameFr, nameEn, slugFr, slugEn, icon, color) VALUES
   ('cat-1', 'news', 'Actualités', 'News', 'actualites', 'news', 'Newspaper', '#3B82F6'),
@@ -241,11 +267,13 @@ INSERT OR IGNORE INTO categories (id, key, nameFr, nameEn, slugFr, slugEn, icon,
 ---
 
 ### Commit 5: Add integration tests for taxonomy operations
+
 **Files**: `tests/integration/taxonomy-schema.test.ts` (new)
 **Size**: ~150 lines
 **Duration**: 60-90 min (implementation) + 30-45 min (review)
 
 **Content**:
+
 - Create integration test file `tests/integration/taxonomy-schema.test.ts`
 - Test suite 1: Categories operations
   - Query all categories (expect 9 rows)
@@ -264,12 +292,14 @@ INSERT OR IGNORE INTO categories (id, key, nameFr, nameEn, slugFr, slugEn, icon,
 - Use `wrangler d1 execute` for seeding fixtures
 
 **Why it's atomic**:
+
 - Single responsibility: Validate taxonomy schema with integration tests
 - Dependencies: Requires migration applied and seed data loaded
 - Independent: Tests don't modify production code
 - Complete validation: Covers all taxonomy tables and relationships
 
 **Technical Validation**:
+
 ```bash
 # Run integration tests
 pnpm test:integration
@@ -279,11 +309,13 @@ pnpm test:coverage tests/integration/taxonomy-schema.test.ts
 ```
 
 **Expected Result**:
+
 - All tests pass
 - Coverage >80% for taxonomy queries
 - No errors or warnings
 
 **Review Criteria**:
+
 - [ ] Tests cover categories, tags, and articleTags tables
 - [ ] Tests use local D1 database (not mocks)
 - [ ] `beforeEach` hook seeds test data consistently
@@ -296,11 +328,14 @@ pnpm test:coverage tests/integration/taxonomy-schema.test.ts
 - [ ] Tests are isolated (each test starts with known state)
 
 **Test Structure Example**:
+
 ```typescript
 describe('Categories Operations', () => {
   beforeEach(async () => {
     // Reset and seed test database
-    execSync('wrangler d1 execute DB --local --file=./drizzle/seeds/categories.sql');
+    execSync(
+      'wrangler d1 execute DB --local --file=./drizzle/seeds/categories.sql',
+    );
   });
 
   it('should retrieve all 9 canonical categories', async () => {
@@ -309,7 +344,8 @@ describe('Categories Operations', () => {
   });
 
   it('should retrieve category by key', async () => {
-    const [category] = await db.select()
+    const [category] = await db
+      .select()
       .from(categoriesTable)
       .where(eq(categoriesTable.key, 'news'));
     expect(category.nameFr).toBe('Actualités');
@@ -336,6 +372,7 @@ describe('Categories Operations', () => {
 ### Validation at Each Step
 
 After each commit:
+
 ```bash
 # Type-check
 pnpm tsc --noEmit
@@ -353,30 +390,33 @@ All must pass before moving to next commit.
 
 ## 📊 Commit Metrics
 
-| Commit | Files | Lines | Implementation | Review | Total |
-|--------|-------|-------|----------------|--------|-------|
-| 1. Categories schema | 1 | ~30 | 30-45 min | 20-30 min | 50-75 min |
-| 2. Tags + junction | 1 | ~40 | 45-60 min | 25-35 min | 70-95 min |
-| 3. Migration | 3 | ~80 | 20-30 min | 15-20 min | 35-50 min |
-| 4. Seed script | 2 | ~60 | 45-60 min | 20-30 min | 65-90 min |
-| 5. Integration tests | 1 | ~150 | 60-90 min | 30-45 min | 90-135 min |
-| **TOTAL** | **8** | **~360** | **3-5h** | **1.5-2.5h** | **4.5-7.5h** |
+| Commit               | Files | Lines    | Implementation | Review       | Total        |
+| -------------------- | ----- | -------- | -------------- | ------------ | ------------ |
+| 1. Categories schema | 1     | ~30      | 30-45 min      | 20-30 min    | 50-75 min    |
+| 2. Tags + junction   | 1     | ~40      | 45-60 min      | 25-35 min    | 70-95 min    |
+| 3. Migration         | 3     | ~80      | 20-30 min      | 15-20 min    | 35-50 min    |
+| 4. Seed script       | 2     | ~60      | 45-60 min      | 20-30 min    | 65-90 min    |
+| 5. Integration tests | 1     | ~150     | 60-90 min      | 30-45 min    | 90-135 min   |
+| **TOTAL**            | **8** | **~360** | **3-5h**       | **1.5-2.5h** | **4.5-7.5h** |
 
 ---
 
 ## ✅ Atomic Approach Benefits
 
 ### For Developers
+
 - 🎯 **Clear focus**: One table or operation at a time
 - 🧪 **Testable**: Each schema validated independently
 - 📝 **Documented**: Clear migration history in git
 
 ### For Reviewers
+
 - ⚡ **Fast review**: 15-45 min per commit
 - 🔍 **Focused**: Single table or SQL file to review
 - ✅ **Quality**: Easier to spot schema issues early
 
 ### For the Project
+
 - 🔄 **Rollback-safe**: Revert specific schema changes without breaking core tables
 - 📚 **Historical**: Git history shows taxonomy evolution
 - 🏗️ **Maintainable**: Seed data separate from schema for easy updates
@@ -388,6 +428,7 @@ All must pass before moving to next commit.
 ### Commit Messages
 
 Format:
+
 ```
 feat(db): add categories table schema
 
@@ -403,6 +444,7 @@ Types: `feat`, `refactor`, `chore`, `test`
 ### Review Checklist
 
 Before committing:
+
 - [ ] Code follows Drizzle ORM best practices
 - [ ] All type-checks pass
 - [ ] Schema changes generate valid SQL
@@ -414,6 +456,7 @@ Before committing:
 ## ⚠️ Important Points
 
 ### Do's
+
 - ✅ Follow the commit order (categories → tags/junction → migration → seed → tests)
 - ✅ Validate schema with `pnpm db:generate --check` before committing
 - ✅ Review generated migration SQL carefully before applying
@@ -421,6 +464,7 @@ Before committing:
 - ✅ Use consistent IDs for categories ('cat-1' to 'cat-9')
 
 ### Don'ts
+
 - ❌ Skip migration review (SQL can have subtle issues)
 - ❌ Hardcode category IDs in tests (use fixtures)
 - ❌ Modify generated migration SQL (breaks drizzle-kit tracking)

@@ -35,19 +35,23 @@ When given a technical document, your mission is to:
 ## Methodology
 
 ### Step 1: Document Analysis (5-10 minutes)
+
 - Read the entire document to understand context and scope
 - Identify the document type (architecture, design, guide, specification)
 - List all technical technologies mentioned
 - Note the project context and domain
 
 ### Step 2: Concept Extraction (10-15 minutes)
+
 Extract **30-50 technical concepts** from the document:
+
 - List each technology, framework, library, service, pattern
 - Note line/section references
 - Identify concept type (Framework, Library, Service, Pattern, Architecture)
 - Group by initial domain
 
 ### Step 3: Property Identification (15-20 minutes)
+
 For each concept, identify **2-3 factual properties** that need validation.
 
 Classify each property into **one of 8 types**:
@@ -85,6 +89,7 @@ Classify each property into **one of 8 types**:
    - Question: "Does this integration still work?"
 
 ### Step 4: Domain Organization (5-10 minutes)
+
 Organize concepts into **12 standard domains**:
 
 1. Framework & Runtime
@@ -103,6 +108,7 @@ Organize concepts into **12 standard domains**:
 Each property should be assigned to exactly one domain.
 
 ### Step 5: Criticality Assessment (5 minutes)
+
 For each property, assign **one of three criticality levels**:
 
 - **Fundamental (15-20%)** - Core architecture affecting everything
@@ -113,19 +119,23 @@ For each property, assign **one of three criticality levels**:
   - Performance tuning, development tools, optional features
 
 ### Step 6: Question Generation (10-15 minutes)
+
 Convert each property into a **specific, researchable validation question**:
 
 **Good questions**:
+
 - "Is Next.js 15.0+ the current stable version as of 2025?"
 - "Is Cloudflare D1 production-ready with SLA guarantees?"
 - "What is the current status of React Server Components adoption?"
 
 **Bad questions**:
+
 - "Is Next.js good?" (subjective)
 - "Does the architecture make sense?" (opinion-based)
 - "Are there any issues?" (too vague)
 
 ### Step 7: Source Identification (5-10 minutes)
+
 For each property, identify **verification sources**:
 
 - Official documentation URLs
@@ -135,6 +145,7 @@ For each property, identify **verification sources**:
 - Release notes
 
 ### Step 8: Checklist Generation (10-15 minutes)
+
 Generate a **comprehensive Markdown checklist** with:
 
 1. **Quick Reference Table**
@@ -169,37 +180,43 @@ The output should be a well-structured Markdown file with:
 **Total Items**: {COUNT}
 
 ## Quick Reference
-| Criticality | Count | % |
-|---|---|---|
-| Fundamental | X | X% |
-| Major | X | X% |
-| Secondary | X | X% |
-| **Total** | **X** | **100%** |
+
+| Criticality | Count | %        |
+| ----------- | ----- | -------- |
+| Fundamental | X     | X%       |
+| Major       | X     | X%       |
+| Secondary   | X     | X%       |
+| **Total**   | **X** | **100%** |
 
 ## Validation Checklist
 
 ### Domain 1: Framework & Runtime (X items)
 
 #### Fundamental
+
 - [ ] Question 1
   - Type: Version
   - Source: URL
   - Research: Hint
 
 #### Major
+
 - [ ] Question 2
   - Type: Support
   - Source: URL
   - Research: Hint
 
 ### Domain 2: Database & ORM (X items)
+
 ...
 
 ## Research Sources
+
 ### Technology 1
+
 - Official Docs: URL
 - GitHub: URL
-...
+  ...
 ```
 
 ## Quality Standards

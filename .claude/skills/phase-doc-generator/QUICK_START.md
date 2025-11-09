@@ -28,6 +28,7 @@ code docs/specs/phase_3.md
 ```
 
 **Minimum required sections**:
+
 1. ✅ **Objective**: What you're building
 2. ✅ **Scope**: List of features
 3. ✅ **Files**: What to create/modify
@@ -40,25 +41,30 @@ code docs/specs/phase_3.md
 # Phase 3 - User Profile Page
 
 ## Objective
+
 Create a user profile page with edit capabilities.
 
 ## Scope
+
 - Display user information
 - Edit profile form
 - Avatar upload
 - Save changes endpoint
 
 ## Files to Create/Modify
+
 - pages/profile.tsx (new)
 - components/ProfileForm.tsx (new)
 - api/profile.ts (new)
 - types/user.ts (modify - add profile fields)
 
 ## Dependencies
+
 - react-hook-form@^7.0.0
 - zod@^3.0.0
 
 ## Tests
+
 - Unit: ProfileForm validation
 - Integration: Profile update endpoint
 ```
@@ -82,6 +88,7 @@ or
 ```
 
 Then answer the prompts:
+
 1. **Phase number**: `3`
 2. **Phase name**: `User Profile Page`
 3. **Spec path**: `docs/specs/phase_3.md`
@@ -121,6 +128,7 @@ cat docs/implementation/phase_3/IMPLEMENTATION_PLAN.md
 ```
 
 Check:
+
 - ✅ Atomic commits make sense
 - ✅ Time estimates reasonable
 - ✅ Dependencies correct
@@ -132,6 +140,7 @@ cat docs/implementation/phase_3/ENVIRONMENT_SETUP.md
 ```
 
 Follow the setup steps:
+
 - Install dependencies
 - Configure environment variables
 - Start required services
@@ -143,6 +152,7 @@ cat docs/implementation/phase_3/COMMIT_CHECKLIST.md
 ```
 
 For each commit:
+
 1. ✅ Complete implementation tasks
 2. ✅ Run validation commands
 3. ✅ Self-review checklist
@@ -155,6 +165,7 @@ cat docs/implementation/phase_3/validation/VALIDATION_CHECKLIST.md
 ```
 
 Go through final validation:
+
 - All commits completed
 - All tests pass
 - Code reviewed
@@ -196,28 +207,34 @@ Go through final validation:
 ### Example 1: Simple Feature
 
 **Spec** (2 min to write):
+
 ```markdown
 # Phase 4 - Dark Mode Toggle
 
 ## Objective
+
 Add dark mode toggle to application.
 
 ## Scope
+
 - Theme context provider
 - Toggle component
 - Persist preference
 - Apply theme CSS
 
 ## Files
+
 - contexts/ThemeContext.tsx (new)
 - components/ThemeToggle.tsx (new)
 - styles/themes.css (new)
 - app/layout.tsx (modify)
 
 ## Dependencies
+
 - None (use localStorage)
 
 ## Tests
+
 - Theme persists on reload
 - Toggle switches theme
 ```
@@ -229,13 +246,16 @@ Add dark mode toggle to application.
 ### Example 2: Complex Feature
 
 **Spec** (10 min to write):
+
 ```markdown
 # Phase 5 - Payment Integration
 
 ## Objective
+
 Integrate Stripe for payment processing.
 
 ## Scope
+
 - Stripe checkout flow
 - Webhook handling
 - Order confirmation
@@ -243,6 +263,7 @@ Integrate Stripe for payment processing.
 - Email notifications
 
 ## Files
+
 - api/stripe/checkout.ts (new)
 - api/stripe/webhook.ts (new)
 - components/CheckoutForm.tsx (new)
@@ -251,10 +272,12 @@ Integrate Stripe for payment processing.
 - services/email.ts (modify)
 
 ## Dependencies
+
 - stripe@^14.0.0
 - @stripe/stripe-js@^2.0.0
 
 ## Tests
+
 - Checkout session creation
 - Webhook signature validation
 - Payment status updates
@@ -309,6 +332,7 @@ Integrate Stripe for payment processing.
 ---
 
 **Time Investment**:
+
 - First time: ~20 min (learning + setup)
 - Subsequent uses: ~10 min (spec + generation)
 - **Time saved**: ~5 hours of manual documentation per phase!

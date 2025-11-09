@@ -19,6 +19,7 @@ These checklists (80-150 items) can be exported to external AI agents (Gemini, C
 ```
 
 The command will:
+
 1. ✅ Load the doc-validation-framework skill for methodology
 2. ✅ Delegate to checklist-generator subagent for analysis
 3. ✅ Generate a comprehensive Markdown checklist (80-150 items)
@@ -29,23 +30,27 @@ The command will:
 ### Framework Components
 
 **Skill: `doc-validation-framework`**
+
 - Location: `.claude/skills/doc-validation-framework/`
 - Purpose: Encapsulates the complete validation methodology
 - Invocation: Automatically loaded by the command
 - References: See `SKILL.md` for expert guidance
 
 **Subagent: `checklist-generator`**
+
 - Location: `.claude/agents/checklist-generator.md`
 - Purpose: Analyzes documents and generates checklists
 - Expertise: Extracting 30-50 concepts and 80-150 properties
 - Responsibility: Producing structured Markdown output
 
 **Command: `/generate-checklist`**
+
 - Location: `.claude/commands/generate-checklist.md`
 - Usage: `/generate-checklist <document-path>`
 - Role: Manual entry point that orchestrates the workflow
 
 **Configuration: `validation-config.yaml`**
+
 - Location: `.claude/validation-config.yaml`
 - Purpose: Defines standards, domains, property types
 - Customizable: Can be adjusted for your specific needs
@@ -98,43 +103,50 @@ A typical generated checklist includes:
 # Document Title - Validation Checklist
 
 ## Quick Reference
-| Criticality | Count | % |
-|---|---|---|
-| Fundamental | 23 | 18% |
-| Major | 45 | 35% |
-| Secondary | 59 | 47% |
-| Total | 127 | 100% |
+
+| Criticality | Count | %    |
+| ----------- | ----- | ---- |
+| Fundamental | 23    | 18%  |
+| Major       | 45    | 35%  |
+| Secondary   | 59    | 47%  |
+| Total       | 127   | 100% |
 
 ## Validation Checklist by Domain
 
 ### Domain 1: Framework & Runtime (15 items)
 
 #### Fundamental
+
 - [ ] Is Next.js version 15.0+ confirmed?
   - Type: Version
   - Source: https://nextjs.org/releases
   - Research: Check latest release, breaking changes
 
 #### Major
+
 - [ ] Is the OpenNext adapter still maintained?
   - Type: Support
   - Source: https://github.com/...
   - Research: Check GitHub activity, maintenance status
 
 ### Domain 2: Database & ORM (12 items)
+
 ... (repeat for all domains)
 
 ## Research Sources
 
 ### Next.js
+
 - Official Docs: https://nextjs.org/docs
 - GitHub: https://github.com/vercel/next.js
 - Releases: https://nextjs.org/releases
 
 ### Cloudflare D1
+
 ... (all technologies listed)
 
 ## Notes & Findings
+
 - Space for documenting validation results
 - Track updates, breaking changes, deprecations
 ```
@@ -142,21 +154,27 @@ A typical generated checklist includes:
 ## Usage Workflow
 
 ### Step 1: Generate Checklist (5-15 minutes)
+
 ```bash
 /generate-checklist docs/specs/Architecture_technique.md
 ```
+
 Output: `Architecture_technique.md.validation-checklist.md`
 
 ### Step 2: Export to Research Agent (1 minute)
+
 Copy the generated Markdown checklist and share with external agent (Gemini, ChatGPT)
 
 ### Step 3: External Research (varies)
+
 The external agent receives the checklist and:
+
 - Researches each item using provided sources
 - Collects findings and validation results
 - Produces a validation report
 
 ### Step 4: Review & Update (varies)
+
 Review findings and update documentation as needed
 
 ## Quality Standards
@@ -195,12 +213,14 @@ Generated checklists should meet these standards:
 ## Integration Points
 
 ### With Claude Code Ecosystem
+
 - **Skill**: Autonomously invoked for validation expertise
 - **Subagent**: Handles complex analysis with context isolation
 - **Command**: Manual trigger for user control
 - **Pattern**: Follows recommended Claude Code architecture patterns
 
 ### With External Agents
+
 - **Format**: Plain Markdown (universal)
 - **Completeness**: 80-150 items (comprehensive)
 - **Clarity**: Specific questions for research
@@ -209,16 +229,19 @@ Generated checklists should meet these standards:
 ## Evolution Roadmap
 
 ### Phase 1: Checklist Generation ✅ COMPLETE
+
 - Generates 80-150 item checklists
 - Manually triggered via `/generate-checklist`
 - Ready for external agent research
 
 ### Phase 2: Semi-Automated Research (2-3 weeks)
+
 - Agent performs web research on critical items
 - Human reviews and consolidates findings
 - Automated reporting with findings
 
 ### Phase 3: Full Automation (1-2 months)
+
 - 100% automated validation end-to-end
 - Scheduled regular validations
 - Dashboard with metrics and status
@@ -226,16 +249,19 @@ Generated checklists should meet these standards:
 ## Examples
 
 ### Generate Checklist for Architecture Document
+
 ```bash
 /generate-checklist docs/specs/Architecture_technique.md
 ```
 
 ### Generate Checklist for Framework Documentation
+
 ```bash
 /generate-checklist docs/frameworks/GENERIC_VALIDATION_FRAMEWORK.md
 ```
 
 ### Generate Checklist for Any Technical Document
+
 ```bash
 /generate-checklist @my-document.md
 ```
@@ -243,15 +269,19 @@ Generated checklists should meet these standards:
 ## For Framework Developers
 
 ### To Customize Domains
+
 Edit `.claude/validation-config.yaml` and update the `standard_domains` section.
 
 ### To Adjust Property Types
+
 Modify `property_types` in the configuration file.
 
 ### To Change Criticality Distribution
+
 Update `distribution_target` in criticality_levels section.
 
 ### To Extend the Skill
+
 Add new references to `.claude/skills/doc-validation-framework/references/`
 
 ## References
@@ -265,6 +295,7 @@ Add new references to `.claude/skills/doc-validation-framework/references/`
 ## Support
 
 For issues or questions about the framework:
+
 1. Review the SKILL.md in the doc-validation-framework skill
 2. Check the Quick Start guide
 3. Review the Agent Implementation Guide for detailed methodology

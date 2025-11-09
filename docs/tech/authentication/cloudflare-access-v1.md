@@ -17,6 +17,7 @@ La V1 utilise Cloudflare Access comme mécanisme d'authentification pour sécuri
 ### 1. Créer une Application Access
 
 Dans Cloudflare Dashboard :
+
 1. Allez à **Zero Trust** → **Access** → **Applications**
 2. Créez une nouvelle application
 3. Configurez le domaine : `https://yourdomain.com/admin`
@@ -28,36 +29,36 @@ Créez un middleware pour valider le JWT Cloudflare :
 
 ```typescript
 // src/middleware.ts
-import { NextRequest, NextResponse } from "next/server";
-import * as jose from "jose";
+import { NextRequest, NextResponse } from 'next/server';
+import * as jose from 'jose';
 
 export async function middleware(request: NextRequest) {
   // Extraire le JWT du header Cf-Authorization
-  const token = request.headers.get("Cf-Access-Jwt-Assertion");
+  const token = request.headers.get('Cf-Access-Jwt-Assertion');
 
   // Routes protégées
-  if (request.nextUrl.pathname.startsWith("/admin")) {
+  if (request.nextUrl.pathname.startsWith('/admin')) {
     if (!token) {
-      return NextResponse.redirect(new URL("/", request.url));
+      return NextResponse.redirect(new URL('/', request.url));
     }
 
     try {
       // Valider le JWT (Cloudflare le signe avec OIDC)
       const secret = process.env.CLOUDFLARE_ACCESS_KEY;
       if (!secret) {
-        throw new Error("Access key not configured");
+        throw new Error('Access key not configured');
       }
 
       const verified = await jose.jwtVerify(
         token,
-        new TextEncoder().encode(secret)
+        new TextEncoder().encode(secret),
       );
 
       // Token valide, continuer
       return NextResponse.next();
     } catch (error) {
-      console.error("Token validation failed:", error);
-      return NextResponse.redirect(new URL("/", request.url));
+      console.error('Token validation failed:', error);
+      return NextResponse.redirect(new URL('/', request.url));
     }
   }
 
@@ -65,13 +66,14 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ['/admin/:path*'],
 };
 ```
 
 ### 3. Récupérer la Clé d'Accès
 
 La clé de vérification JWT est disponible dans Cloudflare Dashboard :
+
 1. **Zero Trust** → **Access** → **Applications** → Votre app
 2. Copiez la **Application Audience (AUD)**
 3. Configurez dans `wrangler.toml` :
@@ -89,24 +91,24 @@ CLOUDFLARE_ACCESS_KEY = "your-secret-key"
 
 ```typescript
 // src/app/admin/actions.ts
-"use server";
+'use server';
 
-import { headers } from "next/headers";
-import * as jose from "jose";
+import { headers } from 'next/headers';
+import * as jose from 'jose';
 
 export async function getAdminIdentity() {
   const headersList = await headers();
-  const token = headersList.get("Cf-Access-Jwt-Assertion");
+  const token = headersList.get('Cf-Access-Jwt-Assertion');
 
   if (!token) {
-    throw new Error("Not authenticated");
+    throw new Error('Not authenticated');
   }
 
   try {
     const secret = process.env.CLOUDFLARE_ACCESS_KEY;
     const verified = await jose.jwtVerify(
       token,
-      new TextEncoder().encode(secret)
+      new TextEncoder().encode(secret),
     );
 
     const payload = verified.payload as any;
@@ -118,7 +120,7 @@ export async function getAdminIdentity() {
       isAdmin: true,
     };
   } catch (error) {
-    throw new Error("Invalid token");
+    throw new Error('Invalid token');
   }
 }
 ```

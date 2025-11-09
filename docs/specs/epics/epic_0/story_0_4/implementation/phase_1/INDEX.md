@@ -30,6 +30,7 @@ phase_1/
 Install Drizzle ORM, configure connection to Cloudflare D1, and validate basic connectivity.
 
 This phase establishes the foundation for all database operations in the sebc.dev project by:
+
 - Installing the Drizzle ORM ecosystem (drizzle-orm, drizzle-kit)
 - Creating a Cloudflare D1 database instance (both local and remote)
 - Configuring Wrangler to bind the D1 database to the Next.js application
@@ -52,20 +53,21 @@ This phase establishes the foundation for all database operations in the sebc.de
 
 ## 📚 Available Documents
 
-| Document | Description | For Who | Duration |
-|----------|-------------|---------|----------|
-| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)** | Atomic strategy in 5 commits | Developer | 15 min |
-| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)** | Detailed checklist per commit | Developer | Reference |
-| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)** | Environment variables & setup | DevOps/Dev | 10 min |
-| **[guides/REVIEW.md](./guides/REVIEW.md)** | Code review guide | Reviewer | 30 min |
-| **[guides/TESTING.md](./guides/TESTING.md)** | Testing guide (integration) | QA/Dev | 20 min |
-| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist | Tech Lead | 30 min |
+| Document                                                                       | Description                   | For Who    | Duration  |
+| ------------------------------------------------------------------------------ | ----------------------------- | ---------- | --------- |
+| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)**                         | Atomic strategy in 5 commits  | Developer  | 15 min    |
+| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)**                               | Detailed checklist per commit | Developer  | Reference |
+| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)**                             | Environment variables & setup | DevOps/Dev | 10 min    |
+| **[guides/REVIEW.md](./guides/REVIEW.md)**                                     | Code review guide             | Reviewer   | 30 min    |
+| **[guides/TESTING.md](./guides/TESTING.md)**                                   | Testing guide (integration)   | QA/Dev     | 20 min    |
+| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist    | Tech Lead  | 30 min    |
 
 ---
 
 ## 🔄 Implementation Workflow
 
 ### Step 1: Initial Setup
+
 ```bash
 # Read the overall story phases plan
 cat docs/specs/epics/epic_0/story_0_4/implementation/PHASES_PLAN.md
@@ -78,6 +80,7 @@ cat docs/specs/epics/epic_0/story_0_4/implementation/phase_1/ENVIRONMENT_SETUP.m
 ```
 
 ### Step 2: Atomic Implementation (5 commits)
+
 ```bash
 # Commit 1: Install Drizzle dependencies
 cat docs/specs/epics/epic_0/story_0_4/implementation/phase_1/COMMIT_CHECKLIST.md  # Section Commit 1
@@ -96,6 +99,7 @@ cat docs/specs/epics/epic_0/story_0_4/implementation/phase_1/COMMIT_CHECKLIST.md
 ```
 
 ### Step 3: Validation
+
 ```bash
 # Run integration test
 pnpm test:integration
@@ -115,26 +119,34 @@ cat docs/specs/epics/epic_0/story_0_4/implementation/phase_1/validation/VALIDATI
 ## 🎯 Use Cases by Profile
 
 ### 🧑‍💻 Developer
+
 **Goal**: Implement Phase 1 step-by-step
+
 1. Read IMPLEMENTATION_PLAN.md (15 min)
 2. Follow COMMIT_CHECKLIST.md for each of the 5 commits
 3. Validate after each commit
 4. Use TESTING.md to write the connection test
 
 ### 👀 Code Reviewer
+
 **Goal**: Review the implementation efficiently
+
 1. Read IMPLEMENTATION_PLAN.md to understand strategy (15 min)
 2. Use guides/REVIEW.md for commit-by-commit review (2-3h)
 3. Verify against VALIDATION_CHECKLIST.md
 
 ### 📊 Tech Lead / Project Manager
+
 **Goal**: Track progress and quality
+
 1. Check INDEX.md for status
 2. Review IMPLEMENTATION_PLAN.md for metrics
 3. Use VALIDATION_CHECKLIST.md for final approval
 
 ### 🏗️ Architect / Senior Dev
+
 **Goal**: Ensure architectural consistency
+
 1. Review IMPLEMENTATION_PLAN.md for design decisions
 2. Check ENVIRONMENT_SETUP.md for dependencies
 3. Validate ORM choice (Drizzle) and D1 configuration
@@ -143,13 +155,13 @@ cat docs/specs/epics/epic_0/story_0_4/implementation/phase_1/validation/VALIDATI
 
 ## 📊 Metrics
 
-| Metric | Target | Actual |
-|--------|--------|--------|
-| **Total Commits** | 5 | - |
-| **Implementation Time** | 4-5h | - |
-| **Review Time** | 2.5-3h | - |
-| **Test Coverage** | 100% (connection utility) | - |
-| **Type Safety** | 100% | - |
+| Metric                  | Target                    | Actual |
+| ----------------------- | ------------------------- | ------ |
+| **Total Commits**       | 5                         | -      |
+| **Implementation Time** | 4-5h                      | -      |
+| **Review Time**         | 2.5-3h                    | -      |
+| **Test Coverage**       | 100% (connection utility) | -      |
+| **Type Safety**         | 100%                      | -      |
 
 ---
 

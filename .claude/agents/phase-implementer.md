@@ -92,10 +92,12 @@ Before implementing, you MUST gather context from multiple sources:
 You are working on a **SvelteKit 5 + Cloudflare Workers** stack with specific architectural constraints:
 
 **See Full Details**:
+
 - **Frontend_Specification.md**: `docs/specs/Frontend_Specification.md` - Complete tech stack and architecture
 - **Brief.md**: `docs/specs/Brief.md` - Project overview and constraints
 
 **Tech Stack Summary**:
+
 - **Framework**: SvelteKit 5 with Svelte 5 Runes (reactive, type-safe)
 - **Runtime**: Cloudflare Workers (edge-first, serverless)
 - **Database**: Cloudflare D1 (SQLite)
@@ -108,6 +110,7 @@ You are working on a **SvelteKit 5 + Cloudflare Workers** stack with specific ar
 - **Package Manager**: pnpm
 
 **Development Workflow**:
+
 - Local development with Wrangler HMR
 - Test changes before deployment
 - Follow SvelteKit conventions

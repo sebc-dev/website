@@ -22,6 +22,7 @@ Phase 4 focuses on **unit testing** for validation logic:
 ### Purpose
 
 Test that validation schemas and helpers correctly:
+
 - Accept valid data
 - Reject invalid data
 - Provide clear error messages
@@ -91,8 +92,8 @@ src/lib/server/db/
 3. Follow the pattern:
 
 ```typescript
-import { describe, it, expect } from 'vitest'
-import { insertArticleSchema } from './validation'
+import { describe, it, expect } from 'vitest';
+import { insertArticleSchema } from './validation';
 
 describe('Auto-generated Insert Schemas', () => {
   describe('insertArticleSchema', () => {
@@ -102,17 +103,17 @@ describe('Auto-generated Insert Schemas', () => {
         categoryId: 'cat-1',
         complexity: 'intermediate',
         status: 'draft',
-      }
+      };
 
       // Act: Validate data
-      const result = insertArticleSchema.safeParse(validArticle)
+      const result = insertArticleSchema.safeParse(validArticle);
 
       // Assert: Check result
-      expect(result.success).toBe(true)
+      expect(result.success).toBe(true);
       if (result.success) {
-        expect(result.data.categoryId).toBe('cat-1')
+        expect(result.data.categoryId).toBe('cat-1');
       }
-    })
+    });
 
     it('should reject invalid status enum', () => {
       // Arrange: Prepare invalid data
@@ -120,19 +121,19 @@ describe('Auto-generated Insert Schemas', () => {
         categoryId: 'cat-1',
         complexity: 'intermediate',
         status: 'invalid_status',
-      }
+      };
 
       // Act: Validate data
-      const result = insertArticleSchema.safeParse(invalidArticle)
+      const result = insertArticleSchema.safeParse(invalidArticle);
 
       // Assert: Check failure
-      expect(result.success).toBe(false)
+      expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error.errors[0].path).toContain('status')
+        expect(result.error.errors[0].path).toContain('status');
       }
-    })
-  })
-})
+    });
+  });
+});
 ```
 
 ---
@@ -149,6 +150,7 @@ pnpm test:coverage src/lib/server/db/validation.test.ts
 ### View Coverage
 
 **Terminal Output**:
+
 ```
  % Coverage report from v8
 ------------------------------|---------|----------|---------|---------|
@@ -160,6 +162,7 @@ All files                     |   87.50 |    85.00 |   90.00 |   87.50 |
 ```
 
 **HTML Report**:
+
 ```bash
 # Generate HTML coverage report
 pnpm test:coverage src/lib/server/db/validation.test.ts
@@ -170,13 +173,13 @@ open coverage/index.html
 
 ### Coverage Goals
 
-| Area | Target | Current |
-|------|--------|---------|
-| Statements | >85% | - |
-| Branches | >80% | - |
-| Functions | >85% | - |
-| Lines | >85% | - |
-| **Overall** | **>85%** | - |
+| Area        | Target   | Current |
+| ----------- | -------- | ------- |
+| Statements  | >85%     | -       |
+| Branches    | >80%     | -       |
+| Functions   | >85%     | -       |
+| Lines       | >85%     | -       |
+| **Overall** | **>85%** | -       |
 
 ---
 
@@ -187,6 +190,7 @@ open coverage/index.html
 #### Issue: Tests fail with "Cannot find module"
 
 **Solution**:
+
 ```bash
 # Clear cache and reinstall
 rm -rf node_modules/.cache
@@ -199,6 +203,7 @@ pnpm test src/lib/server/db/validation.test.ts
 #### Issue: Slug validation test fails unexpectedly
 
 **Solution**:
+
 ```bash
 # Check regex in validation.ts
 grep "slug.*regex" src/lib/server/db/validation.ts
@@ -210,6 +215,7 @@ grep "slug.*regex" src/lib/server/db/validation.ts
 #### Issue: Coverage is below 85%
 
 **Solution**:
+
 1. Run coverage report: `pnpm test:coverage`
 2. Open HTML report to see uncovered lines
 3. Add tests for uncovered code:
@@ -239,6 +245,7 @@ node --inspect-brk node_modules/vitest/vitest.mjs src/lib/server/db/validation.t
 **Purpose**: Verify drizzle-zod generates schemas correctly
 
 **Examples**:
+
 - Valid data passes validation
 - Required fields are enforced
 - ENUM values validated
@@ -253,6 +260,7 @@ node --inspect-brk node_modules/vitest/vitest.mjs src/lib/server/db/validation.t
 **Purpose**: Verify custom validation rules work
 
 **Examples**:
+
 - Slug format validation (lowercase, hyphens only)
 - String length constraints (title max 200, excerpt max 500)
 - SEO field validation
@@ -267,6 +275,7 @@ node --inspect-brk node_modules/vitest/vitest.mjs src/lib/server/db/validation.t
 **Purpose**: Verify update schemas allow optional fields
 
 **Examples**:
+
 - Partial updates with only changed fields
 - Partial updates still validate provided fields
 - No required fields in update schemas
@@ -280,6 +289,7 @@ node --inspect-brk node_modules/vitest/vitest.mjs src/lib/server/db/validation.t
 **Purpose**: Verify helper functions work correctly
 
 **Examples**:
+
 - `validateArticleInsert` with valid/invalid data
 - `validateTranslationInsert` with valid/invalid data
 - `validateArticleUpdate` with partial data
@@ -294,6 +304,7 @@ node --inspect-brk node_modules/vitest/vitest.mjs src/lib/server/db/validation.t
 **Purpose**: Verify handling of unusual inputs
 
 **Examples**:
+
 - Empty strings (should fail if required)
 - Missing required fields (should fail)
 - Extra fields (should pass - Zod allows by default)
@@ -326,6 +337,7 @@ node --inspect-brk node_modules/vitest/vitest.mjs src/lib/server/db/validation.t
 ### Writing Tests
 
 ✅ **Do**:
+
 - Test behavior, not implementation
 - Use descriptive test names ("should reject invalid slug format (uppercase)")
 - One assertion per test when possible
@@ -333,6 +345,7 @@ node --inspect-brk node_modules/vitest/vitest.mjs src/lib/server/db/validation.t
 - Verify error messages are clear
 
 ❌ **Don't**:
+
 - Test library internals (Zod, drizzle-zod)
 - Write flaky tests (tests that fail randomly)
 - Ignore failing tests
@@ -344,6 +357,7 @@ node --inspect-brk node_modules/vitest/vitest.mjs src/lib/server/db/validation.t
 **Pattern**: `should [expected behavior] when [condition]`
 
 Examples:
+
 - `should validate valid article data`
 - `should reject invalid slug format (uppercase)`
 - `should allow partial updates with optional fields`
@@ -356,13 +370,13 @@ describe('Feature or Component', () => {
   describe('Sub-feature or Method', () => {
     it('should do X when Y', () => {
       // Test code
-    })
+    });
 
     it('should do Z when W', () => {
       // Test code
-    })
-  })
-})
+    });
+  });
+});
 ```
 
 ---
@@ -372,6 +386,7 @@ describe('Feature or Component', () => {
 Before marking Phase 4 complete:
 
 ### Unit Tests
+
 - [ ] All auto-generated schemas tested (insert/select)
 - [ ] All custom refinements tested (slug, lengths, ENUMs)
 - [ ] All partial schemas tested
@@ -380,6 +395,7 @@ Before marking Phase 4 complete:
 - [ ] Edge cases tested
 
 ### Test Quality
+
 - [ ] All tests pass
 - [ ] Descriptive test names
 - [ ] Clear arrange-act-assert structure
@@ -387,12 +403,14 @@ Before marking Phase 4 complete:
 - [ ] No console.log statements
 
 ### Coverage
+
 - [ ] Coverage >85% overall
 - [ ] All functions covered
 - [ ] All branches covered (if/else)
 - [ ] Edge cases covered
 
 ### Running Tests
+
 - [ ] Tests run successfully: `pnpm test src/lib/server/db/validation.test.ts`
 - [ ] Coverage passes: `pnpm test:coverage`
 - [ ] No warnings or errors in output
@@ -401,12 +419,12 @@ Before marking Phase 4 complete:
 
 ## 📊 Test Metrics
 
-| Metric | Target | Actual |
-|--------|--------|--------|
-| Test Count | 15+ | - |
-| Coverage | >85% | - |
-| Test Duration | <500ms | - |
-| Passing Tests | 100% | - |
+| Metric        | Target | Actual |
+| ------------- | ------ | ------ |
+| Test Count    | 15+    | -      |
+| Coverage      | >85%   | -      |
+| Test Duration | <500ms | -      |
+| Passing Tests | 100%   | -      |
 
 ---
 
@@ -414,6 +432,7 @@ Before marking Phase 4 complete:
 
 **Q: How much should I test?**
 A: Aim for >85% coverage, focus on:
+
 - Happy paths (valid data)
 - Error paths (invalid data)
 - Edge cases (empty, missing, extra fields)
@@ -433,11 +452,12 @@ A: Fix the validation logic or update the test if expectations were wrong. Don't
 
 **Q: How do I test error messages?**
 A: Use `.safeParse()` and check `result.error.errors[0].message`:
+
 ```typescript
-const result = schema.safeParse(invalidData)
-expect(result.success).toBe(false)
+const result = schema.safeParse(invalidData);
+expect(result.success).toBe(false);
 if (!result.success) {
-  expect(result.error.errors[0].message).toContain('Slug must be lowercase')
+  expect(result.error.errors[0].message).toContain('Slug must be lowercase');
 }
 ```
 

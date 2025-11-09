@@ -1,6 +1,6 @@
 ---
 created: 2025-11-05T00:00
-title: "🚀 START HERE - Framework de Validation de Documents"
+title: '🚀 START HERE - Framework de Validation de Documents'
 status: entry-point
 ---
 
@@ -44,14 +44,14 @@ Un framework qui permet de **générer automatiquement des checklists de validat
 
 **6 documents (3,725 lignes) contenant:**
 
-| Document | Taille | Rôle | Lire si... |
-|----------|--------|------|-----------|
-| **QUICK_START.md** | 522 L | Guide rapide | Vous voulez valider UN document |
-| **README.md** | 456 L | Vue d'ensemble | Vous découvrez le framework |
-| **GENERIC_VALIDATION_FRAMEWORK.md** | 617 L | Méthodologie | Vous voulez comprendre la théorie |
-| **AGENT_IMPLEMENTATION_GUIDE.md** | 700 L | Implementation | Vous codez un agent IA |
-| **EXAMPLE_APPLICATION.md** | 856 L | Démonstration | Vous voulez voir ça marche |
-| **INDEX.md** | 574 L | Index détaillé | Vous cherchez quelque chose |
+| Document                            | Taille | Rôle           | Lire si...                        |
+| ----------------------------------- | ------ | -------------- | --------------------------------- |
+| **QUICK_START.md**                  | 522 L  | Guide rapide   | Vous voulez valider UN document   |
+| **README.md**                       | 456 L  | Vue d'ensemble | Vous découvrez le framework       |
+| **GENERIC_VALIDATION_FRAMEWORK.md** | 617 L  | Méthodologie   | Vous voulez comprendre la théorie |
+| **AGENT_IMPLEMENTATION_GUIDE.md**   | 700 L  | Implementation | Vous codez un agent IA            |
+| **EXAMPLE_APPLICATION.md**          | 856 L  | Démonstration  | Vous voulez voir ça marche        |
+| **INDEX.md**                        | 574 L  | Index détaillé | Vous cherchez quelque chose       |
 
 ---
 
@@ -377,6 +377,7 @@ Trouver quelque chose spécifique     → INDEX.md
 ## 🎉 Vous Êtes Prêt!
 
 **Vous avez:**
+
 - ✅ Méthodologie complète
 - ✅ Guides pratiques
 - ✅ Exemples concrets
@@ -386,6 +387,7 @@ Trouver quelque chose spécifique     → INDEX.md
 **Choix de votre prochain document:**
 
 ### Option A: Apprendre Rapidement (30 min)
+
 ```
 → Ouvrez QUICK_START.md
 → Lisez la section "3 Étapes Principales"
@@ -393,6 +395,7 @@ Trouver quelque chose spécifique     → INDEX.md
 ```
 
 ### Option B: Comprendre Complètement (3 heures)
+
 ```
 → Ouvrez README.md
 → Lisez GENERIC_VALIDATION_FRAMEWORK.md
@@ -401,6 +404,7 @@ Trouver quelque chose spécifique     → INDEX.md
 ```
 
 ### Option C: Implémenter l'Agent (2-3 jours)
+
 ```
 → Ouvrez GENERIC_VALIDATION_FRAMEWORK.md
 → Consultez AGENT_IMPLEMENTATION_GUIDE.md
@@ -414,7 +418,7 @@ Trouver quelque chose spécifique     → INDEX.md
 
 Ce framework a été créé parce qu'il y a un **besoin systémique** :
 
-> *"Comment s'assurer qu'un document technique reste à jour et exact?"*
+> _"Comment s'assurer qu'un document technique reste à jour et exact?"_
 
 **La réponse:** Un système **reproductible, exhaustif et traçable**.
 

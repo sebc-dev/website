@@ -7,6 +7,7 @@ Complete guide for reviewing the Phase 3 implementation: Taxonomy Schemas.
 ## 🎯 Review Objective
 
 Validate that the implementation:
+
 - ✅ Defines 3 taxonomy tables correctly (categories, tags, articleTags)
 - ✅ Establishes proper foreign key relationships with cascading deletes
 - ✅ Creates and applies migration successfully without schema errors
@@ -22,11 +23,13 @@ Validate that the implementation:
 Phase 3 is split into **5 atomic commits**. You can:
 
 **Option A: Commit-by-commit review** (recommended)
+
 - Easier to digest (15-45 min per commit)
 - Progressive validation (schema → migration → seed → tests)
 - Targeted feedback per commit
 
 **Option B: Global review at once**
+
 - Faster (2-3h total)
 - Immediate overview of complete taxonomy layer
 - Requires more focus
@@ -45,6 +48,7 @@ Phase 3 is split into **5 atomic commits**. You can:
 #### Review Checklist
 
 ##### Schema Structure
+
 - [ ] `categories` table defined using `sqliteTable()`
 - [ ] All 8 required fields present:
   - [ ] `id` - text, primary key
@@ -59,12 +63,14 @@ Phase 3 is split into **5 atomic commits**. You can:
 - [ ] Table exported: `export const categories = sqliteTable(...)`
 
 ##### Documentation
+
 - [ ] JSDoc comment above table definition
 - [ ] Comment explains: 9 canonical categories
 - [ ] Comment mentions: Modifiable but not deletable
 - [ ] Comment describes purpose: Primary article classification
 
 ##### Code Quality
+
 - [ ] No TypeScript errors
 - [ ] Consistent formatting with existing tables
 - [ ] No unused imports
@@ -99,6 +105,7 @@ pnpm db:generate --check
 #### Review Checklist
 
 ##### Tags Table
+
 - [ ] `tags` table defined with `sqliteTable()`
 - [ ] All 4 required fields:
   - [ ] `id` - text, primary key
@@ -109,6 +116,7 @@ pnpm db:generate --check
 - [ ] JSDoc comment explains: Flexible taxonomy, admin-managed
 
 ##### ArticleTags Junction Table
+
 - [ ] `articleTags` table defined with `sqliteTable()`
 - [ ] Two FK fields:
   - [ ] `articleId` - text, not null
@@ -120,12 +128,14 @@ pnpm db:generate --check
 - [ ] JSDoc comment explains: Many-to-Many, composite PK prevents duplicates
 
 ##### Articles Table Update (if applicable)
+
 - [ ] If `categoryId` was nullable in Phase 2:
   - [ ] FK reference added: `.references(() => categories.id)`
   - [ ] Behavior appropriate (nullable or not)
 - [ ] If FK already existed, verify it's correct
 
 ##### Code Quality
+
 - [ ] No TypeScript errors
 - [ ] No `any` types
 - [ ] Consistent formatting
@@ -160,6 +170,7 @@ pnpm db:generate --check
 #### Review Checklist
 
 ##### Migration SQL Content
+
 - [ ] File named correctly (e.g., `0002_add_taxonomy_tables.sql`)
 - [ ] CREATE TABLE statement for `categories` with 8 columns
 - [ ] CREATE TABLE statement for `tags` with 4 columns
@@ -172,17 +183,20 @@ pnpm db:generate --check
 - [ ] No SQL syntax errors
 
 ##### Migration Metadata
+
 - [ ] `meta/_journal.json` updated with new migration entry
 - [ ] Migration hash generated correctly
 - [ ] Previous migrations still listed
 
 ##### Migration Execution
+
 - [ ] Migration applied successfully (`pnpm db:migrate:local`)
 - [ ] No errors in Wrangler output
 - [ ] All 3 tables created in local D1
 - [ ] Previous tables intact (articles, article_translations)
 
 ##### Code Quality
+
 - [ ] Migration files committed (SQL + meta JSON)
 - [ ] No manual edits to generated SQL (breaks drizzle-kit tracking)
 - [ ] Migration is atomic (single transaction if possible)
@@ -218,6 +232,7 @@ wrangler d1 execute DB --local --command "SELECT name FROM sqlite_master WHERE t
 #### Review Checklist
 
 ##### Seed Script Content
+
 - [ ] File created: `drizzle/seeds/categories.sql`
 - [ ] Header comment explains purpose (canonical categories)
 - [ ] Uses `INSERT OR IGNORE` for idempotency
@@ -233,6 +248,7 @@ wrangler d1 execute DB --local --command "SELECT name FROM sqlite_master WHERE t
   9. [ ] tool-test - Test d'Outil / Tool Test
 
 ##### Category Data Accuracy
+
 - [ ] Each INSERT has all 8 fields (id, key, nameFr, nameEn, slugFr, slugEn, icon, color)
 - [ ] IDs are consistent (e.g., 'cat-1' through 'cat-9')
 - [ ] Keys are URL-safe (lowercase, hyphens, no spaces)
@@ -247,11 +263,13 @@ wrangler d1 execute DB --local --command "SELECT name FROM sqlite_master WHERE t
 - [ ] Single quotes escaped correctly in French (e.g., `d''Apprentissage`, `d''Outil`)
 
 ##### Package.json
+
 - [ ] `db:seed` script added to `scripts` section
 - [ ] Script command: `wrangler d1 execute DB --local --file=./drizzle/seeds/categories.sql`
 - [ ] Path to SQL file is correct
 
 ##### Execution
+
 - [ ] Seed script runs without errors (`pnpm db:seed`)
 - [ ] 9 categories inserted (verify count)
 - [ ] Re-running seed is idempotent (no duplicates, no errors)
@@ -274,6 +292,7 @@ pnpm db:seed
 ```
 
 **Expected Results**:
+
 - Count: 9
 - Keys: behind-scenes, case-study, deep-analysis, learning-path, news, quick-tips, retrospective, tool-test, tutorial
 - No errors on re-run
@@ -294,6 +313,7 @@ pnpm db:seed
 #### Review Checklist
 
 ##### Test Structure
+
 - [ ] File created: `tests/integration/taxonomy-schema.test.ts`
 - [ ] Proper imports: Vitest (`describe`, `it`, `beforeEach`, `expect`)
 - [ ] Database connection and tables imported
@@ -302,6 +322,7 @@ pnpm db:seed
 - [ ] Uses `it` or `test` for individual tests
 
 ##### Test Coverage - Categories
+
 - [ ] Test: Retrieve all 9 canonical categories
 - [ ] Test: Query category by key (e.g., 'news')
 - [ ] Test: Verify category structure (all 8 fields present and correct types)
@@ -309,6 +330,7 @@ pnpm db:seed
 - [ ] Categories verified against seed data
 
 ##### Test Coverage - Tags
+
 - [ ] Test: Insert tag with bilingual names
 - [ ] Test: Query tag by ID
 - [ ] Test: Update tag name (optional but recommended)
@@ -316,6 +338,7 @@ pnpm db:seed
 - [ ] Tests use proper assertions (toHaveLength, toBe, etc.)
 
 ##### Test Coverage - ArticleTags Junction
+
 - [ ] Test: Link article to tag (insert articleTag)
 - [ ] Test: Query tags for specific article (join or separate queries)
 - [ ] Test: Composite primary key prevents duplicates (insert same pair twice)
@@ -323,6 +346,7 @@ pnpm db:seed
 - [ ] Test: ON DELETE CASCADE for tag (deleting tag removes articleTags)
 
 ##### Test Quality
+
 - [ ] Uses local D1 database (not mocks)
 - [ ] `beforeEach` hook seeds test database consistently
 - [ ] Tests are isolated (each starts with clean state)
@@ -332,6 +356,7 @@ pnpm db:seed
 - [ ] Tests clean up if needed (or rely on beforeEach reset)
 
 ##### Code Quality
+
 - [ ] No TypeScript errors
 - [ ] No `any` types
 - [ ] Consistent formatting
@@ -353,6 +378,7 @@ pnpm test:coverage tests/integration/taxonomy-schema.test.ts
 ```
 
 **Expected Results**:
+
 - All tests pass (✓)
 - Coverage >80% for taxonomy-related code
 - No errors or warnings
@@ -371,6 +397,7 @@ pnpm test:coverage tests/integration/taxonomy-schema.test.ts
 After reviewing all 5 commits:
 
 ### Architecture & Design
+
 - [ ] All 3 taxonomy tables follow SQLite best practices (TEXT types, proper constraints)
 - [ ] Foreign key relationships are logical and correct
 - [ ] Composite primary key pattern used correctly for junction table
@@ -378,12 +405,14 @@ After reviewing all 5 commits:
 - [ ] Schema design matches Architecture documentation (if specified)
 
 ### Code Quality
+
 - [ ] Consistent style across all schema definitions
 - [ ] Clear and consistent naming (camelCase for fields, plural for tables)
 - [ ] JSDoc comments provide context and explain design decisions
 - [ ] No commented-out code or debug statements
 
 ### Testing
+
 - [ ] All taxonomy features tested (categories, tags, junction)
 - [ ] Edge cases covered (duplicate prevention, cascade deletes)
 - [ ] Integration tests use real D1 database
@@ -391,18 +420,21 @@ After reviewing all 5 commits:
 - [ ] Tests are meaningful and catch regressions
 
 ### Type Safety
+
 - [ ] No `any` types (unless justified and documented)
 - [ ] Drizzle type inference works correctly
 - [ ] TypeScript strict mode passes
 - [ ] All table exports have proper types
 
 ### Data Integrity
+
 - [ ] 9 canonical categories match specification exactly
 - [ ] Category metadata (icons, colors) are valid and reference-able
 - [ ] Seed script is idempotent and re-runnable
 - [ ] Foreign keys enforce referential integrity
 
 ### Documentation
+
 - [ ] JSDoc comments explain non-obvious design choices
 - [ ] Seed script has header comment
 - [ ] README or dev docs updated if new commands added (`db:seed`)
@@ -465,6 +497,7 @@ Use this template for feedback:
 ## 🎯 Review Actions
 
 ### If Approved ✅
+
 1. Merge all 5 commits to main branch
 2. Update Phase 3 status to COMPLETED in INDEX.md
 3. Archive review notes
@@ -472,12 +505,14 @@ Use this template for feedback:
 5. Prepare for Phase 4
 
 ### If Changes Requested 🔧
+
 1. Create detailed feedback using template above
 2. Discuss with developer (schedule review meeting if needed)
 3. Track requested changes (create issues or checklist)
 4. Re-review after fixes applied
 
 ### If Rejected ❌
+
 1. Document major issues preventing approval
 2. Schedule discussion with developer and tech lead
 3. Plan rework strategy (which commits need changes)

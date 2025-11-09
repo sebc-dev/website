@@ -12,6 +12,7 @@ status: index
 Ce dossier contient un **framework générique et réutilisable** pour valider la qualité, l'exactitude et la fraîcheur des documents techniques.
 
 Le framework peut être utilisé :
+
 - ✅ **Manuellement** : Par des humains suivant une checklist
 - ✅ **Semi-automatisé** : Agent IA génère checklist, humains font recherche
 - ✅ **Complètement automatisé** : Agent IA génère AND complète le checklist (future)
@@ -21,7 +22,8 @@ Le framework peut être utilisé :
 ## 📚 Documents du Framework
 
 ### 1. **GENERIC_VALIDATION_FRAMEWORK.md**
-   *La Bible du Framework*
+
+_La Bible du Framework_
 
 **Contient :** La méthodologie complète et réutilisable
 
@@ -39,6 +41,7 @@ Le framework peut être utilisé :
 **Usage :** Consulter pour comprendre la méthodologie globale
 
 **Qui l'utilise :**
+
 - Développeurs d'agents IA
 - Architectes de documentation
 - QA pour processus de validation
@@ -46,7 +49,8 @@ Le framework peut être utilisé :
 ---
 
 ### 2. **AGENT_IMPLEMENTATION_GUIDE.md**
-   *Guide Pratique pour Développeurs*
+
+_Guide Pratique pour Développeurs_
 
 **Contient :** Instructions concrètes pour implémenter un agent
 
@@ -66,6 +70,7 @@ Le framework peut être utilisé :
 **Usage :** Utiliser pour implémenter un agent réel
 
 **Qui l'utilise :**
+
 - Développeurs Python/JavaScript/Go
 - ML engineers
 - DevOps engineers pour CI/CD
@@ -73,7 +78,8 @@ Le framework peut être utilisé :
 ---
 
 ### 3. **EXAMPLE_APPLICATION.md**
-   *Démonstration Concrète*
+
+_Démonstration Concrète_
 
 **Contient :** Application du framework à un document réel
 
@@ -93,6 +99,7 @@ Le framework peut être utilisé :
 **Usage :** Voir comment ça marche en pratique
 
 **Qui l'utilise :**
+
 - Toute personne voulant comprendre le processus
 - Validateurs de documents
 - Users testing le framework
@@ -194,16 +201,16 @@ Le framework peut être utilisé :
 
 Toute affirmation technique tombe dans l'une de ces catégories :
 
-| Type | Question | Exemple |
-|------|----------|---------|
-| **Version** | "La version X.Y.Z est-elle correcte ?" | "Next.js 15.0+" |
-| **Disponibilité** | "La feature X est-elle GA/beta ?" | "D1 Time Travel available" |
-| **Support** | "X supporte-t-il Y ?" | "OpenNext supports RSC" |
-| **Recommandation** | "X est-il toujours recommandé ?" | "Drizzle as best ORM" |
-| **Dépression** | "X est-il vraiment obsolète ?" | "next-on-pages archived" |
-| **Limitation** | "La limite X est-elle exacte ?" | "2MB row max" |
-| **Pattern** | "Le pattern X est-il validé ?" | "Server-first approach" |
-| **Intégration** | "A et B s'intègrent-ils bien ?" | "Drizzle → Zod → Form" |
+| Type               | Question                               | Exemple                    |
+| ------------------ | -------------------------------------- | -------------------------- |
+| **Version**        | "La version X.Y.Z est-elle correcte ?" | "Next.js 15.0+"            |
+| **Disponibilité**  | "La feature X est-elle GA/beta ?"      | "D1 Time Travel available" |
+| **Support**        | "X supporte-t-il Y ?"                  | "OpenNext supports RSC"    |
+| **Recommandation** | "X est-il toujours recommandé ?"       | "Drizzle as best ORM"      |
+| **Dépression**     | "X est-il vraiment obsolète ?"         | "next-on-pages archived"   |
+| **Limitation**     | "La limite X est-elle exacte ?"        | "2MB row max"              |
+| **Pattern**        | "Le pattern X est-il validé ?"         | "Server-first approach"    |
+| **Intégration**    | "A et B s'intègrent-ils bien ?"        | "Drizzle → Zod → Form"     |
 
 ### Niveaux de Criticité
 
@@ -333,27 +340,27 @@ Si vous implémentez un agent, utilisez cette config :
 
 ```yaml
 validation_config:
-  framework_path: "docs/frameworks/GENERIC_VALIDATION_FRAMEWORK.md"
-  implementation_guide: "docs/frameworks/AGENT_IMPLEMENTATION_GUIDE.md"
-  example_path: "docs/frameworks/EXAMPLE_APPLICATION.md"
+  framework_path: 'docs/frameworks/GENERIC_VALIDATION_FRAMEWORK.md'
+  implementation_guide: 'docs/frameworks/AGENT_IMPLEMENTATION_GUIDE.md'
+  example_path: 'docs/frameworks/EXAMPLE_APPLICATION.md'
 
   document_input:
-    path: "{{ document_path }}"
-    type: "{{ document_type }}"  # architecture|design|guide|spec
-    language: "{{ language }}"  # fr|en
+    path: '{{ document_path }}'
+    type: '{{ document_type }}' # architecture|design|guide|spec
+    language: '{{ language }}' # fr|en
 
   output:
-    format: "markdown"
-    base_path: "docs/validation/"
+    format: 'markdown'
+    base_path: 'docs/validation/'
     include_toc: true
     include_research_section: true
     include_quick_reference: true
 
   research:
-    enable_auto_research: false  # true pour future automation
-    web_search_enabled: false  # true pour future automation
+    enable_auto_research: false # true pour future automation
+    web_search_enabled: false # true pour future automation
     cache_results: true
-    cache_ttl: 3600  # 1 hour
+    cache_ttl: 3600 # 1 hour
 
   sources:
     official_docs: true
@@ -388,16 +395,19 @@ validation_config:
 ## 🎯 Prochaines Étapes
 
 ### Court Terme (Maintenant)
+
 - [ ] Utiliser le framework pour valider `Architecture_technique.md`
 - [ ] Générer VALIDATION_CHECKLIST.md pour chaque spec key
 - [ ] Faire validations manuelles
 
 ### Moyen Terme (Semaines)
+
 - [ ] Implémenter agent de génération basique
 - [ ] Ajouter web research simple
 - [ ] Intégrer dans CI/CD pour checks
 
 ### Long Terme (Mois)
+
 - [ ] Web research complètement automatisé
 - [ ] Analyse automatique des sources
 - [ ] Reports générés auto
@@ -408,18 +418,21 @@ validation_config:
 ## 💡 Conseils d'Utilisation
 
 ### Optimiser la Validation Manuelle
+
 1. **Groupez les sources** : Visiter d'abord all Next.js docs, puis Cloudflare, etc.
 2. **Notez les découvertes** : Peut servir pour update future
 3. **Priorisez les critiques** : Faites Fondamental items d'abord
 4. **Utilisez un navigateur** : Garder onglets pour sources principales ouvertes
 
 ### Optimiser l'Implémentation d'Agent
+
 1. **Commencez simple** : Juste génération checklist d'abord
 2. **Ajoutez incrementalement** : Web search → Auto analysis → Reporting
 3. **Testez extensivement** : Plusieurs types de docs avant prod
 4. **Collectez feedback** : Users trouveront améliorations
 
 ### Optimiser la Maintenance
+
 1. **Versionnez les checklists** : Git tracked, historical
 2. **Comparez versions** : Identifiez quoi a changé
 3. **Set alerts** : Sur breaking changes, dépréciations
@@ -430,6 +443,7 @@ validation_config:
 ## 📞 Support & Questions
 
 Pour questions sur le framework :
+
 - Consultez **GENERIC_VALIDATION_FRAMEWORK.md** pour théorie
 - Consultez **AGENT_IMPLEMENTATION_GUIDE.md** pour pratique
 - Consultez **EXAMPLE_APPLICATION.md** pour exemples
@@ -439,6 +453,7 @@ Pour questions sur le framework :
 ## ✅ Conclusion
 
 Ce framework fournit une **méthodologie production-ready** pour :
+
 - ✅ Valider TOUT document technique
 - ✅ Générer checklists exhaustifs
 - ✅ Automatiser certains aspects
@@ -452,5 +467,5 @@ Ce framework fournit une **méthodologie production-ready** pour :
 
 ---
 
-*Framework créé pour sebc.dev project*
-*Réutilisable pour n'importe quel projet technique*
+_Framework créé pour sebc.dev project_
+_Réutilisable pour n'importe quel projet technique_

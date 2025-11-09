@@ -31,6 +31,7 @@ node -e "const { createInsertSchema } = require('drizzle-zod'); console.log('dri
 ```
 
 **Expected Result**:
+
 - `drizzle-zod` listed in dependencies (not devDependencies)
 - Version compatible with `drizzle-orm` (check package.json)
 - Import succeeds without errors
@@ -38,12 +39,14 @@ node -e "const { createInsertSchema } = require('drizzle-zod'); console.log('dri
 ### Review Checklist
 
 #### Dependency Management
+
 - [ ] `drizzle-zod` in `dependencies` (not `devDependencies`)
 - [ ] Version is latest stable or compatible with project
 - [ ] `pnpm-lock.yaml` updated correctly
 - [ ] No unrelated dependency changes
 
 #### Installation
+
 - [ ] `pnpm install` completes without errors
 - [ ] Package can be imported in Node.js
 - [ ] No peer dependency warnings
@@ -103,6 +106,7 @@ node -e "const schemas = require('./src/lib/server/db/validation'); console.log(
 ```
 
 **Expected Result**:
+
 - File compiles without TypeScript errors
 - All 10 schemas exported (5 insert + 5 select)
 - Schemas can be imported and used
@@ -110,18 +114,21 @@ node -e "const schemas = require('./src/lib/server/db/validation'); console.log(
 ### Review Checklist
 
 #### Schema Generation
+
 - [ ] All 5 tables have insert schemas
 - [ ] All 5 tables have select schemas
 - [ ] Schemas use `createInsertSchema()` and `createSelectSchema()`
 - [ ] No manual Zod schemas (pure auto-generation)
 
 #### Code Quality
+
 - [ ] File has header comment explaining purpose
 - [ ] Imports organized logically (external, then internal)
 - [ ] Exports are named exports (not default)
 - [ ] Consistent naming: `insert*Schema` and `select*Schema`
 
 #### TypeScript
+
 - [ ] No TypeScript errors (`pnpm tsc --noEmit`)
 - [ ] No `any` types
 - [ ] Type inference works for generated schemas
@@ -202,6 +209,7 @@ node -e "
 ```
 
 **Expected Result**:
+
 - Slug validation rejects uppercase and special characters
 - String length constraints enforced
 - Partial schemas allow optional fields
@@ -210,23 +218,27 @@ node -e "
 ### Review Checklist
 
 #### Custom Refinements
+
 - [ ] Slug regex is correct: `/^[a-z0-9-]+$/`
 - [ ] All string fields have min/max length constraints
 - [ ] Error messages are clear and user-friendly
 - [ ] Refinements use `.extend()` on generated schemas
 
 #### Partial Schemas
+
 - [ ] Update schemas use `.partial()` correctly
 - [ ] Partial schemas still validate provided fields
 - [ ] Naming convention: `update*Schema`
 
 #### Type Inference
+
 - [ ] All schemas have type exports
 - [ ] Naming convention: `Insert*` and `Select*` types
 - [ ] Types use `z.infer<typeof schema>`
 - [ ] TypeScript autocomplete works in IDE
 
 #### Documentation
+
 - [ ] JSDoc comments explain custom refinements
 - [ ] Complex validation logic documented
 - [ ] Usage examples in comments (optional)
@@ -259,8 +271,8 @@ Part of Phase 4 - Commit 3/5"
   ```typescript
   export function validateData<T>(
     schema: z.ZodSchema<T>,
-    data: unknown
-  ): { success: true; data: T } | { success: false; errors: z.ZodError }
+    data: unknown,
+  ): { success: true; data: T } | { success: false; errors: z.ZodError };
   ```
 - [ ] Implement helper logic using `.safeParse()`
 - [ ] Create specific validation helpers:
@@ -270,7 +282,7 @@ Part of Phase 4 - Commit 3/5"
   - [ ] `export function validateTranslationUpdate(data: unknown)`
 - [ ] Create error formatting utility:
   ```typescript
-  export function formatZodErrors(errors: z.ZodError): Record<string, string>
+  export function formatZodErrors(errors: z.ZodError): Record<string, string>;
   ```
 - [ ] Implement error formatting (flatten Zod errors to field → message map)
 - [ ] Add JSDoc comments explaining usage patterns
@@ -304,6 +316,7 @@ node -e "
 ```
 
 **Expected Result**:
+
 - Generic helper validates any schema
 - Specific helpers provide type-safe wrappers
 - Error formatting produces readable messages
@@ -312,24 +325,28 @@ node -e "
 ### Review Checklist
 
 #### Generic Helper
+
 - [ ] Uses TypeScript generics (`<T>`)
 - [ ] Returns discriminated union (success/failure)
 - [ ] Uses `.safeParse()` (not `.parse()` which throws)
 - [ ] Type-safe return values
 
 #### Specific Helpers
+
 - [ ] Cover main use cases (insert/update for articles and translations)
 - [ ] Call generic helper internally
 - [ ] Provide clear function names
 - [ ] No code duplication
 
 #### Error Formatting
+
 - [ ] Converts Zod errors to simple object
 - [ ] Field paths are clear (e.g., "slug", "title")
 - [ ] Error messages are user-friendly
 - [ ] Handles nested errors correctly
 
 #### Documentation
+
 - [ ] JSDoc comments explain parameters and return types
 - [ ] Usage examples provided
 - [ ] Complex logic documented
@@ -401,6 +418,7 @@ pnpm test:coverage src/lib/server/db/validation.test.ts
 ```
 
 **Expected Result**:
+
 - 15+ test cases covering all scenarios
 - All tests pass
 - Coverage >85% for validation.ts
@@ -409,6 +427,7 @@ pnpm test:coverage src/lib/server/db/validation.test.ts
 ### Review Checklist
 
 #### Test Coverage
+
 - [ ] Valid data tests (happy path) for all schemas
 - [ ] Invalid data tests (error cases) for all schemas
 - [ ] Custom refinements tested (slug, length, enum)
@@ -418,6 +437,7 @@ pnpm test:coverage src/lib/server/db/validation.test.ts
 - [ ] Edge cases tested (empty, missing, extra fields)
 
 #### Test Quality
+
 - [ ] Tests use descriptive names ("should validate valid article data")
 - [ ] Tests are isolated (no dependencies between tests)
 - [ ] Tests check both success and error cases
@@ -425,12 +445,14 @@ pnpm test:coverage src/lib/server/db/validation.test.ts
 - [ ] Each test has clear arrange-act-assert structure
 
 #### Test Organization
+
 - [ ] Tests grouped in `describe` blocks by feature
 - [ ] Consistent naming convention
 - [ ] No skipped or commented-out tests
 - [ ] No console.log statements
 
 #### Coverage
+
 - [ ] Coverage report shows >85%
 - [ ] All functions tested
 - [ ] All branches tested (if/else)
@@ -460,6 +482,7 @@ Part of Phase 4 - Commit 5/5"
 After all 5 commits:
 
 ### Complete Phase Checklist
+
 - [ ] All 5 commits completed
 - [ ] All tests pass (`pnpm test src/lib/server/db/validation.test.ts`)
 - [ ] Type-checking passes (`pnpm tsc --noEmit`)

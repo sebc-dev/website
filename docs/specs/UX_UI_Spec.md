@@ -6,6 +6,7 @@ stack: Next.js 15 + Cloudflare Workers
 ---
 
 # UX/UI Specification — sebc.dev V1
+
 ## Adaptation pour Next.js 15 + Cloudflare Stack
 
 ---
@@ -60,6 +61,7 @@ Ce document définit les objectifs UX, l'architecture de l'information, les parc
 ### 3.1 Structure Logique
 
 L'objectif est de permettre découverte rapide en accord avec :
+
 - **time-to-value < 60s** pour accès direct aux solutions
 - **pattern discovery < 3min** pour apprenants progressifs
 
@@ -94,9 +96,10 @@ L'objectif est de permettre découverte rapide en accord avec :
 ```
 
 **Flux principal** :
+
 1. Utilisateur arrive sur **Accueil** (`/fr/` ou `/en/`)
 2. Clique sur **"Blog"** → **Hub de Recherche** (`/fr/articles`) OU
-   - Clique sur **"Catégories"** → Redirect **Hub de Recherche** avec filtre `?category=X`  OU
+   - Clique sur **"Catégories"** → Redirect **Hub de Recherche** avec filtre `?category=X` OU
    - Clique sur **"Niveaux"** → Redirect **Hub de Recherche** (interface affiche filtres par niveau)
 3. Sur **Hub de Recherche**, utilise **filtres combinés** (mots-clés, catégories, tags, complexité, durée, date)
 4. Clique sur **article card** → **Page de lecture** avec TOC + barre de progression
@@ -109,6 +112,7 @@ L'objectif est de permettre découverte rapide en accord avec :
 Toutes les taxonomies (catégories, tags, niveaux) sont des **points d'entrée directs qui redirigent vers le Hub** avec filtres pré-appliqués :
 
 **Points d'entrée vers le Hub** :
+
 - **Navigation Catégories** → Clique catégorie → Redirect `/fr/articles?category=X`
 - **Navigation Niveaux** → Clique niveau → Redirect `/fr/articles?complexity=beginner|intermediate|advanced`
 - **Article** → Clique badge catégorie/tag → Redirect `/fr/articles?category=X` ou `/fr/articles?tags=Y`
@@ -207,6 +211,7 @@ S'affiche sous la navigation, reflète le contexte de filtrage :
 ### 4.3 Contexte Multilingue
 
 Toutes les URLs sont préfixées `/fr` ou `/en` :
+
 - Détection automatique via `Accept-Language` (cookie override)
 - next-intl gère le routing via middleware et route groups `/[lang]/`
 - Balises `hreflang` pour SEO
@@ -241,6 +246,7 @@ graph TD
 ```
 
 **Critères de succès** :
+
 - Filtres s'appliquent sans rechargement de page (URL Search Params gérés via `next/navigation`)
 - Résultats mis à jour instantanément via Server Component réexécuté avec `searchParams`
 - URL reste partageable (`/fr/articles?category=tutorial&level=beginner`)
@@ -267,6 +273,7 @@ graph TD
 ```
 
 **Critères de succès** :
+
 - TOC cliquable → défilement vers section (smooth scroll)
 - Barre progression mise à jour au scroll
 - Temps de lecture global + par section visibles
@@ -301,18 +308,19 @@ graph TD
 
 Utilisation TailwindCSS 4 standard :
 
-| Breakpoint | Min Width | Appareils |
-|---|---|---|
-| **Mobile (sm)** | 0px | Smartphones portrait/paysage |
-| **Tablette (md)** | 768px | Tablettes portrait/paysage |
-| **Desktop (lg)** | 1024px | Ordinateurs portables, bureaux |
-| **Wide (xl)** | 1280px | Grands moniteurs |
+| Breakpoint        | Min Width | Appareils                      |
+| ----------------- | --------- | ------------------------------ |
+| **Mobile (sm)**   | 0px       | Smartphones portrait/paysage   |
+| **Tablette (md)** | 768px     | Tablettes portrait/paysage     |
+| **Desktop (lg)**  | 1024px    | Ordinateurs portables, bureaux |
+| **Wide (xl)**     | 1280px    | Grands moniteurs               |
 
 ### 6.2 Layout par Point de Rupture
 
 #### Hub de Recherche
 
 **Mobile (< 768px)**
+
 ```
 ┌─────────────────┐
 │  [Filtr] [🔍]   │  ← Bouton "Filtrer" + Recherche
@@ -322,11 +330,13 @@ Utilisation TailwindCSS 4 standard :
 │   [📦] Article  │
 └─────────────────┘
 ```
+
 - Bouton "Filtrer" ouvre **Sheet** (panneau latéral mobile)
 - Recherche par mots-clés en haut
 - Cartes une seule colonne
 
 **Tablette (768px - 1024px)**
+
 ```
 ┌──────┬──────────────┐
 │      │  [Filtr] [🔍]│
@@ -337,11 +347,13 @@ Utilisation TailwindCSS 4 standard :
 │sticky │              │
 └──────┴──────────────┘
 ```
+
 - Panneau filtres **sticky** à gauche
 - Cartes deux colonnes
 - Hauteur de viewport constante
 
 **Desktop (≥ 1024px)**
+
 ```
 ┌──────┬──────────────────┐
 │      │  [Filtr] [🔍]    │
@@ -352,6 +364,7 @@ Utilisation TailwindCSS 4 standard :
 │sticky │                 │
 └──────┴──────────────────┘
 ```
+
 - Panneau filtres **sticky** à gauche
 - Cartes trois colonnes
 - Marges latérales élargies (max-width container)
@@ -359,6 +372,7 @@ Utilisation TailwindCSS 4 standard :
 #### Page Article
 
 **Mobile (< 768px)**
+
 ```
 ┌─────────────────┐
 │  [🔖] TOC modal │  ← Bouton TOC ouvre modal
@@ -371,11 +385,13 @@ Utilisation TailwindCSS 4 standard :
 │                 │
 └─────────────────┘
 ```
+
 - TOC : bouton → modal (overlay)
 - Barre progression sticky en haut
 - Contenu une colonne (max-width 800px recommandé)
 
 **Tablette (768px - 1024px)**
+
 ```
 ┌──────┬──────────────┐
 │      │ ▮▮▮▯▯▯▯▯▯▯▯  │  ← Barre progression sticky
@@ -386,11 +402,13 @@ Utilisation TailwindCSS 4 standard :
 │(right)│              │
 └──────┴──────────────┘
 ```
+
 - TOC : bouton → modal (tablettes < 1024px)
 - Barre progression sticky top
 - Contenu centré avec marges
 
 **Desktop (≥ 1024px)**
+
 ```
 ┌─────────────┬──────────────┬─────────────┐
 │             │ ▮▮▮▯▯▯▯▯▯▯▯  │             │  ← Progression sticky
@@ -401,6 +419,7 @@ Utilisation TailwindCSS 4 standard :
 │             │              │             │
 └─────────────┴──────────────┴─────────────┘
 ```
+
 - Contenu centré, colonne unique (max-width 700px lecture optimale)
 - TOC **sticky** à droite (visible en permanence)
 - Barre progression sticky top
@@ -408,14 +427,17 @@ Utilisation TailwindCSS 4 standard :
 ### 6.3 Adaptation Composants
 
 **Boutons et zones interactives**
+
 - Mobile : minimum 44x44px (norme tactile WCAG)
 - Desktop : hover states visibles, focus ring clairs
 
 **Images**
+
 - Mobile : fullwidth
 - Desktop : centrage + max-width 800px
 
 **Tableau de matières**
+
 - Mobile : modal/Sheet (ne pas encombrer viewport)
 - Desktop : sidebar sticky (visible permanent)
 
@@ -427,28 +449,29 @@ Utilisation TailwindCSS 4 standard :
 
 Basée sur **dark mode moderne**, avec accent vert canard :
 
-| Type | Hex | Utilisation |
-|---|---|---|
-| **Fond Primaire** | `#1A1D23` | Arrière-plan principal (anthracite profond) |
-| **Fond Secondaire** | `#2D3748` | Cartes, panneaux, sections |
+| Type                 | Hex       | Utilisation                                      |
+| -------------------- | --------- | ------------------------------------------------ |
+| **Fond Primaire**    | `#1A1D23` | Arrière-plan principal (anthracite profond)      |
+| **Fond Secondaire**  | `#2D3748` | Cartes, panneaux, sections                       |
 | **Accent Principal** | `#14B8A6` | Liens, boutons, indicateurs actifs (vert canard) |
-| **Texte Principal** | `#F7FAFC` | Titres, corps (blanc cassé) |
-| **Texte Secondaire** | `#A0AEC0` | Métadonnées, hints (gris moyen) |
-| **Erreur** | `#F56565` | Messages d'erreur, actions destructives (rouge) |
-| **Succès** | `#48BB78` | Confirmations (vert) |
+| **Texte Principal**  | `#F7FAFC` | Titres, corps (blanc cassé)                      |
+| **Texte Secondaire** | `#A0AEC0` | Métadonnées, hints (gris moyen)                  |
+| **Erreur**           | `#F56565` | Messages d'erreur, actions destructives (rouge)  |
+| **Succès**           | `#48BB78` | Confirmations (vert)                             |
 
 ### 7.2 Typographie
 
-| Élément | Taille | Graisse | Hauteur Ligne | Famille |
-|---|---|---|---|---|
-| **H1** | 2.25rem (36px) | 700 | 1.2 | Nunito Sans |
-| **H2** | 1.875rem (30px) | 700 | 1.2 | Nunito Sans |
-| **H3** | 1.5rem (24px) | 600 | 1.3 | Nunito Sans |
-| **Corps** | 1rem (16px) | 400 | 1.6 | Nunito Sans |
-| **Petit** | 0.875rem (14px) | 400 | 1.5 | Nunito Sans |
-| **Code** | 0.875rem (14px) | 400 | 1.6 | JetBrains Mono |
+| Élément   | Taille          | Graisse | Hauteur Ligne | Famille        |
+| --------- | --------------- | ------- | ------------- | -------------- |
+| **H1**    | 2.25rem (36px)  | 700     | 1.2           | Nunito Sans    |
+| **H2**    | 1.875rem (30px) | 700     | 1.2           | Nunito Sans    |
+| **H3**    | 1.5rem (24px)   | 600     | 1.3           | Nunito Sans    |
+| **Corps** | 1rem (16px)     | 400     | 1.6           | Nunito Sans    |
+| **Petit** | 0.875rem (14px) | 400     | 1.5           | Nunito Sans    |
+| **Code**  | 0.875rem (14px) | 400     | 1.6           | JetBrains Mono |
 
 **Polices**
+
 - **Nunito Sans** : Corps + titres (lisibilité, formes arrondies amicales)
 - **JetBrains Mono** : Code (monospace, familiarité développeurs)
 
@@ -459,6 +482,7 @@ Basée sur **dark mode moderne**, avec accent vert canard :
 - **États** : icônes pour actif/inactif/loading
 
 Exemple 9 catégories :
+
 - Actualités → 📰 (news-icon)
 - Analyse Approfondie → 🔬 (microscope-icon)
 - Parcours d'Apprentissage → 🛤️ (journey-icon)
@@ -503,19 +527,20 @@ Affichage homogène dans toutes les listes (Hub, catégories, articles connexes)
 
 ```tsx
 <ArticleCard
-  title="Article Title"
-  excerpt="Short excerpt..."
-  category="Tutorial"
+  title='Article Title'
+  excerpt='Short excerpt...'
+  category='Tutorial'
   tags={['tag1', 'tag2']}
-  complexity="intermediate"
+  complexity='intermediate'
   readingTime={8}
   publishedAt={new Date()}
-  slug="article-slug"
-  lang="fr"
+  slug='article-slug'
+  lang='fr'
 />
 ```
 
 **Affichage** :
+
 ```
 ┌──────────────────┐
 │ [Icône] Tutoriel │ ← Catégorie + badge couleur
@@ -544,6 +569,7 @@ Auto-généré depuis headings MDX, cliquable, avec temps de lecture par section
 ```
 
 **Affichage** :
+
 ```
 Table des Matières
 ─────────────────
@@ -569,10 +595,11 @@ Affiche progression visuelle (0-100%) via largeur bar, couleur accent (#14B8A6).
 Badge avec icône et label, traductions via next-intl :
 
 ```tsx
-<ComplexityBadge level="intermediate" />
+<ComplexityBadge level='intermediate' />
 ```
 
 Variantes :
+
 - Débutant → icône 📗 + label "Débutant" (vert)
 - Intermédiaire → icône 📕 + label "Intermédiaire" (orange)
 - Avancé → icône 📘 + label "Avancé" (rouge)
@@ -603,14 +630,14 @@ Filtres combinables pour Hub de Recherche :
 
 ### 9.2 Animations Clés
 
-| Interaction | Durée | Easing | Exemple |
-|---|---|---|---|
-| **Hover boutons** | 200ms | ease-out | Legère translation y: -2px + color fade |
-| **Focus outline** | Immédiate | N/A | Ring visible 2px (#14B8A6) |
-| **Page transition** | 200ms | ease-in-out | Fade in/out |
-| **Loading skeleton** | Pulse | linear | Shimmer effect (background gradient) |
-| **Scroll smooth** | 400ms | ease-out | Scroll vers TOC item |
-| **Progress bar** | Smooth | linear | Width change fluid |
+| Interaction          | Durée     | Easing      | Exemple                                 |
+| -------------------- | --------- | ----------- | --------------------------------------- |
+| **Hover boutons**    | 200ms     | ease-out    | Legère translation y: -2px + color fade |
+| **Focus outline**    | Immédiate | N/A         | Ring visible 2px (#14B8A6)              |
+| **Page transition**  | 200ms     | ease-in-out | Fade in/out                             |
+| **Loading skeleton** | Pulse     | linear      | Shimmer effect (background gradient)    |
+| **Scroll smooth**    | 400ms     | ease-out    | Scroll vers TOC item                    |
+| **Progress bar**     | Smooth    | linear      | Width change fluid                      |
 
 ### 9.3 États Visuels
 
@@ -662,23 +689,27 @@ Filtres combinables pour Hub de Recherche :
 ### 11.2 Stratégies SvelteKit + Cloudflare
 
 **Frontend**
+
 - Pages servies depuis Edge Cloudflare (latence minimale)
 - Bundle optimisé via Vite build (tree-shaking, code-splitting)
 - Composants shadcn-svelte légers + Nunito Sans subset
 - Lazy loading images par défaut
 
 **Images (Cloudflare R2 + Transform)**
+
 - Stockage R2, transformation à la volée via CDN-cgi
 - WebP/AVIF auto (format negotiation)
 - Lazy loading + width/height requis (pas de CLS)
 - Max 500 Ko source avant transformation
 
 **Cache (Cloudflare)**
+
 - Pages articles : max-age=3600, s-maxage=86400
 - API/données : max-age=300
 - Admin : no-cache
 
 **Database**
+
 - Drizzle ORM queryoptimization (select columns strictly)
 - D1 queries servies depuis Edge
 - Indexes sur colonnes filtrage fréquent
@@ -697,6 +728,7 @@ Filtres combinables pour Hub de Recherche :
 ### 12.2 Fallback de Contenu
 
 Si traduction manquante :
+
 1. Affiche version disponible (ex: FR si EN manquante)
 2. Badge "Affiché en FR" en haut page
 3. Bouton "Voir en Anglais" (link vers EN si dispo)
@@ -728,6 +760,7 @@ L'état du Hub de Recherche est **persisté dans l'URL** via `URLSearchParams` :
 ```
 
 **Paramètres** :
+
 - `q` : Recherche textuelle (mots-clés)
 - `category` : ID catégorie (filtrage mono ou multi)
 - `level` : beginner|intermediate|advanced (mono)
@@ -740,6 +773,7 @@ L'état du Hub de Recherche est **persisté dans l'URL** via `URLSearchParams` :
 ### 13.2 Mise à Jour sans Rechargement
 
 **Flux Next.js** :
+
 1. Utilisateur interagit avec filtre
 2. URL mise à jour via `router.push(newUrl)` (client-side)
 3. Server Component Next.js réexécuté (données pré-chargées serveur)
@@ -747,7 +781,7 @@ L'état du Hub de Recherche est **persisté dans l'URL** via `URLSearchParams` :
 
 ```typescript
 // app/[lang]/articles/page.tsx
-export default async function ArticlesPage({ searchParams }: { 
+export default async function ArticlesPage({ searchParams }: {
   searchParams: { q?: string; category?: string }
 }) {
   const q = searchParams.q ?? '';
@@ -806,6 +840,7 @@ Les options de filtrage (catégories, tags) sont **recalculées** selon résulta
 ### 14.2 Validation Publication
 
 Article **ne peut être publié que si** :
+
 - ✅ Titre FR + EN
 - ✅ Slug FR + EN
 - ✅ Excerpt FR + EN
@@ -818,6 +853,7 @@ Validation via `react-hook-form` + Zod schemas (générés par drizzle-zod) dans
 ### 14.3 Mode Prévisualisation
 
 Bouton "Prévisualiser" ouvre `/fr/articles/[slug]?preview=true` :
+
 - Affiche article en mode draft (avant publication)
 - Protégé par **Better Auth** (authentification) + **Cloudflare Access** (niveau infrastructure)
 - Badge "MODE PRÉVISUALISATION" visible en haut page
@@ -834,7 +870,7 @@ Générés dynamiquement via Next.js Metadata API dans chaque page :
 
 ```typescript
 // app/[lang]/articles/[slug]/page.tsx
-export async function generateMetadata({ params }: { 
+export async function generateMetadata({ params }: {
   params: { slug: string; lang: string }
 }): Promise<Metadata> {
   const article = await db.select().from(articles)...;
@@ -863,6 +899,7 @@ export async function generateMetadata({ params }: {
 ### 15.2 Sitemap Dynamique
 
 Route Handler `route.ts` génère sitemap XML :
+
 - Toutes pages publiées
 - Priorités : articles récents (1.0), anciens (0.8)
 - Fréquences : récents weekly, anciens monthly
@@ -879,6 +916,7 @@ Générés automatiquement par Next.js Metadata API (voir section 15.1). Next.js
 ### 16.1 Empty States
 
 **Aucun article** (Hub filtre vide) :
+
 ```
 🔍 Aucun résultat
 
@@ -893,12 +931,14 @@ Suggestions :
 ### 16.2 Loading States
 
 **Recherche en cours** :
+
 - Skeleton loaders pour cartes articles
 - Spinner léger sur boutons
 
 ### 16.3 Erreurs
 
 **Article non trouvé (404)** :
+
 ```
 Page non trouvée (404)
 
@@ -908,6 +948,7 @@ Cet article n'existe pas ou a été supprimé.
 ```
 
 **Erreur serveur (500)** :
+
 ```
 Une erreur s'est produite
 
@@ -934,6 +975,7 @@ Chaque catégorie a une **couleur et icône dédiée** :
 ```
 
 Palette :
+
 - Actualités → Bleu
 - Analyse → Indigo
 - Parcours → Vert
@@ -956,24 +998,27 @@ Palette :
 
 ### 18.1 Modèle de Testing Imposé par l'Architecture RSC
 
-L'architecture **React Server Components (RSC) + Next.js 15** impose un **modèle de testing hybride obligatoire**. Les Server Components async ne peuvent PAS être unit-testés de manière fiable dans un environnement JSDOM moqué. Le Validation Checklist (Section 9.2) confirme que "**Async Server Components *cannot be unit-tested* in the traditional sense.**"
+L'architecture **React Server Components (RSC) + Next.js 15** impose un **modèle de testing hybride obligatoire**. Les Server Components async ne peuvent PAS être unit-testés de manière fiable dans un environnement JSDOM moqué. Le Validation Checklist (Section 9.2) confirme que "**Async Server Components _cannot be unit-tested_ in the traditional sense.**"
 
 ### 18.2 Stratégie Détaillée
 
 #### **Pour les Client Components et Fonctions Utilitaires (Vitest + React Testing Library)**
 
 **Scope** : Unit tests pour :
+
 - Composants marqués `'use client'` (filtres, boutons, modales)
 - Fonctions utilitaires (formatage dates, validation formulaires)
 - Hooks React custom ('use client')
 - Server Actions simples (sans dépendances réseau)
 
 **Outils** :
+
 - **Vitest** : Test runner (faster than Jest, ESM native)
 - **React Testing Library** : Rendu composants + assertions user-centric
 - **@testing-library/user-event** : Simulations interactions utilisateur
 
 **Exemple** :
+
 ```typescript
 // __tests__/components/SearchFilters.test.tsx
 import { render, screen } from '@testing-library/react';
@@ -990,6 +1035,7 @@ describe('SearchFilters', () => {
 #### **Pour les Pages Data-Driven et Flows Utilisateur (Playwright E2E Obligatoire)**
 
 **Scope** : E2E tests obligatoires pour :
+
 - **Pages avec RSC async** : Hub de Recherche, page article (MDX rendering server-side)
 - **Auth flows** : Login → Redirection → Protected routes → Logout
 - **Admin flows** : Créer/éditer/publier articles
@@ -998,10 +1044,12 @@ describe('SearchFilters', () => {
 **Raison** : Les Server Components async executent le data-fetching côté serveur et rendent le HTML initial. Le **seul** moyen de tester ce cycle complet est de lancer l'application en environnement production-like et tester le HTML/DOM final.
 
 **Outils** :
+
 - **Playwright** : E2E automation + assertions sur HTML rendu
 - **npm run build && npm run start** : Environnement production-like
 
 **Exemple** :
+
 ```typescript
 // e2e/articles-hub.spec.ts
 import { test, expect } from '@playwright/test';
@@ -1029,6 +1077,7 @@ test('auth flow: login → protected route → logout', async ({ page }) => {
 ### 18.3 Configuration Recommandée
 
 **package.json** :
+
 ```json
 {
   "devDependencies": {
@@ -1080,27 +1129,32 @@ test('auth flow: login → protected route → logout', async ({ page }) => {
 ## 19. Rollout Plan (V1)
 
 ### Phase 1 : Socle Technique (EPIC 0)
+
 - Initialisation Next.js 15, TailwindCSS 4, Drizzle, D1, wrangler.toml
 - Configuration OpenNext adapter
 - CI/CD GitHub Actions
 - Cloudflare Access `/admin`
 
 ### Phase 2 : Articles & Taxonomie (EPIC 1, 2)
+
 - Schéma D1, Server Actions, Admin panel
 - Rendu MDX, TOC, progression
 - Catégories, tags, complexité
 
 ### Phase 3 : Hub Recherche (EPIC 3, 4)
+
 - Page recherche avancée, filtres combinés
 - next-intl i18n
 - URL Search Params
 
 ### Phase 4 : SEO & Performance (EPIC 5, 8)
+
 - Sitemap, robots.txt, Open Graph
 - Core Web Vitals
 - Cloudflare Images optimization
 
 ### Phase 5 : Sécurité & Monitoring (EPIC 6, 7)
+
 - Validations Zod, CSP, WAF
 - Health checks, Web Analytics
 - Tests hybrid: **Vitest + React Testing Library** pour Client Components et fonctions utilitaires; **Playwright E2E obligatoire** pour toutes les pages avec RSC async (data-driven pages, auth flows, Server Actions)
@@ -1122,6 +1176,7 @@ test('auth flow: login → protected route → logout', async ({ page }) => {
 Cette spécification UX/UI adapte les objectifs fondamentaux du blog (efficacité, clarté, apprentissage) à la stack moderne **Next.js 15 + React 19 Server Components + Cloudflare Workers**.
 
 L'architecture préserve l'expérience utilisateur tout en bénéficiant de :
+
 - **Latence minimale** via Edge network Cloudflare (300+ datacenters)
 - **Serverless scalabilité** sans gestion infrastructure ou ops
 - **DX optimisée** avec Next.js 15 App Router + React 19 Server Components + shadcn/ui

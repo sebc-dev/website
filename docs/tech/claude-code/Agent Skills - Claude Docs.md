@@ -2,30 +2,32 @@
 created: 2025-10-22T08:41:39 (UTC +02:00)
 tags: []
 source: https://docs.claude.com/en/docs/claude-code/sub-agents
-author: 
+author:
 ---
 
 # Agent Skills - Claude Docs
 
 > ## Excerpt
+>
 > Create, manage, and share Skills to extend Claude's capabilities in Claude Code.
 
 ---
+
 This guide shows you how to create, use, and manage Agent Skills in Claude Code. Skills are modular capabilities that extend Claude’s functionality through organized folders containing instructions, scripts, and resources.
 
 ## Prerequisites
 
--   Claude Code version 1.0 or later
--   Basic familiarity with [Claude Code](https://docs.claude.com/en/docs/claude-code/quickstart)
+- Claude Code version 1.0 or later
+- Basic familiarity with [Claude Code](https://docs.claude.com/en/docs/claude-code/quickstart)
 
 ## What are Agent Skills?
 
 Agent Skills package expertise into discoverable capabilities. Each Skill consists of a `SKILL.md` file with instructions that Claude reads when relevant, plus optional supporting files like scripts and templates. **How Skills are invoked**: Skills are **model-invoked**—Claude autonomously decides when to use them based on your request and the Skill’s description. This is different from slash commands, which are **user-invoked** (you explicitly type `/command` to trigger them). **Benefits**:
 
--   Extend Claude’s capabilities for your specific workflows
--   Share expertise across your team via git
--   Reduce repetitive prompting
--   Compose multiple Skills for complex tasks
+- Extend Claude’s capabilities for your specific workflows
+- Share expertise across your team via git
+- Reduce repetitive prompting
+- Compose multiple Skills for complex tasks
 
 Learn more in the [Agent Skills overview](https://docs.claude.com/en/docs/agents-and-tools/agent-skills/overview).
 
@@ -43,9 +45,9 @@ mkdir -p ~/.claude/skills/my-skill-name
 
 **Use personal Skills for**:
 
--   Your individual workflows and preferences
--   Experimental Skills you’re developing
--   Personal productivity tools
+- Your individual workflows and preferences
+- Experimental Skills you’re developing
+- Personal productivity tools
 
 ### Project Skills
 
@@ -57,9 +59,9 @@ mkdir -p .claude/skills/my-skill-name
 
 **Use project Skills for**:
 
--   Team workflows and conventions
--   Project-specific expertise
--   Shared utilities and scripts
+- Team workflows and conventions
+- Project-specific expertise
+- Shared utilities and scripts
 
 Project Skills are checked into git and automatically available to team members.
 
@@ -137,9 +139,9 @@ This Skill provides read-only file access.
 
 When this Skill is active, Claude can only use the specified tools (Read, Grep, Glob) without needing to ask for permission. This is useful for:
 
--   Read-only Skills that shouldn’t modify files
--   Skills with limited scope (e.g., only data analysis, no file writing)
--   Security-sensitive workflows where you want to restrict capabilities
+- Read-only Skills that shouldn’t modify files
+- Skills with limited scope (e.g., only data analysis, no file writing)
+- Security-sensitive workflows where you want to restrict capabilities
 
 If `allowed-tools` is not specified, Claude will ask for permission to use tools as normal, following the standard permission model.
 
@@ -147,9 +149,9 @@ If `allowed-tools` is not specified, Claude will ask for permission to use tools
 
 Skills are automatically discovered by Claude from three sources:
 
--   Personal Skills: `~/.claude/skills/`
--   Project Skills: `.claude/skills/`
--   Plugin Skills: bundled with installed plugins
+- Personal Skills: `~/.claude/skills/`
+- Project Skills: `.claude/skills/`
+- Plugin Skills: bundled with installed plugins
 
 **To view all available Skills**, ask Claude directly:
 
@@ -228,9 +230,9 @@ cat SKILL.md | head -n 10
 
 Ensure:
 
--   Opening `---` on line 1
--   Closing `---` before Markdown content
--   Valid YAML syntax (no tabs, correct indentation)
+- Opening `---` on line 1
+- Closing `---` before Markdown content
+- Valid YAML syntax (no tabs, correct indentation)
 
 ### View errors
 
@@ -303,14 +305,14 @@ git commit -m "Remove unused Skill"
 
 One Skill should address one capability: **Focused**:
 
--   “PDF form filling”
--   “Excel data analysis”
--   “Git commit messages”
+- “PDF form filling”
+- “Excel data analysis”
+- “Git commit messages”
 
 **Too broad**:
 
--   “Document processing” (split into separate Skills)
--   “Data tools” (split by data type or operation)
+- “Document processing” (split into separate Skills)
+- “Data tools” (split by data type or operation)
 
 ### Write clear descriptions
 
@@ -326,9 +328,9 @@ description: Analyze Excel spreadsheets, create pivot tables, and generate chart
 
 Have teammates use Skills and provide feedback:
 
--   Does the Skill activate when expected?
--   Are the instructions clear?
--   Are there missing examples or edge cases?
+- Does the Skill activate when expected?
+- Are the instructions clear?
+- Are there missing examples or edge cases?
 
 ### Document Skill versions
 
