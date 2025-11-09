@@ -29,6 +29,7 @@
  */
 
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
+import { z } from 'zod'
 import {
 	articles,
 	article_translations,
@@ -48,10 +49,39 @@ import {
 export const insertArticleSchema = createInsertSchema(articles)
 
 /**
- * Insert schema for article translations
+ * Insert schema for article translations with custom refinements
  * Use this when creating translated content for an article
+ *
+ * Custom refinements:
+ * - slug: Lowercase alphanumeric with hyphens only (SEO-friendly URLs)
+ * - title: Max 200 characters
+ * - excerpt: Max 500 characters
+ * - seoTitle: Max 60 characters (Google title limit)
+ * - seoDescription: Max 160 characters (Google description limit)
  */
-export const insertArticleTranslationSchema = createInsertSchema(article_translations)
+export const insertArticleTranslationSchema = createInsertSchema(article_translations).extend({
+	slug: z
+		.string()
+		.min(1, 'Slug is required')
+		.max(200, 'Slug must be 200 characters or less')
+		.regex(/^[a-z0-9-]+$/, 'Slug must be lowercase alphanumeric with hyphens only'),
+	title: z
+		.string()
+		.min(1, 'Title is required')
+		.max(200, 'Title must be 200 characters or less'),
+	excerpt: z
+		.string()
+		.min(1, 'Excerpt is required')
+		.max(500, 'Excerpt must be 500 characters or less'),
+	seoTitle: z
+		.string()
+		.min(1, 'SEO title is required')
+		.max(60, 'SEO title should be 60 characters or less for optimal display'),
+	seoDescription: z
+		.string()
+		.min(1, 'SEO description is required')
+		.max(160, 'SEO description should be 160 characters or less for optimal display')
+})
 
 /**
  * Insert schema for categories
@@ -104,3 +134,117 @@ export const selectTagSchema = createSelectSchema(tags)
  * Use this for validating query results or type inference
  */
 export const selectArticleTagSchema = createSelectSchema(articleTags)
+
+// ============================================================================
+// PARTIAL SCHEMAS (for updates)
+// ============================================================================
+
+/**
+ * Partial insert schema for articles (for updates)
+ * Use this when updating article records where all fields are optional
+ */
+export const updateArticleSchema = insertArticleSchema.partial()
+
+/**
+ * Partial insert schema for article translations (for updates)
+ * Use this when updating translation records where all fields are optional
+ * Note: Custom refinements still apply to provided fields
+ */
+export const updateArticleTranslationSchema = insertArticleTranslationSchema.partial()
+
+// ============================================================================
+// TYPE INFERENCE EXPORTS
+// ============================================================================
+
+/**
+ * TypeScript type for inserting articles
+ * Automatically inferred from insertArticleSchema
+ *
+ * @example
+ * ```typescript
+ * const newArticle: InsertArticle = {
+ *   categoryId: 'cat-1',
+ *   complexity: 'beginner',
+ *   status: 'draft'
+ * }
+ * ```
+ */
+// @ts-expect-error - drizzle-zod schema types don't perfectly align with Zod's ZodType
+export type InsertArticle = z.infer<typeof insertArticleSchema>
+
+/**
+ * TypeScript type for selecting articles
+ * Automatically inferred from selectArticleSchema
+ */
+// @ts-expect-error - drizzle-zod schema types don't perfectly align with Zod's ZodType
+export type SelectArticle = z.infer<typeof selectArticleSchema>
+
+/**
+ * TypeScript type for inserting article translations
+ * Automatically inferred from insertArticleTranslationSchema
+ */
+// @ts-expect-error - drizzle-zod schema types don't perfectly align with Zod's ZodType
+export type InsertArticleTranslation = z.infer<typeof insertArticleTranslationSchema>
+
+/**
+ * TypeScript type for selecting article translations
+ * Automatically inferred from selectArticleTranslationSchema
+ */
+// @ts-expect-error - drizzle-zod schema types don't perfectly align with Zod's ZodType
+export type SelectArticleTranslation = z.infer<typeof selectArticleTranslationSchema>
+
+/**
+ * TypeScript type for inserting categories
+ * Automatically inferred from insertCategorySchema
+ */
+// @ts-expect-error - drizzle-zod schema types don't perfectly align with Zod's ZodType
+export type InsertCategory = z.infer<typeof insertCategorySchema>
+
+/**
+ * TypeScript type for selecting categories
+ * Automatically inferred from selectCategorySchema
+ */
+// @ts-expect-error - drizzle-zod schema types don't perfectly align with Zod's ZodType
+export type SelectCategory = z.infer<typeof selectCategorySchema>
+
+/**
+ * TypeScript type for inserting tags
+ * Automatically inferred from insertTagSchema
+ */
+// @ts-expect-error - drizzle-zod schema types don't perfectly align with Zod's ZodType
+export type InsertTag = z.infer<typeof insertTagSchema>
+
+/**
+ * TypeScript type for selecting tags
+ * Automatically inferred from selectTagSchema
+ */
+// @ts-expect-error - drizzle-zod schema types don't perfectly align with Zod's ZodType
+export type SelectTag = z.infer<typeof selectTagSchema>
+
+/**
+ * TypeScript type for inserting article tags
+ * Automatically inferred from insertArticleTagSchema
+ */
+// @ts-expect-error - drizzle-zod schema types don't perfectly align with Zod's ZodType
+export type InsertArticleTag = z.infer<typeof insertArticleTagSchema>
+
+/**
+ * TypeScript type for selecting article tags
+ * Automatically inferred from selectArticleTagSchema
+ */
+// @ts-expect-error - drizzle-zod schema types don't perfectly align with Zod's ZodType
+export type SelectArticleTag = z.infer<typeof selectArticleTagSchema>
+
+/**
+ * TypeScript type for updating articles
+ * All fields optional - automatically inferred from updateArticleSchema
+ */
+// @ts-expect-error - drizzle-zod schema types don't perfectly align with Zod's ZodType
+export type UpdateArticle = z.infer<typeof updateArticleSchema>
+
+/**
+ * TypeScript type for updating article translations
+ * All fields optional - automatically inferred from updateArticleTranslationSchema
+ */
+// @ts-expect-error - drizzle-zod schema types don't perfectly align with Zod's ZodType
+export type UpdateArticleTranslation = z.infer<typeof updateArticleTranslationSchema>
