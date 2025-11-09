@@ -5,6 +5,7 @@ Guide complet pour configurer les règles de protection de branches sur GitHub.
 ## Vue d'ensemble
 
 Les Branch Protection Rules garantissent que :
+
 - ✅ Tout le code passe les tests avant merge
 - ✅ Au moins un reviewer approuve chaque PR
 - ✅ Les commits sont signés et à jour avec main
@@ -44,6 +45,7 @@ Branch name pattern: main
   - ✅ **Build Next.js Application**
 
 **OPTIONNEL** (recommandé de cocher) :
+
 - ☐ **Mutation Testing** (cochez si vous voulez le require)
 
 #### 3️⃣ Require signed commits
@@ -87,6 +89,7 @@ Branch name pattern: develop
 ```
 
 ### Recommandations
+
 - ✅ Require a pull request
   - 1 review (au lieu de 2)
 - ✅ Require status checks
@@ -193,6 +196,7 @@ Pull Request: "Fix: Add feature XYZ"
 ### Merge Button
 
 Le bouton **Merge pull request** sera :
+
 - 🔴 **Désactivé (rouge)** si une des conditions n'est pas remplie
 - 🟢 **Activé (vert)** si toutes les conditions sont remplies
 
@@ -205,6 +209,7 @@ Le bouton **Merge pull request** sera :
 **Problème** : GitHub ne trouve pas le status check.
 
 **Solution** :
+
 1. Attendez que la PR créé au moins un run GitHub Actions
 2. Attendez que le run soit complété
 3. Le status check devrait apparaître dans la liste
@@ -214,6 +219,7 @@ Le bouton **Merge pull request** sera :
 **Problème** : Aucune review.
 
 **Solution** :
+
 1. Demandez une review via le menu "Reviewers"
 2. Attendez l'approval d'au moins 1 reviewer
 3. Puis vous pouvez merger
@@ -223,6 +229,7 @@ Le bouton **Merge pull request** sera :
 **Problème** : Main a avancé depuis la création de la PR.
 
 **Solution** :
+
 1. Cliquez **Update branch** dans la PR
 2. Attendez que les checks redémarrents
 3. Puis merge
@@ -278,6 +285,7 @@ Pour automatiser les reviewers, créez `.github/CODEOWNERS` :
 ```
 
 Puis cochez dans les règles :
+
 - ✅ **Require review from Code Owners**
 
 ---
@@ -324,11 +332,13 @@ Checklist avant de considérer la config comme complète :
 ## Notes
 
 ⚠️ **Important** :
+
 - Ces règles s'appliquent à **TOUS** les utilisateurs (même admins)
 - Pour déprotéger momentanément, un admin doit aller dans Settings et désactiver la règle
 - Les règles sont appliquées au niveau du **repository**
 
 💡 **Conseil** :
+
 - Commencez par une config simple (PR + 1 review)
 - Augmentez progressivement la stricture si nécessaire
 - Écoutez votre équipe pour ajuster

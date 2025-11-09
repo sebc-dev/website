@@ -9,19 +9,22 @@
   },
   "mutate": [
     "src/lib/server/**/*.ts",
+    "!src/lib/server/**/*.test.ts",
+    "!src/lib/server/**/*.spec.ts",
+    "!src/lib/server/db/schema.ts",
     "app/admin/actions.ts",
     "src/lib/utils/**/*.ts",
-    "!**/*.test.ts",
-    "!**/*.spec.ts",
+    "!src/lib/utils/**/*.test.ts",
+    "!src/lib/utils/**/*.spec.ts",
     "!**/__tests__/**"
   ],
   "mutator": {
     "excludedMutations": ["StringLiteral", "ObjectLiteral"]
   },
   "thresholds": {
-    "high": 80,
-    "low": 60,
-    "break": 50
+    "high": 85,
+    "low": 70,
+    "break": 70
   },
   "reporters": ["html", "clear-text", "progress"],
   "htmlReporter": {

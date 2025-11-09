@@ -7,6 +7,7 @@ Blog technique bilingue (FR/EN) sur l'IA, l'UX et les bonnes pratiques d'ingéni
 ## 🚀 Démarrage
 
 ### Prérequis
+
 - Node.js 20+
 - pnpm 8+
 - Wrangler CLI
@@ -33,21 +34,25 @@ Open [http://localhost:3000](http://localhost:3000) to see the site.
 ## 📖 Documentation
 
 ### Architecture & Setup
+
 - **[Brief Projet](docs/specs/Brief.md)** - Vue d'ensemble du projet
 - **[Architecture Technique](docs/specs/Architecture_technique.md)** - Stack technique détaillée
 - **[Concept du Produit](docs/specs/Concept.md)** - Vision et fonctionnalités
 
 ### CI/CD & Quality
+
 - **[Pipeline GitHub Actions](.github/CI_CD_PIPELINE.md)** - Description complète du pipeline
 - **[Branch Protection Setup](.github/BRANCH_PROTECTION_SETUP.md)** - Configuration des règles de branches
 
 ### Développement Local
+
 - **[CLAUDE.md](CLAUDE.md)** - Instructions pour Claude Code
 - **[Environment Setup](docs/environment-setup.md)** - Configuration de l'environnement
 
 ## 🛠️ Scripts
 
 ### Développement
+
 ```bash
 pnpm dev              # Démarrer le serveur de dev (Turbopack)
 pnpm build            # Build production
@@ -55,6 +60,7 @@ pnpm start            # Lancer le serveur production
 ```
 
 ### Quality & Testing
+
 ```bash
 # Linting & Formatting
 pnpm lint             # Run ESLint
@@ -82,6 +88,7 @@ pnpm quality:check    # Format + Lint + Architecture validation
 ```
 
 ### Database
+
 ```bash
 pnpm db:generate      # Generate Drizzle migrations
 pnpm db:migrate:local # Apply migrations locally
@@ -100,6 +107,7 @@ This project includes a comprehensive quality suite:
 - **Stryker.js** - Mutation testing for AI-generated test validation
 
 All tools are integrated with:
+
 - **GitHub Actions** - Automated CI/CD pipeline on every PR
 - **VSCode** - Auto-format on save + auto-fix on save
 - **Pre-commit hooks** - Validate locally before pushing
@@ -109,6 +117,7 @@ See [CI/CD Pipeline Documentation](.github/CI_CD_PIPELINE.md) for details.
 ## 📊 GitHub Actions Pipeline
 
 The project has a comprehensive CI/CD pipeline that runs on:
+
 - **Every Pull Request** to `main` or `develop`
 - **Every Push** to `main` or `develop`
 - **Weekly Schedule** (Mondays 2 AM UTC)

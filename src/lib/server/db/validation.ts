@@ -28,15 +28,16 @@
  * @see https://zod.dev
  */
 
-import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
-import { z } from 'zod'
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { z } from 'zod';
 
 import {
-	article_translations,
-	articles,
-	articleTags,
-	categories,
-	tags} from './schema'
+  article_translations,
+  articles,
+  articleTags,
+  categories,
+  tags,
+} from './schema';
 
 // ============================================================================
 // INSERT SCHEMAS (for creating new records)
@@ -45,8 +46,11 @@ import {
 /**
  * Insert schema for articles
  * Use this when creating new article records
+ * ID is optional - will be generated if not provided
  */
-export const insertArticleSchema = createInsertSchema(articles)
+export const insertArticleSchema = createInsertSchema(articles).extend({
+  id: z.string().optional(),
+});
 
 /**
  * Insert schema for article translations with custom refinements
@@ -59,56 +63,72 @@ export const insertArticleSchema = createInsertSchema(articles)
  * - seoTitle: Max 60 characters (Google title limit)
  * - seoDescription: Max 160 characters (Google description limit)
  */
-const baseArticleTranslationSchema = createInsertSchema(article_translations)
+const baseArticleTranslationSchema = createInsertSchema(article_translations);
 
 // Type assertion needed because drizzle-zod schemas don't expose .shape in their type definitions
 // but it's available at runtime
 type SchemaWithShape = typeof baseArticleTranslationSchema & {
-	shape: {
-		slug: z.ZodString
-		title: z.ZodString
-		excerpt: z.ZodString
-		seoTitle: z.ZodString
-		seoDescription: z.ZodString
-	}
-}
+  shape: {
+    slug: z.ZodString;
+    title: z.ZodString;
+    excerpt: z.ZodString;
+    seoTitle: z.ZodString;
+    seoDescription: z.ZodString;
+  };
+};
 
-export const insertArticleTranslationSchema = baseArticleTranslationSchema.extend({
-	slug: (baseArticleTranslationSchema as SchemaWithShape).shape.slug
-		.min(1, 'Slug is required')
-		.max(200, 'Slug must be 200 characters or less')
-		.regex(/^[a-z0-9-]+$/, 'Slug must be lowercase alphanumeric with hyphens only'),
-	title: (baseArticleTranslationSchema as SchemaWithShape).shape.title
-		.min(1, 'Title is required')
-		.max(200, 'Title must be 200 characters or less'),
-	excerpt: (baseArticleTranslationSchema as SchemaWithShape).shape.excerpt
-		.min(1, 'Excerpt is required')
-		.max(500, 'Excerpt must be 500 characters or less'),
-	seoTitle: (baseArticleTranslationSchema as SchemaWithShape).shape.seoTitle
-		.min(1, 'SEO title is required')
-		.max(60, 'SEO title should be 60 characters or less for optimal display'),
-	seoDescription: (baseArticleTranslationSchema as SchemaWithShape).shape.seoDescription
-		.min(1, 'SEO description is required')
-		.max(160, 'SEO description should be 160 characters or less for optimal display')
-})
+export const insertArticleTranslationSchema =
+  baseArticleTranslationSchema.extend({
+    id: z.string().optional(),
+    slug: (baseArticleTranslationSchema as SchemaWithShape).shape.slug
+      .min(1, 'Slug is required')
+      .max(200, 'Slug must be 200 characters or less')
+      .regex(
+        /^[a-z0-9-]+$/,
+        'Slug must be lowercase alphanumeric with hyphens only',
+      ),
+    title: (baseArticleTranslationSchema as SchemaWithShape).shape.title
+      .min(1, 'Title is required')
+      .max(200, 'Title must be 200 characters or less'),
+    excerpt: (baseArticleTranslationSchema as SchemaWithShape).shape.excerpt
+      .min(1, 'Excerpt is required')
+      .max(500, 'Excerpt must be 500 characters or less'),
+    seoTitle: (baseArticleTranslationSchema as SchemaWithShape).shape.seoTitle
+      .min(1, 'SEO title is required')
+      .max(60, 'SEO title should be 60 characters or less for optimal display'),
+    seoDescription: (
+      baseArticleTranslationSchema as SchemaWithShape
+    ).shape.seoDescription
+      .min(1, 'SEO description is required')
+      .max(
+        160,
+        'SEO description should be 160 characters or less for optimal display',
+      ),
+  });
 
 /**
  * Insert schema for categories
  * Use this when creating new category records
+ * ID is optional - will be generated if not provided
  */
-export const insertCategorySchema = createInsertSchema(categories)
+export const insertCategorySchema = createInsertSchema(categories).extend({
+  id: z.string().optional(),
+});
 
 /**
  * Insert schema for tags
  * Use this when creating new tag records
+ * ID is optional - will be generated if not provided
  */
-export const insertTagSchema = createInsertSchema(tags)
+export const insertTagSchema = createInsertSchema(tags).extend({
+  id: z.string().optional(),
+});
 
 /**
  * Insert schema for article-tag relationships
  * Use this when associating a tag with an article
  */
-export const insertArticleTagSchema = createInsertSchema(articleTags)
+export const insertArticleTagSchema = createInsertSchema(articleTags);
 
 // ============================================================================
 // SELECT SCHEMAS (for query results)
@@ -118,31 +138,32 @@ export const insertArticleTagSchema = createInsertSchema(articleTags)
  * Select schema for articles
  * Use this for validating query results or type inference
  */
-export const selectArticleSchema = createSelectSchema(articles)
+export const selectArticleSchema = createSelectSchema(articles);
 
 /**
  * Select schema for article translations
  * Use this for validating query results or type inference
  */
-export const selectArticleTranslationSchema = createSelectSchema(article_translations)
+export const selectArticleTranslationSchema =
+  createSelectSchema(article_translations);
 
 /**
  * Select schema for categories
  * Use this for validating query results or type inference
  */
-export const selectCategorySchema = createSelectSchema(categories)
+export const selectCategorySchema = createSelectSchema(categories);
 
 /**
  * Select schema for tags
  * Use this for validating query results or type inference
  */
-export const selectTagSchema = createSelectSchema(tags)
+export const selectTagSchema = createSelectSchema(tags);
 
 /**
  * Select schema for article tags
  * Use this for validating query results or type inference
  */
-export const selectArticleTagSchema = createSelectSchema(articleTags)
+export const selectArticleTagSchema = createSelectSchema(articleTags);
 
 // ============================================================================
 // PARTIAL SCHEMAS (for updates)
@@ -152,14 +173,15 @@ export const selectArticleTagSchema = createSelectSchema(articleTags)
  * Partial insert schema for articles (for updates)
  * Use this when updating article records where all fields are optional
  */
-export const updateArticleSchema = insertArticleSchema.partial()
+export const updateArticleSchema = insertArticleSchema.partial();
 
 /**
  * Partial insert schema for article translations (for updates)
  * Use this when updating translation records where all fields are optional
  * Note: Custom refinements still apply to provided fields
  */
-export const updateArticleTranslationSchema = insertArticleTranslationSchema.partial()
+export const updateArticleTranslationSchema =
+  insertArticleTranslationSchema.partial();
 
 // ============================================================================
 // TYPE INFERENCE EXPORTS
@@ -170,7 +192,7 @@ export const updateArticleTranslationSchema = insertArticleTranslationSchema.par
  * drizzle-zod schemas are runtime-compatible with Zod but don't satisfy
  * the ZodType constraint at compile-time, so we use this workaround
  */
-type InferDrizzleZod<T> = T extends { _output: infer O } ? O : never
+type InferDrizzleZod<T> = T extends { _output: infer O } ? O : never;
 
 /**
  * TypeScript type for inserting articles
@@ -185,73 +207,79 @@ type InferDrizzleZod<T> = T extends { _output: infer O } ? O : never
  * }
  * ```
  */
-export type InsertArticle = InferDrizzleZod<typeof insertArticleSchema>
+export type InsertArticle = InferDrizzleZod<typeof insertArticleSchema>;
 
 /**
  * TypeScript type for selecting articles
  * Automatically inferred from selectArticleSchema
  */
-export type SelectArticle = InferDrizzleZod<typeof selectArticleSchema>
+export type SelectArticle = InferDrizzleZod<typeof selectArticleSchema>;
 
 /**
  * TypeScript type for inserting article translations
  * Automatically inferred from insertArticleTranslationSchema
  */
-export type InsertArticleTranslation = InferDrizzleZod<typeof insertArticleTranslationSchema>
+export type InsertArticleTranslation = InferDrizzleZod<
+  typeof insertArticleTranslationSchema
+>;
 
 /**
  * TypeScript type for selecting article translations
  * Automatically inferred from selectArticleTranslationSchema
  */
-export type SelectArticleTranslation = InferDrizzleZod<typeof selectArticleTranslationSchema>
+export type SelectArticleTranslation = InferDrizzleZod<
+  typeof selectArticleTranslationSchema
+>;
 
 /**
  * TypeScript type for inserting categories
  * Automatically inferred from insertCategorySchema
  */
-export type InsertCategory = InferDrizzleZod<typeof insertCategorySchema>
+export type InsertCategory = InferDrizzleZod<typeof insertCategorySchema>;
 
 /**
  * TypeScript type for selecting categories
  * Automatically inferred from selectCategorySchema
  */
-export type SelectCategory = InferDrizzleZod<typeof selectCategorySchema>
+export type SelectCategory = InferDrizzleZod<typeof selectCategorySchema>;
 
 /**
  * TypeScript type for inserting tags
  * Automatically inferred from insertTagSchema
  */
-export type InsertTag = InferDrizzleZod<typeof insertTagSchema>
+export type InsertTag = InferDrizzleZod<typeof insertTagSchema>;
 
 /**
  * TypeScript type for selecting tags
  * Automatically inferred from selectTagSchema
  */
-export type SelectTag = InferDrizzleZod<typeof selectTagSchema>
+export type SelectTag = InferDrizzleZod<typeof selectTagSchema>;
 
 /**
  * TypeScript type for inserting article tags
  * Automatically inferred from insertArticleTagSchema
  */
-export type InsertArticleTag = InferDrizzleZod<typeof insertArticleTagSchema>
+export type InsertArticleTag = InferDrizzleZod<typeof insertArticleTagSchema>;
 
 /**
  * TypeScript type for selecting article tags
  * Automatically inferred from selectArticleTagSchema
  */
-export type SelectArticleTag = InferDrizzleZod<typeof selectArticleTagSchema>
+export type SelectArticleTag = InferDrizzleZod<typeof selectArticleTagSchema>;
 
 /**
  * TypeScript type for updating articles
  * All fields optional - automatically inferred from updateArticleSchema
  */
-export type UpdateArticle = InferDrizzleZod<typeof updateArticleSchema>
+export type UpdateArticle = InferDrizzleZod<typeof updateArticleSchema>;
 
 /**
  * TypeScript type for updating article translations
  * All fields optional - automatically inferred from updateArticleTranslationSchema
  */
-export type UpdateArticleTranslation = InferDrizzleZod<typeof updateArticleTranslationSchema>
+export type UpdateArticleTranslation = InferDrizzleZod<
+  typeof updateArticleTranslationSchema
+>;
 
 // ============================================================================
 // VALIDATION HELPERS
@@ -276,16 +304,20 @@ export type UpdateArticleTranslation = InferDrizzleZod<typeof updateArticleTrans
  * ```
  */
 export function validateData<T>(
-	schema: { safeParse(data: unknown): { success: true; data: T } | { success: false; error: z.ZodError } },
-	data: unknown
+  schema: {
+    safeParse(
+      data: unknown,
+    ): { success: true; data: T } | { success: false; error: z.ZodError };
+  },
+  data: unknown,
 ): { success: true; data: T } | { success: false; errors: z.ZodError } {
-	const result = schema.safeParse(data)
+  const result = schema.safeParse(data);
 
-	if (result.success) {
-		return { success: true, data: result.data }
-	}
+  if (result.success) {
+    return { success: true, data: result.data };
+  }
 
-	return { success: false, errors: result.error }
+  return { success: false, errors: result.error };
 }
 
 /**
@@ -304,7 +336,7 @@ export function validateData<T>(
  * ```
  */
 export function validateArticleInsert(data: unknown) {
-	return validateData(insertArticleSchema, data)
+  return validateData(insertArticleSchema, data);
 }
 
 /**
@@ -328,7 +360,7 @@ export function validateArticleInsert(data: unknown) {
  * ```
  */
 export function validateTranslationInsert(data: unknown) {
-	return validateData(insertArticleTranslationSchema, data)
+  return validateData(insertArticleTranslationSchema, data);
 }
 
 /**
@@ -346,7 +378,7 @@ export function validateTranslationInsert(data: unknown) {
  * ```
  */
 export function validateArticleUpdate(data: unknown) {
-	return validateData(updateArticleSchema, data)
+  return validateData(updateArticleSchema, data);
 }
 
 /**
@@ -364,7 +396,7 @@ export function validateArticleUpdate(data: unknown) {
  * ```
  */
 export function validateTranslationUpdate(data: unknown) {
-	return validateData(updateArticleTranslationSchema, data)
+  return validateData(updateArticleTranslationSchema, data);
 }
 
 /**
@@ -384,15 +416,15 @@ export function validateTranslationUpdate(data: unknown) {
  * ```
  */
 export function formatZodErrors(errors: z.ZodError): Record<string, string> {
-	const formatted: Record<string, string> = {}
+  const formatted: Record<string, string> = {};
 
-	errors.issues.forEach((issue: z.ZodIssue) => {
-		const path = issue.path.join('.')
-		// Only store the first error per field
-		if (!formatted[path]) {
-			formatted[path] = issue.message
-		}
-	})
+  errors.issues.forEach((issue: z.ZodIssue) => {
+    const path = issue.path.join('.');
+    // Only store the first error per field
+    if (!formatted[path]) {
+      formatted[path] = issue.message;
+    }
+  });
 
-	return formatted
+  return formatted;
 }

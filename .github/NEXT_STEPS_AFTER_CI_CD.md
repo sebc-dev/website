@@ -5,6 +5,7 @@ Ce document résume ce qui a été accompli et les actions recommandées ensuite
 ## ✅ Ce Qui Est Maintenant En Place
 
 ### 1. Code Quality Tools (Commit `🔧 feat(quality)`)
+
 - ✅ ESLint 9 (Flat Config) - Linting type-aware
 - ✅ Prettier 3.3 - Code formatting avec Tailwind CSS
 - ✅ dependency-cruiser - Validation d'architecture
@@ -12,6 +13,7 @@ Ce document résume ce qui a été accompli et les actions recommandées ensuite
 - ✅ VSCode integration - Auto-format on save
 
 ### 2. GitHub Actions CI/CD Pipeline (Commit `🚀 feat(ci)`)
+
 - ✅ Workflow `quality.yml` - Pipeline complet avec 6 jobs
 - ✅ detect-changes - Optimisation des tests critiques
 - ✅ standard-quality - Lint, Format, Tests, Coverage
@@ -21,6 +23,7 @@ Ce document résume ce qui a été accompli et les actions recommandées ensuite
 - ✅ ci-success - Agrégation statut final
 
 ### 3. Documentation
+
 - ✅ README.md - Guide complet du projet
 - ✅ .github/CI_CD_PIPELINE.md - Documentation pipeline
 - ✅ .github/BRANCH_PROTECTION_SETUP.md - Configuration branches
@@ -53,6 +56,7 @@ Ce document résume ce qui a été accompli et les actions recommandées ensuite
 ### Phase 2: Test du Pipeline (5-10 minutes)
 
 - [ ] **Créez une PR test**
+
   ```bash
   git checkout -b test/ci-pipeline
   echo "# Test" >> README.md
@@ -94,6 +98,7 @@ Ce document résume ce qui a été accompli et les actions recommandées ensuite
 Selon vos besoins :
 
 #### A. Codecov (Code Coverage Tracking)
+
 ```bash
 # 1. Créez un compte Codecov
 # 2. Connectez votre repo GitHub
@@ -102,11 +107,13 @@ Selon vos besoins :
 ```
 
 **Avantage** :
+
 - Suivi de la couverture de tests
 - Graphiques et trends
 - Commentaires PR automatiques
 
 #### B. Slack/Discord Notifications
+
 Créez un workflow séparé `.github/workflows/notify-slack.yml` :
 
 ```yaml
@@ -131,11 +138,13 @@ jobs:
 ```
 
 **Setup** :
+
 1. Créez un Slack Webhook : https://api.slack.com/apps
 2. Ajoutez le secret dans GitHub Settings
 3. Recevez des notifs sur chaque run
 
 #### C. GitHub Commit Status Checks
+
 Configurez les vérifications de statut pour les différents checks :
 
 1. **Settings > Branches > Branch protection rules > main**
@@ -145,6 +154,7 @@ Configurez les vérifications de statut pour les différents checks :
 **Déjà configuré** ✓ (Mutation testing est optionnel)
 
 #### D. Auto-Merge (Optionnel)
+
 Pour autoriser le merge automatique de certaines PRs :
 
 ```bash
@@ -188,6 +198,7 @@ gh pr merge --auto --squash -t "chore: merge from bot"
 ### Les checks ne s'affichent pas après la création de la PR
 
 **Solution** :
+
 1. Attendez 30-60 secondes
 2. Rafraîchissez la page
 3. Vérifiez l'onglet "Checks" en bas de la PR
@@ -195,6 +206,7 @@ gh pr merge --auto --squash -t "chore: merge from bot"
 ### Un job timeout
 
 **Solution** :
+
 1. Vérifiez le log du job pour voir où ça s'arrête
 2. Augmentez `timeout-minutes` pour ce job dans `.github/workflows/quality.yml`
 3. Optimisez le code/tests si possible
@@ -202,6 +214,7 @@ gh pr merge --auto --squash -t "chore: merge from bot"
 ### Le build échoue localement mais pas en CI
 
 **Solution** :
+
 ```bash
 # Simulez exactement ce que la CI fait
 rm -rf .next node_modules
@@ -215,6 +228,7 @@ pnpm test
 **C'est normal** - Cela signifie vos tests ne sont pas assez stricts.
 
 **Solution** :
+
 1. Téléchargez le rapport mutation
 2. Lisez les mutations qui passent inaperçues
 3. Améliorez les tests correspondants
@@ -225,14 +239,14 @@ pnpm test
 
 Après quelques semaines, analyser :
 
-| Métrique | Cible | Outil |
-|----------|-------|-------|
-| **Couverture Tests** | > 70% | Codecov |
-| **Mutation Score** | > 80% | Stryker (rapports) |
-| **Linting Errors** | 0 | GitHub Actions logs |
-| **Build Time** | < 15 min | GitHub Actions summary |
-| **E2E Test Time** | < 15 min | GitHub Actions summary |
-| **First Response Time** | < 3 min | GitHub Actions summary |
+| Métrique                | Cible    | Outil                  |
+| ----------------------- | -------- | ---------------------- |
+| **Couverture Tests**    | > 70%    | Codecov                |
+| **Mutation Score**      | > 80%    | Stryker (rapports)     |
+| **Linting Errors**      | 0        | GitHub Actions logs    |
+| **Build Time**          | < 15 min | GitHub Actions summary |
+| **E2E Test Time**       | < 15 min | GitHub Actions summary |
+| **First Response Time** | < 3 min  | GitHub Actions summary |
 
 ---
 
@@ -263,11 +277,13 @@ Après quelques semaines, analyser :
 ## 📖 Ressources
 
 ### Documentation Créée
+
 - `.github/CI_CD_PIPELINE.md` - Guide complet pipeline
 - `.github/BRANCH_PROTECTION_SETUP.md` - Configuration branches
 - `README.md` - Overview projet
 
 ### Ressources Externes
+
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)
 - [GitHub Branch Protection](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches)
 - [Codecov Documentation](https://docs.codecov.io)
@@ -290,6 +306,7 @@ Vous avez maintenant un pipeline CI/CD professionnel et complet:
 ---
 
 **Questions?**
+
 - Voir `.github/CI_CD_PIPELINE.md` pour détails techniques
 - Voir `.github/BRANCH_PROTECTION_SETUP.md` pour configuration GitHub
 - Voir `CLAUDE.md` pour aide avec Claude Code

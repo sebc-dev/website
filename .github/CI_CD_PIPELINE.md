@@ -5,6 +5,7 @@ Ce document décrit le pipeline CI/CD automatisé pour le projet sebc.dev.
 ## Vue d'ensemble
 
 Le pipeline CI/CD est défini dans `.github/workflows/quality.yml` et s'exécute automatiquement lors de :
+
 - **Pull Requests** vers `main` ou `develop`
 - **Push** vers `main` ou `develop`
 - **Schedule** : Tous les lundis à 2h du matin (mutation testing hebdomadaire)
@@ -53,6 +54,7 @@ Le pipeline CI/CD est défini dans `.github/workflows/quality.yml` et s'exécute
 ## Jobs Détaillés
 
 ### 1. **detect-changes** ⚙️
+
 Détecte les fichiers changés pour optimiser l'exécution du mutation testing.
 
 - **Trigger** : Tous les événements
@@ -60,15 +62,18 @@ Détecte les fichiers changés pour optimiser l'exécution du mutation testing.
 - **Sortie** : Variable `critical-files` (true/false)
 
 #### Logique :
+
 - **Pull Request** : Vérifie si les diffs contiennent `app/admin/` ou `src/lib/server/`
 - **Push/Schedule** : Toujours `true` (exécute mutation testing complet)
 
 ---
 
 ### 2. **standard-quality** ✓
+
 Validation rapide de la qualité du code (exécuté sur toutes les PR).
 
 **Étapes** :
+
 1. `pnpm format:check` - Prettier
 2. `pnpm lint` - ESLint + plugins
 3. `pnpm arch:validate` - dependency-cruiser
@@ -82,9 +87,11 @@ Validation rapide de la qualité du code (exécuté sur toutes les PR).
 ---
 
 ### 3. **e2e-tests** 🎭
+
 Tests end-to-end avec Playwright (navigation complète du navigateur).
 
 **Étapes** :
+
 1. Installe les dépendances
 2. `pnpm exec playwright install --with-deps` - Télécharge les navigateurs
 3. `pnpm test:e2e` - Exécute tous les tests E2E
@@ -97,9 +104,11 @@ Tests end-to-end avec Playwright (navigation complète du navigateur).
 ---
 
 ### 4. **mutation-testing** 🧬
+
 Validation de la qualité des tests via mutation de code.
 
 **Conditions d'exécution** :
+
 ```
 SI schedule (Lundi 2h) → pnpm test:mutation        # Complet
 SINON push (main/dev) → pnpm test:mutation:critical # Chemins critiques
@@ -108,6 +117,7 @@ SINON PR → SKIP
 ```
 
 **Portée** :
+
 - `src/lib/server/**/*.ts` - Code serveur
 - `app/admin/actions.ts` - Actions admin
 - `src/lib/utils/**/*.ts` - Utilitaires
@@ -120,9 +130,11 @@ SINON PR → SKIP
 ---
 
 ### 5. **build** 🏗️
+
 Compile l'application Next.js et analyse le bundle.
 
 **Étapes** :
+
 1. `pnpm build` - Build production Next.js
 2. `pnpm bundle:analyze` - Analyse bundle size
 3. Upload artefacts `.next/` (5 jours rétention)
@@ -134,9 +146,11 @@ Compile l'application Next.js et analyse le bundle.
 ---
 
 ### 6. **ci-success** ✅
+
 Vérification finale du statut global du pipeline.
 
 Marque le pipeline comme succès/échec en fonction des résultats de :
+
 - `standard-quality`
 - `e2e-tests`
 - `build`
@@ -147,17 +161,17 @@ Note : Le mutation-testing n'est pas requis pour le succès global.
 
 ## Timings Approximatifs
 
-| Job | Rapide | Normal | Lent |
-|-----|--------|--------|------|
-| detect-changes | 30s | 30s | 30s |
-| standard-quality | 5m | 8m | 10m |
-| e2e-tests | 8m | 12m | 15m |
-| build | 8m | 12m | 15m |
-| mutation-testing (critical) | - | 15m | 30m |
-| mutation-testing (complet) | - | 30m | 45m |
-| **Total PR normal** | ~15m | ~25m | ~35m |
-| **Total PR critical** | ~23m | ~35m | ~50m |
-| **Total schedule** | - | ~60m | ~80m |
+| Job                         | Rapide | Normal | Lent |
+| --------------------------- | ------ | ------ | ---- |
+| detect-changes              | 30s    | 30s    | 30s  |
+| standard-quality            | 5m     | 8m     | 10m  |
+| e2e-tests                   | 8m     | 12m    | 15m  |
+| build                       | 8m     | 12m    | 15m  |
+| mutation-testing (critical) | -      | 15m    | 30m  |
+| mutation-testing (complet)  | -      | 30m    | 45m  |
+| **Total PR normal**         | ~15m   | ~25m   | ~35m |
+| **Total PR critical**       | ~23m   | ~35m   | ~50m |
+| **Total schedule**          | -      | ~60m   | ~80m |
 
 ---
 
@@ -173,6 +187,7 @@ Tous les jobs utilisent le cache pnpm automatiquement via `actions/setup-node@v4
 ```
 
 **Avantages** :
+
 - Pas besoin de réinstaller `node_modules` si `pnpm-lock.yaml` inchangé
 - ~80% de gain de temps sur les runs suivantes
 
@@ -189,6 +204,7 @@ concurrency:
 ```
 
 **Comportement** :
+
 - Une seule run par branch à la fois
 - Les runs précédentes sont annulées si une nouvelle arrive
 - Évite les runs inutiles quand on pousse rapidement
@@ -197,12 +213,12 @@ concurrency:
 
 ## Artefacts Générés
 
-| Artefact | Durée | Chemin |
-|----------|--------|--------|
-| **Coverage Report** | - | `coverage/` |
-| **Playwright Report** | 14 jours | `playwright-report/` |
-| **Mutation Report** | 30 jours | `reports/mutation/html/` |
-| **Build Output** | 5 jours | `.next/` |
+| Artefact              | Durée    | Chemin                   |
+| --------------------- | -------- | ------------------------ |
+| **Coverage Report**   | -        | `coverage/`              |
+| **Playwright Report** | 14 jours | `playwright-report/`     |
+| **Mutation Report**   | 30 jours | `reports/mutation/html/` |
+| **Build Output**      | 5 jours  | `.next/`                 |
 
 ## Accès aux Rapports
 
@@ -222,6 +238,7 @@ Après chaque run GitHub Actions :
 **Cause** : Vos tests n'attrapent pas assez de bugs (mutations).
 
 **Solution** :
+
 1. Téléchargez le rapport de mutation
 2. Lisez les mutations qui passent inaperçues
 3. Améliorez les tests correspondants
@@ -231,6 +248,7 @@ Après chaque run GitHub Actions :
 **Cause** : Tests Playwright trop lents ou site non réactif.
 
 **Solution** :
+
 1. Augmentez `timeout-minutes: 30` dans le workflow
 2. Vérifiez la performance du site
 3. Optimisez les tests Playwright
@@ -240,6 +258,7 @@ Après chaque run GitHub Actions :
 **Cause** : Erreurs de type détectées.
 
 **Solution** :
+
 ```bash
 pnpm tsc          # Vérifier localement
 pnpm lint:fix     # Auto-fixer les erreurs ESLint
@@ -284,6 +303,7 @@ pnpm quality:check
 Le workflow ne nécessite **aucun secret** pour fonctionner.
 
 **Permissions requis** (par défaut) :
+
 - `contents: read` - Lire le code
 - `pull-requests: write` - Commenter les PRs (mutation-testing)
 
@@ -318,6 +338,7 @@ Pour forcer le succès du pipeline avant merge :
 ### Alertes
 
 Vous pouvez configurer des notifications Slack/Discord pour les échecs :
+
 - Dans **Settings** > **Notifications** (GitHub)
 - Ou utiliser des GitHub Apps tierces
 
