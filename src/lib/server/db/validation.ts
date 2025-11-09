@@ -248,3 +248,150 @@ export type UpdateArticle = z.infer<typeof updateArticleSchema>
  */
 // @ts-expect-error - drizzle-zod schema types don't perfectly align with Zod's ZodType
 export type UpdateArticleTranslation = z.infer<typeof updateArticleTranslationSchema>
+
+// ============================================================================
+// VALIDATION HELPERS
+// ============================================================================
+
+/**
+ * Generic validation helper for any Zod schema
+ * Uses safe parsing to avoid throwing errors, instead returning a discriminated union
+ *
+ * @param schema - The Zod schema to validate against
+ * @param data - The data to validate (can be any type)
+ * @returns Object with success flag and either validated data or errors
+ *
+ * @example
+ * ```typescript
+ * const result = validateData(insertArticleSchema, formData);
+ * if (result.success) {
+ *   console.log('Valid:', result.data);
+ * } else {
+ *   console.log('Errors:', result.errors);
+ * }
+ * ```
+ */
+export function validateData<T>(
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	schema: any,
+	data: unknown
+): { success: true; data: T } | { success: false; errors: z.ZodError } {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const result = schema.safeParse(data) as any
+
+	if (result.success) {
+		return { success: true, data: result.data }
+	}
+
+	return { success: false, errors: result.error }
+}
+
+/**
+ * Validate article insert data
+ *
+ * @param data - The data to validate
+ * @returns Validation result with success flag and data or errors
+ *
+ * @example
+ * ```typescript
+ * const result = validateArticleInsert({
+ *   categoryId: 'cat-1',
+ *   complexity: 'beginner',
+ *   status: 'draft'
+ * });
+ * ```
+ */
+export function validateArticleInsert(data: unknown) {
+	return validateData<InsertArticle>(insertArticleSchema, data)
+}
+
+/**
+ * Validate article translation insert data
+ *
+ * @param data - The data to validate
+ * @returns Validation result with success flag and data or errors
+ *
+ * @example
+ * ```typescript
+ * const result = validateTranslationInsert({
+ *   articleId: 'art-1',
+ *   language: 'fr',
+ *   title: 'Mon Article',
+ *   slug: 'mon-article',
+ *   excerpt: 'Description',
+ *   seoTitle: 'SEO',
+ *   seoDescription: 'SEO Desc',
+ *   contentMdx: '# Content'
+ * });
+ * ```
+ */
+export function validateTranslationInsert(data: unknown) {
+	return validateData<InsertArticleTranslation>(insertArticleTranslationSchema, data)
+}
+
+/**
+ * Validate article update data
+ * All fields are optional for updates
+ *
+ * @param data - The data to validate (partial update)
+ * @returns Validation result with success flag and data or errors
+ *
+ * @example
+ * ```typescript
+ * const result = validateArticleUpdate({
+ *   status: 'published'
+ * });
+ * ```
+ */
+export function validateArticleUpdate(data: unknown) {
+	return validateData<UpdateArticle>(updateArticleSchema, data)
+}
+
+/**
+ * Validate article translation update data
+ * All fields are optional for updates
+ *
+ * @param data - The data to validate (partial update)
+ * @returns Validation result with success flag and data or errors
+ *
+ * @example
+ * ```typescript
+ * const result = validateTranslationUpdate({
+ *   title: 'Updated Title'
+ * });
+ * ```
+ */
+export function validateTranslationUpdate(data: unknown) {
+	return validateData<UpdateArticleTranslation>(updateArticleTranslationSchema, data)
+}
+
+/**
+ * Format Zod validation errors into a user-friendly field → message map
+ * Flattens nested errors and provides clear error messages
+ *
+ * @param errors - Zod validation error object
+ * @returns Object mapping field paths to error messages
+ *
+ * @example
+ * ```typescript
+ * const result = insertArticleTranslationSchema.safeParse(invalidData);
+ * if (!result.success) {
+ *   const formatted = formatZodErrors(result.error);
+ *   // Returns: { slug: "Slug must be lowercase alphanumeric with hyphens only" }
+ * }
+ * ```
+ */
+export function formatZodErrors(errors: z.ZodError): Record<string, string> {
+	const formatted: Record<string, string> = {}
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	errors.errors.forEach((error: any) => {
+		const path = error.path.join('.')
+		// Only store the first error per field
+		if (!formatted[path]) {
+			formatted[path] = error.message
+		}
+	})
+
+	return formatted
+}
