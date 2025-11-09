@@ -8,6 +8,13 @@ on:
   schedule:
     - cron: '0 2 * * 1' # Lundi 2h du matin (mutation testing hebdomadaire)
 
+# Permissions minimales requises (principe du moindre privilège)
+permissions:
+  contents: read           # Lire le code source (checkout)
+  pull-requests: write     # Commenter sur les PRs (mutation testing)
+  actions: read            # Lire les statuts des actions
+  checks: write            # Écrire les résultats de checks
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true

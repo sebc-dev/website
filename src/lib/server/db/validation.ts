@@ -30,13 +30,13 @@
 
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod'
 import { z } from 'zod'
+
 import {
-	articles,
 	article_translations,
+	articles,
+	articleTags,
 	categories,
-	tags,
-	articleTags
-} from './schema'
+	tags} from './schema'
 
 // ============================================================================
 // INSERT SCHEMAS (for creating new records)
