@@ -14,7 +14,7 @@
     "arch:validate": "depcruise src app",
     "bundle:analyze": "ANALYZE=true pnpm build",
     "test:mutation": "stryker run",
-    "test:mutation:critical": "stryker run --mutate 'app/admin/actions.ts' --mutate 'src/lib/server/**/*.ts'",
+    "test:mutation:critical": "stryker run stryker.critical.config.json",
     "quality:check": "pnpm format:check && pnpm lint && pnpm arch:validate",
     "test": "vitest",
     "test:ui": "vitest --ui",
