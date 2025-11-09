@@ -59,26 +59,27 @@ export const insertArticleSchema = createInsertSchema(articles)
  * - seoTitle: Max 60 characters (Google title limit)
  * - seoDescription: Max 160 characters (Google description limit)
  */
-export const insertArticleTranslationSchema = createInsertSchema(article_translations).extend({
-	slug: z
-		.string()
+const baseArticleTranslationSchema = createInsertSchema(article_translations)
+export const insertArticleTranslationSchema = baseArticleTranslationSchema.extend({
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	slug: (baseArticleTranslationSchema as any).shape.slug
 		.min(1, 'Slug is required')
 		.max(200, 'Slug must be 200 characters or less')
 		.regex(/^[a-z0-9-]+$/, 'Slug must be lowercase alphanumeric with hyphens only'),
-	title: z
-		.string()
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	title: (baseArticleTranslationSchema as any).shape.title
 		.min(1, 'Title is required')
 		.max(200, 'Title must be 200 characters or less'),
-	excerpt: z
-		.string()
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	excerpt: (baseArticleTranslationSchema as any).shape.excerpt
 		.min(1, 'Excerpt is required')
 		.max(500, 'Excerpt must be 500 characters or less'),
-	seoTitle: z
-		.string()
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	seoTitle: (baseArticleTranslationSchema as any).shape.seoTitle
 		.min(1, 'SEO title is required')
 		.max(60, 'SEO title should be 60 characters or less for optimal display'),
-	seoDescription: z
-		.string()
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	seoDescription: (baseArticleTranslationSchema as any).shape.seoDescription
 		.min(1, 'SEO description is required')
 		.max(160, 'SEO description should be 160 characters or less for optimal display')
 })
@@ -385,11 +386,12 @@ export function formatZodErrors(errors: z.ZodError): Record<string, string> {
 	const formatted: Record<string, string> = {}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	errors.errors.forEach((error: any) => {
-		const path = error.path.join('.')
+	const errorArray = (errors as any).errors || []
+	errorArray.forEach((error: any) => {
+		const path = (error.path || []).join('.')
 		// Only store the first error per field
 		if (!formatted[path]) {
-			formatted[path] = error.message
+			formatted[path] = error.message || 'Validation error'
 		}
 	})
 
