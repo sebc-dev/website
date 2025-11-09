@@ -6,11 +6,11 @@ Ce document décrit comment configurer les variables d'environnement et la confi
 
 Le projet utilise plusieurs fichiers de configuration pour gérer les environnements :
 
-| Fichier | Usage | Versionné | Description |
-|---------|-------|-----------|-------------|
-| `.env` | Développement local | ❌ Non (`.gitignore`) | Variables pour le développement local |
-| `.env.example` | Template | ✅ Oui | Template pour nouveaux développeurs |
-| `wrangler.jsonc` | Configuration Cloudflare | ✅ Oui | Configuration pour déploiement (dev/staging/prod) |
+| Fichier          | Usage                    | Versionné             | Description                                       |
+| ---------------- | ------------------------ | --------------------- | ------------------------------------------------- |
+| `.env`           | Développement local      | ❌ Non (`.gitignore`) | Variables pour le développement local             |
+| `.env.example`   | Template                 | ✅ Oui                | Template pour nouveaux développeurs               |
+| `wrangler.jsonc` | Configuration Cloudflare | ✅ Oui                | Configuration pour déploiement (dev/staging/prod) |
 
 ## Fichiers d'Environnement
 
@@ -60,12 +60,14 @@ Ce fichier contient la configuration pour Cloudflare Workers :
 
 ```jsonc
 {
-  "d1_databases": [{
-    "binding": "DB",
-    "database_name": "sebc-dev-db",
-    "database_id": "6615b6d8-2522-46dc-9051-bc0813b42240",  // ID pour environnement dev
-    "migrations_dir": "drizzle/migrations"
-  }]
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "sebc-dev-db",
+      "database_id": "6615b6d8-2522-46dc-9051-bc0813b42240", // ID pour environnement dev
+      "migrations_dir": "drizzle/migrations",
+    },
+  ],
 }
 ```
 
@@ -80,11 +82,13 @@ Ce fichier contient la configuration pour Cloudflare Workers :
 **Est-ce sécurisé ?**
 
 ✅ **OUI** - Le `database_id` n'est pas un secret :
+
 - C'est un UUID de ressource Cloudflare
 - Accessible uniquement avec des credentials valides (API token)
 - Similaire à un ID de repository GitHub (public mais non exploitable)
 
 ❌ **À NE PAS committer** :
+
 - `CLOUDFLARE_API_TOKEN` (secret dans `.env`)
 - Credentials de base de données
 - Clés privées
@@ -94,6 +98,7 @@ Ce fichier contient la configuration pour Cloudflare Workers :
 Pour gérer plusieurs environnements (dev, staging, production), deux options :
 
 **Option A : Branches Git** (recommandé pour petits projets)
+
 ```bash
 # Branche dev (wrangler.jsonc avec database_id dev)
 git checkout dev
@@ -103,6 +108,7 @@ git checkout main
 ```
 
 **Option B : Fichiers Wrangler séparés** (pour projets complexes)
+
 ```bash
 # Créer des fichiers par environnement (gitignored)
 wrangler.dev.jsonc
@@ -136,11 +142,13 @@ pnpm db:check
 ```
 
 **Variables validées** :
+
 - `CLOUDFLARE_ACCOUNT_ID`
 - `CLOUDFLARE_DATABASE_ID`
 - `CLOUDFLARE_API_TOKEN`
 
 **Comportement** :
+
 - ✅ Toutes définies → Succès
 - ❌ Une manquante ou vide → Erreur avec nom de la variable
 
@@ -149,23 +157,27 @@ pnpm db:check
 ### Pour un Nouveau Développeur
 
 1. **Cloner le repository**
+
    ```bash
    git clone https://github.com/sebc-dev/website.git
    cd website
    ```
 
 2. **Installer les dépendances**
+
    ```bash
    pnpm install
    ```
 
 3. **Configurer les variables d'environnement**
+
    ```bash
    cp .env.example .env
    # Éditer .env avec vos valeurs Cloudflare
    ```
 
 4. **Vérifier la configuration**
+
    ```bash
    pnpm db:check
    ```
@@ -173,6 +185,7 @@ pnpm db:check
 5. **Créer/utiliser la base de données D1**
 
    **Option A : Créer une nouvelle base D1 (recommandé pour dev local)**
+
    ```bash
    # Créer une nouvelle base D1
    wrangler d1 create sebc-dev-db-local
@@ -183,6 +196,7 @@ pnpm db:check
    ```
 
    **Option B : Utiliser la base D1 partagée (dev team)**
+
    ```bash
    # Demander le database_id à l'équipe
    # Le renseigner uniquement dans .env
@@ -190,6 +204,7 @@ pnpm db:check
    ```
 
 6. **Appliquer les migrations**
+
    ```bash
    pnpm db:migrate:local
    ```
@@ -201,11 +216,12 @@ pnpm db:check
 
 ## Dépannage
 
-### Erreur : "Missing: CLOUDFLARE_*"
+### Erreur : "Missing: CLOUDFLARE\_\*"
 
 **Cause** : Variable d'environnement manquante ou vide
 
 **Solution** :
+
 ```bash
 # Vérifier le contenu de .env
 cat .env
@@ -223,6 +239,7 @@ CLOUDFLARE_ACCOUNT_ID=a1b2c3d4e5f67890  # ✅
 **Cause** : `database_id` dans `wrangler.jsonc` différent de `CLOUDFLARE_DATABASE_ID` dans `.env`
 
 **Solution** :
+
 ```bash
 # Lire le database_id dans wrangler.jsonc
 grep database_id wrangler.jsonc
@@ -235,6 +252,7 @@ grep database_id wrangler.jsonc
 **Cause** : `dotenv-cli` non installé ou version incorrecte
 
 **Solution** :
+
 ```bash
 # Réinstaller les dépendances
 pnpm install
@@ -249,6 +267,7 @@ pnpm list dotenv-cli
 **Cause** : Foreign keys activées, ordre de création incorrect
 
 **Solution** : Les migrations Drizzle gèrent cela automatiquement. Si problème :
+
 ```bash
 # Supprimer la base locale et recréer
 rm -rf .wrangler/state/v3/d1

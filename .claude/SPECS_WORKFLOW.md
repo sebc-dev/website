@@ -67,6 +67,7 @@ Le workflow de sebc.dev suit une **architecture à 5 niveaux**, du plus stratég
 ### **Niveau 1: PRODUIT - Les Spécifications de Base**
 
 **Fichiers** : `docs/specs/`
+
 ```
 docs/specs/
 ├── PRD.md                           # Source de vérité produit
@@ -77,6 +78,7 @@ docs/specs/
 ```
 
 **Contenu** :
+
 - **PRD.md** (43KB, 2000+ lignes)
   - Tous les features épiques (EFs)
   - Tous les features non épiques (ENFs)
@@ -116,6 +118,7 @@ docs/specs/
 ### **Niveau 2: EPIC - Organisation au Niveau Epic**
 
 **Fichiers** : `docs/specs/epics/epic_X/`
+
 ```
 docs/specs/epics/epic_X/
 ├── EPIC_TRACKING.md                 # Central hub pour l'epic
@@ -123,6 +126,7 @@ docs/specs/epics/epic_X/
 ```
 
 **EPIC_TRACKING.md** contient :
+
 - Titre et description de l'epic
 - Statut global (PLANNING / IN PROGRESS / COMPLETED)
 - Tableau de **tous les stories** dans l'epic
@@ -134,11 +138,13 @@ docs/specs/epics/epic_X/
   ```
 
 **Créé par** : `/epic-initializer` skill
+
 - Scan du PRD
 - Extraction de tous les stories pour cet epic
 - Création de la table de suivi centralisée
 
 **Mis à jour par** :
+
 - `story-phase-planner` skill (après planification de story)
 - `phase-doc-generator` skill (après génération de phase)
 - `phase-implementer` agent (après implémentation de phase)
@@ -153,6 +159,7 @@ docs/specs/epics/epic_X/
 ### **Niveau 3: STORY - Spécifications Stratégiques**
 
 **Fichiers** : `docs/specs/epics/epic_X/story_X_Y/`
+
 ```
 docs/specs/epics/epic_X/story_X_Y/
 ├── story_X.Y.md                     # Story spec (du PRD)
@@ -163,6 +170,7 @@ docs/specs/epics/epic_X/story_X_Y/
 #### **story_X.Y.md** - Spécification de la Story
 
 Créé par `/plan-story` skill, contient :
+
 - Description de la story (extraite du PRD)
 - Objectif fonctionnel
 - Acceptance criteria (du PRD)
@@ -170,14 +178,17 @@ Créé par `/plan-story` skill, contient :
 - Dépendances avec d'autres stories
 
 **Exemple** (Story 0.1 - Project Foundation) :
+
 ```markdown
 # Story 0.1 - Project Foundation
 
 ## Description
+
 Initialize sebc.dev project with core infrastructure,
 SvelteKit 5, Cloudflare Workers bindings, and database setup.
 
 ## Acceptance Criteria
+
 - [ ] SvelteKit 5 project created and builds successfully
 - [ ] Cloudflare Workers bindings configured
 - [ ] D1 database initialized
@@ -189,6 +200,7 @@ SvelteKit 5, Cloudflare Workers bindings, and database setup.
 #### **PHASES_PLAN.md** - Strategic Phases Breakdown
 
 Créé par `/plan-story` skill, contient :
+
 - **Why X phases?** - Justification du nombre de phases
 - **Pour chaque phase** :
   - Objectif (une phrase)
@@ -204,6 +216,7 @@ Créé par `/plan-story` skill, contient :
 - **Testing strategy** - Approche de test
 
 **Exemple** (Story 0.1) :
+
 ```markdown
 # Story 0.1 - Phases Implementation Plan
 
@@ -218,22 +231,26 @@ This story is decomposed into **9 atomic phases** based on:
 ## Phases Summary
 
 ### Phase 1: SvelteKit & Wrangler Setup
+
 **Objective**: Initialize SvelteKit 5 project with Cloudflare Workers support
 **Scope**:
+
 - SvelteKit 5 project initialization
 - Wrangler integration
 - TypeScript configuration
-**Files**: src/app.html, svelte.config.js, tsconfig.json
-**Duration**: 2 days, ~3 commits
+  **Files**: src/app.html, svelte.config.js, tsconfig.json
+  **Duration**: 2 days, ~3 commits
 
 ### Phase 2: Database Schema Setup
+
 **Objective**: Initialize D1 database with Drizzle ORM
 **Scope**:
+
 - D1 database initialization
 - Drizzle ORM setup
 - Initial schema definition
-**Files**: src/lib/db/schema.ts, wrangler.toml
-**Duration**: 2 days, ~4 commits
+  **Files**: src/lib/db/schema.ts, wrangler.toml
+  **Duration**: 2 days, ~4 commits
 
 ... (autres phases)
 ```
@@ -251,6 +268,7 @@ This story is decomposed into **9 atomic phases** based on:
 ### **Niveau 4: PHASE - Documentation Détaillée**
 
 **Fichiers** : `docs/specs/epics/epic_X/story_X_Y/implementation/phase_X/`
+
 ```
 docs/specs/epics/epic_X/story_X_Y/implementation/phase_X/
 ├── INDEX.md                         # Navigation et overview
@@ -327,6 +345,7 @@ docs/specs/epics/epic_X/story_X_Y/implementation/phase_X/
 **Créé par** : `phase-implementer` agent (un commit à la fois)
 
 **Process** :
+
 1. Lire COMMIT_CHECKLIST.md pour le commit courant
 2. Implémenter les fichiers listés
 3. Lancer les validations
@@ -335,6 +354,7 @@ docs/specs/epics/epic_X/story_X_Y/implementation/phase_X/
 6. Passer au commit suivant
 
 **Caractéristiques** :
+
 - ✅ Atomic : Une responsabilité par commit
 - ✅ Petit : Typiquement 50-300 lignes
 - ✅ Reviewable : 15-90 min de review
@@ -369,6 +389,7 @@ cat docs/specs/UX_UI_Spec.md     # Exigences UX/UI
 ```
 
 **Checkpoint** ✅
+
 - Vous comprenez les objectifs du projet
 - Vous connaissez la stack technique
 - Vous avez identifié un epic/story à travailler
@@ -381,6 +402,7 @@ cat docs/specs/UX_UI_Spec.md     # Exigences UX/UI
 **Commande** : `/epic-initializer` skill
 
 **Input** :
+
 ```
 Epic Reference: "Epic 1"
 PRD Path: "docs/specs/PRD.md"
@@ -388,11 +410,13 @@ Output Directory: "docs/specs/epics/epic_1/"
 ```
 
 **Le skill fait** :
+
 1. Lire le PRD
 2. Extraire tous les stories de Epic 1
 3. Créer la table de suivi centralisée
 
 **Output** :
+
 ```
 docs/specs/epics/epic_1/
 └── EPIC_TRACKING.md  (~150-250 lignes)
@@ -412,6 +436,7 @@ Contenu:
 ```
 
 **Checkpoint** ✅
+
 - EPIC_TRACKING.md créé
 - Tous les stories listés
 - Prêt pour story planning
@@ -424,6 +449,7 @@ Contenu:
 **Commande** : `/plan-story`
 
 **Input** :
+
 ```
 Story Reference: "Epic 1 Story 1.1"
 PRD Path: "docs/specs/PRD.md" (auto-détecté)
@@ -431,6 +457,7 @@ Epic Directory: "docs/specs/epics/epic_1/" (auto-créé si nécessaire)
 ```
 
 **Le skill fait** :
+
 1. Lire le PRD, extraire Story 1.1
 2. Créer story_1_1.md (spec de story)
 3. Analyser complexity et dépendances
@@ -438,6 +465,7 @@ Epic Directory: "docs/specs/epics/epic_1/" (auto-créé si nécessaire)
 5. Update EPIC_TRACKING.md
 
 **Output** :
+
 ```
 docs/specs/epics/epic_1/story_1_1/
 ├── story_1.1.md  (~200-400 lignes)
@@ -454,11 +482,13 @@ docs/specs/epics/epic_1/story_1_1/
 ```
 
 **Update** : EPIC_TRACKING.md
+
 ```
 | 1.1 | Add Posts | Create, edit, delete posts | 🚧 IN PROGRESS | 5 | 0/5 |
 ```
 
 **Checkpoint** ✅
+
 - story_1.1.md créé et validé
 - PHASES_PLAN.md créé avec phases réalistes
 - EPIC_TRACKING.md updaté
@@ -472,6 +502,7 @@ docs/specs/epics/epic_1/story_1_1/
 **Commande** : `/generate-phase-doc`
 
 **Input** :
+
 ```
 Story Reference: "Epic 1 Story 1.1"
 Phase Number: "1"
@@ -479,6 +510,7 @@ Phase Name: (auto-extrait de PHASES_PLAN.md)
 ```
 
 **Le skill fait** :
+
 1. Smart path detection : résout les chemins automatiquement
 2. Lire PHASES_PLAN.md pour Phase 1
 3. Générer 7 documents détaillés
@@ -486,6 +518,7 @@ Phase Name: (auto-extrait de PHASES_PLAN.md)
 5. Update EPIC_TRACKING.md
 
 **Output** :
+
 ```
 docs/specs/epics/epic_1/story_1_1/implementation/phase_1/
 ├── INDEX.md                    # Navigation
@@ -500,6 +533,7 @@ docs/specs/epics/epic_1/story_1_1/implementation/phase_1/
 ```
 
 **COMMIT_CHECKLIST.md structure** :
+
 ```
 ## Commit 1/5: Database Schema Setup
 
@@ -524,6 +558,7 @@ git commit -m "Database Schema: Define users table with Drizzle ORM"
 ```
 
 **Checkpoint** ✅
+
 - 7 documents générés (3400+ lignes)
 - COMMIT_CHECKLIST.md prêt
 - Prêt pour implémentation
@@ -538,6 +573,7 @@ git commit -m "Database Schema: Define users table with Drizzle ORM"
 **Process** (pour Commit 1/5) :
 
 **1. Préparation**
+
 ```bash
 # Lire COMMIT_CHECKLIST.md pour Commit 1
 # Identifier les fichiers : src/lib/db/schema.ts, src/lib/db/index.ts
@@ -545,6 +581,7 @@ git commit -m "Database Schema: Define users table with Drizzle ORM"
 ```
 
 **2. Implémentation**
+
 ```typescript
 // src/lib/db/schema.ts
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
@@ -557,6 +594,7 @@ export const users = sqliteTable('users', {
 ```
 
 **3. Validation**
+
 ```bash
 pnpm typecheck  # ✅ Pas d'erreurs types
 pnpm lint       # ✅ ESLint OK
@@ -564,12 +602,14 @@ pnpm test       # ✅ Tests passent
 ```
 
 **4. Update Documentation**
+
 ```bash
 # INDEX.md : Status = IN PROGRESS
 # COMMIT_CHECKLIST.md : Commit 1 marked [x]
 ```
 
 **5. Git Commit**
+
 ```bash
 git add src/lib/db/
 git commit -m "Database Schema: Define users table with Drizzle ORM
@@ -589,6 +629,7 @@ git commit -m "Database Schema: Define users table with Drizzle ORM
 → Phase Implementer reprend avec Commit 2
 
 **Checkpoint** ✅
+
 - Commit 1 fait et validé
 - Tests et types passent
 - Prêt pour Commit 2
@@ -598,6 +639,7 @@ git commit -m "Database Schema: Define users table with Drizzle ORM
 ## Documents et fichiers
 
 ### **Spec Files** (Reference - Read Only)
+
 ```
 docs/specs/
 ├── PRD.md                           # Source de vérité
@@ -608,6 +650,7 @@ docs/specs/
 ```
 
 ### **Generated Files** (Per Epic)
+
 ```
 docs/specs/epics/epic_X/
 ├── EPIC_TRACKING.md                 # Central tracking
@@ -636,6 +679,7 @@ docs/specs/epics/epic_X/
 ```
 
 ### **Claude Automation Files** (.claude/)
+
 ```
 .claude/
 ├── commands/
@@ -656,27 +700,33 @@ docs/specs/epics/epic_X/
 ## Commandes et skills utilisées
 
 ### **Phase 1: Epic Initialization**
+
 ```bash
 /epic-initializer
 ```
+
 - **Input** : Epic reference (e.g., "Epic 1")
 - **Output** : EPIC_TRACKING.md
 - **Time** : 5-10 minutes
 - **Automation** : ✅ Entièrement automatisé
 
 ### **Phase 2: Story Planning**
+
 ```bash
 /plan-story
 ```
+
 - **Input** : Story reference (e.g., "Epic 1 Story 1.1")
 - **Output** : story_X.Y.md + PHASES_PLAN.md
 - **Time** : 20-30 minutes (dépend de complexité)
 - **Automation** : ✅ Entièrement automatisé
 
 ### **Phase 3: Phase Documentation**
+
 ```bash
 /generate-phase-doc
 ```
+
 - **Input** : Story reference + Phase number
 - **Smart features** :
   - Auto-détecte les chemins
@@ -687,9 +737,11 @@ docs/specs/epics/epic_X/
 - **Automation** : ✅ Entièrement automatisé
 
 ### **Phase 4: Implementation**
+
 ```bash
 phase-implementer (via Task tool)
 ```
+
 - **Input** : Story reference + Phase number
 - **Output** : Code implémenté + git commits
 - **Process** : ONE COMMIT AT A TIME
@@ -703,12 +755,14 @@ phase-implementer (via Task tool)
 ### **Exemple 1: Implémenter Epic 0, Story 0.1, Phase 1**
 
 **Jour 1: Preparation**
+
 ```bash
 # Lire le PRD et comprendre Epic 0
 cat docs/specs/PRD.md | grep -A 20 "Epic 0"
 ```
 
 **Jour 2: Epic Initialization (10 min)**
+
 ```
 Utilisateur: "Initialize Epic 0 please"
 Claude: /epic-initializer skill
@@ -717,6 +771,7 @@ Claude: /epic-initializer skill
 ```
 
 **Jour 3: Story Planning (30 min)**
+
 ```
 Utilisateur: "/plan-story Epic 0 Story 0.1"
 Claude: /plan-story command
@@ -726,6 +781,7 @@ Claude: /plan-story command
 ```
 
 **Jour 4-5: Phase Documentation (20 min)**
+
 ```
 Utilisateur: "/generate-phase-doc Epic 0 Story 0.1 Phase 1"
 Claude: /generate-phase-doc command
@@ -735,6 +791,7 @@ Claude: /generate-phase-doc command
 ```
 
 **Jour 6-8: Implementation (plusieurs jours)**
+
 ```
 Utilisateur: "Implement Phase 1 Commit 1"
 Claude: phase-implementer agent
@@ -763,22 +820,27 @@ Claude: Commit 3 : TypeScript configuration
 **Le workflow s'adapte au tech stack** :
 
 #### Linter
+
 - SvelteKit → ESLint (was: Biome for Next.js)
 - Command: `pnpm lint` (not `biome check`)
 
 #### Package Manager
+
 - Default: `pnpm` (also supports npm, yarn)
 - Install: `pnpm install` (not npm install)
 
 #### Test Framework
+
 - Default: Vitest (also supports Jest, pytest)
 - Run: `pnpm test` (not jest)
 
 #### Build Tool
+
 - Default: Vite via SvelteKit
 - Command: `pnpm build`
 
 #### Database
+
 - D1 (SQLite) with Drizzle ORM
 - Migrations: `wrangler d1 migrations create`
 
@@ -789,17 +851,20 @@ Claude: Commit 3 : TypeScript configuration
 ## Checklist de validation
 
 ### **Avant de commencer**
+
 - [ ] Vous avez lu le PRD et compris les objectifs
 - [ ] Vous avez lu Brief.md pour la vision
 - [ ] Vous avez lu Frontend_Specification.md pour le tech stack
 - [ ] Vous avez identifié l'epic/story à travailler
 
 ### **Après Epic Initialization**
+
 - [ ] EPIC_TRACKING.md créé dans docs/specs/epics/epic_X/
 - [ ] Tous les stories du PRD listés dans le tableau
 - [ ] Statuts initialisés à "NOT STARTED"
 
 ### **Après Story Planning**
+
 - [ ] story_X.Y.md créé et contient story specification
 - [ ] PHASES_PLAN.md créé avec phase breakdown
 - [ ] Nombre de phases adapté à la complexité (pas de template fixe)
@@ -807,6 +872,7 @@ Claude: Commit 3 : TypeScript configuration
 - [ ] EPIC_TRACKING.md updaté (Status de story = IN PROGRESS)
 
 ### **Après Phase Documentation**
+
 - [ ] 7 documents générés dans phase_X/
 - [ ] IMPLEMENTATION_PLAN.md contient N commits atomiques
 - [ ] COMMIT_CHECKLIST.md contient détails par commit
@@ -815,6 +881,7 @@ Claude: Commit 3 : TypeScript configuration
 - [ ] EPIC_TRACKING.md updaté avec phase info
 
 ### **Après chaque Commit Implementation**
+
 - [ ] Files créés/modifiés correspondent à COMMIT_CHECKLIST.md
 - [ ] `pnpm typecheck` : ✅ Pas d'erreurs
 - [ ] `pnpm lint` : ✅ Linting OK
@@ -823,18 +890,21 @@ Claude: Commit 3 : TypeScript configuration
 - [ ] Documentation (INDEX.md, COMMIT_CHECKLIST.md) updatée
 
 ### **Après Phase Completion**
+
 - [ ] Tous les commits implémentés et validés
 - [ ] Validation checklist complétée
 - [ ] EPIC_TRACKING.md : Phase progress = 7/7 (ou nombre final)
 - [ ] Prêt pour phase suivante
 
 ### **Après Story Completion**
+
 - [ ] Toutes les phases implémentées
 - [ ] EPIC_TRACKING.md : Story status = ✅ COMPLETED
 - [ ] Progress = 9/9 (ou nombre final de phases)
 - [ ] Acceptances criteria du story validés
 
 ### **Après Epic Completion**
+
 - [ ] Tous les stories complétés
 - [ ] EPIC_TRACKING.md : Status = ✅ COMPLETED
 - [ ] Tous les stories du tableau marqués COMPLETED
@@ -845,27 +915,31 @@ Claude: Commit 3 : TypeScript configuration
 ## Résumé et Quick Reference
 
 ### **Le Workflow en Une Phrase**
+
 PRD → Epic Init → Story Plan → Phase Docs → Atomic Commits
 
 ### **Commandes à Utiliser**
-| Étape | Commande | Quand | Entrée | Sortie |
-|-------|----------|-------|--------|--------|
-| 1 | `/epic-initializer` | Nouveau epic | "Epic X" | EPIC_TRACKING.md |
-| 2 | `/plan-story` | Nouveau story | "Epic X Story X.Y" | story_X.Y.md + PHASES_PLAN.md |
-| 3 | `/generate-phase-doc` | Chaque phase | "Epic X Story X.Y Phase Z" | 7 documents |
-| 4 | `phase-implementer` | Chaque commit | Phase docs | Code + git commits |
+
+| Étape | Commande              | Quand         | Entrée                     | Sortie                        |
+| ----- | --------------------- | ------------- | -------------------------- | ----------------------------- |
+| 1     | `/epic-initializer`   | Nouveau epic  | "Epic X"                   | EPIC_TRACKING.md              |
+| 2     | `/plan-story`         | Nouveau story | "Epic X Story X.Y"         | story_X.Y.md + PHASES_PLAN.md |
+| 3     | `/generate-phase-doc` | Chaque phase  | "Epic X Story X.Y Phase Z" | 7 documents                   |
+| 4     | `phase-implementer`   | Chaque commit | Phase docs                 | Code + git commits            |
 
 ### **Fichiers Importants**
-| Fichier | Type | Création | Rôle |
-|---------|------|----------|------|
-| PRD.md | Reference | Manuel | Source de vérité produit |
-| EPIC_TRACKING.md | Generated | epic-initializer | Dashboard epic |
-| story_X.Y.md | Generated | story-phase-planner | Story spec (du PRD) |
-| PHASES_PLAN.md | Generated | story-phase-planner | Strategic breakdown |
-| COMMIT_CHECKLIST.md | Generated | phase-doc-generator | Implementation guide |
-| Source files | Generated | phase-implementer | Code réel |
+
+| Fichier             | Type      | Création            | Rôle                     |
+| ------------------- | --------- | ------------------- | ------------------------ |
+| PRD.md              | Reference | Manuel              | Source de vérité produit |
+| EPIC_TRACKING.md    | Generated | epic-initializer    | Dashboard epic           |
+| story_X.Y.md        | Generated | story-phase-planner | Story spec (du PRD)      |
+| PHASES_PLAN.md      | Generated | story-phase-planner | Strategic breakdown      |
+| COMMIT_CHECKLIST.md | Generated | phase-doc-generator | Implementation guide     |
+| Source files        | Generated | phase-implementer   | Code réel                |
 
 ### **Temps Estimés**
+
 - Epic Initialization : ~10 min
 - Story Planning : ~30 min (simple) à 1-2h (complexe)
 - Phase Documentation : ~20 min par phase (auto-générée)

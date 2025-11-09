@@ -73,12 +73,14 @@ You are a Technical Documentation Validation Agent. Your role is to:
 ### Phase 2: Concept Extraction
 Extract each technical concept as:
 ```
+
 Technology: [Name]
 Type: [Framework/Library/Service/Pattern/Architecture]
 Document Mentions: [Where in document]
 Claimed Properties: [What is asserted about it]
 Criticality: [Fundamental/Major/Secondary]
-```
+
+````
 
 ### Phase 3: Property Validation Mapping
 For each claimed property, categorize it:
@@ -144,7 +146,7 @@ Always produce Markdown with:
     - Major changes from v14
     - Support timeline
   - Criticality: Fundamental
-```
+````
 
 ## Important
 
@@ -152,6 +154,7 @@ Always produce Markdown with:
 - Include both positive (supported) and negative (deprecated) checks
 - When info conflicts between sources, flag for human review
 - Always include a "Research Priority" section at end
+
 ```
 
 ---
@@ -161,6 +164,7 @@ Always produce Markdown with:
 Quand l'utilisateur veut valider un document :
 
 ```
+
 Analyze the following technical document and generate a comprehensive
 validation checklist using the Generic Validation Framework.
 
@@ -169,6 +173,7 @@ Document Type: [architecture|design|guide|spec|config]
 Project Context: [Brief description of project]
 
 Please:
+
 1. Extract all technical claims and concepts
 2. Identify validation sources for each claim
 3. Generate a structured markdown checklist
@@ -177,8 +182,9 @@ Please:
 6. Flag critical items needing verification
 
 Output should be production-ready and saved to:
-docs/validation/[DOCUMENT_NAME]_VALIDATION_CHECKLIST.md
-```
+docs/validation/[DOCUMENT_NAME]\_VALIDATION_CHECKLIST.md
+
+````
 
 ---
 
@@ -236,7 +242,7 @@ class ValidationAgent:
         """Generate structured markdown checklist"""
         # Produces final markdown output
         pass
-```
+````
 
 ### Step 2: Configure External Sources
 
@@ -245,49 +251,49 @@ class ValidationAgent:
 
 frameworks:
   next_js:
-    official_docs: "https://nextjs.org/docs"
-    releases: "https://nextjs.org/releases"
-    github: "https://github.com/vercel/next.js"
-    blog: "https://nextjs.org/blog"
+    official_docs: 'https://nextjs.org/docs'
+    releases: 'https://nextjs.org/releases'
+    github: 'https://github.com/vercel/next.js'
+    blog: 'https://nextjs.org/blog'
 
   react:
-    official_docs: "https://react.dev"
-    github: "https://github.com/facebook/react"
-    blog: "https://react.dev/blog"
+    official_docs: 'https://react.dev'
+    github: 'https://github.com/facebook/react'
+    blog: 'https://react.dev/blog'
 
   cloudflare:
-    workers_docs: "https://developers.cloudflare.com/workers/"
-    d1_docs: "https://developers.cloudflare.com/d1/"
-    r2_docs: "https://developers.cloudflare.com/r2/"
-    blog: "https://blog.cloudflare.com/"
-    community: "https://community.cloudflare.com/"
+    workers_docs: 'https://developers.cloudflare.com/workers/'
+    d1_docs: 'https://developers.cloudflare.com/d1/'
+    r2_docs: 'https://developers.cloudflare.com/r2/'
+    blog: 'https://blog.cloudflare.com/'
+    community: 'https://community.cloudflare.com/'
 
 orm:
   drizzle:
-    official: "https://orm.drizzle.team/"
-    github: "https://github.com/drizzle-team/drizzle-orm"
-    docs: "https://orm.drizzle.team/docs"
+    official: 'https://orm.drizzle.team/'
+    github: 'https://github.com/drizzle-team/drizzle-orm'
+    docs: 'https://orm.drizzle.team/docs'
 
 i18n:
   next_intl:
-    official: "https://next-intl-docs.vercel.app/"
-    github: "https://github.com/amannn/next-intl"
+    official: 'https://next-intl-docs.vercel.app/'
+    github: 'https://github.com/amannn/next-intl'
 
 ui:
   shadcn_ui:
-    official: "https://ui.shadcn.com/"
-    github: "https://github.com/shadcn-ui/ui"
+    official: 'https://ui.shadcn.com/'
+    github: 'https://github.com/shadcn-ui/ui'
   tailwind:
-    official: "https://tailwindcss.com/"
-    docs: "https://tailwindcss.com/docs"
+    official: 'https://tailwindcss.com/'
+    docs: 'https://tailwindcss.com/docs'
 
 testing:
   vitest:
-    official: "https://vitest.dev/"
-    github: "https://github.com/vitest-dev/vitest"
+    official: 'https://vitest.dev/'
+    github: 'https://github.com/vitest-dev/vitest'
   playwright:
-    official: "https://playwright.dev/"
-    github: "https://github.com/microsoft/playwright"
+    official: 'https://playwright.dev/'
+    github: 'https://github.com/microsoft/playwright'
 ```
 
 ### Step 3: Define Extraction Patterns
@@ -503,7 +509,9 @@ Generates checklist with:
 [Full checklist structure...]
 
 ## 1. Framework & Runtime
+
 ### 1.1 Next.js
+
 - [ ] **Next.js 15.0+**: Latest version?
   - Source: https://nextjs.org/releases
   - To Verify:
@@ -515,15 +523,17 @@ Generates checklist with:
 [... 88 more items ...]
 
 ## 12. Quick Reference
+
 | Domain | Items | Status |
 [... table ...]
 
 ## Research Priority
+
 1. Verify Next.js 15 latest version
 2. Check OpenNext compatibility
 3. Verify D1 maturity status
 4. Check next-intl with App Router
-[... priority list ...]
+   [... priority list ...]
 ```
 
 ---
@@ -531,6 +541,7 @@ Generates checklist with:
 ## Considérations Techniques
 
 ### Caching & Performance
+
 ```python
 # Cache résultats pour éviter re-fetches
 class CachedResearch:
@@ -556,6 +567,7 @@ class CachedResearch:
 ```
 
 ### Error Handling
+
 ```python
 # Handle missing/broken sources gracefully
 def fetch_source(url, fallback_action='flag_for_review'):
@@ -572,6 +584,7 @@ def fetch_source(url, fallback_action='flag_for_review'):
 ```
 
 ### Multi-Language Support
+
 ```python
 # Generate checklists in multiple languages
 def translate_checklist(checklist_en, target_lang='fr'):
@@ -606,7 +619,7 @@ on:
     paths:
       - 'docs/**/*.md'
   schedule:
-    - cron: '0 0 * * 0'  # Weekly
+    - cron: '0 0 * * 0' # Weekly
 
 jobs:
   validate:
@@ -686,6 +699,7 @@ class ValidationMetrics:
 Ce guide fournit une **roadmap complète** pour implémenter un agent de validation de documents.
 
 **Points clés:**
+
 1. ✅ Système de prompt clair pour diriger l'agent
 2. ✅ Architecture modulaire et extensible
 3. ✅ Integration avec sources externes
@@ -693,6 +707,7 @@ Ce guide fournit une **roadmap complète** pour implémenter un agent de validat
 5. ✅ Possibilités d'automatisation CI/CD
 
 **Prochaines étapes:**
+
 - Implémenter le core agent
 - Tester sur divers types de documents
 - Raffiner les prompts basé sur feedback

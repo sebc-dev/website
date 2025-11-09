@@ -14,6 +14,7 @@ Complete validation checklist before marking Phase 4 as complete.
 - [ ] Git history is clean and readable
 
 **Verification**:
+
 ```bash
 git log --oneline --grep="Part of Phase 4"
 # Should show 5 commits
@@ -30,6 +31,7 @@ git log --oneline --grep="Part of Phase 4"
 - [ ] TypeScript strict mode compliance
 
 **Validation**:
+
 ```bash
 pnpm tsc --noEmit
 # Should complete with no errors
@@ -50,6 +52,7 @@ pnpm tsc --noEmit
 - [ ] Error messages are user-friendly
 
 **Validation**:
+
 ```bash
 pnpm lint src/lib/server/db/validation.ts
 # Should pass with no errors
@@ -70,6 +73,7 @@ pnpm lint src/lib/server/db/validation.ts
 - [ ] No skipped tests (`it.skip`) without justification
 
 **Validation**:
+
 ```bash
 # Run tests
 pnpm test src/lib/server/db/validation.test.ts
@@ -79,6 +83,7 @@ pnpm test:coverage src/lib/server/db/validation.test.ts
 ```
 
 **Expected Results**:
+
 - All tests passing (15+)
 - Coverage >85%
 
@@ -92,6 +97,7 @@ pnpm test:coverage src/lib/server/db/validation.test.ts
 - [ ] No peer dependency warnings
 
 **Validation**:
+
 ```bash
 pnpm list drizzle-zod
 # Should show version number
@@ -111,6 +117,7 @@ pnpm install
 - [ ] Schemas match Drizzle table definitions
 
 **Tables Covered**:
+
 - [ ] `insertArticleSchema` / `selectArticleSchema`
 - [ ] `insertArticleTranslationSchema` / `selectArticleTranslationSchema`
 - [ ] `insertCategorySchema` / `selectCategorySchema`
@@ -118,6 +125,7 @@ pnpm install
 - [ ] `insertArticleTagSchema` / `selectArticleTagSchema`
 
 **Validation**:
+
 ```bash
 grep "createInsertSchema" src/lib/server/db/validation.ts
 # Should show 5 uses (one per table)
@@ -138,6 +146,7 @@ grep "createSelectSchema" src/lib/server/db/validation.ts
 - [ ] Refinements use `.extend()` on generated schemas
 
 **Validation**:
+
 ```bash
 # Test slug validation manually
 node -e "
@@ -164,6 +173,7 @@ node -e "
 ```
 
 **Expected Output**:
+
 ```
 Uppercase rejected: true
 Lowercase accepted: true
@@ -177,9 +187,10 @@ Lowercase accepted: true
 - [ ] `updateArticleSchema` allows optional fields
 - [ ] `updateArticleTranslationSchema` allows optional fields
 - [ ] Partial schemas still validate provided fields
-- [ ] Naming convention followed (update*Schema)
+- [ ] Naming convention followed (update\*Schema)
 
 **Validation**:
+
 ```bash
 # Test partial update
 node -e "
@@ -196,6 +207,7 @@ node -e "
 ```
 
 **Expected Output**:
+
 ```
 Partial update works: true
 Still validates provided fields: true
@@ -212,6 +224,7 @@ Still validates provided fields: true
 - [ ] Type inference tested in validation.test.ts
 
 **Type Exports**:
+
 - [ ] `InsertArticle`, `SelectArticle`
 - [ ] `InsertArticleTranslation`, `SelectArticleTranslation`
 - [ ] `InsertCategory`, `SelectCategory`
@@ -219,6 +232,7 @@ Still validates provided fields: true
 - [ ] `InsertArticleTag`, `SelectArticleTag`
 
 **Validation**:
+
 ```bash
 grep "export type Insert" src/lib/server/db/validation.ts
 # Should show 5 types
@@ -244,6 +258,7 @@ grep "export type Select" src/lib/server/db/validation.ts
 - [ ] Type-safe throughout (no `any`)
 
 **Validation**:
+
 ```bash
 # Test validation helper
 node -e "
@@ -264,6 +279,7 @@ node -e "
 ```
 
 **Expected Output**:
+
 ```
 Valid data passes: true
 Invalid data fails: true
@@ -281,6 +297,7 @@ Invalid data fails: true
 - [ ] Single source of truth principle documented
 
 **Check**:
+
 ```bash
 # File should have header comment explaining purpose
 head -20 src/lib/server/db/validation.ts
@@ -297,6 +314,7 @@ head -20 src/lib/server/db/validation.ts
 - [ ] Ready for Server Actions (Phase 5 will use these helpers)
 
 **Validation**:
+
 ```bash
 # Verify imports work
 node -e "
@@ -316,6 +334,7 @@ node -e "
 - [ ] No eslint-disable comments (unless justified)
 
 **Validation**:
+
 ```bash
 pnpm lint src/lib/server/db/validation.ts
 pnpm lint src/lib/server/db/validation.test.ts
@@ -353,15 +372,15 @@ pnpm test:coverage src/lib/server/db/validation.test.ts
 
 ## 📊 Success Metrics
 
-| Metric | Target | Actual | Status |
-|--------|--------|--------|--------|
-| Commits | 5 | - | ⏳ |
-| Type Coverage | 100% | - | ⏳ |
-| Test Coverage | >85% | - | ⏳ |
-| Tests Passing | 100% | - | ⏳ |
-| Lint Status | ✅ | - | ⏳ |
-| Files Created | 2 | - | ⏳ |
-| Lines of Code | ~490 | - | ⏳ |
+| Metric        | Target | Actual | Status |
+| ------------- | ------ | ------ | ------ |
+| Commits       | 5      | -      | ⏳     |
+| Type Coverage | 100%   | -      | ⏳     |
+| Test Coverage | >85%   | -      | ⏳     |
+| Tests Passing | 100%   | -      | ⏳     |
+| Lint Status   | ✅     | -      | ⏳     |
+| Files Created | 2      | -      | ⏳     |
+| Lines of Code | ~490   | -      | ⏳     |
 
 **All metrics must meet or exceed targets.**
 
@@ -389,6 +408,7 @@ Verify all phase objectives achieved:
 Check Phase 4 contribution to Story 0.4 AC4:
 
 **AC4: Type-Safe Validation Chain**
+
 - [ ] drizzle-zod installed and configured ✅
 - [ ] Zod schemas auto-generated from Drizzle schemas ✅
 - [ ] Validation helpers created for Server Actions ✅
@@ -414,6 +434,7 @@ Select one:
 ## 📝 Next Steps
 
 ### If Approved ✅
+
 1. [ ] Update INDEX.md status to ✅ COMPLETED
 2. [ ] Update actual metrics in INDEX.md
 3. [ ] Merge phase branch to story branch
@@ -422,11 +443,13 @@ Select one:
 6. [ ] Prepare for Phase 5 (Database Access Layer & Integration Testing)
 
 ### If Changes Requested 🔧
+
 1. [ ] Address all feedback items in checklist
 2. [ ] Re-run validation commands
 3. [ ] Request re-review
 
 ### If Rejected ❌
+
 1. [ ] Document issues clearly
 2. [ ] Plan rework strategy
 3. [ ] Schedule review after rework

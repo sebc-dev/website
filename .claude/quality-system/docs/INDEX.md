@@ -4,37 +4,37 @@ Vous cherchez quelque chose de spécifique ? Ce guide vous aide à naviguer rapi
 
 ## 🚀 Pour Démarrer Rapidement
 
-| Je veux...                                      | Aller à...                               |
-|-------------------------------------------------|------------------------------------------|
-| Comprendre comment ça marche en 2 minutes      | [`QUALITY-SYSTEM-SUMMARY.md`](.claude/quality-system/docs/SUMMARY.md) |
-| Voir des schémas visuels des flux              | [`QUALITY-SYSTEM-VISUAL-GUIDE.md`](.claude/quality-system/docs/VISUAL-GUIDE.md) |
-| Lire la doc complète et technique              | [`README-QUALITY-HOOKS.md`](.claude/quality-system/docs/README.md) |
-| Vérifier que tout est bien installé            | Exécuter `.claude/quality-system/scripts/test-installation.sh` |
+| Je veux...                                | Aller à...                                                                      |
+| ----------------------------------------- | ------------------------------------------------------------------------------- |
+| Comprendre comment ça marche en 2 minutes | [`QUALITY-SYSTEM-SUMMARY.md`](.claude/quality-system/docs/SUMMARY.md)           |
+| Voir des schémas visuels des flux         | [`QUALITY-SYSTEM-VISUAL-GUIDE.md`](.claude/quality-system/docs/VISUAL-GUIDE.md) |
+| Lire la doc complète et technique         | [`README-QUALITY-HOOKS.md`](.claude/quality-system/docs/README.md)              |
+| Vérifier que tout est bien installé       | Exécuter `.claude/quality-system/scripts/test-installation.sh`                  |
 
 ## 📚 Documentation par Type
 
 ### Documentation Utilisateur
 
-| Document                          | Contenu                                    | Quand le lire                |
-|-----------------------------------|--------------------------------------------|------------------------------|
-| `INSTALLATION-SUCCESS.txt`        | Message de confirmation d'installation     | Juste après l'installation   |
-| `QUALITY-SYSTEM-SUMMARY.md`       | Résumé concis (5-10 min de lecture)        | Pour un aperçu rapide        |
-| `QUALITY-SYSTEM-VISUAL-GUIDE.md`  | Diagrammes et flux visuels                 | Pour comprendre les flux     |
+| Document                         | Contenu                                | Quand le lire              |
+| -------------------------------- | -------------------------------------- | -------------------------- |
+| `INSTALLATION-SUCCESS.txt`       | Message de confirmation d'installation | Juste après l'installation |
+| `QUALITY-SYSTEM-SUMMARY.md`      | Résumé concis (5-10 min de lecture)    | Pour un aperçu rapide      |
+| `QUALITY-SYSTEM-VISUAL-GUIDE.md` | Diagrammes et flux visuels             | Pour comprendre les flux   |
 
 ### Documentation Technique
 
-| Document                     | Contenu                                       | Quand le lire                    |
-|------------------------------|-----------------------------------------------|----------------------------------|
-| `README-QUALITY-HOOKS.md`    | Guide technique complet et référence          | Pour l'implémentation détaillée  |
-| `settings.json`              | Configuration des hooks                       | Pour personnaliser les matchers  |
+| Document                  | Contenu                              | Quand le lire                   |
+| ------------------------- | ------------------------------------ | ------------------------------- |
+| `README-QUALITY-HOOKS.md` | Guide technique complet et référence | Pour l'implémentation détaillée |
+| `settings.json`           | Configuration des hooks              | Pour personnaliser les matchers |
 
 ### Documentation des Composants
 
-| Composant                    | Documentation                                 | Localisation                     |
-|------------------------------|-----------------------------------------------|----------------------------------|
-| Hook PostToolUse             | Commentaires dans le script                   | `.claude/quality-system/hooks/quality-check.sh` |
-| Skill quality-report         | Instructions complètes                        | `.claude/quality-system/skills/quality-report/SKILL.md` |
-| Script de génération         | Commentaires dans le script                   | `.claude/quality-system/skills/quality-report/scripts/generate-quality-report.sh` |
+| Composant            | Documentation               | Localisation                                                                      |
+| -------------------- | --------------------------- | --------------------------------------------------------------------------------- |
+| Hook PostToolUse     | Commentaires dans le script | `.claude/quality-system/hooks/quality-check.sh`                                   |
+| Skill quality-report | Instructions complètes      | `.claude/quality-system/skills/quality-report/SKILL.md`                           |
+| Script de génération | Commentaires dans le script | `.claude/quality-system/skills/quality-report/scripts/generate-quality-report.sh` |
 
 ## 🔍 Recherche par Question
 
@@ -142,29 +142,29 @@ Vous cherchez quelque chose de spécifique ? Ce guide vous aide à naviguer rapi
 
 ### Documentation Locale
 
-| Ressource                 | Localisation                                          |
-|---------------------------|-------------------------------------------------------|
-| Guide Hooks (FR)          | `docs/claude-code/Devenir expert des hooks Claude Code.md` |
-| Guide Skills (FR)         | `docs/claude-code/Maîtriser les Skills dans Claude Code.md` |
+| Ressource         | Localisation                                                |
+| ----------------- | ----------------------------------------------------------- |
+| Guide Hooks (FR)  | `docs/claude-code/Devenir expert des hooks Claude Code.md`  |
+| Guide Skills (FR) | `docs/claude-code/Maîtriser les Skills dans Claude Code.md` |
 
 ### Scripts Utiles
 
-| Script                        | Commande                                      | Utilité                  |
-|-------------------------------|-----------------------------------------------|--------------------------|
-| Test d'installation           | `.claude/quality-system/scripts/test-installation.sh`              | Valider l'installation   |
-| Test manuel du hook           | `.claude/quality-system/hooks/quality-check.sh`              | Tester le hook seul      |
-| Génération de rapport         | `.claude/quality-system/skills/quality-report/scripts/...`   | Tester le skill seul     |
+| Script                | Commande                                                   | Utilité                |
+| --------------------- | ---------------------------------------------------------- | ---------------------- |
+| Test d'installation   | `.claude/quality-system/scripts/test-installation.sh`      | Valider l'installation |
+| Test manuel du hook   | `.claude/quality-system/hooks/quality-check.sh`            | Tester le hook seul    |
+| Génération de rapport | `.claude/quality-system/skills/quality-report/scripts/...` | Tester le skill seul   |
 
 ## 🎓 Glossaire Rapide
 
-| Terme              | Définition                                                    |
-|--------------------|---------------------------------------------------------------|
-| **Hook**           | Script automatique exécuté en réponse à un événement          |
-| **PostToolUse**    | Hook qui s'exécute après l'utilisation d'un outil (Write, Edit) |
-| **Skill**          | Package de connaissances/expertise invocable par Claude       |
-| **Matcher**        | Critères pour déterminer si un hook doit s'exécuter           |
-| **Exit Code**      | Code de sortie d'un script (0=succès, 1=warning, 2=critique)  |
-| **Quality Check**  | Vérification de qualité du code (typecheck, lint, tests, etc.) |
+| Terme             | Définition                                                      |
+| ----------------- | --------------------------------------------------------------- |
+| **Hook**          | Script automatique exécuté en réponse à un événement            |
+| **PostToolUse**   | Hook qui s'exécute après l'utilisation d'un outil (Write, Edit) |
+| **Skill**         | Package de connaissances/expertise invocable par Claude         |
+| **Matcher**       | Critères pour déterminer si un hook doit s'exécuter             |
+| **Exit Code**     | Code de sortie d'un script (0=succès, 1=warning, 2=critique)    |
+| **Quality Check** | Vérification de qualité du code (typecheck, lint, tests, etc.)  |
 
 ---
 

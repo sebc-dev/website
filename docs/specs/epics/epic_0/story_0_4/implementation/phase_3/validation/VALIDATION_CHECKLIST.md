@@ -29,6 +29,7 @@ Complete validation checklist before marking Phase 3 as complete.
 - [ ] TypeScript strict mode passes
 
 **Validation**:
+
 ```bash
 pnpm tsc --noEmit
 ```
@@ -40,6 +41,7 @@ pnpm tsc --noEmit
 ## ✅ 3. Database Schema
 
 ### Categories Table
+
 - [ ] `categories` table defined in `schema.ts`
 - [ ] All 8 required fields present:
   - [ ] `id` - text, primary key
@@ -54,6 +56,7 @@ pnpm tsc --noEmit
 - [ ] JSDoc comment documents purpose and constraints
 
 ### Tags Table
+
 - [ ] `tags` table defined in `schema.ts`
 - [ ] All 4 required fields present:
   - [ ] `id` - text, primary key
@@ -63,6 +66,7 @@ pnpm tsc --noEmit
 - [ ] JSDoc comment explains flexible taxonomy
 
 ### ArticleTags Junction Table
+
 - [ ] `articleTags` table defined in `schema.ts`
 - [ ] Two FK fields present:
   - [ ] `articleId` - text, not null
@@ -73,10 +77,12 @@ pnpm tsc --noEmit
 - [ ] JSDoc comment explains Many-to-Many relationship
 
 ### Articles Table Update
+
 - [ ] `articles.categoryId` FK references `categories.id`
 - [ ] FK behavior appropriate (nullable or not)
 
 **Validation**:
+
 ```bash
 # Verify Drizzle can parse schema
 pnpm db:generate --check
@@ -101,6 +107,7 @@ pnpm db:generate --check
 - [ ] All 3 tables exist in database
 
 **Validation**:
+
 ```bash
 # Apply migration (if not already done)
 pnpm db:migrate:local
@@ -140,6 +147,7 @@ wrangler d1 execute DB --local --command "SELECT name FROM sqlite_master WHERE t
 - [ ] Seed script is re-runnable (idempotent)
 
 **Validation**:
+
 ```bash
 # Execute seed script
 pnpm db:seed
@@ -158,6 +166,7 @@ wrangler d1 execute DB --local --command "SELECT COUNT(*) as count FROM categori
 ```
 
 **Expected**:
+
 - First seed: 9 categories inserted
 - Re-run: No errors, still 9 categories (not 18)
 - Keys: behind-scenes, case-study, deep-analysis, learning-path, news, quick-tips, retrospective, tool-test, tutorial
@@ -187,6 +196,7 @@ wrangler d1 execute DB --local --command "SELECT COUNT(*) as count FROM categori
 - [ ] No hardcoded IDs that might break
 
 **Validation**:
+
 ```bash
 # Run integration tests
 pnpm test:integration
@@ -199,6 +209,7 @@ pnpm test:coverage tests/integration/taxonomy-schema.test.ts
 ```
 
 **Expected**:
+
 - All tests pass (✓)
 - Coverage >80% for taxonomy operations
 - No errors or warnings
@@ -216,6 +227,7 @@ pnpm test:coverage tests/integration/taxonomy-schema.test.ts
 - [ ] Error handling appropriate (tests verify constraints)
 
 **Validation**:
+
 ```bash
 # Run linter
 pnpm lint
@@ -234,6 +246,7 @@ pnpm lint
 - [ ] Cascade delete behavior tested (integration tests)
 
 **Validation**:
+
 ```bash
 # Test cascade delete (from integration tests)
 pnpm test tests/integration/taxonomy-schema.test.ts -t "cascade delete"
@@ -255,12 +268,14 @@ pnpm test tests/integration/taxonomy-schema.test.ts -t "cascade delete"
 - [ ] Slugs match locale and naming conventions
 
 **Validation**:
+
 ```bash
 # Query all categories and verify data
 wrangler d1 execute DB --local --command "SELECT * FROM categories ORDER BY key;"
 ```
 
 **Manual Review**:
+
 - [ ] Verify each category has correct icon (check Lucide docs if needed)
 - [ ] Verify colors are visually distinct and match design system
 - [ ] Verify bilingual names are accurate translations
@@ -276,6 +291,7 @@ wrangler d1 execute DB --local --command "SELECT * FROM categories ORDER BY key;
 - [ ] Phase 3 INDEX.md status updated if complete
 
 **Validation**:
+
 ```bash
 # Check JSDoc comments exist
 grep -A 3 "categories\s*=" src/lib/server/db/schema.ts
@@ -300,6 +316,7 @@ head -n 5 drizzle/seeds/categories.sql
 - [ ] npm scripts work correctly (`db:generate`, `db:migrate:local`, `db:seed`)
 
 **Validation**:
+
 ```bash
 # Verify all commands work
 pnpm db:generate --check
@@ -313,6 +330,7 @@ wrangler d1 execute DB --local --command "SELECT COUNT(*) FROM articleTags;"
 ```
 
 **Expected**:
+
 - All commands execute without errors
 - Categories: 9
 - Tags: 0 (unless test data exists)
@@ -373,17 +391,17 @@ wrangler d1 execute DB --local --command "SELECT name FROM sqlite_master WHERE t
 
 ## 📊 Success Metrics
 
-| Metric | Target | Actual | Status |
-|--------|--------|--------|--------|
-| Commits | 5 | - | ⏳ |
-| Type Errors | 0 | - | ⏳ |
-| Lint Errors | 0 | - | ⏳ |
-| Test Coverage | >80% | - | ⏳ |
-| Integration Tests | All pass | - | ⏳ |
-| Canonical Categories | 9 | - | ⏳ |
-| Tables Created | 3 | - | ⏳ |
-| Migration Applied | ✅ | - | ⏳ |
-| Seed Executed | ✅ | - | ⏳ |
+| Metric               | Target   | Actual | Status |
+| -------------------- | -------- | ------ | ------ |
+| Commits              | 5        | -      | ⏳     |
+| Type Errors          | 0        | -      | ⏳     |
+| Lint Errors          | 0        | -      | ⏳     |
+| Test Coverage        | >80%     | -      | ⏳     |
+| Integration Tests    | All pass | -      | ⏳     |
+| Canonical Categories | 9        | -      | ⏳     |
+| Tables Created       | 3        | -      | ⏳     |
+| Migration Applied    | ✅       | -      | ⏳     |
+| Seed Executed        | ✅       | -      | ⏳     |
 
 ---
 
@@ -410,6 +428,7 @@ Select one:
 ## 📝 Next Steps
 
 ### If Approved ✅
+
 1. [ ] Update INDEX.md status to ✅ COMPLETED
 2. [ ] Update actual metrics in this checklist
 3. [ ] Merge phase branch to main (or development branch)
@@ -420,12 +439,14 @@ Select one:
 8. [ ] Archive Phase 3 documentation
 
 ### If Changes Requested 🔧
+
 1. [ ] Address all feedback items listed above
 2. [ ] Re-run all validation commands
 3. [ ] Update checklist with actual results
 4. [ ] Request re-review
 
 ### If Rejected ❌
+
 1. [ ] Document major issues preventing approval
 2. [ ] Plan rework (which commits need changes)
 3. [ ] Set timeline for fixes
@@ -440,12 +461,15 @@ Select one:
 **Duration**: [Time spent on validation]
 
 ### Issues Found
+
 [List any issues discovered during validation]
 
 ### Recommendations
+
 [Any suggestions for future phases or improvements]
 
 ### Additional Comments
+
 [Any other notes or observations]
 
 ---

@@ -88,38 +88,27 @@
       "indexes": {
         "article_translations_article_id_idx": {
           "name": "article_translations_article_id_idx",
-          "columns": [
-            "article_id"
-          ],
+          "columns": ["article_id"],
           "isUnique": false
         },
         "article_translations_language_idx": {
           "name": "article_translations_language_idx",
-          "columns": [
-            "language"
-          ],
+          "columns": ["language"],
           "isUnique": false
         },
         "article_translations_slug_idx": {
           "name": "article_translations_slug_idx",
-          "columns": [
-            "slug"
-          ],
+          "columns": ["slug"],
           "isUnique": false
         },
         "article_translations_unique_article_language": {
           "name": "article_translations_unique_article_language",
-          "columns": [
-            "article_id",
-            "language"
-          ],
+          "columns": ["article_id", "language"],
           "isUnique": true
         },
         "article_translations_unique_slug": {
           "name": "article_translations_unique_slug",
-          "columns": [
-            "slug"
-          ],
+          "columns": ["slug"],
           "isUnique": true
         }
       },
@@ -128,12 +117,8 @@
           "name": "article_translations_article_id_articles_id_fk",
           "tableFrom": "article_translations",
           "tableTo": "articles",
-          "columnsFrom": [
-            "article_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["article_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -206,23 +191,17 @@
       "indexes": {
         "articles_category_id_idx": {
           "name": "articles_category_id_idx",
-          "columns": [
-            "category_id"
-          ],
+          "columns": ["category_id"],
           "isUnique": false
         },
         "articles_status_idx": {
           "name": "articles_status_idx",
-          "columns": [
-            "status"
-          ],
+          "columns": ["status"],
           "isUnique": false
         },
         "articles_published_at_idx": {
           "name": "articles_published_at_idx",
-          "columns": [
-            "published_at"
-          ],
+          "columns": ["published_at"],
           "isUnique": false
         }
       },

@@ -10,7 +10,14 @@
  * @see https://orm.drizzle.team/docs/column-types/sqlite
  */
 
-import { sqliteTable, text, integer, index, unique, primaryKey } from 'drizzle-orm/sqlite-core';
+import {
+  index,
+  integer,
+  primaryKey,
+  sqliteTable,
+  text,
+  unique,
+} from 'drizzle-orm/sqlite-core';
 
 // ============================================================================
 // ENUM Definitions
@@ -75,19 +82,16 @@ export type Status = (typeof StatusEnum)[number];
  * @field icon - Lucide React icon name (e.g., 'Newspaper', 'BookOpen')
  * @field color - Hex color code for UI display (e.g., '#3B82F6')
  */
-export const categories = sqliteTable(
-	'categories',
-	{
-		id: text('id').primaryKey(),
-		key: text('key').notNull().unique(),
-		nameFr: text('name_fr').notNull(),
-		nameEn: text('name_en').notNull(),
-		slugFr: text('slug_fr').notNull(),
-		slugEn: text('slug_en').notNull(),
-		icon: text('icon').notNull(),
-		color: text('color').notNull()
-	}
-);
+export const categories = sqliteTable('categories', {
+  id: text('id').primaryKey(),
+  key: text('key').notNull().unique(),
+  nameFr: text('name_fr').notNull(),
+  nameEn: text('name_en').notNull(),
+  slugFr: text('slug_fr').notNull(),
+  slugEn: text('slug_en').notNull(),
+  icon: text('icon').notNull(),
+  color: text('color').notNull(),
+});
 
 /**
  * TypeScript type inference for Category records
@@ -122,28 +126,28 @@ export type Category = typeof categories.$inferSelect;
  * @field updatedAt - Last modification timestamp
  */
 export const articles = sqliteTable(
-	'articles',
-	{
-		id: text('id').primaryKey(),
-		categoryId: text('category_id').references(() => categories.id), // FK to categories (nullable)
-		complexity: text('complexity', { enum: ComplexityEnum }).notNull(),
-		status: text('status', { enum: StatusEnum }).notNull().default('draft'),
-		publishedAt: integer('published_at', { mode: 'timestamp' }),
-		coverImage: text('cover_image'),
-		createdAt: integer('created_at', { mode: 'timestamp' })
-			.notNull()
-			.$defaultFn(() => new Date()),
-		updatedAt: integer('updated_at', { mode: 'timestamp' })
-			.notNull()
-			.$defaultFn(() => new Date())
-			.$onUpdate(() => new Date())
-	},
-	(table) => ({
-		// Indexes for query performance
-		categoryIdIdx: index('articles_category_id_idx').on(table.categoryId),
-		statusIdx: index('articles_status_idx').on(table.status),
-		publishedAtIdx: index('articles_published_at_idx').on(table.publishedAt)
-	})
+  'articles',
+  {
+    id: text('id').primaryKey(),
+    categoryId: text('category_id').references(() => categories.id), // FK to categories (nullable)
+    complexity: text('complexity', { enum: ComplexityEnum }).notNull(),
+    status: text('status', { enum: StatusEnum }).notNull().default('draft'),
+    publishedAt: integer('published_at', { mode: 'timestamp' }),
+    coverImage: text('cover_image'),
+    createdAt: integer('created_at', { mode: 'timestamp' })
+      .notNull()
+      .$defaultFn(() => new Date()),
+    updatedAt: integer('updated_at', { mode: 'timestamp' })
+      .notNull()
+      .$defaultFn(() => new Date())
+      .$onUpdate(() => new Date()),
+  },
+  (table) => ({
+    // Indexes for query performance
+    categoryIdIdx: index('articles_category_id_idx').on(table.categoryId),
+    statusIdx: index('articles_status_idx').on(table.status),
+    publishedAtIdx: index('articles_published_at_idx').on(table.publishedAt),
+  }),
 );
 
 /**
@@ -194,39 +198,40 @@ export type Language = (typeof LanguageEnum)[number];
  * @field updatedAt - Last modification timestamp
  */
 export const article_translations = sqliteTable(
-	'article_translations',
-	{
-		id: text('id').primaryKey(),
-		articleId: text('article_id')
-			.notNull()
-			.references(() => articles.id, { onDelete: 'cascade' }),
-		language: text('language', { enum: LanguageEnum }).notNull(),
-		title: text('title').notNull(),
-		slug: text('slug').notNull(),
-		excerpt: text('excerpt').notNull(),
-		seoTitle: text('seo_title').notNull(),
-		seoDescription: text('seo_description').notNull(),
-		contentMdx: text('content_mdx').notNull(),
-		createdAt: integer('created_at', { mode: 'timestamp' })
-			.notNull()
-			.$defaultFn(() => new Date()),
-		updatedAt: integer('updated_at', { mode: 'timestamp' })
-			.notNull()
-			.$defaultFn(() => new Date())
-			.$onUpdate(() => new Date())
-	},
-	(table) => ({
-		// Indexes for query performance
-		articleIdIdx: index('article_translations_article_id_idx').on(table.articleId),
-		languageIdx: index('article_translations_language_idx').on(table.language),
-		slugIdx: index('article_translations_slug_idx').on(table.slug),
-		// Unique constraints
-		uniqueArticleLanguage: unique('article_translations_unique_article_language').on(
-			table.articleId,
-			table.language
-		),
-		uniqueSlug: unique('article_translations_unique_slug').on(table.slug)
-	})
+  'article_translations',
+  {
+    id: text('id').primaryKey(),
+    articleId: text('article_id')
+      .notNull()
+      .references(() => articles.id, { onDelete: 'cascade' }),
+    language: text('language', { enum: LanguageEnum }).notNull(),
+    title: text('title').notNull(),
+    slug: text('slug').notNull(),
+    excerpt: text('excerpt').notNull(),
+    seoTitle: text('seo_title').notNull(),
+    seoDescription: text('seo_description').notNull(),
+    contentMdx: text('content_mdx').notNull(),
+    createdAt: integer('created_at', { mode: 'timestamp' })
+      .notNull()
+      .$defaultFn(() => new Date()),
+    updatedAt: integer('updated_at', { mode: 'timestamp' })
+      .notNull()
+      .$defaultFn(() => new Date())
+      .$onUpdate(() => new Date()),
+  },
+  (table) => ({
+    // Indexes for query performance
+    articleIdIdx: index('article_translations_article_id_idx').on(
+      table.articleId,
+    ),
+    languageIdx: index('article_translations_language_idx').on(table.language),
+    slugIdx: index('article_translations_slug_idx').on(table.slug),
+    // Unique constraints
+    uniqueArticleLanguage: unique(
+      'article_translations_unique_article_language',
+    ).on(table.articleId, table.language),
+    uniqueSlug: unique('article_translations_unique_slug').on(table.slug),
+  }),
 );
 
 /**
@@ -260,12 +265,12 @@ export type ArticleTranslation = typeof article_translations.$inferSelect;
  * @field createdAt - Record creation timestamp
  */
 export const tags = sqliteTable('tags', {
-	id: text('id').primaryKey(),
-	nameFr: text('name_fr').notNull(),
-	nameEn: text('name_en').notNull(),
-	createdAt: integer('created_at', { mode: 'timestamp' })
-		.notNull()
-		.$defaultFn(() => new Date())
+  id: text('id').primaryKey(),
+  nameFr: text('name_fr').notNull(),
+  nameEn: text('name_en').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' })
+    .notNull()
+    .$defaultFn(() => new Date()),
 });
 
 /**
@@ -301,19 +306,19 @@ export type Tag = typeof tags.$inferSelect;
  * @field tagId - Foreign key to tags.id
  */
 export const articleTags = sqliteTable(
-	'article_tags',
-	{
-		articleId: text('article_id')
-			.notNull()
-			.references(() => articles.id, { onDelete: 'cascade' }),
-		tagId: text('tag_id')
-			.notNull()
-			.references(() => tags.id, { onDelete: 'cascade' })
-	},
-	(table) => ({
-		// Composite primary key prevents duplicate article-tag pairs
-		pk: primaryKey({ columns: [table.articleId, table.tagId] })
-	})
+  'article_tags',
+  {
+    articleId: text('article_id')
+      .notNull()
+      .references(() => articles.id, { onDelete: 'cascade' }),
+    tagId: text('tag_id')
+      .notNull()
+      .references(() => tags.id, { onDelete: 'cascade' }),
+  },
+  (table) => ({
+    // Composite primary key prevents duplicate article-tag pairs
+    pk: primaryKey({ columns: [table.articleId, table.tagId] }),
+  }),
 );
 
 /**

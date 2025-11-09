@@ -9,12 +9,14 @@ This is a Next.js 15 website deployed to Cloudflare Workers using OpenNext. The 
 ## Core Commands
 
 ### Development
+
 - `pnpm dev` - Start Next.js dev server with Turbopack (runs on http://localhost:3000)
 - `pnpm build` - Build production bundle
 - `pnpm start` - Start production server
 - `pnpm lint` - Run ESLint
 
 ### Testing
+
 - `pnpm test` - Run Vitest unit tests
 - `pnpm test:ui` - Run Vitest with UI
 - `pnpm test:coverage` - Generate test coverage report
@@ -24,17 +26,20 @@ This is a Next.js 15 website deployed to Cloudflare Workers using OpenNext. The 
 - `pnpm test:e2e:debug` - Debug Playwright tests
 
 ### Deployment
+
 - `pnpm deploy` - Build and deploy to Cloudflare Workers
 - `pnpm preview` - Build and preview Cloudflare deployment locally
 - `pnpm cf-typegen` - Generate Cloudflare environment types
 
 ### Running Single Tests
+
 - Vitest: `pnpm test <filename>` or use `.only` in test files
 - Playwright: `pnpm test:e2e <test-file-path>` or use `.only` in spec files
 
 ## Architecture
 
 ### Project Structure
+
 ```
 /app              - Next.js App Router pages (layout.tsx, page.tsx)
 /lib              - Utility functions (e.g., cn() for className merging)
@@ -45,6 +50,7 @@ This is a Next.js 15 website deployed to Cloudflare Workers using OpenNext. The 
 ```
 
 ### Key Technologies
+
 - **Framework**: Next.js 15 (App Router, RSC enabled)
 - **Runtime**: Cloudflare Workers via @opennextjs/cloudflare
 - **Styling**: Tailwind CSS v4 with cssVariables, shadcn/ui "new-york" style
@@ -53,6 +59,7 @@ This is a Next.js 15 website deployed to Cloudflare Workers using OpenNext. The 
 - **Package Manager**: pnpm
 
 ### Path Aliases
+
 - `@/*` - Root-level imports (configured in tsconfig.json)
 - shadcn/ui aliases (in components.json):
   - `@/components` - Components directory
@@ -61,12 +68,14 @@ This is a Next.js 15 website deployed to Cloudflare Workers using OpenNext. The 
   - `@/hooks` - React hooks
 
 ### Testing Configuration
+
 - **Vitest**: Uses jsdom environment, globals enabled, setup file at `vitest.setup.ts` which imports `@testing-library/jest-dom`
 - Unit tests: `**/*.{test,spec}.{ts,tsx}` (excludes `/tests` directory)
 - E2E tests: `/tests/**/*.spec.ts` with Playwright
 - Coverage excludes: node_modules, .next, tests, config files, type definitions
 
 ### Cloudflare Integration
+
 - Uses OpenNext adapter for Cloudflare Workers compatibility
 - Configuration in `open-next.config.ts` and `wrangler.jsonc`
 - Built worker output in `.open-next/` directory
@@ -74,6 +83,7 @@ This is a Next.js 15 website deployed to Cloudflare Workers using OpenNext. The 
 - Access Cloudflare context via `getCloudflareContext()` in dev mode
 
 ### Fonts
+
 Uses Geist font family (Geist Sans and Geist Mono) via `next/font/google`
 
 ## Project Workflow System
@@ -81,6 +91,7 @@ Uses Geist font family (Geist Sans and Geist Mono) via `next/font/google`
 This project uses a comprehensive 5-level specification workflow system for managing features:
 
 ### Workflow Levels
+
 1. **PRODUIT** - Product requirements (PRD, Brief, Concept, Frontend/UX specs)
 2. **EPIC** - High-level feature groupings tracked in `EPIC_TRACKING.md`
 3. **STORY** - Individual user stories with specifications
@@ -88,12 +99,14 @@ This project uses a comprehensive 5-level specification workflow system for mana
 5. **COMMIT** - Atomic commits with checklists
 
 ### Key Documents
+
 - `/docs/specs/` - Product specifications and requirements
 - `/.claude/SPECS_WORKFLOW.md` - Complete workflow documentation
 - `/.claude/VALIDATION_FRAMEWORK_README.md` - Document validation framework
 - `/.claude/validation-config.yaml` - Validation rules configuration
 
 ### Custom Slash Commands
+
 - `/plan-story` - Generate story specification and phase breakdown from PRD
 - `/generate-phase-doc` - Generate detailed phase implementation documents
 - `/generate-checklist` - Generate validation checklist for technical documents
@@ -108,6 +121,7 @@ These commands are available in `/.claude/commands/` and automate the spec-to-im
 La liste complète des emojis disponibles et leurs descriptions se trouve dans le fichier `/docs/gitmoji.md`.
 
 Exemples de commits valides:
+
 - ✨ Introduce new features
 - 🐛 Fix a bug
 - 📝 Add or update documentation

@@ -7,17 +7,20 @@ This guide covers all environment setup needed for Phase 4.
 ## 📋 Prerequisites
 
 ### Previous Phases
+
 - [x] Phase 1 completed and validated (Drizzle ORM installed and D1 configured)
 - [x] Phase 2 completed and validated (Core schema: articles, article_translations)
 - [x] Phase 3 completed and validated (Taxonomy schema: categories, tags, articleTags)
 
 ### Tools Required
+
 - [x] Node.js (v18.0.0+)
 - [x] pnpm (v8.0.0+)
 - [x] TypeScript (v5.0.0+)
 - [x] Drizzle ORM installed (from Phase 1)
 
 ### Services Required
+
 - [x] None (Phase 4 is local-only - no external services)
 
 ---
@@ -37,6 +40,7 @@ pnpm list drizzle-zod
 ```
 
 **Package added**:
+
 - `drizzle-zod` - Auto-generates Zod validation schemas from Drizzle ORM schemas
 
 ### Verify Installation
@@ -51,6 +55,7 @@ node -e "const { createInsertSchema } = require('drizzle-zod'); console.log('dri
 ```
 
 **Expected Output**:
+
 ```
 drizzle-zod loaded successfully
 ```
@@ -64,6 +69,7 @@ drizzle-zod loaded successfully
 Phase 4 does **not** require any new environment variables.
 
 **Existing variables** (from previous phases):
+
 - `CLOUDFLARE_ACCOUNT_ID` - Cloudflare account ID (Phase 1)
 - `CLOUDFLARE_DATABASE_ID` - D1 database ID (Phase 1)
 - `CLOUDFLARE_API_TOKEN` - Cloudflare API token (Phase 1)
@@ -79,6 +85,7 @@ These are already configured in `.env.local` or your environment.
 Phase 4 builds on the complete database schema created in Phases 2-3:
 
 **Tables**:
+
 1. `articles` - Core article metadata
 2. `article_translations` - Localized article content
 3. `categories` - Canonical categories (9 entries)
@@ -98,6 +105,7 @@ grep "export const" src/lib/server/db/schema.ts
 ```
 
 **Expected Output**:
+
 ```
 export const articles = sqliteTable(...)
 export const articleTranslations = sqliteTable(...)
@@ -141,16 +149,19 @@ pnpm tsc --noEmit
 ### Issue: drizzle-zod Installation Fails
 
 **Symptoms**:
+
 - `pnpm add drizzle-zod` fails with error
 - Peer dependency warnings
 
 **Solutions**:
+
 1. Update pnpm: `pnpm self-update`
 2. Clear cache: `pnpm store prune`
 3. Retry installation: `pnpm add drizzle-zod`
 4. Check compatibility: Ensure `drizzle-orm` version is compatible
 
 **Verify Fix**:
+
 ```bash
 pnpm install
 pnpm list drizzle-zod
@@ -161,16 +172,19 @@ pnpm list drizzle-zod
 ### Issue: TypeScript Errors After Installation
 
 **Symptoms**:
+
 - `pnpm tsc --noEmit` shows errors
 - Import errors for `drizzle-zod`
 
 **Solutions**:
+
 1. Restart TypeScript server in IDE (VS Code: Cmd+Shift+P → "Restart TS Server")
 2. Ensure `tsconfig.json` includes `src/**/*`
 3. Clear TypeScript cache: `rm -rf node_modules/.cache`
 4. Reinstall: `pnpm install`
 
 **Verify Fix**:
+
 ```bash
 pnpm tsc --noEmit
 # Should complete with no errors
@@ -181,16 +195,19 @@ pnpm tsc --noEmit
 ### Issue: Cannot Import from `schema.ts`
 
 **Symptoms**:
+
 - `validation.ts` cannot import from `schema.ts`
 - Module not found errors
 
 **Solutions**:
+
 1. Verify `schema.ts` exists: `ls src/lib/server/db/schema.ts`
 2. Check exports in `schema.ts`: `grep "export const" src/lib/server/db/schema.ts`
 3. Verify TypeScript path aliases in `tsconfig.json`
 4. Ensure relative import path is correct
 
 **Verify Fix**:
+
 ```bash
 # Test import
 node -e "const { articles } = require('./src/lib/server/db/schema'); console.log(articles)"

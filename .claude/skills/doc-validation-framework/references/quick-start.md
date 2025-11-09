@@ -50,14 +50,18 @@ Save output to: docs/validation/Architecture_technique_VALIDATION_CHECKLIST.md
 Ouvrez le fichier généré et parcourez-le:
 
 ## 1. Framework & Runtime
+
 ### 1.1 Next.js
+
 - [ ] **Next.js 15.0+**: Dernière version?
   - Source: https://nextjs.org/releases
   - À vérifier: Current version, breaking changes, timeline
   - Criticité: Fondamental
 
 ## 2. Base de Données
+
 ### 2.1 Cloudflare D1
+
 - [ ] **Production-ready en 2025**: Status GA?
   - Source: https://developers.cloudflare.com/d1/
   - À vérifier: Feature GA, SLA, limitations
@@ -101,14 +105,14 @@ User action:
 
 ### Pour Architecture_technique.md
 
-| Métrique | Valeur |
-|----------|--------|
-| Total Items | 127 |
-| Fundamental | 23 |
-| Major | 45 |
-| Secondary | 59 |
-| Domains | 12 |
-| External Sources | 25+ |
+| Métrique             | Valeur     |
+| -------------------- | ---------- |
+| Total Items          | 127        |
+| Fundamental          | 23         |
+| Major                | 45         |
+| Secondary            | 59         |
+| Domains              | 12         |
+| External Sources     | 25+        |
 | Est. Validation Time | 8-12 hours |
 
 ### Criticité par Domaine
@@ -251,6 +255,7 @@ Total: ~130 minutes for 15 items
 ### Optimize Searching
 
 **DO:**
+
 ```
 ✓ Use official docs as primary source
 ✓ Check release notes/changelogs
@@ -260,6 +265,7 @@ Total: ~130 minutes for 15 items
 ```
 
 **DON'T:**
+
 ```
 ✗ Rely solely on Medium articles
 ✗ Trust YouTube tutorials without checking date
@@ -445,22 +451,26 @@ Status: MOSTLY VALID with 3 issues
 Coverage: 127/127 items verified
 
 ## Summary
+
 - ✓ All core technologies validated
 - ⚠ 2 major issues found
 - ℹ 5 minor issues found
 - ↻ 1 section needs clarification
 
 ## Critical Issues (0)
+
 None found.
 
 ## Major Issues (2)
 
 ### Issue 1: D1 Global Read Replication Status
+
 Current text: "Global read replication beta"
 Finding: Still in beta as of Nov 2025, no GA date announced
 Recommendation: Keep current, or add "Status: Beta, no GA ETA"
 
 ### Issue 2: OpenNext RSC Support
+
 Current text: "Full support for all RSC features"
 Finding: GitHub issues show 2 open bugs with complex RSC patterns
 Recommendation: Update to "Full support for standard RSC patterns"
@@ -468,6 +478,7 @@ Recommendation: Update to "Full support for standard RSC patterns"
 ## Minor Issues (5)
 
 ### Issue 3: TailwindCSS Version Number
+
 Current: "TailwindCSS 4.0+"
 Actual: Current is 4.0.2
 Recommendation: Update to "4.0.2+" for clarity
@@ -480,18 +491,21 @@ Recommendation: Update to "4.0.2+" for clarity
 ## 📞 Getting Help
 
 **If item is unclear:**
+
 1. Re-read the question carefully
 2. Check if there are related items that clarify
 3. Search the source URL for examples
 4. Ask in community forums with specific question
 
 **If source is broken:**
+
 1. Try archive.org Wayback Machine
 2. Search for similar official page
 3. Check GitHub repo for same info
 4. Flag for manual review
 
 **If finding contradicts document:**
+
 1. Double-check your finding
 2. Try alternative sources
 3. Check for version differences
@@ -516,6 +530,7 @@ You now have everything needed to validate a technical document:
 ## 📚 Full Documentation
 
 For more details, see:
+
 - `GENERIC_VALIDATION_FRAMEWORK.md` - Complete methodology
 - `AGENT_IMPLEMENTATION_GUIDE.md` - For building agents
 - `EXAMPLE_APPLICATION.md` - Detailed walkthrough

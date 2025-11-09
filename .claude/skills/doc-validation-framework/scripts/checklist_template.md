@@ -8,12 +8,12 @@
 
 ## Quick Reference
 
-| Criticality Level | Count | Percentage |
-|---|---|---|
-| **Fundamental** | {FUNDAMENTAL_COUNT} | {FUNDAMENTAL_PCT}% |
-| **Major** | {MAJOR_COUNT} | {MAJOR_PCT}% |
-| **Secondary** | {SECONDARY_COUNT} | {SECONDARY_PCT}% |
-| **Total** | {TOTAL_COUNT} | 100% |
+| Criticality Level | Count               | Percentage         |
+| ----------------- | ------------------- | ------------------ |
+| **Fundamental**   | {FUNDAMENTAL_COUNT} | {FUNDAMENTAL_PCT}% |
+| **Major**         | {MAJOR_COUNT}       | {MAJOR_PCT}%       |
+| **Secondary**     | {SECONDARY_COUNT}   | {SECONDARY_PCT}%   |
+| **Total**         | {TOTAL_COUNT}       | 100%               |
 
 ---
 
@@ -85,18 +85,23 @@ Items validating claims about {DOMAIN_DESCRIPTION}
 ## Notes & Findings
 
 ### Items Requiring Updates
+
 - [ ] List any items that need documentation updates
 
 ### Version Changes Detected
+
 - [ ] List any outdated versions found
 
 ### Breaking Changes
+
 - [ ] List any breaking changes discovered
 
 ### Deprecated Features
+
 - [ ] List any deprecated features found
 
 ### Recommendations
+
 - [ ] List recommendations for improvements
 
 ---
@@ -113,12 +118,12 @@ Items validating claims about {DOMAIN_DESCRIPTION}
 
 ## Validation History
 
-| Date | Validator | Status | Notes |
-|---|---|---|---|
+| Date     | Validator     | Status     | Notes     |
+| -------- | ------------- | ---------- | --------- |
 | {DATE_1} | {VALIDATOR_1} | {STATUS_1} | {NOTES_1} |
 | {DATE_2} | {VALIDATOR_2} | {STATUS_2} | {NOTES_2} |
 
 ---
 
-*This checklist was generated using the Generic Document Validation Framework*
-*Framework Location: /.claude/skills/doc-validation-framework/*
+_This checklist was generated using the Generic Document Validation Framework_
+_Framework Location: /.claude/skills/doc-validation-framework/_

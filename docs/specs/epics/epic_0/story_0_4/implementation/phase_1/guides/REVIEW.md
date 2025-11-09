@@ -7,6 +7,7 @@ Complete guide for reviewing the Phase 1 implementation: Drizzle ORM Installatio
 ## 🎯 Review Objective
 
 Validate that the implementation:
+
 - ✅ Successfully installs and configures Drizzle ORM for Cloudflare D1
 - ✅ Creates D1 database and configures Wrangler binding correctly
 - ✅ Establishes working database connection with proper error handling
@@ -21,12 +22,14 @@ Validate that the implementation:
 Phase 1 is split into **5 atomic commits**. You can:
 
 **Option A: Commit-by-commit review** (recommended)
+
 - Easier to digest (15-45 min per commit)
 - Progressive validation
 - Targeted feedback
 - Total time: ~2.5-3h
 
 **Option B: Global review at once**
+
 - Faster overview (2-3h total)
 - Requires more focus
 - May miss details
@@ -45,6 +48,7 @@ Phase 1 is split into **5 atomic commits**. You can:
 #### Review Checklist
 
 ##### Dependencies
+
 - [ ] `drizzle-orm` added to `dependencies` section (not devDependencies)
 - [ ] Version is specific (e.g., `^0.29.0`), not `*` or `latest`
 - [ ] `drizzle-kit` added to `devDependencies`
@@ -52,11 +56,13 @@ Phase 1 is split into **5 atomic commits**. You can:
 - [ ] All three packages are at compatible versions
 
 ##### Lock File
+
 - [ ] `pnpm-lock.yaml` updated
 - [ ] No unexpected packages added
 - [ ] Lock file diff is clean (only new packages + their dependencies)
 
 ##### Security
+
 - [ ] Run `pnpm audit` - no high/critical vulnerabilities
 - [ ] Packages are from trusted sources (npm registry)
 
@@ -98,11 +104,13 @@ pnpm install --loglevel warn
 #### Review Checklist
 
 ##### D1 Database
+
 - [ ] Database created (verify with `wrangler d1 list`)
 - [ ] Database name is `sebc-dev-db`
 - [ ] Database ID is in correct UUID format
 
 ##### Wrangler Configuration
+
 - [ ] `[[d1_databases]]` section added to `wrangler.toml`
 - [ ] Binding name is exactly `DB` (case-sensitive)
 - [ ] `database_name` matches created database
@@ -111,6 +119,7 @@ pnpm install --loglevel warn
 - [ ] Placement in file is logical (after `compatibility_flags`)
 
 ##### Environment Variables
+
 - [ ] `.env.example` updated with D1 variables
 - [ ] `CLOUDFLARE_ACCOUNT_ID` documented with placeholder
 - [ ] `CLOUDFLARE_API_TOKEN` documented with placeholder
@@ -119,6 +128,7 @@ pnpm install --loglevel warn
 - [ ] Placeholders are clearly marked (e.g., `your_account_id_here`)
 
 ##### Git Ignore
+
 - [ ] `.wrangler/state/d1/` in .gitignore
 - [ ] `.dev.vars` in .gitignore
 - [ ] `.env.local` in .gitignore
@@ -164,6 +174,7 @@ wrangler d1 execute DB --local --command "SELECT 1"
 #### Review Checklist
 
 ##### Drizzle Configuration
+
 - [ ] `drizzle.config.ts` created at project root
 - [ ] Imports `Config` type from `drizzle-kit`
 - [ ] Config object satisfies `Config` type
@@ -176,6 +187,7 @@ wrangler d1 execute DB --local --command "SELECT 1"
 - [ ] File is TypeScript (not JavaScript)
 
 ##### NPM Scripts
+
 - [ ] `db:generate` script added
 - [ ] `db:migrate:local` script added (uses `--local` flag)
 - [ ] `db:migrate:remote` script added (uses `--remote` flag)
@@ -185,6 +197,7 @@ wrangler d1 execute DB --local --command "SELECT 1"
 - [ ] Scripts are in logical grouping (all start with `db:`)
 
 ##### Directory Structure
+
 - [ ] `src/lib/server/db/` directory created
 - [ ] `drizzle/migrations/` directory created
 - [ ] `.gitkeep` files added to empty directories (optional but good practice)
@@ -229,6 +242,7 @@ ls -la drizzle/migrations
 #### Review Checklist
 
 ##### Function Implementation
+
 - [ ] `getDb()` function exported
 - [ ] Accepts `env` parameter with type `{ DB: D1Database }`
 - [ ] Returns `DrizzleD1Database` type (explicit return type)
@@ -237,6 +251,7 @@ ls -la drizzle/migrations
 - [ ] Returns the drizzle instance
 
 ##### Error Handling
+
 - [ ] Checks if `env.DB` is defined
 - [ ] Throws error if `env.DB` is missing
 - [ ] Error message is clear and actionable
@@ -244,6 +259,7 @@ ls -la drizzle/migrations
 - [ ] Error message mentions Cloudflare Workers runtime
 
 ##### Type Safety
+
 - [ ] No use of `any` types
 - [ ] Parameter type is explicit (`{ DB: D1Database }`)
 - [ ] Return type is explicit (`DrizzleD1Database`)
@@ -251,6 +267,7 @@ ls -la drizzle/migrations
 - [ ] All imports have correct types
 
 ##### Documentation
+
 - [ ] JSDoc comment on `getDb()` function
 - [ ] `@param` documents env parameter
 - [ ] `@returns` documents return value
@@ -261,6 +278,7 @@ ls -la drizzle/migrations
 - [ ] Documentation explains server-side only restriction
 
 ##### Code Organization
+
 - [ ] File is in `src/lib/server/db/` (server-only location)
 - [ ] File name is `index.ts` (clean import path)
 - [ ] Exports are clearly defined
@@ -309,6 +327,7 @@ pnpm lint src/lib/server/db/index.ts
 #### Review Checklist
 
 ##### Test Structure
+
 - [ ] Test file in `tests/integration/` directory
 - [ ] Uses Vitest syntax (`describe`, `it`, `expect`)
 - [ ] Imports `getDb` from `@/lib/server/db`
@@ -316,6 +335,7 @@ pnpm lint src/lib/server/db/index.ts
 - [ ] Test suite has descriptive name (`D1 Database Connection`)
 
 ##### Test Coverage
+
 - [ ] Test: Creates database instance without errors
 - [ ] Test: Executes SELECT 1 query successfully
 - [ ] Test: Throws error when DB binding is missing
@@ -323,6 +343,7 @@ pnpm lint src/lib/server/db/index.ts
 - [ ] All code paths in `getDb()` are covered
 
 ##### Test Quality
+
 - [ ] Assertions are specific (not just truthy checks)
 - [ ] Expected values are checked (e.g., `result.results[0].result === 1`)
 - [ ] Test names describe what they validate
@@ -331,6 +352,7 @@ pnpm lint src/lib/server/db/index.ts
 - [ ] Tests would catch regression if `getDb()` breaks
 
 ##### Test Configuration
+
 - [ ] Tests run successfully (`pnpm test:integration`)
 - [ ] Miniflare provides D1 binding in test environment
 - [ ] Tests use `global.DB` or mock D1Database appropriately
@@ -375,6 +397,7 @@ ls -la tests/integration/db-connection.test.ts
 After reviewing all 5 commits:
 
 ### Architecture & Design
+
 - [ ] Drizzle ORM chosen correctly for D1 compatibility
 - [ ] Separation of concerns: connection utility is focused
 - [ ] Server-only code properly isolated (`src/lib/server/`)
@@ -382,6 +405,7 @@ After reviewing all 5 commits:
 - [ ] Follows project architectural patterns
 
 ### Code Quality
+
 - [ ] Consistent code style throughout
 - [ ] Clear and descriptive naming
 - [ ] Appropriate comments (JSDoc, inline)
@@ -389,30 +413,35 @@ After reviewing all 5 commits:
 - [ ] No debug statements (console.log)
 
 ### Testing
+
 - [ ] Integration test validates core functionality
 - [ ] Tests cover happy and error paths
 - [ ] Test coverage is 100% for connection utility
 - [ ] Tests are meaningful (not just for coverage)
 
 ### Type Safety
+
 - [ ] No `any` types (unless absolutely necessary and documented)
 - [ ] Proper type inference from Drizzle
 - [ ] TypeScript compiles without errors
 - [ ] Type definitions are accurate
 
 ### Configuration
+
 - [ ] Wrangler binding configured correctly
 - [ ] Drizzle config uses correct dialect and driver
 - [ ] Environment variables properly documented
 - [ ] npm scripts are functional and well-named
 
 ### Security
+
 - [ ] No sensitive data in committed files
 - [ ] Environment variables used for credentials
 - [ ] `.env.local` and `.dev.vars` in .gitignore
 - [ ] Database binding properly secured
 
 ### Documentation
+
 - [ ] JSDoc comments on public functions
 - [ ] README/docs updated if needed
 - [ ] Complex logic explained in comments
@@ -475,6 +504,7 @@ Use this template for providing feedback:
 ## 🎯 Review Actions
 
 ### If Approved ✅
+
 1. Merge the commits to main branch
 2. Update Phase 1 status to ✅ COMPLETED in INDEX.md
 3. Update EPIC_TRACKING.md (Story 0.4 Phase 1 progress: 1/5)
@@ -482,12 +512,14 @@ Use this template for providing feedback:
 5. Prepare for Phase 2
 
 ### If Changes Requested 🔧
+
 1. Create detailed feedback using template above
 2. Discuss with developer if changes are unclear
 3. Re-review after fixes are committed
 4. Verify fixes address all concerns
 
 ### If Rejected ❌
+
 1. Document major issues clearly
 2. Schedule discussion with developer and tech lead
 3. Plan rework strategy

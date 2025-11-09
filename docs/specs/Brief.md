@@ -2,6 +2,7 @@
 created: 2025-11-01T08:45
 updated: 2025-11-05T00:00
 ---
+
 # Project Brief: sebc.dev
 
 ## Executive Summary
@@ -40,6 +41,7 @@ sebc.dev est un blog technique bilingue (français/anglais) tenu par un auteur u
 ## MVP Scope (V1) — Architecture & Workflow
 
 ### Architecture Projet
+
 - **Application Next.js 15** full-stack déployée sur Cloudflare Workers
   - Framework App Router avec React Server Components
   - Panneau d'administration intégré (route `/admin`)
@@ -47,6 +49,7 @@ sebc.dev est un blog technique bilingue (français/anglais) tenu par un auteur u
   - Développement local unifié : `wrangler dev -- npx next dev` (HMR + bindings)
 
 ### Stack Technique
+
 - **Framework** : Next.js 15 (App Router avec React Server Components)
 - **Adaptateur** : `@opennextjs/cloudflare` (OpenNext adapter - l'ancien @cloudflare/next-on-pages est obsolète)
 - **UI** : TailwindCSS 4 + shadcn/ui (composants copy-paste)
@@ -58,6 +61,7 @@ sebc.dev est un blog technique bilingue (français/anglais) tenu par un auteur u
 - **Cache** : Architecture OpenNext multi-composants (R2 + Durable Objects + D1 + KV)
 
 ### Fonctionnalités produit
+
 - Blog **bilingue (FR/EN)** avec contenu **MDX** et blocs de contenu flexibles
 - **Internationalisation** avec **next-intl** :
   - Middleware pour gestion des préfixes `/fr` et `/en`
@@ -69,7 +73,7 @@ sebc.dev est un blog technique bilingue (français/anglais) tenu par un auteur u
   - Mise à jour sans rechargement de page
   - Utilisation de React Server Components pour pré-chargement serveur
 - **Indicateur de complexité** (Débutant / Intermédiaire / Avancé)
-  > *Stockage des valeurs en anglais : `beginner|intermediate|advanced`; labels localisés en UI*
+  > _Stockage des valeurs en anglais : `beginner|intermediate|advanced`; labels localisés en UI_
 - **Identité visuelle** distincte pour les **9 catégories** (icônes, couleurs, badges)
 - **Table des matières** auto-générée + **temps de lecture par section**
 - **Indicateur de progression** de lecture (composant React avec hooks)
@@ -83,6 +87,7 @@ sebc.dev est un blog technique bilingue (français/anglais) tenu par un auteur u
 - **Publication en lecture seule** (pas d'interactions utilisateur en V1)
 
 ### Sécurité & opérations
+
 - **Authentification Admin V1** : Cloudflare Access (Zero Trust) pour sécuriser `/admin`
   - Validation JWT (`Cf-Access-Jwt-Assertion`) dans middleware Next.js avec `jose`
 - **Authentification Utilisateurs Post-V1** : Better Auth avec adaptateur `better-auth-cloudflare` (intégration native D1 + Drizzle + KV)
@@ -102,14 +107,22 @@ sebc.dev est un blog technique bilingue (français/anglais) tenu par un auteur u
 - **Backups** : D1 Time Travel (Point-in-Time Recovery sur 30 jours)
 
 ### Qualité
+
 - **Tests composants** : Vitest + @testing-library/react
 - **Tests E2E** : Playwright avec fixtures de base de données (seeding via `wrangler d1 execute DB --local --file=./seed.sql`)
+- **Tests mutation** : Stryker.js pour validation qualité tests générés par IA (mutation score > 80%)
 - **Couverture** : ≥ 70 %
+- **Outils qualité** :
+  - ESLint (Flat Config) avec support MDX et linting typé
+  - Prettier avec plugin Tailwind CSS
+  - dependency-cruiser (validation architecture client/serveur)
+  - @next/bundle-analyzer (détection erreurs bundling)
 - **Pipeline CI/CD** :
-  1. Tests (composants + E2E)
-  2. Migrations D1 (`wrangler d1 migrations apply DB --remote`)
-  3. Build Next.js via OpenNext
-  4. Déploiement (`wrangler deploy`)
+  1. Tests (composants + E2E) + Lint + Validation architecture
+  2. Mutation testing (hebdomadaire OU si PR critique)
+  3. Migrations D1 (`wrangler d1 migrations apply DB --remote`)
+  4. Build Next.js via OpenNext
+  5. Déploiement (`wrangler deploy`)
 - **SEO** : Meta tags optimisés (Open Graph, Twitter Cards) via Next.js Metadata API, sitemap généré automatiquement
 
 > **Périmètre volontairement ambitieux** : une priorisation stricte sera appliquée. Certaines fonctionnalités secondaires pourront glisser en **post-V1** si nécessaire.
@@ -121,12 +134,14 @@ sebc.dev est un blog technique bilingue (français/anglais) tenu par un auteur u
 ## Clarifications Techniques
 
 ### Structure du Projet
+
 - **Application Next.js** standard avec App Router
 - Panneau d'administration intégré dans `/admin` (pas de CMS externe)
 - Composants réutilisables organisés dans `src/components`
 - Utilitaires et helpers dans `src/lib` (code serveur et client)
 
 ### Patterns Next.js Spécifiques
+
 - **Server Actions** pour mutations (fonctions async dans composants serveur)
 - **Server Components** pour pré-chargement de données (async components)
 - **Route Handlers** (`route.ts`) pour API endpoints (Presigned URLs R2)
@@ -134,6 +149,7 @@ sebc.dev est un blog technique bilingue (français/anglais) tenu par un auteur u
 - **Metadata API** pour SEO (meta tags, Open Graph, Twitter Cards)
 
 ### Migration des Données
+
 - Scripts de migration Drizzle pour génération SQL (`drizzle-kit generate`)
 - Application via Wrangler (`wrangler d1 migrations apply DB --local|--remote`)
 - Workflow en deux étapes obligatoire (Drizzle Kit → Wrangler)
@@ -141,12 +157,14 @@ sebc.dev est un blog technique bilingue (français/anglais) tenu par un auteur u
 - Time Travel D1 pour récupération point-in-time (30 jours)
 
 ### Hébergement Serverless
+
 - Pas de gestion d'infrastructure (VPS, Docker, firewall)
 - Déploiement automatisé via GitHub Actions vers Cloudflare Workers
 - Scalabilité automatique via infrastructure Edge
 - Configuration centralisée dans `wrangler.toml`
 
 ### Métriques Unifiées
+
 - **UX** : Time-to-value < 60s, Pattern discovery < 3min
 - **Core Web Vitals** : LCP < 2.5s, INP < 100ms, CLS < 0.1
 - **Performance Edge** : Distribution globale, latence minimale via Edge network

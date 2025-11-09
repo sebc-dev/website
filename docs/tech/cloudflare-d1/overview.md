@@ -28,17 +28,18 @@ Cloudflare D1 est le service de base de données SQL serverless de Cloudflare. I
 
 D1 hérite des limitations de SQLite :
 
-| Limite | Valeur | Impact |
-|--------|--------|--------|
-| **Taille maximale** | 10 Go par base | 🔴 Critique pour l'IA/embeddings |
+| Limite                     | Valeur           | Impact                                         |
+| -------------------------- | ---------------- | ---------------------------------------------- |
+| **Taille maximale**        | 10 Go par base   | 🔴 Critique pour l'IA/embeddings               |
 | **Transactions complexes** | Batch uniquement | 🟡 Moyen pour les opérations transactionnelles |
-| **Concurrence** | Simple (SQLite) | 🟡 Limité pour très haute concurrence |
+| **Concurrence**            | Simple (SQLite)  | 🟡 Limité pour très haute concurrence          |
 
 ## Limitations Critiques Non Documentées
 
 ### Le Paradoxe IA et Embeddings
 
 La première colonne du projet sebc.dev est "**l'IA comme outil d'amplification**". Dans un contexte de blog, cela implique fortement :
+
 - **Recherche sémantique** via embeddings (vecteurs)
 - **Stockage de vecteurs** pour chaque article
 - **Bilingue** (FR + EN) = 2x stockage
@@ -46,11 +47,13 @@ La première colonne du projet sebc.dev est "**l'IA comme outil d'amplification*
 ### Calcul Simple
 
 Pour un blog avec 10 000 articles bilingues :
+
 - Taille par embedding : ~1.5-3 KB (768-1536 dimensions)
 - Stockage par article : 3-6 KB × 2 langues = 6-12 KB
 - Total approximatif : 10 000 × 12 KB = **120 MB** (raisonnable)
 
 **Mais ajouter** :
+
 - Métadonnées d'indexation
 - Caches de recherche
 - Snapshots de contenu
@@ -67,6 +70,7 @@ La **croissance même du projet garantit son échec** sur D1. L'utilisateur de d
 ### Court Terme (V1)
 
 Pour une V1 sans fonctionnalités IA avancées :
+
 - D1 est suffisant
 - Monitorer la croissance mensuelle
 - Établir des alertes sur l'utilisation d'espace
@@ -74,6 +78,7 @@ Pour une V1 sans fonctionnalités IA avancées :
 ### Moyen Terme (Post-V1)
 
 Avant l'implémentation complète de l'IA :
+
 - Évaluer **D1 Vectorize** (si disponible)
 - Investiguer le **sharding manuel** (complexe)
 - Considérer une base **secondaire** pour les embeddings
@@ -100,9 +105,10 @@ database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 ```typescript
 // Server Action
 export async function getArticles(db: D1Database) {
-  const result = await db.prepare(
-    "SELECT * FROM articles WHERE language = ?"
-  ).bind("fr").all();
+  const result = await db
+    .prepare('SELECT * FROM articles WHERE language = ?')
+    .bind('fr')
+    .all();
 
   return result.results;
 }

@@ -1,5 +1,5 @@
-import { drizzle } from 'drizzle-orm/d1';
 import type { DrizzleD1Database } from 'drizzle-orm/d1';
+import { drizzle } from 'drizzle-orm/d1';
 
 /**
  * Get Drizzle database instance for Cloudflare D1.
@@ -28,15 +28,15 @@ import type { DrizzleD1Database } from 'drizzle-orm/d1';
  *  * }
  * */
 export function getDb(env: { DB: D1Database }): DrizzleD1Database {
-	if (!env.DB) {
-		throw new Error(
-			'DB binding is not available. ' +
-				'Ensure wrangler.jsonc is configured correctly and ' +
-				'you are running in the Cloudflare Workers runtime.',
-		);
-	}
+  if (!env.DB) {
+    throw new Error(
+      'DB binding is not available. ' +
+        'Ensure wrangler.jsonc is configured correctly and ' +
+        'you are running in the Cloudflare Workers runtime.',
+    );
+  }
 
-	return drizzle(env.DB);
+  return drizzle(env.DB);
 }
 
 /**

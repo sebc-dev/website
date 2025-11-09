@@ -17,6 +17,7 @@ You are a specialized agent that initializes new epics with proper directory str
 Initialize a new epic by creating the epic folder structure with an EPIC_TRACKING.md file that will serve as the central hub for managing all stories within that epic.
 
 **Structure Created**:
+
 ```
 docs/specs/epics/epic_X/
 ├── EPIC_TRACKING.md          # Central tracking for all stories
@@ -35,6 +36,7 @@ When activated, collect these inputs from the user:
 3. **Output Directory** (optional, default: `docs/specs/epics/epic_X/`)
 
 **Context Documents** (read to understand epic scope):
+
 - **PRD.md**: `docs/specs/PRD.md` - Product requirements document with all epics and stories
 - **Brief.md**: `docs/specs/Brief.md` - Executive summary and project goals
 - **Concept.md**: `docs/specs/Concept.md` - Vision, personas, content architecture
@@ -49,6 +51,7 @@ docs/specs/epics/epic_X/
 ```
 
 **EPIC_TRACKING.md** contains:
+
 - Epic title and description (extracted from PRD)
 - Status overview (PLANNING / IN PROGRESS / COMPLETED)
 - Table of all stories in the epic (from PRD breakdown)
@@ -58,7 +61,7 @@ docs/specs/epics/epic_X/
 
 ## 📋 EPIC_TRACKING.md Template
 
-```markdown
+````markdown
 # Epic {X} - {Epic Name}
 
 **Status**: 📋 PLANNING | 🚧 IN PROGRESS | ✅ COMPLETED
@@ -89,14 +92,15 @@ docs/specs/epics/epic_X/
 
 This epic contains **{N} stories** as defined in the PRD:
 
-| Story | Title | Description | Status | Phases | Progress |
-|-------|-------|-------------|--------|--------|----------|
-| {X}.1 | {Story Title 1} | {Short description} | 📋 NOT STARTED | - | 0/0 |
-| {X}.2 | {Story Title 2} | {Short description} | 📋 NOT STARTED | - | 0/0 |
-| {X}.3 | {Story Title 3} | {Short description} | 📋 NOT STARTED | - | 0/0 |
-| ... | ... | ... | ... | ... | ... |
+| Story | Title           | Description         | Status         | Phases | Progress |
+| ----- | --------------- | ------------------- | -------------- | ------ | -------- |
+| {X}.1 | {Story Title 1} | {Short description} | 📋 NOT STARTED | -      | 0/0      |
+| {X}.2 | {Story Title 2} | {Short description} | 📋 NOT STARTED | -      | 0/0      |
+| {X}.3 | {Story Title 3} | {Short description} | 📋 NOT STARTED | -      | 0/0      |
+| ...   | ...             | ...                 | ...            | ...    | ...      |
 
 **Columns Explained**:
+
 - **Story**: Reference ID (e.g., 1.1, 1.2)
 - **Title**: Story name from PRD
 - **Description**: One-line summary of what the story delivers
@@ -140,6 +144,7 @@ For each story in the epic:
 # Check epic progress at any time
 cat docs/specs/epics/epic_{X}/EPIC_TRACKING.md
 ```
+````
 
 ---
 
@@ -170,6 +175,7 @@ cat docs/specs/epics/epic_{X}/EPIC_TRACKING.md
 {If stories have dependencies, list them here}
 
 Example:
+
 - Story {X}.1 must be completed before Story {X}.2
 - Story {X}.3 can be done in parallel with Story {X}.2
 
@@ -178,6 +184,7 @@ Example:
 {If the entire epic depends on external work}
 
 Example:
+
 - API integration (depends on backend team)
 - Design assets (waiting on design team)
 
@@ -200,15 +207,18 @@ Track epic-level milestones here:
 ## 🔗 Reference Documents
 
 ### Story Specifications
+
 - Story {X}.1: `docs/specs/epics/epic_{X}/story_{X}_1/story_{X}.1.md` (created via /plan-story)
 - Story {X}.2: `docs/specs/epics/epic_{X}/story_{X}_2/story_{X}.2.md`
 - [List will be updated as stories are planned]
 
 ### Phase Plans
+
 - Story {X}.1: `docs/specs/epics/epic_{X}/story_{X}_1/implementation/PHASES_PLAN.md`
 - [Links will be added as phases are planned]
 
 ### Related Documentation
+
 - PRD: `docs/specs/PRD.md`
 - Epic in PRD: [Section reference]
 
@@ -217,18 +227,21 @@ Track epic-level milestones here:
 ## 📋 Checklist
 
 ### Epic Setup
+
 - [x] EPIC_TRACKING.md created
 - [ ] All stories from PRD added to table
 - [ ] Dependencies documented
 - [ ] Team assigned
 
 ### During Epic Execution
+
 - [ ] First story planned (/plan-story)
 - [ ] First phase completed
 - [ ] First phase validated
 - [ ] Metrics updated
 
 ### Epic Completion
+
 - [ ] All stories planned
 - [ ] All stories in progress
 - [ ] All stories completed
@@ -240,7 +253,8 @@ Track epic-level milestones here:
 **Epic Initialized**: {Date}
 **Last Updated**: {Date}
 **Created by**: Claude Code (epic-initializer skill)
-```
+
+````
 
 ---
 
@@ -265,13 +279,14 @@ Read the PRD file and extract:
 
 ```bash
 mkdir -p docs/specs/epics/epic_{X}
-```
+````
 
 The `story_X_Y/` directories will be created automatically when `/plan-story` is used.
 
 ### Step 4: Generate EPIC_TRACKING.md
 
 Create the file with:
+
 - Epic metadata (name, status, dates)
 - Description and objectives from PRD
 - Table of all stories from PRD
@@ -283,6 +298,7 @@ Create the file with:
 ### Step 5: Validate Generation
 
 Check:
+
 - [x] EPIC_TRACKING.md created successfully
 - [x] All stories from PRD are listed in the table
 - [x] No placeholder text left (`{`, `[` not replaced)
@@ -297,29 +313,35 @@ Output a summary:
 ## ✅ Epic {X} Initialized
 
 ### 📁 Structure Created
+
 - Directory: `docs/specs/epics/epic_{X}/`
 - Tracking file: `EPIC_TRACKING.md` (~XXX lines)
 
 ### 📚 Stories in This Epic
+
 Epic {X} contains {N} stories from the PRD:
+
 1. Story {X}.1 - {Title}
 2. Story {X}.2 - {Title}
 3. Story {X}.3 - {Title}
-...
+   ...
 
 ### 📋 Current Status
+
 - Status: 📋 PLANNING
 - Stories Identified: {N}
 - Stories Planned: 0
 - Stories Completed: 0
 
 ### 🚀 Next Steps
+
 1. Review `EPIC_TRACKING.md` with your team
 2. For each story, run: `/plan-story Epic {X} Story {X}.Y`
 3. Track progress in the status table
 4. Update milestones as stories complete
 
 ### 🔗 Files
+
 - Tracking: `docs/specs/epics/epic_{X}/EPIC_TRACKING.md`
 - PRD reference: `docs/specs/PRD.md`
 
@@ -331,6 +353,7 @@ Epic {X} contains {N} stories from the PRD:
 ## 📐 Important Guidelines
 
 ### Do's
+
 - ✅ Extract all stories from PRD
 - ✅ Create proper directory structure
 - ✅ Use consistent naming (epic_X, story_X_Y)
@@ -338,6 +361,7 @@ Epic {X} contains {N} stories from the PRD:
 - ✅ Document dependencies
 
 ### Don'ts
+
 - ❌ Create story_X_Y/ directories (created on demand with /plan-story)
 - ❌ Skip stories from PRD
 - ❌ Use inconsistent naming
@@ -353,12 +377,14 @@ Epic {X} contains {N} stories from the PRD:
 **User Request**: Initialize Epic 2 (User Onboarding)
 
 **PRD Content**:
+
 - Epic 2: User Onboarding Flow
   - Story 2.1: Welcome email setup
   - Story 2.2: Profile completion wizard
   - Story 2.3: First purchase incentive
 
 **Generated**:
+
 - Directory: `docs/specs/epics/epic_2/`
 - File: `EPIC_TRACKING.md`
 - Stories table with 3 stories
@@ -371,6 +397,7 @@ Epic {X} contains {N} stories from the PRD:
 **User Request**: Initialize Epic 3 (Payment System)
 
 **PRD Content**:
+
 - Epic 3: Payment Processing
   - Story 3.1: Stripe integration
   - Story 3.2: Payment methods
@@ -379,6 +406,7 @@ Epic {X} contains {N} stories from the PRD:
   - Story 3.5: Refund handling
 
 **Generated**:
+
 - Directory: `docs/specs/epics/epic_3/`
 - File: `EPIC_TRACKING.md`
 - Stories table with 5 stories

@@ -46,20 +46,21 @@ The phase delivers a complete taxonomy layer that enables articles to be classif
 
 ## 📚 Available Documents
 
-| Document | Description | For Who | Duration |
-|----------|-------------|---------|----------|
-| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)** | Atomic strategy in 5 commits | Developer | 15 min |
-| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)** | Detailed checklist per commit | Developer | Reference |
-| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)** | Environment variables & setup | DevOps/Dev | 10 min |
-| **[guides/REVIEW.md](./guides/REVIEW.md)** | Code review guide | Reviewer | 20 min |
-| **[guides/TESTING.md](./guides/TESTING.md)** | Testing guide (unit + integration) | QA/Dev | 20 min |
-| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist | Tech Lead | 30 min |
+| Document                                                                       | Description                        | For Who    | Duration  |
+| ------------------------------------------------------------------------------ | ---------------------------------- | ---------- | --------- |
+| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)**                         | Atomic strategy in 5 commits       | Developer  | 15 min    |
+| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)**                               | Detailed checklist per commit      | Developer  | Reference |
+| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)**                             | Environment variables & setup      | DevOps/Dev | 10 min    |
+| **[guides/REVIEW.md](./guides/REVIEW.md)**                                     | Code review guide                  | Reviewer   | 20 min    |
+| **[guides/TESTING.md](./guides/TESTING.md)**                                   | Testing guide (unit + integration) | QA/Dev     | 20 min    |
+| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist         | Tech Lead  | 30 min    |
 
 ---
 
 ## 🔄 Implementation Workflow
 
 ### Step 1: Initial Setup
+
 ```bash
 # Read the PHASES_PLAN.md
 cat docs/specs/epics/epic_0/story_0_4/implementation/PHASES_PLAN.md
@@ -72,6 +73,7 @@ cat docs/specs/epics/epic_0/story_0_4/implementation/phase_3/ENVIRONMENT_SETUP.m
 ```
 
 ### Step 2: Atomic Implementation (5 commits)
+
 ```bash
 # Commit 1: Define categories table schema
 cat docs/specs/epics/epic_0/story_0_4/implementation/phase_3/COMMIT_CHECKLIST.md  # Section Commit 1
@@ -90,6 +92,7 @@ cat docs/specs/epics/epic_0/story_0_4/implementation/phase_3/COMMIT_CHECKLIST.md
 ```
 
 ### Step 3: Validation
+
 ```bash
 # Run tests
 pnpm test:integration
@@ -109,26 +112,34 @@ cat docs/specs/epics/epic_0/story_0_4/implementation/phase_3/validation/VALIDATI
 ## 🎯 Use Cases by Profile
 
 ### 🧑‍💻 Developer
+
 **Goal**: Implement the phase step-by-step
+
 1. Read IMPLEMENTATION_PLAN.md (15 min)
 2. Follow COMMIT_CHECKLIST.md for each commit
 3. Validate after each commit
 4. Use TESTING.md to write integration tests
 
 ### 👀 Code Reviewer
+
 **Goal**: Review the implementation efficiently
+
 1. Read IMPLEMENTATION_PLAN.md to understand strategy
 2. Use guides/REVIEW.md for commit-by-commit review
 3. Verify against VALIDATION_CHECKLIST.md
 
 ### 📊 Tech Lead / Project Manager
+
 **Goal**: Track progress and quality
+
 1. Check INDEX.md for status
 2. Review IMPLEMENTATION_PLAN.md for metrics
 3. Use VALIDATION_CHECKLIST.md for final approval
 
 ### 🏗️ Architect / Senior Dev
+
 **Goal**: Ensure architectural consistency
+
 1. Review IMPLEMENTATION_PLAN.md for schema design
 2. Check ENVIRONMENT_SETUP.md for dependencies
 3. Validate seed data matches UX/UI spec requirements
@@ -137,14 +148,14 @@ cat docs/specs/epics/epic_0/story_0_4/implementation/phase_3/validation/VALIDATI
 
 ## 📊 Metrics
 
-| Metric | Target | Actual |
-|--------|--------|--------|
-| **Total Commits** | 5 | - |
-| **Implementation Time** | 3-5h | - |
-| **Review Time** | 1.5-2.5h | - |
-| **Test Coverage** | >80% | - |
-| **Type Safety** | 100% | - |
-| **Canonical Categories** | 9 | - |
+| Metric                   | Target   | Actual |
+| ------------------------ | -------- | ------ |
+| **Total Commits**        | 5        | -      |
+| **Implementation Time**  | 3-5h     | -      |
+| **Review Time**          | 1.5-2.5h | -      |
+| **Test Coverage**        | >80%     | -      |
+| **Type Safety**          | 100%     | -      |
+| **Canonical Categories** | 9        | -      |
 
 ---
 

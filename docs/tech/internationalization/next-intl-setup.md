@@ -71,15 +71,13 @@ src/
 
 ```typescript
 // src/i18n.config.ts
-import { getRequestConfig } from "next-intl/server";
+import { getRequestConfig } from 'next-intl/server';
 
-export const defaultLocale = "fr";
-export const locales = ["fr", "en", "es"] as const;
+export const defaultLocale = 'fr';
+export const locales = ['fr', 'en', 'es'] as const;
 
 export default getRequestConfig(async ({ locale }) => ({
-  messages: (
-    await import(`./messages/${locale}.json`)
-  ).default,
+  messages: (await import(`./messages/${locale}.json`)).default,
 }));
 ```
 
@@ -87,19 +85,19 @@ export default getRequestConfig(async ({ locale }) => ({
 
 ```typescript
 // src/middleware.ts
-import createMiddleware from "next-intl/middleware";
-import { defaultLocale, locales } from "@/i18n.config";
+import createMiddleware from 'next-intl/middleware';
+import { defaultLocale, locales } from '@/i18n.config';
 
 export default createMiddleware({
   locales,
   defaultLocale,
-  localePrefix: "always", // /fr/... , /en/...
+  localePrefix: 'always', // /fr/... , /en/...
 });
 
 export const config = {
   matcher: [
     // Inclure tous les chemins sauf les fichiers statiques
-    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
   ],
 };
 ```
@@ -209,8 +207,8 @@ export function ArticleCard({ article, publishDate }) {
 ### Utilisation
 
 ```typescript
-const t = useTranslations("article");
-const message = t("comments", { count: 5 }); // "5 commentaires"
+const t = useTranslations('article');
+const message = t('comments', { count: 5 }); // "5 commentaires"
 ```
 
 ## Navigation entre Locales
@@ -270,7 +268,7 @@ next-intl charge automatiquement les messages de la langue requise :
 
 ```typescript
 // Seules les traductions FR sont chargées en production
-await import(`./messages/fr.json`)
+await import(`./messages/fr.json`);
 ```
 
 ### Statique Generation (SSG)

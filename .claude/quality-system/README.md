@@ -51,27 +51,30 @@ quality-system/
 ### 3. Utilisation Manuelle (Skill)
 
 Demandez à Claude :
+
 ```
 "Génère-moi un rapport de qualité du code"
 ```
 
 ## 📚 Documentation
 
-| Fichier | Description | Public |
-|---------|-------------|--------|
-| [`docs/INDEX.md`](docs/INDEX.md) | Navigation et index | Tous |
-| [`docs/SUMMARY.md`](docs/SUMMARY.md) | Résumé rapide | Utilisateurs |
-| [`docs/VISUAL-GUIDE.md`](docs/VISUAL-GUIDE.md) | Diagrammes visuels | Tous |
-| [`docs/README.md`](docs/README.md) | Guide complet | Experts |
+| Fichier                                        | Description         | Public       |
+| ---------------------------------------------- | ------------------- | ------------ |
+| [`docs/INDEX.md`](docs/INDEX.md)               | Navigation et index | Tous         |
+| [`docs/SUMMARY.md`](docs/SUMMARY.md)           | Résumé rapide       | Utilisateurs |
+| [`docs/VISUAL-GUIDE.md`](docs/VISUAL-GUIDE.md) | Diagrammes visuels  | Tous         |
+| [`docs/README.md`](docs/README.md)             | Guide complet       | Experts      |
 
 ## 🔧 Composants
 
 ### Hook Automatique
+
 - **Fichier:** `hooks/quality-check.sh`
 - **Déclenchement:** Après Write/Edit de fichiers TS/JS
 - **Configuration:** `../.claude/settings.json`
 
 ### Skill Manuel
+
 - **Nom:** `quality-report`
 - **Localisation:** `skills/quality-report/`
 - **Invocation:** Sur demande
@@ -87,16 +90,19 @@ Demandez à Claude :
 ## 🎓 Parcours Recommandés
 
 ### Débutant (15 min)
+
 1. Lire [`docs/INSTALLATION-SUCCESS.txt`](docs/INSTALLATION-SUCCESS.txt)
 2. Parcourir [`docs/SUMMARY.md`](docs/SUMMARY.md)
 3. Tester en modifiant un fichier
 
 ### Utilisateur (30 min)
+
 1. Lire [`docs/SUMMARY.md`](docs/SUMMARY.md)
 2. Consulter [`docs/VISUAL-GUIDE.md`](docs/VISUAL-GUIDE.md)
 3. Tester les deux modes (auto et manuel)
 
 ### Expert (1h)
+
 1. Lire [`docs/README.md`](docs/README.md)
 2. Étudier les scripts dans `hooks/` et `skills/`
 3. Personnaliser selon vos besoins

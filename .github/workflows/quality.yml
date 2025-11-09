@@ -1,0 +1,95 @@
+name: Quality Checks
+
+on:
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    - cron: '0 2 * * 1' # Lundi 2h du matin (mutation testing hebdomadaire)
+
+jobs:
+  # CI Standard : Rapide, chaque PR
+  standard-quality:
+    name: Lint + Architecture + Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check formatting
+        run: pnpm format:check
+
+      - name: Lint code
+        run: pnpm lint
+
+      - name: Validate architecture
+        run: pnpm arch:validate
+
+      - name: Run unit tests
+        run: pnpm test
+
+      - name: Run E2E tests
+        run: pnpm test:e2e
+
+  # Mutation Testing : Lent, conditions spécifiques
+  mutation-testing:
+    name: Mutation Testing
+    runs-on: ubuntu-latest
+
+    # Exécution SI :
+    # - Workflow hebdomadaire (schedule)
+    # - OU PR touchant modules critiques
+    if: |
+      github.event_name == 'schedule' ||
+      (github.event_name == 'pull_request' && (
+        contains(github.event.pull_request.changed_files, 'app/admin/') ||
+        contains(github.event.pull_request.changed_files, 'src/lib/server/')
+      ))
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run mutation testing
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            pnpm test:mutation
+          else
+            pnpm test:mutation:critical
+          fi
+
+      - name: Upload mutation report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mutation-report
+          path: reports/mutation/html
+          retention-days: 30

@@ -22,6 +22,7 @@ Phase 2 uses a focused integration testing approach:
 ### Purpose
 
 Test that the database schema works correctly with actual D1 database operations:
+
 - Table creation via migrations
 - Data insertion and querying
 - Foreign key relations and CASCADE behavior
@@ -94,6 +95,7 @@ tests/
 **Purpose**: Validate articles and article_translations schema with real D1 database
 
 **Setup**:
+
 ```typescript
 import { describe, it, expect, beforeEach } from 'vitest';
 import { drizzle } from 'drizzle-orm/d1';
@@ -115,28 +117,33 @@ describe('Articles Schema Integration Tests', () => {
 **Key Test Suites**:
 
 #### Suite 1: Articles Table
+
 - Insert article with all fields
 - Query article by id
 - Verify timestamps auto-populated
 - Verify ENUM fields (complexity, status)
 
 #### Suite 2: Translations Table
+
 - Insert multiple translations (FR + EN) for same article
 - Query translations by articleId
 - Filter translations by language
 - Verify all content fields populated
 
 #### Suite 3: Unique Constraints
+
 - Attempt duplicate (articleId, language) → should fail
 - Attempt duplicate slug → should fail
 - Verify valid data still works
 
 #### Suite 4: Foreign Key Cascade
+
 - Create article with translations
 - Delete article
 - Verify translations auto-deleted (CASCADE)
 
 #### Suite 5: ENUM Validation
+
 - Attempt invalid complexity ('expert') → should fail
 - Attempt invalid status ('archived') → should fail
 - Verify valid ENUM values work
@@ -158,6 +165,7 @@ beforeEach(async () => {
 ```
 
 **Why delete before, not after?**
+
 - Leaves data for inspection if test fails
 - Ensures clean state even if previous test crashed
 - Simpler error debugging (final state visible)
@@ -180,11 +188,13 @@ beforeEach(async () => {
 ## 🎭 No Mocking in Phase 2
 
 **Why no mocks?**
+
 - We're testing the actual database schema, not application logic
 - Need real D1 to verify constraints, relations, and SQLite behavior
 - Integration tests provide confidence that schema works as designed
 
 **What we test with real D1**:
+
 - Table creation via migrations
 - INSERT/SELECT/UPDATE/DELETE operations
 - Foreign key constraints and CASCADE
@@ -208,11 +218,11 @@ pnpm test:coverage --reporter=html
 
 ### Coverage Goals
 
-| Area | Target | Current |
-|------|--------|---------|
-| Schema definitions (schema.ts) | >80% | - |
-| Integration tests (articles-schema.test.ts) | 100% | - |
-| Overall Phase 2 | >80% | - |
+| Area                                        | Target | Current |
+| ------------------------------------------- | ------ | ------- |
+| Schema definitions (schema.ts)              | >80%   | -       |
+| Integration tests (articles-schema.test.ts) | 100%   | -       |
+| Overall Phase 2                             | >80%   | -       |
 
 **Note**: Coverage for schema file measures how much of the schema is exercised by tests (e.g., all tables, all fields, all constraints).
 
@@ -225,20 +235,24 @@ pnpm test:coverage --reporter=html
 #### Issue 1: Tests fail with "table not found"
 
 **Symptoms**:
+
 - Error: `no such table: articles`
 - Tests fail during query/insert
 
 **Solutions**:
+
 1. **Verify migration applied**:
+
    ```bash
    pnpm db:migrate:local
    wrangler d1 execute DB --local --command="SELECT name FROM sqlite_master WHERE type='table';"
    ```
 
 2. **Check database connection in test**:
+
    ```typescript
    // Ensure using local D1 binding
-   const db = drizzle(env.DB);  // env.DB from Cloudflare binding
+   const db = drizzle(env.DB); // env.DB from Cloudflare binding
    ```
 
 3. **Recreate local database**:
@@ -252,16 +266,20 @@ pnpm test:coverage --reporter=html
 #### Issue 2: Unique constraint tests pass when they should fail
 
 **Symptoms**:
+
 - Test expects error for duplicate slug, but insert succeeds
 - Unique constraints not enforced
 
 **Solutions**:
+
 1. **Verify constraint in migration SQL**:
+
    ```bash
    cat drizzle/migrations/0001_*.sql | grep -i "UNIQUE"
    ```
 
 2. **Check schema definition**:
+
    ```typescript
    // Should have unique constraint
    slug: text('slug').notNull().unique(),
@@ -278,16 +296,20 @@ pnpm test:coverage --reporter=html
 #### Issue 3: CASCADE delete doesn't work
 
 **Symptoms**:
+
 - Test deletes article but translations remain
 - Foreign key constraint not enforcing CASCADE
 
 **Solutions**:
+
 1. **Verify FK in migration SQL**:
+
    ```bash
    cat drizzle/migrations/0001_*.sql | grep -i "ON DELETE CASCADE"
    ```
 
 2. **Check schema definition**:
+
    ```typescript
    articleId: text('articleId')
      .notNull()
@@ -304,14 +326,17 @@ pnpm test:coverage --reporter=html
 #### Issue 4: Tests are flaky (pass/fail randomly)
 
 **Symptoms**:
+
 - Tests sometimes pass, sometimes fail
 - Order-dependent failures
 
 **Solutions**:
+
 1. **Verify database reset in beforeEach**:
+
    ```typescript
    beforeEach(async () => {
-     await db.delete(article_translations);  // Must be first (FK)
+     await db.delete(article_translations); // Must be first (FK)
      await db.delete(articles);
    });
    ```
@@ -322,7 +347,7 @@ pnpm test:coverage --reporter=html
 
 3. **Add delays if needed** (rare):
    ```typescript
-   await new Promise(resolve => setTimeout(resolve, 100));
+   await new Promise((resolve) => setTimeout(resolve, 100));
    ```
 
 ---
@@ -348,6 +373,7 @@ wrangler d1 execute DB --local --command="SELECT * FROM article_translations;"
 ### GitHub Actions (or other CI)
 
 Tests run automatically on:
+
 - [ ] Pull requests to main branch
 - [ ] Push to main branch
 - [ ] Scheduled runs (optional)
@@ -390,6 +416,7 @@ jobs:
 ### Required Checks
 
 All PRs must:
+
 - [ ] Pass all integration tests (15+ tests)
 - [ ] Meet coverage threshold (>80%)
 - [ ] Pass TypeScript type-checking
@@ -416,6 +443,7 @@ Before merging Phase 2:
 ### Writing Tests
 
 ✅ **Do**:
+
 - Test actual database behavior (not mocks)
 - Use descriptive test names (`should prevent duplicate slug for different articles`)
 - Test both positive cases (valid data works) and negative cases (invalid data fails)
@@ -423,6 +451,7 @@ Before merging Phase 2:
 - Keep tests focused (one assertion per test when possible)
 
 ❌ **Don't**:
+
 - Mock the database (defeats purpose of integration tests)
 - Share state between tests
 - Leave commented-out tests without explanation

@@ -11,7 +11,7 @@ OpenNext 3 est l'adaptateur stratégique officiel recommandé par Cloudflare pou
 Cloudflare a officiellement abandonné le maintien de son propre adaptateur `@cloudflare/next-on-pages` au profit de l'écosystème OpenNext communautaire. Cette décision reflète une stratégie d'architecture où :
 
 - **Cloudflare** se concentre sur l'optimisation du runtime sous-jacent (workerd) et des services natifs (D1, R2, KV)
-- **OpenNext** (communauté open-source) gère la couche d'adaptation complexe (le *shim* qui traduit le build Next.js)
+- **OpenNext** (communauté open-source) gère la couche d'adaptation complexe (le _shim_ qui traduit le build Next.js)
 
 ### Validation
 
@@ -52,12 +52,12 @@ watch_paths = ["src/**/*.{ts,tsx,js,jsx}"]
 
 L'adaptateur OpenNext nécessite plusieurs bindings Cloudflare pour les fonctionnalités avancées :
 
-| Binding | Service | Fonction |
-|---------|---------|----------|
-| `NEXT_INC_CACHE_R2_BUCKET` | R2 | Cache incrémental (ISR/SSG) |
-| `NEXT_CACHE_DO_QUEUE` | Durable Object | File d'attente de revalidation |
-| `NEXT_TAG_CACHE_DO_SHARDED` | Durable Object | Cache de tags (revalidateTag) |
-| `WORKER_SELF_REFERENCE` | Service Binding | Auto-référence du worker |
+| Binding                     | Service         | Fonction                       |
+| --------------------------- | --------------- | ------------------------------ |
+| `NEXT_INC_CACHE_R2_BUCKET`  | R2              | Cache incrémental (ISR/SSG)    |
+| `NEXT_CACHE_DO_QUEUE`       | Durable Object  | File d'attente de revalidation |
+| `NEXT_TAG_CACHE_DO_SHARDED` | Durable Object  | Cache de tags (revalidateTag)  |
+| `WORKER_SELF_REFERENCE`     | Service Binding | Auto-référence du worker       |
 
 ## Points Critiques
 

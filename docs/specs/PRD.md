@@ -4,6 +4,7 @@ updated: 2025-11-06T00:00
 status: validated
 validation_source: Architecture Next.js 15 + Cloudflare Workers (OpenNext)
 ---
+
 # Product Requirements Document (PRD) — sebc.dev
 
 ## Introduction
@@ -276,6 +277,7 @@ Pas d'objectif commercial immédiat. **Timeline** : V1 prévue pour fin novembre
 **Description** : Application Next.js 15 standard avec App Router et panneau d'administration intégré.
 
 **Critères d'acceptation** :
+
 - CA1 : Le projet suit la structure Next.js App Router avec routes organisées logiquement dans `app/`.
 - CA2 : Panneau d'administration accessible via `/admin` (routes protégées).
 - CA3 : Composants globaux dans `src/components/`.
@@ -287,6 +289,7 @@ Pas d'objectif commercial immédiat. **Timeline** : V1 prévue pour fin novembre
 
 **Description** : Le cache utilise l'architecture OpenNext multi-composants pour Next.js sur Cloudflare Workers.
 **Critères** :
+
 - CA1 : Configuration des bindings OpenNext requis dans wrangler.toml (R2, Durable Objects, D1/KV pour tags).
 - CA2 : Headers de cache HTTP configurés pour pages statiques et API.
 - CA3 : Support ISR (Incremental Static Regeneration) via R2 et queue Durable Objects.
@@ -325,12 +328,18 @@ Pas d'objectif commercial immédiat. **Timeline** : V1 prévue pour fin novembre
 
 ### ENF7 — Bonnes pratiques d'ingénierie
 
-**Description** : Le code doit suivre des standards de qualité et maintenabilité.
+**Description** : Le code doit suivre des standards de qualité et maintenabilité stricts, avec garde-fous automatisés pour développement assisté par IA.
+
 **Critères d'acceptation** :
 
-- CA1 : ESLint et Prettier configurés.
-- CA2 : Tests avec couverture ≥ 70 %.
-- CA3 : Revue de code obligatoire pour merger.
+- CA1 : ESLint configuré en Flat Config avec support MDX et linting typé (`parserOptions.project = true`)
+- CA2 : Prettier configuré avec plugin Tailwind CSS pour tri automatique des classes
+- CA3 : dependency-cruiser configuré pour valider frontières client/serveur (règle `no-server-in-client`)
+- CA4 : @next/bundle-analyzer configuré pour analyse manuelle des bundles pré-release
+- CA5 : Stryker.js configuré pour validation qualité des tests (mutation score > 80%)
+- CA6 : Tests avec couverture ≥ 70 %
+- CA7 : Workflow VSCode "Perfect Save" (Prettier → ESLint à chaque sauvegarde)
+- CA8 : Revue de code obligatoire (self-review après 24h + assistance Claude Code)
 
 ### ENF8 — Intégrations futures (Post-V1)
 
@@ -456,12 +465,14 @@ Pas d'objectif commercial immédiat. **Timeline** : V1 prévue pour fin novembre
 
 **Description**
 Mettre en place un monitoring via **Cloudflare** :
+
 - **Health Checks** sur `/health` toutes les **5 minutes** ; **alerte après 2 échecs** consécutifs.
 - **Workers Metrics** pour surveiller les performances et erreurs.
 - **Log Explorer** pour centraliser les logs.
 - L'endpoint **canonique** est `GET /health` (public), JSON minimal `{ status: 'ok', service: 'sebc.dev', buildId: '...', database: 'connected' }`.
 
 **Critères d'acceptation**
+
 - **CA1** : L'URL `https://<domaine>/health` retourne `200` avec JSON `{status:'ok', service:'sebc.dev', buildId:'...', database:'connected'}`.
 - **CA2** : Un Health Check Cloudflare est configuré (intervalle 5 min, politique « 2 fails ») et actif.
 - **CA3** : L'endpoint vérifie la connexion à D1 et retourne une erreur si inaccessible.
@@ -503,6 +514,7 @@ Mettre en place un monitoring via **Cloudflare** :
 ### ENF25 — Performances
 
 **V1 (Cloudflare Workers + D1 + R2)**
+
 - Distribution globale via Edge network
 - Latence optimisée par la proximité géographique
 - Cache via Cloudflare Cache API
@@ -510,6 +522,7 @@ Mettre en place un monitoring via **Cloudflare** :
 - Erreurs **< 1%**
 
 **Post-V1 (optimisations) – cible**
+
 - **≥ 100 req/s**, **p95 < 500 ms**
 - Optimisations cache avancées si nécessaire (R2 Incremental + D1 Tags)
 
@@ -530,6 +543,33 @@ Mettre en place un monitoring via **Cloudflare** :
 - CA1 : Documentation PRA validée (restauration D1 Time Travel).
 - CA2 : Tests de restauration trimestriels réussis.
 - CA3 : Procédure de rollback déploiement documentée.
+
+### ENF28 — Outils de Qualité de Code
+
+**Description** : Configuration complète des outils de qualité de code et d'analyse statique pour développement assisté par IA.
+
+**Critères d'acceptation** :
+
+- CA1 : Fichiers de configuration créés et validés :
+  - `prettier.config.js` (avec prettier-plugin-tailwindcss)
+  - `eslint.config.mjs` (Flat Config, MDX, linting typé)
+  - `.dependency-cruiser.js` (validation architecture)
+  - `stryker.config.json` (mutation testing)
+  - `.vscode/settings.json` (workflow Perfect Save)
+- CA2 : Scripts package.json pour exécution manuelle :
+  - `pnpm lint` : Exécute ESLint
+  - `pnpm lint:fix` : Corrige automatiquement
+  - `pnpm format:check` : Vérifie formatage (CI)
+  - `pnpm format` : Formate tous fichiers
+  - `pnpm arch:validate` : Valide architecture
+  - `pnpm test:mutation` : Exécute Stryker (scope complet)
+  - `pnpm test:mutation:critical` : Stryker (scope réduit)
+  - `pnpm quality:check` : Commande unifiée (format + lint + arch)
+- CA3 : Intégration CI/CD (GitHub Actions) :
+  - ESLint + Prettier + dependency-cruiser exécutés sur chaque PR
+  - Stryker.js exécuté hebdomadairement (lundi 2h) OU si PR touche `/admin` ou `/src/lib/server`
+  - Build échoue si violation règles critiques
+- CA4 : Documentation des patterns recommandés pour génération de code IA (prompts optimisés)
 
 ---
 
@@ -664,6 +704,10 @@ Mettre en place un monitoring via **Cloudflare** :
 - **7.4** Tests E2E Server Components async et Server Actions (obligatoire)
 - **7.5** Tests d'intégration avec D1 local (Wrangler)
 - **7.6** Tests SEO (hreflang, canonical, sitemap)
+- **7.7** Configuration ESLint (Flat Config) + Prettier + plugin Tailwind
+- **7.8** Configuration dependency-cruiser (validation architecture client/serveur)
+- **7.9** Configuration Stryker.js (mutation testing sur modules critiques)
+- **7.10** Workflow CI/CD qualité (GitHub Actions : lint, arch, tests, mutation weekly)
 
 ## 📊 EPIC 8 — SEO & Analytics
 
@@ -692,6 +736,7 @@ Mettre en place un monitoring via **Cloudflare** :
 **Décision** : MDX stocké en base de données D1
 
 **Architecture validée** :
+
 1. **Table `article_translations`** avec colonnes :
    - `content_mdx` (TEXT) : contenu Markdown avec composants React
    - `title`, `excerpt`, `seo_title`, `seo_description`, `slug`
@@ -700,6 +745,7 @@ Mettre en place un monitoring via **Cloudflare** :
 3. **Composants personnalisés** : Blocs code, citations, images via composants React réutilisables
 
 **Avantages validés** :
+
 - ✅ Édition via panneau admin web
 - ✅ Multilingue simplifié (table relations)
 - ✅ Métadonnées structurées pour requêtes
@@ -710,6 +756,7 @@ Mettre en place un monitoring via **Cloudflare** :
 **Décision** : Query param `?preview=true` avec vérification authentification
 
 **Implémentation** :
+
 ```typescript
 // app/[lang]/articles/[slug]/page.tsx (React Server Component)
 export default async function ArticlePage({
@@ -742,6 +789,7 @@ export default async function ArticlePage({
 ```
 
 **Workflow validé** :
+
 1. Admin édite article en mode `draft`
 2. Bouton "Prévisualiser" → `/fr/articles/[slug]?preview=true`
 3. Vérification authentification via middleware Next.js (Cloudflare Access JWT)
@@ -753,6 +801,7 @@ export default async function ArticlePage({
 **Décision** : `next/image` avec loader personnalisé + Cloudflare Images Transform
 
 **Architecture validée** :
+
 1. **Stockage** : Images originales dans Cloudflare R2
 2. **Upload** : Presigned URLs générées par Route Handlers Next.js (`route.ts`)
 3. **Optimisation** : Cloudflare Images Transform (service Edge natif)
@@ -762,6 +811,7 @@ export default async function ArticlePage({
 4. **Intégration Next.js** : `next/image` avec loader personnalisé
 
 **Configuration Next.js :**
+
 ```typescript
 // next.config.js
 module.exports = {
@@ -772,7 +822,11 @@ module.exports = {
 };
 
 // src/lib/cloudflare-image-loader.ts
-export default function cloudflareLoader({ src, width, quality }: {
+export default function cloudflareLoader({
+  src,
+  width,
+  quality,
+}: {
   src: string;
   width: number;
   quality?: number;
@@ -788,25 +842,31 @@ export default function cloudflareLoader({ src, width, quality }: {
 ```
 
 **Utilisation :**
+
 ```tsx
 // Composants React
 import Image from 'next/image';
 
 <Image
-  src="/articles/post-123/hero.jpg"
-  alt="Article hero"
+  src='/articles/post-123/hero.jpg'
+  alt='Article hero'
   width={800}
   height={600}
-  loading="lazy"
-/>
+  loading='lazy'
+/>;
 ```
 
 **Fonction utilitaire (pour non-Image usages) :**
+
 ```typescript
 // src/lib/utils/images.ts
 export function buildCloudflareImageUrl(
   src: string,
-  options: { width?: number; format?: 'auto' | 'webp' | 'avif'; quality?: number } = {}
+  options: {
+    width?: number;
+    format?: 'auto' | 'webp' | 'avif';
+    quality?: number;
+  } = {},
 ): string {
   const { width, format = 'auto', quality = 85 } = options;
 
@@ -814,13 +874,16 @@ export function buildCloudflareImageUrl(
     width && `width=${width}`,
     format && `format=${format}`,
     quality && `quality=${quality}`,
-  ].filter(Boolean).join(',');
+  ]
+    .filter(Boolean)
+    .join(',');
 
   return `/cdn-cgi/image/${params}/${src.replace(/^\//, '')}`;
 }
 ```
 
 **Workflow complet** :
+
 1. Upload → Route Handler génère Presigned URL R2
 2. Client → PUT direct vers R2 (image originale)
 3. Affichage → `next/image` utilise loader personnalisé
@@ -828,12 +891,14 @@ export function buildCloudflareImageUrl(
 5. Cloudflare → Transforme à la volée + mise en cache Edge
 
 **Avantages validés** :
+
 - ✅ Performance optimale (transformation et cache à l'Edge)
 - ✅ next/image natif (lazy loading, responsive, CLS prevention)
 - ✅ Coût prévisible (tarification par "transformations uniques")
 - ✅ Scalabilité automatique
 
 **Stratégie de nommage R2** :
+
 - Structure : `/articles/{article-id}/{uuid}-{original-name}.{ext}`
 - Génération UUID v4 pour éviter collisions
 - Conservation nom original pour debuggage et SEO
@@ -844,6 +909,7 @@ export function buildCloudflareImageUrl(
 **Décision** : Génération dynamique via Route Handler Next.js
 
 **Implémentation validée** :
+
 ```typescript
 // app/sitemap.xml/route.ts
 import { db } from '@/lib/server/db';
@@ -868,7 +934,9 @@ export async function GET() {
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-  ${publishedArticles.map(article => `
+  ${publishedArticles
+    .map(
+      (article) => `
   <url>
     <loc>https://sebc.dev/fr/articles/${article.slug}</loc>
     <lastmod>${article.updatedAt}</lastmod>
@@ -881,14 +949,16 @@ export async function GET() {
     <changefreq>${isRecent(article.updatedAt) ? 'weekly' : 'monthly'}</changefreq>
     <priority>${isRecent(article.updatedAt) ? '1.0' : '0.8'}</priority>
   </url>
-  `).join('')}
+  `,
+    )
+    .join('')}
 </urlset>`;
 
   return new Response(sitemap, {
     headers: {
       'Content-Type': 'application/xml',
-      'Cache-Control': 'public, max-age=3600'
-    }
+      'Cache-Control': 'public, max-age=3600',
+    },
   });
 }
 
@@ -900,6 +970,7 @@ function isRecent(date: string): boolean {
 ```
 
 **Priorités et fréquences** :
+
 - Articles récents (< 30 jours) : priority `1.0`, changefreq `weekly`
 - Articles anciens (> 30 jours) : priority `0.8`, changefreq `monthly`
 - Pages statiques (home) : priority `1.0`, changefreq `weekly`
@@ -909,6 +980,7 @@ function isRecent(date: string): boolean {
 **Décision** : Architecture OpenNext avec bindings multiples (R2, Durable Objects, KV)
 
 **Implémentation** :
+
 - **Cache incrémental (ISR)** : R2 via binding `NEXT_INC_CACHE_R2_BUCKET`
 - **Queue révalidation** : Durable Object via `NEXT_CACHE_DO_QUEUE`
 - **Cache de tags** : Durable Object (`NEXT_TAG_CACHE_DO_SHARDED` recommandé production) ou D1 (`NEXT_TAG_CACHE_D1` pour faible trafic)
@@ -917,6 +989,7 @@ function isRecent(date: string): boolean {
 - Admin : `Cache-Control: no-store, no-cache, must-revalidate`
 
 **Configuration wrangler.toml** :
+
 ```toml
 [[r2_buckets]]
 binding = "NEXT_INC_CACHE_R2_BUCKET"

@@ -7,10 +7,12 @@ This guide covers all environment setup needed for Phase 1: Drizzle ORM Installa
 ## 📋 Prerequisites
 
 ### Previous Phases/Stories
+
 - [x] Story 0.1 - Next.js 15 initialized and working
 - [ ] Story 0.5 - `wrangler.toml` exists (will be modified in Commit 2)
 
 ### Tools Required
+
 - [ ] Node.js 18+ installed
   - Check: `node --version`
   - Should output: `v18.x.x` or higher
@@ -25,6 +27,7 @@ This guide covers all environment setup needed for Phase 1: Drizzle ORM Installa
   - Check: `git --version`
 
 ### Cloudflare Account
+
 - [ ] Cloudflare account created ([sign up](https://dash.cloudflare.com/sign-up))
 - [ ] Wrangler authenticated
   - Command: `wrangler login`
@@ -32,6 +35,7 @@ This guide covers all environment setup needed for Phase 1: Drizzle ORM Installa
   - Verify: `wrangler whoami`
 
 ### Local Development Environment
+
 - [ ] Project cloned and dependencies installed
   - `cd /home/negus/dev/website`
   - `pnpm install`
@@ -46,11 +50,13 @@ This guide covers all environment setup needed for Phase 1: Drizzle ORM Installa
 Phase 1 will install these packages (handled in Commit 1):
 
 ### Runtime Dependencies
+
 - `drizzle-orm` - ORM for type-safe database queries
   - Will be added to `dependencies` section
   - Version: Latest stable (check [npm](https://www.npmjs.com/package/drizzle-orm))
 
 ### Development Dependencies
+
 - `drizzle-kit` - CLI tool for migration generation
   - Will be added to `devDependencies` section
   - Version: Latest stable
@@ -91,12 +97,14 @@ CLOUDFLARE_DATABASE_ID=will_be_set_in_commit_2
 #### 1. Cloudflare Account ID
 
 **Option A: From Dashboard**
+
 1. Log in to [Cloudflare Dashboard](https://dash.cloudflare.com/)
 2. Select any website (or Workers & Pages)
 3. Find Account ID in the right sidebar
 4. Copy the value
 
 **Option B: From Wrangler**
+
 ```bash
 wrangler whoami
 # Account ID is displayed in the output
@@ -105,6 +113,7 @@ wrangler whoami
 #### 2. Cloudflare API Token
 
 **Create API Token**:
+
 1. Go to [Cloudflare Dashboard → My Profile → API Tokens](https://dash.cloudflare.com/profile/api-tokens)
 2. Click "Create Token"
 3. Use "Edit Cloudflare Workers" template
@@ -115,6 +124,7 @@ wrangler whoami
 6. Store in `.env.local`
 
 **Permissions Required**:
+
 - `D1:edit` - To create and manage D1 databases
 - `Workers:edit` - To deploy and manage Workers
 
@@ -123,6 +133,7 @@ wrangler whoami
 This will be generated in Commit 2 when running `wrangler d1 create sebc-dev-db`.
 
 The output will look like:
+
 ```
 ✅ Successfully created DB 'sebc-dev-db'
 
@@ -141,11 +152,13 @@ Copy the `database_id` value and add it to `.env.local`.
 ### Create D1 Database (Commit 2)
 
 **Command**:
+
 ```bash
 wrangler d1 create sebc-dev-db
 ```
 
 **Expected Output**:
+
 ```
 ✅ Successfully created DB 'sebc-dev-db'
 
@@ -158,6 +171,7 @@ Add the above to your wrangler.toml to connect to your D1 database.
 ```
 
 **What This Does**:
+
 - Creates a new D1 database named `sebc-dev-db`
 - Allocates a UUID as the database ID
 - Sets up both local (Miniflare) and remote (Cloudflare) instances
@@ -174,6 +188,7 @@ database_id = "<paste-id-from-create-command>"
 ```
 
 **Binding Details**:
+
 - `binding = "DB"` - How you access the database in code (`env.DB`)
 - `database_name` - Human-readable name
 - `database_id` - Unique identifier (UUID)
@@ -188,6 +203,7 @@ File location: Project root
 Content created in Commit 3
 
 **Configuration Details**:
+
 - **Dialect**: `sqlite` (D1 is SQLite-based)
 - **Driver**: `d1-http` (for remote D1 access via HTTP API)
 - **Schema path**: `./src/lib/server/db/schema.ts` (will be created in Phase 2)
@@ -197,13 +213,13 @@ Content created in Commit 3
 
 Added to `package.json` in Commit 3:
 
-| Script | Purpose | Usage |
-|--------|---------|-------|
-| `db:generate` | Generate migration SQL from schema | After changing schema |
-| `db:migrate:local` | Apply migrations to local D1 | Development |
-| `db:migrate:remote` | Apply migrations to remote D1 | Production deployment |
-| `db:studio` | Launch Drizzle Studio | Visual schema explorer |
-| `db:push` | Push schema directly (dev only) | Quick prototyping |
+| Script              | Purpose                            | Usage                  |
+| ------------------- | ---------------------------------- | ---------------------- |
+| `db:generate`       | Generate migration SQL from schema | After changing schema  |
+| `db:migrate:local`  | Apply migrations to local D1       | Development            |
+| `db:migrate:remote` | Apply migrations to remote D1      | Production deployment  |
+| `db:studio`         | Launch Drizzle Studio              | Visual schema explorer |
+| `db:push`           | Push schema directly (dev only)    | Quick prototyping      |
 
 ---
 
@@ -244,16 +260,19 @@ pnpm test:integration
 ### Issue 1: Wrangler Not Authenticated
 
 **Symptoms**:
+
 - `wrangler d1 create` fails with authentication error
 - Error: "Not logged in"
 
 **Solutions**:
+
 1. Run `wrangler login`
 2. Browser opens for authentication
 3. Authorize Wrangler
 4. Verify with `wrangler whoami`
 
 **Verify Fix**:
+
 ```bash
 wrangler whoami
 # Should show your account email and ID
@@ -264,6 +283,7 @@ wrangler whoami
 ### Issue 2: pnpm Install Fails for better-sqlite3
 
 **Symptoms**:
+
 - `pnpm add -D better-sqlite3` fails
 - Error about Python or build tools
 
@@ -272,29 +292,34 @@ wrangler whoami
 **Solutions**:
 
 **On macOS**:
+
 ```bash
 xcode-select --install
 pnpm add -D better-sqlite3
 ```
 
 **On Ubuntu/Debian**:
+
 ```bash
 sudo apt-get install build-essential python3
 pnpm add -D better-sqlite3
 ```
 
 **On Windows (WSL recommended)**:
+
 ```bash
 # Use WSL2 with Ubuntu
 # Then follow Ubuntu instructions above
 ```
 
 **Alternative**: Skip Drizzle Studio for now
+
 - Drizzle Studio is optional
 - Main validation is the integration test (Commit 5)
 - You can still use `wrangler d1 execute` for manual queries
 
 **Verify Fix**:
+
 ```bash
 pnpm list better-sqlite3
 # Should show package installed
@@ -305,17 +330,20 @@ pnpm list better-sqlite3
 ### Issue 3: D1 Local Database Not Found
 
 **Symptoms**:
+
 - Integration tests fail with "database not found"
 - `wrangler d1 execute DB --local` fails
 
 **Cause**: Local D1 database not initialized
 
 **Solutions**:
+
 1. Ensure `wrangler d1 create` was run successfully
 2. Check `.wrangler/state/d1/` directory exists
 3. Re-run `wrangler d1 execute DB --local --command "SELECT 1"`
 
 **Verify Fix**:
+
 ```bash
 ls -la .wrangler/state/d1/
 # Should show database files
@@ -329,12 +357,14 @@ wrangler d1 execute DB --local --command "SELECT 1"
 ### Issue 4: Type Errors with D1Database
 
 **Symptoms**:
+
 - TypeScript errors: `Cannot find name 'D1Database'`
 - Happens in `src/lib/server/db/index.ts` or tests
 
 **Cause**: Missing Cloudflare Workers types
 
 **Solutions**:
+
 1. Ensure `@cloudflare/workers-types` is installed
    ```bash
    pnpm add -D @cloudflare/workers-types
@@ -349,6 +379,7 @@ wrangler d1 execute DB --local --command "SELECT 1"
    ```
 
 **Verify Fix**:
+
 ```bash
 pnpm type-check
 # Should compile without D1Database errors
@@ -359,12 +390,14 @@ pnpm type-check
 ### Issue 5: Drizzle Studio Doesn't Work with D1
 
 **Symptoms**:
+
 - `pnpm db:studio` launches but can't connect to database
 - Error: "Unsupported driver"
 
 **Cause**: Drizzle Studio has limited D1 support
 
 **Solutions**:
+
 1. **Expected behavior**: D1 support in Studio is experimental
 2. **Alternative**: Use `wrangler d1 execute` for queries
 3. **Workaround**: Studio can visualize schema definition, but won't connect to actual D1 database
@@ -372,6 +405,7 @@ pnpm type-check
 **Not a blocker**: Drizzle Studio is optional. Main validation is the integration test.
 
 **Verify Alternative**:
+
 ```bash
 # Query D1 directly via Wrangler
 wrangler d1 execute DB --local --command "SELECT * FROM sqlite_master"
@@ -384,18 +418,21 @@ wrangler d1 execute DB --local --command "SELECT * FROM sqlite_master"
 ### Issue 6: Environment Variables Not Loaded
 
 **Symptoms**:
+
 - `drizzle-kit generate` fails with "Cannot read property 'CLOUDFLARE_ACCOUNT_ID' of undefined"
 - Environment variables are undefined
 
 **Cause**: `.env.local` not loaded or wrong file name
 
 **Solutions**:
+
 1. Ensure file is named exactly `.env.local` (or `.dev.vars` for Wrangler)
 2. Check file is in project root
 3. For Drizzle Kit, use `.env.local` (Next.js convention)
 4. For Wrangler, use `.dev.vars` or command-line flags
 
 **Verify Fix**:
+
 ```bash
 # Check file exists
 ls -la .env.local
@@ -411,6 +448,7 @@ node -e "require('dotenv').config({path:'.env.local'}); console.log(process.env.
 Complete this checklist before starting Phase 1 implementation:
 
 ### Prerequisites
+
 - [ ] Node.js 18+ installed and verified
 - [ ] pnpm installed and verified
 - [ ] Wrangler CLI installed and verified
@@ -418,12 +456,14 @@ Complete this checklist before starting Phase 1 implementation:
 - [ ] Wrangler authenticated (`wrangler login`)
 
 ### Environment Files
+
 - [ ] `.env.local` created (or `.dev.vars`)
 - [ ] `CLOUDFLARE_ACCOUNT_ID` set in env file
 - [ ] `CLOUDFLARE_API_TOKEN` created and set
 - [ ] `.gitignore` includes `.env.local` and `.dev.vars`
 
 ### Project State
+
 - [ ] `pnpm install` runs without errors
 - [ ] `pnpm dev` starts Next.js successfully
 - [ ] `wrangler whoami` shows correct account

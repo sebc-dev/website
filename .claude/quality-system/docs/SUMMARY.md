@@ -3,6 +3,7 @@
 ## 📦 Ce qui a été installé
 
 ### 1️⃣ Hook Automatique PostToolUse
+
 - **Fichier** : `.claude/quality-system/hooks/quality-check.sh`
 - **Déclenchement** : Automatique après modification de fichiers TS/JS dans `apps/web/`
 - **Vérifications** :
@@ -13,17 +14,20 @@
   - ✅ Couverture de Code
 
 ### 2️⃣ Skill de Rapport Détaillé
+
 - **Localisation** : `.claude/quality-system/skills/quality-report/`
 - **Invocation** : Sur demande ("Génère-moi un rapport de qualité")
 - **Formats de sortie** : JSON + Markdown
 - **Rapports sauvegardés** : `.claude/quality-system/reports/quality-{timestamp}.{json,md}`
 
 ### 3️⃣ Configuration
+
 - **Fichier** : `.claude/settings.json`
 - **Hook configuré** : PostToolUse avec matcher intelligent
 - **Optimisations** : Détection contextuelle des fichiers modifiés
 
 ### 4️⃣ Documentation
+
 - **Guide complet** : `.claude/quality-system/docs/README.md`
 - **Script de test** : `.claude/quality-system/scripts/test-installation.sh`
 - **Template de rapport** : `.claude/quality-system/skills/quality-report/resources/report-template.md`
@@ -31,6 +35,7 @@
 ## 🚀 Utilisation Rapide
 
 ### Mode Automatique (Recommandé)
+
 Aucune action nécessaire ! Le système s'exécute automatiquement.
 
 ```
@@ -41,6 +46,7 @@ Aucune action nécessaire ! Le système s'exécute automatiquement.
 ```
 
 ### Mode Manuel (Skill)
+
 Demandez simplement à Claude :
 
 ```
@@ -78,16 +84,19 @@ Details:
 ## ⚙️ Configuration Actuelle
 
 ### Matchers (Quand le hook se déclenche)
+
 - **Outils** : `Write` ou `Edit`
 - **Fichiers** : `apps/web/**/*.{ts,tsx,js,jsx}`
 
 ### Niveaux de Criticité
+
 - **Critique** (bloque si code exit 2) : TypeCheck
 - **Non-critique** (rapporte seulement) : Lint, Format, Tests, Coverage
 
 ## 🔧 Personnalisation
 
 ### Modifier les vérifications
+
 Éditer `.claude/quality-system/hooks/quality-check.sh` :
 
 ```bash
@@ -96,17 +105,19 @@ run_check "Ma Vérification" "ma-commande" false
 ```
 
 ### Changer les matchers
+
 Éditer `.claude/settings.json` :
 
 ```json
 {
   "matcher": {
-    "file_paths": ["**/*.ts"]  // Tous les TS
+    "file_paths": ["**/*.ts"] // Tous les TS
   }
 }
 ```
 
 ### Variables d'environnement (Skill)
+
 ```bash
 export QUALITY_REPORT_FORMAT=markdown  # json, markdown, both
 export QUALITY_REPORT_DETAILED=true    # Logs détaillés
@@ -115,16 +126,19 @@ export QUALITY_REPORT_DETAILED=true    # Logs détaillés
 ## 🧪 Tests et Validation
 
 ### Tester l'installation
+
 ```bash
 ./.claude/quality-system/scripts/test-installation.sh
 ```
 
 ### Tester manuellement le hook
+
 ```bash
 ./.claude/quality-system/hooks/quality-check.sh
 ```
 
 ### Tester le skill
+
 ```bash
 ./.claude/quality-system/skills/quality-report/scripts/generate-quality-report.sh
 ```
@@ -155,6 +169,7 @@ export QUALITY_REPORT_DETAILED=true    # Logs détaillés
 ## 🎓 Concepts Appliqués (Basés sur le Guide Expert)
 
 ### Du Guide des Hooks
+
 - ✅ **Modèle du Gardien** : Validation et feedback intelligent
 - ✅ **PostToolUse** : Automatisation après modification
 - ✅ **Codes de sortie** : Contrôle du flux (0=OK, 1=warning, 2=block)
@@ -162,6 +177,7 @@ export QUALITY_REPORT_DETAILED=true    # Logs détaillés
 - ✅ **Performance** : Détection contextuelle pour éviter les vérifications inutiles
 
 ### Du Guide des Skills
+
 - ✅ **Encapsulation d'expertise** : Le skill capture le processus de vérification qualité
 - ✅ **Portabilité** : Fonctionne sur Claude.ai, Claude Code et l'API
 - ✅ **Composabilité** : Le skill peut être combiné avec d'autres
@@ -171,16 +187,19 @@ export QUALITY_REPORT_DETAILED=true    # Logs détaillés
 ## 🎯 Prochaines Étapes
 
 ### Immédiat
+
 1. **Redémarrer Claude Code** pour charger la nouvelle configuration
 2. **Tester le hook** en modifiant un fichier TypeScript
 3. **Invoquer le skill** en demandant un rapport de qualité
 
 ### Court Terme
+
 - Ajuster les seuils de couverture selon les besoins du projet
 - Personnaliser le template de rapport
 - Ajouter des vérifications spécifiques au projet
 
 ### Long Terme
+
 - Intégration CI/CD pour bloquer les PR avec score faible
 - Dashboard web pour suivre l'évolution de la qualité
 - Notifications Slack/Discord pour les rapports de qualité
@@ -190,6 +209,7 @@ export QUALITY_REPORT_DETAILED=true    # Logs détaillés
 ### Problèmes courants
 
 **Le hook ne s'exécute pas**
+
 ```bash
 # Vérifier les permissions
 chmod +x .claude/quality-system/hooks/quality-check.sh
@@ -202,6 +222,7 @@ cat .claude/settings.json
 ```
 
 **Le skill ne répond pas**
+
 ```bash
 # Vérifier que le skill existe
 ls .claude/quality-system/skills/quality-report/SKILL.md
@@ -211,6 +232,7 @@ head .claude/quality-system/skills/quality-report/SKILL.md
 ```
 
 **Erreurs de dépendances**
+
 ```bash
 # Réinstaller les dépendances
 pnpm install

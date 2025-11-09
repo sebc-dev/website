@@ -150,11 +150,13 @@ QUALITY_REPORT_DETAILED=true      # Inclure les logs détaillés
 ## Détails des Vérifications
 
 ### ✅ TypeScript Type Check
+
 - **Status:** passed
 - **Durée:** 2.3s
 - **Détails:** All checks passed
 
 ### ⚠️ Biome Linting
+
 - **Status:** warning
 - **Durée:** 1.1s
 - **Détails:** Non-critical issues detected
@@ -239,7 +241,7 @@ Pour modifier les fichiers ciblés, éditer `.claude/settings.json` :
 {
   "matcher": {
     "tool_name": "Write|Edit",
-    "file_paths": ["**/*.{ts,tsx}"]  // Tous les fichiers TS
+    "file_paths": ["**/*.{ts,tsx}"] // Tous les fichiers TS
   }
 }
 ```
@@ -272,6 +274,7 @@ Pour modifier les fichiers ciblés, éditer `.claude/settings.json` :
 ### Principe du "Gardien" (Gatekeeper)
 
 Le système actuel est **non-bloquant** :
+
 - Les erreurs sont rapportées mais n'empêchent pas le travail de continuer
 - Claude reçoit un feedback et peut corriger si nécessaire
 
@@ -282,7 +285,7 @@ Pour un mode **bloquant** (PreToolUse), modifier la configuration :
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": {"tool_name": "Write|Edit"},
+        "matcher": { "tool_name": "Write|Edit" },
         "command": ".claude/quality-system/hooks/quality-check.sh"
       }
     ]
