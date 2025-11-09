@@ -275,10 +275,10 @@ export type UpdateArticleTranslation = InferDrizzleZod<typeof updateArticleTrans
  * }
  * ```
  */
-export function validateData<TSchema extends z.ZodTypeAny>(
-	schema: TSchema,
+export function validateData<T>(
+	schema: { safeParse(data: unknown): { success: true; data: T } | { success: false; error: z.ZodError } },
 	data: unknown
-): { success: true; data: z.infer<TSchema> } | { success: false; errors: z.ZodError } {
+): { success: true; data: T } | { success: false; errors: z.ZodError } {
 	const result = schema.safeParse(data)
 
 	if (result.success) {
@@ -304,8 +304,7 @@ export function validateData<TSchema extends z.ZodTypeAny>(
  * ```
  */
 export function validateArticleInsert(data: unknown) {
-	// drizzle-zod schemas are runtime-compatible with Zod
-	return validateData(insertArticleSchema as unknown as z.ZodTypeAny, data)
+	return validateData(insertArticleSchema, data)
 }
 
 /**
@@ -329,8 +328,7 @@ export function validateArticleInsert(data: unknown) {
  * ```
  */
 export function validateTranslationInsert(data: unknown) {
-	// drizzle-zod schemas are runtime-compatible with Zod
-	return validateData(insertArticleTranslationSchema as unknown as z.ZodTypeAny, data)
+	return validateData(insertArticleTranslationSchema, data)
 }
 
 /**
@@ -348,8 +346,7 @@ export function validateTranslationInsert(data: unknown) {
  * ```
  */
 export function validateArticleUpdate(data: unknown) {
-	// drizzle-zod schemas are runtime-compatible with Zod
-	return validateData(updateArticleSchema as unknown as z.ZodTypeAny, data)
+	return validateData(updateArticleSchema, data)
 }
 
 /**
@@ -367,8 +364,7 @@ export function validateArticleUpdate(data: unknown) {
  * ```
  */
 export function validateTranslationUpdate(data: unknown) {
-	// drizzle-zod schemas are runtime-compatible with Zod
-	return validateData(updateArticleTranslationSchema as unknown as z.ZodTypeAny, data)
+	return validateData(updateArticleTranslationSchema, data)
 }
 
 /**

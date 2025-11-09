@@ -8,7 +8,6 @@
 import { describe, it, expect } from 'vitest'
 import {
 	insertArticleSchema,
-	insertArticleTranslationSchema,
 	selectArticleSchema,
 	selectArticleTranslationSchema,
 	updateArticleSchema,
@@ -349,5 +348,26 @@ describe('Error Formatting', () => {
 		// Verify the function is exported and callable
 		expect(typeof formatZodErrors).toBe('function')
 	})
-})
 
+	it('should format Zod errors into field-message map', () => {
+		const invalidData = {
+			articleId: 'art-1',
+			language: 'fr',
+			title: 'a'.repeat(201),
+			slug: 'Invalid_Slug',
+			excerpt: 'Description',
+			seoTitle: 'SEO',
+			seoDescription: 'SEO Desc',
+			contentMdx: '# Content'
+		}
+
+		const result = validateTranslationInsert(invalidData)
+		if (!result.success) {
+			const formatted = formatZodErrors(result.errors)
+			expect(formatted).toBeDefined()
+			expect(typeof formatted).toBe('object')
+			expect(formatted.slug).toBeDefined()
+			expect(formatted.title).toBeDefined()
+		}
+	})
+})
