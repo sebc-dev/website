@@ -190,3 +190,157 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
+
+  # ============================================================================
+  # Health Check Job (Commit 4: Post-Deployment Verification)
+  # ============================================================================
+  #
+  # This job verifies that the deployed Worker is accessible and responds correctly.
+  # It runs after the deployment completes successfully.
+  #
+  # Health Check Strategy:
+  # - Target: Deployed Worker URL
+  # - Method: HTTP GET request
+  # - Success Criteria: HTTP 200 response
+  # - Retry Logic: 3 attempts with 10-second delay between retries
+  # - Purpose: Detect failed deployments (invalid code, missing dependencies, etc.)
+  #
+  # IMPORTANT: Rollback Procedure
+  # If health check fails:
+  # 1. Check Cloudflare Workers Dashboard for error logs
+  # 2. Review recent deployments in Cloudflare UI
+  # 3. Identify the failed deployment by timestamp
+  # 4. Manually rollback to previous version using Cloudflare UI:
+  #    - Go to Workers > Deploy History
+  #    - Select the last successful deployment
+  #    - Click "Rollback to this version"
+  # 5. Investigate error logs to fix the issue
+  # 6. Re-deploy with corrections
+  #
+  verify-deployment:
+    name: Verify Deployment Health
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: |
+      needs.deploy.result == 'success' &&
+      github.event.inputs.skip_verification != 'true'
+
+    steps:
+      # ========================================================================
+      # Step 1: Get Worker URL
+      # ========================================================================
+      # Extract the Worker URL from wrangler configuration or use default
+      # For development/staging: checks the deployed Worker endpoint
+      #
+      - name: Configure Worker URL
+        id: worker-url
+        run: |
+          # Extract Worker name and account subdomain from wrangler config
+          WORKER_NAME=$(grep -oP '"name"\s*:\s*"\K[^"]+' wrangler.jsonc | head -1)
+          ACCOUNT_SUBDOMAIN=$(grep -oP '"account_id"\s*:\s*"\K[^"]+' wrangler.jsonc | head -1 | cut -c1-8)
+
+          # Construct Worker URL (Cloudflare Workers default domain)
+          WORKER_URL="https://${WORKER_NAME}.${ACCOUNT_SUBDOMAIN}.workers.dev"
+
+          echo "worker-url=${WORKER_URL}" >> $GITHUB_OUTPUT
+          echo "Worker URL configured: ${WORKER_URL}"
+
+      # ========================================================================
+      # Step 2: Health Check with Retry Logic
+      # ========================================================================
+      # Test HTTP endpoint with retries to account for CDN propagation delays
+      #
+      # Retry Strategy:
+      # - Attempt 1: Immediate (DNS/CDN cache may not be updated yet)
+      # - Delay 10s (allow for CDN propagation)
+      # - Attempt 2: After 10 second delay
+      # - Delay 10s
+      # - Attempt 3: After another 10 second delay
+      #
+      # Success: HTTP 200 response received
+      # Failure: All 3 attempts fail → workflow fails
+      #
+      - name: Execute Health Check
+        id: health-check
+        continue-on-error: true
+        run: |
+          WORKER_URL="${{ steps.worker-url.outputs.worker-url }}"
+          MAX_ATTEMPTS=3
+          RETRY_DELAY=10
+
+          echo "Starting health check for Worker: ${WORKER_URL}"
+
+          for attempt in $(seq 1 $MAX_ATTEMPTS); do
+            echo ""
+            echo "Health Check Attempt $attempt/$MAX_ATTEMPTS"
+            echo "============================================"
+
+            # Execute health check with 10-second timeout per request
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "${WORKER_URL}")
+
+            echo "HTTP Response Code: $HTTP_CODE"
+
+            if [[ "$HTTP_CODE" == "200" ]]; then
+              echo "✓ Health check PASSED - Worker is accessible"
+              echo "health-status=success" >> $GITHUB_OUTPUT
+              exit 0
+            else
+              echo "✗ Health check FAILED - HTTP $HTTP_CODE received"
+
+              # Only sleep between attempts (not after the last one)
+              if [[ $attempt -lt $MAX_ATTEMPTS ]]; then
+                echo "Waiting $RETRY_DELAY seconds before next attempt..."
+                sleep $RETRY_DELAY
+              fi
+            fi
+          done
+
+          # All attempts failed
+          echo ""
+          echo "ERROR: All $MAX_ATTEMPTS health check attempts failed!"
+          echo "The deployed Worker is not responding correctly."
+          echo ""
+          echo "health-status=failure" >> $GITHUB_OUTPUT
+          exit 1
+
+      # ========================================================================
+      # Step 3: Report Health Check Result
+      # ========================================================================
+      # Set workflow output based on health check result
+      # This output is available for GitHub deployments and notifications
+      #
+      - name: Report Deployment Status
+        if: always()
+        run: |
+          if [[ "${{ steps.health-check.outputs.health-status }}" == "success" ]]; then
+            echo "✓ Deployment verification PASSED"
+            echo "Worker is accessible and responding to requests"
+            echo "Deployment completed successfully!"
+          else
+            echo "✗ Deployment verification FAILED"
+            echo "Worker health check did not receive HTTP 200 response"
+            echo ""
+            echo "To rollback:"
+            echo "1. Visit Cloudflare Dashboard → Workers → [Worker Name]"
+            echo "2. Go to 'Deploy History'"
+            echo "3. Find the last successful deployment"
+            echo "4. Click 'Rollback to this version'"
+            exit 1
+          fi
+
+      # ========================================================================
+      # Step 4: Skip Verification Message (if skipped)
+      # ========================================================================
+      # Inform user when health check verification is intentionally skipped
+      # (This step only runs if skip_verification was set to true)
+      #
+      - name: Note Verification Skipped
+        if: |
+          always() &&
+          github.event.inputs.skip_verification == 'true'
+        run: |
+          echo "⚠ Health check verification was SKIPPED"
+          echo "Skip Verification input: ${{ github.event.inputs.skip_verification }}"
+          echo ""
+          echo "IMPORTANT: Verify deployment manually!"
+          echo "Check: ${{ steps.worker-url.outputs.worker-url }}"
