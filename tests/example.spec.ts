@@ -546,8 +546,14 @@ test.describe('HomePage - Performance', () => {
         let clsScore = 0;
         const observer = new PerformanceObserver((list) => {
           for (const entry of list.getEntries()) {
-            if ((entry as any).hadRecentInput) continue;
-            clsScore += (entry as any).value;
+            const layoutShiftEntry = entry as PerformanceEntryList & {
+              hadRecentInput?: boolean;
+              value?: number;
+            };
+            if (layoutShiftEntry.hadRecentInput) continue;
+            if (layoutShiftEntry.value) {
+              clsScore += layoutShiftEntry.value;
+            }
           }
         });
 
