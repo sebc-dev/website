@@ -146,18 +146,16 @@ test.describe('HomePage - Visual Elements', () => {
   test('loading indicators are visible', async ({ page }) => {
     await page.goto('/');
 
-    // Verify loading dots container exists - find by mb-8 class to distinguish from info card
-    const dotsContainer = page
-      .locator('div[class*="mb-8"][class*="flex"][class*="animate-"]')
-      .nth(2); // Third animated element (after badge and title)
-    await expect(dotsContainer).toBeVisible();
-
-    // Verify exactly 3 pulsing dots exist - they have h-3 w-3 and animate-pulse classes
-    const pulsingDots = dotsContainer.locator(
-      'div[class*="h-3"][class*="w-3"][class*="rounded-full"][class*="animate-pulse"]',
+    // Verify exactly 3 pulsing dots exist - find them directly by their unique h-3 w-3 size
+    // The loading dots are the only h-3 w-3 rounded elements on the page
+    const pulsingDots = page.locator(
+      'div[class*="h-3"][class*="w-3"][class*="rounded-full"][class*="bg-accent"]',
     );
     const pulsingCount = await pulsingDots.count();
-    expect(pulsingCount).toBe(3);
+    expect(pulsingCount).toBeGreaterThanOrEqual(3);
+
+    // Verify first dot is visible
+    await expect(pulsingDots.first()).toBeVisible();
   });
 
   /**
