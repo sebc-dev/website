@@ -1,6 +1,6 @@
 import './globals.css';
 
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 
 const geistSans = Geist({
@@ -14,6 +14,20 @@ const geistMono = Geist_Mono({
 });
 
 /**
+ * Viewport configuration for the root layout
+ *
+ * Defines responsive viewport settings for mobile devices.
+ * Uses device-width for responsive design and prevents zooming.
+ *
+ * @see https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+ */
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+};
+
+/**
  * Metadata configuration for the root layout
  *
  * Defines the primary SEO and social sharing metadata for the sebc.dev platform.
@@ -22,9 +36,9 @@ const geistMono = Geist_Mono({
  * @see https://nextjs.org/docs/app/api-reference/functions/generate-metadata
  */
 export const metadata: Metadata = {
-  title: 'sebc.dev - Laboratoire d\'apprentissage public',
+  title: "sebc.dev - Laboratoire d'apprentissage public",
   description:
-    'À l\'intersection de l\'IA, de l\'UX et de l\'ingénierie logicielle. Blog technique, articles et guides sur le développement moderne.',
+    "À l'intersection de l'IA, de l'UX et de l'ingénierie logicielle. Blog technique, articles et guides sur le développement moderne.",
   keywords: [
     'IA',
     'UX',
@@ -37,9 +51,9 @@ export const metadata: Metadata = {
   authors: [{ name: 'sebc.dev', url: 'https://sebc.dev' }],
   creator: 'sebc.dev',
   openGraph: {
-    title: 'sebc.dev - Laboratoire d\'apprentissage public',
+    title: "sebc.dev - Laboratoire d'apprentissage public",
     description:
-      'À l\'intersection de l\'IA, de l\'UX et de l\'ingénierie logicielle.',
+      "À l'intersection de l'IA, de l'UX et de l'ingénierie logicielle.",
     type: 'website',
     locale: 'fr_FR',
     url: 'https://sebc.dev',
@@ -49,21 +63,16 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'sebc.dev - Laboratoire d\'apprentissage public',
+        alt: "sebc.dev - Laboratoire d'apprentissage public",
         type: 'image/png',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'sebc.dev - Laboratoire d\'apprentissage public',
+    title: "sebc.dev - Laboratoire d'apprentissage public",
     description:
-      'À l\'intersection de l\'IA, de l\'UX et de l\'ingénierie logicielle.',
-  },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
+      "À l'intersection de l'IA, de l'UX et de l'ingénierie logicielle.",
   },
   robots: {
     index: true,
