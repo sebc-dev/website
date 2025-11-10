@@ -36,7 +36,6 @@ name: Deploy to Cloudflare Workers
 #
 on:
   workflow_dispatch:
-    description: 'Manually trigger deployment to Cloudflare Workers'
     inputs:
       skip_verification:
         description: 'Skip health check verification after deployment (use with caution)'
@@ -221,6 +220,8 @@ jobs:
     name: Verify Deployment Health
     runs-on: ubuntu-latest
     needs: deploy
+    outputs:
+      worker-url: ${{ steps.worker-url.outputs.worker-url }}
     if: |
       needs.deploy.result == 'success' &&
       github.event.inputs.skip_verification != 'true'
@@ -229,21 +230,28 @@ jobs:
       # ========================================================================
       # Step 1: Get Worker URL
       # ========================================================================
-      # Extract the Worker URL from wrangler configuration or use default
-      # For development/staging: checks the deployed Worker endpoint
+      # Uses WORKER_URL secret for reliable URL configuration
+      # The Workers.dev subdomain is not derivable from account_id
+      # Must be configured as a repository secret
       #
       - name: Configure Worker URL
         id: worker-url
         run: |
-          # Extract Worker name and account subdomain from wrangler config
-          WORKER_NAME=$(grep -oP '"name"\s*:\s*"\K[^"]+' wrangler.jsonc | head -1)
-          ACCOUNT_SUBDOMAIN=$(grep -oP '"account_id"\s*:\s*"\K[^"]+' wrangler.jsonc | head -1 | cut -c1-8)
+          # Use explicitly configured Worker URL from secrets
+          WORKER_URL="${{ secrets.WORKER_URL }}"
 
-          # Construct Worker URL (Cloudflare Workers default domain)
-          WORKER_URL="https://${WORKER_NAME}.${ACCOUNT_SUBDOMAIN}.workers.dev"
+          # Validate that WORKER_URL is configured
+          if [[ -z "$WORKER_URL" ]]; then
+            echo "❌ ERROR: WORKER_URL not configured"
+            echo "Please add WORKER_URL as a repository secret:"
+            echo "  1. Go to Settings > Secrets and variables > Actions"
+            echo "  2. Add new secret: WORKER_URL"
+            echo "  3. Value: https://your-worker.your-subdomain.workers.dev"
+            exit 1
+          fi
 
           echo "worker-url=${WORKER_URL}" >> $GITHUB_OUTPUT
-          echo "Worker URL configured: ${WORKER_URL}"
+          echo "✅ Worker URL configured: ${WORKER_URL}"
 
       # ========================================================================
       # Step 2: Health Check with Retry Logic
@@ -262,7 +270,6 @@ jobs:
       #
       - name: Execute Health Check
         id: health-check
-        continue-on-error: true
         run: |
           WORKER_URL="${{ steps.worker-url.outputs.worker-url }}"
           MAX_ATTEMPTS=3
@@ -361,6 +368,9 @@ jobs:
     name: Create Deployment Artifacts and Summary
     runs-on: ubuntu-latest
     needs: [deploy, verify-deployment]
+    permissions:
+      contents: read
+      deployments: write
     if: always()
 
     steps:
@@ -376,7 +386,7 @@ jobs:
           WORKER_URL="${{ needs.verify-deployment.outputs.worker-url || 'https://[worker-name].[account-id].workers.dev' }}"
           DEPLOYMENT_TIMESTAMP=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
           COMMIT_SHA="${{ github.sha }}"
-          COMMIT_SHA_SHORT="${{ github.sha }}${COMMIT_SHA:0:7}"
+          COMMIT_SHA_SHORT="${COMMIT_SHA:0:7}"
           GITHUB_RUN_ID="${{ github.run_id }}"
           GITHUB_RUN_NUMBER="${{ github.run_number }}"
           TRIGGER_TYPE="${{ github.event_name }}"
