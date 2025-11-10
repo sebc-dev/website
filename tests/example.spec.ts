@@ -120,7 +120,7 @@ test.describe('HomePage - Visual Elements', () => {
     // Verify subtitle
     const subtitle = page.locator('p:has-text("Un laboratoire d")');
     await expect(subtitle).toBeVisible();
-    await expect(subtitle).toContainText('laboratoire d\'apprentissage public');
+    await expect(subtitle).toContainText("laboratoire d'apprentissage public");
   });
 
   /**
@@ -133,7 +133,7 @@ test.describe('HomePage - Visual Elements', () => {
     // Verify description paragraph
     const description = page.locator('p:has-text("À l\'intersection")');
     await expect(description).toBeVisible();
-    await expect(description).toContainText('À l\'intersection');
+    await expect(description).toContainText("À l'intersection");
     await expect(description).toContainText('IA');
     await expect(description).toContainText('UX');
     await expect(description).toContainText('ingénierie logicielle');
@@ -147,12 +147,15 @@ test.describe('HomePage - Visual Elements', () => {
     await page.goto('/');
 
     // Verify loading dots container exists
-    const dotsContainer = page.locator('div.flex.items-center.gap-2').filter({ has: page.locator('div.animate-pulse') });
+    const dotsContainer = page.locator(
+      'div.mb-8.flex.items-center.justify-center',
+    );
     await expect(dotsContainer).toBeVisible();
 
-    // Verify at least one pulsing dot exists
-    const pulsingDots = page.locator('div.animate-pulse');
-    expect(await pulsingDots.count()).toBeGreaterThanOrEqual(3);
+    // Verify at least 3 pulsing dots exist (they have animate-pulse class)
+    const pulsingDots = page.locator('div[class*="animate-pulse"]');
+    const pulsingCount = await pulsingDots.count();
+    expect(pulsingCount).toBeGreaterThanOrEqual(3);
   });
 
   /**
@@ -188,7 +191,9 @@ test.describe('HomePage - Visual Elements', () => {
    * Test: Background elements are hidden from screen readers
    * Expected: Decorative background elements have aria-hidden
    */
-  test('decorative background elements are hidden from screen readers', async ({ page }) => {
+  test('decorative background elements are hidden from screen readers', async ({
+    page,
+  }) => {
     await page.goto('/');
 
     // Verify grid overlay is hidden
@@ -219,8 +224,12 @@ test.describe('HomePage - Animations', () => {
   test('badge has fade-in animation', async ({ page }) => {
     await page.goto('/');
 
-    // Verify animation class - find inline-flex element with badge styling
-    const badge = page.locator('div.inline-flex.items-center.gap-2.rounded-full.border');
+    // Verify animation class - find the badge by its specific styling
+    const badge = page
+      .locator(
+        'div[class*="inline-flex"][class*="gap-2"][class*="rounded-full"][class*="border"]',
+      )
+      .first();
     const classes = await badge.getAttribute('class');
     expect(classes).toContain('animate');
   });
@@ -232,12 +241,16 @@ test.describe('HomePage - Animations', () => {
   test('elements have staggered animation timing', async ({ page }) => {
     await page.goto('/');
 
-    // Verify badge (0.6s)
-    const badge = page.locator('div.inline-flex.items-center.gap-2.rounded-full.border');
+    // Verify badge (0.6s animation)
+    const badge = page
+      .locator(
+        'div[class*="inline-flex"][class*="gap-2"][class*="rounded-full"][class*="border"]',
+      )
+      .first();
     const badgeClass = await badge.getAttribute('class');
     expect(badgeClass).toContain('0.6s');
 
-    // Verify title (0.8s with 0.2s delay)
+    // Verify title (0.8s animation with 0.2s delay)
     const title = page.locator('h1');
     const titleClass = await title.getAttribute('class');
     expect(titleClass).toContain('0.8s');
@@ -251,8 +264,13 @@ test.describe('HomePage - Animations', () => {
   test('loading dots have pulsing animation', async ({ page }) => {
     await page.goto('/');
 
-    // Verify pulse animation
-    const dots = page.locator('div.bg-accent.h-3.w-3.rounded-full');
+    // Verify pulse animation - find dots by checking for animate-pulse class
+    const dots = page.locator(
+      'div[class*="bg-accent"][class*="rounded-full"][class*="animate-pulse"]',
+    );
+    const count = await dots.count();
+    expect(count).toBeGreaterThanOrEqual(1);
+
     const firstDot = dots.first();
     const classes = await firstDot.getAttribute('class');
     expect(classes).toContain('animate-pulse');
@@ -277,8 +295,9 @@ test.describe('HomePage - Animations', () => {
       return window.getComputedStyle(el).animationDuration;
     });
 
-    // Animation duration should be very small (0.01ms or scientific notation)
-    expect(computedStyle).toMatch(/^(0\.01m|1e-05)s$/);
+    // Animation duration should be very small (0.01ms as "0.01ms" or in scientific notation like "1e-05s")
+    const isReduced = /^(0\.01m|1e-05)s$/.test(computedStyle);
+    expect(isReduced).toBe(true);
 
     await context.close();
   });
@@ -346,8 +365,10 @@ test.describe('HomePage - Responsive Design', () => {
   test('content is centered on all viewports', async ({ page }) => {
     await page.goto('/');
 
-    // Verify main container exists and is centered (main container with relative, flex, min-h-screen)
-    const mainContainer = page.locator('div.relative.flex.min-h-screen.items-center.justify-center');
+    // Verify main container exists and is centered (specific selector for outer container)
+    const mainContainer = page.locator(
+      'div.bg-background.relative.flex.min-h-screen.items-center.justify-center.overflow-hidden',
+    );
     await expect(mainContainer).toBeVisible();
   });
 
@@ -361,7 +382,9 @@ test.describe('HomePage - Responsive Design', () => {
 
     // Get viewport and document width
     const viewportWidth = await page.evaluate(() => window.innerWidth);
-    const documentWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+    const documentWidth = await page.evaluate(
+      () => document.documentElement.scrollWidth,
+    );
 
     expect(documentWidth).toBeLessThanOrEqual(viewportWidth);
   });
@@ -426,7 +449,9 @@ test.describe('HomePage - Accessibility', () => {
    * Test: Decorative elements are hidden from screen readers
    * Expected: All decorative SVGs and backgrounds have aria-hidden
    */
-  test('decorative elements are hidden from screen readers', async ({ page }) => {
+  test('decorative elements are hidden from screen readers', async ({
+    page,
+  }) => {
     await page.goto('/');
 
     // Get all aria-hidden elements
@@ -441,7 +466,9 @@ test.describe('HomePage - Accessibility', () => {
    * Test: Focus indicators are visible
    * Expected: Tab navigation shows focus outlines
    */
-  test('focus indicators are visible on keyboard navigation', async ({ page }) => {
+  test('focus indicators are visible on keyboard navigation', async ({
+    page,
+  }) => {
     await page.goto('/');
 
     // Press Tab to move focus
@@ -475,7 +502,9 @@ test.describe('HomePage - Accessibility', () => {
    * Test: Text is readable without layout shift
    * Expected: Content is visible before animations complete
    */
-  test('content is readable without waiting for animations', async ({ page }) => {
+  test('content is readable without waiting for animations', async ({
+    page,
+  }) => {
     await page.goto('/');
 
     // Immediately check if text is visible (before animation completes)
@@ -573,7 +602,9 @@ test.describe('HomePage - SEO & Metadata', () => {
   test('has meta description', async ({ page }) => {
     await page.goto('/');
 
-    const metaDescription = await page.locator('meta[name="description"]').getAttribute('content');
+    const metaDescription = await page
+      .locator('meta[name="description"]')
+      .getAttribute('content');
     expect(metaDescription).toBeTruthy();
     expect(metaDescription).toContain('IA');
   });
@@ -585,7 +616,9 @@ test.describe('HomePage - SEO & Metadata', () => {
   test('page is configured for search engines', async ({ page }) => {
     await page.goto('/');
 
-    const robots = await page.locator('meta[name="robots"]').getAttribute('content');
+    const robots = await page
+      .locator('meta[name="robots"]')
+      .getAttribute('content');
     expect(robots).toContain('index');
     expect(robots).toContain('follow');
   });
@@ -597,11 +630,15 @@ test.describe('HomePage - SEO & Metadata', () => {
   test('has Open Graph metadata for social sharing', async ({ page }) => {
     await page.goto('/');
 
-    const ogTitle = await page.locator('meta[property="og:title"]').getAttribute('content');
-    const ogDescription = await page.locator('meta[property="og:description"]').getAttribute(
-      'content'
-    );
-    const ogType = await page.locator('meta[property="og:type"]').getAttribute('content');
+    const ogTitle = await page
+      .locator('meta[property="og:title"]')
+      .getAttribute('content');
+    const ogDescription = await page
+      .locator('meta[property="og:description"]')
+      .getAttribute('content');
+    const ogType = await page
+      .locator('meta[property="og:type"]')
+      .getAttribute('content');
 
     expect(ogTitle).toBeTruthy();
     expect(ogDescription).toBeTruthy();
