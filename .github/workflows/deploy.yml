@@ -397,7 +397,7 @@ jobs:
   deployment-logging:
     name: Create Deployment Artifacts and Summary
     runs-on: ubuntu-latest
-    needs: deploy
+    needs: [deploy, verify-deployment]
     permissions:
       contents: read
       deployments: write
@@ -431,7 +431,7 @@ jobs:
             # Fallback: Use WORKER_URL secret for skipped verification scenarios
             WORKER_URL="${{ secrets.WORKER_URL }}"
             if [[ -z "$WORKER_URL" ]]; then
-              echo "⚠️  WARNING: Worker URL not available from verification or secrets"
+              echo "⚠️ WARNING: Worker URL not available from verification or secrets"
               WORKER_URL="[Worker URL not available]"
             fi
           fi
