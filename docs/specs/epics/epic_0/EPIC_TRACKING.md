@@ -41,10 +41,10 @@ This epic contains **10 stories** as defined in the PRD:
 | 0.1   | Initialiser le projet Next.js 15       | Next.js 15.4.7 + React 19 + TypeScript 5 + App Router         | ✅ COMPLETED   | 3      | 3/3                      |
 | 0.2   | Configurer adaptateur OpenNext         | `@opennextjs/cloudflare` v1.3.0 installé et configuré         | ✅ COMPLETED   | -      | ✅                       |
 | 0.3   | Configurer TailwindCSS 4 + shadcn/ui   | TailwindCSS 4 + shadcn/ui + palette projet (teal #14B8A6)     | ✅ COMPLETED   | -      | ✅                       |
-| 0.4   | Configurer Drizzle ORM + Cloudflare D1 | Schéma initial + migrations setup                             | 📋 PLANNED     | 5      | 📋 Phase 2, 4 docs ready |
-| 0.5   | Configurer wrangler.toml avec bindings | Config de base OK, bindings D1/R2/KV/DO manquants             | 🚧 IN PROGRESS | -      | 40%                      |
+| 0.4   | Configurer Drizzle ORM + Cloudflare D1 | Schéma initial + migrations setup                             | ✅ COMPLETED   | 5      | 5/5                      |
+| 0.5   | Configurer wrangler.toml avec bindings | Config de base OK, bindings D1/R2/KV/DO manquants             | 🚧 IN PROGRESS | -      | 20%                      |
 | 0.6   | Configurer compatibility flags         | `nodejs_compat` + `compatibility_date: 2025-03-01`            | ✅ COMPLETED   | -      | ✅                       |
-| 0.7   | Mettre en place CI/CD GitHub Actions   | Pipeline de tests, build OpenNext, migrations D1, déploiement | 📋 NOT STARTED | -      | 0%                       |
+| 0.7   | Mettre en place CI/CD GitHub Actions   | Pipeline de tests, build OpenNext, migrations D1, déploiement | 🚧 IN PROGRESS | 4      | 70% (Phase 1 docs ready) |
 | 0.8   | Configurer Cloudflare Access           | Protection routes `/admin/*` avec Zero Trust                  | 📋 NOT STARTED | -      | 0%                       |
 | 0.9   | Configurer Cloudflare WAF              | Sécurité de base contre menaces web                           | 📋 NOT STARTED | -      | 0%                       |
 | 0.10  | Base tests & linting                   | ESLint + Vitest (avec tests) + Playwright configurés          | ✅ COMPLETED   | -      | ✅                       |
@@ -103,16 +103,16 @@ cat docs/specs/epics/epic_0/EPIC_TRACKING.md
 
 ### Progress Summary
 
-- **Stories Started**: 6 / 10
-- **Stories Completed**: 5 / 10 ✅
-- **Stories Planned**: 1 / 10 (Story 0.4)
-- **Stories In Progress**: 1 / 10
-- **Stories Not Started**: 3 / 10
-- **Total Phases**: 8 (Story 0.1: 3 phases, Story 0.4: 5 phases)
-- **Phases Completed**: 3 / 8 (Story 0.1: 3/3, Story 0.4: 0/5)
+- **Stories Started**: 8 / 10
+- **Stories Completed**: 6 / 10 ✅
+- **Stories Planned**: 3 / 10 (Stories 0.1, 0.4, 0.7)
+- **Stories In Progress**: 2 / 10 (Story 0.5: 20%, Story 0.7: 70%)
+- **Stories Not Started**: 2 / 10 (Stories 0.8, 0.9)
+- **Total Phases**: 12 (Story 0.1: 3 phases, Story 0.4: 5 phases, Story 0.7: 4 phases)
+- **Phases Completed**: 8 / 12 (Story 0.1: 3/3, Story 0.4: 5/5, Story 0.7: 0/4)
 
-**Epic Completion**: 50% (5 stories complétées / 10 total)
-**Weighted Progress**: ~54% (incluant la story partielle 0.5)
+**Epic Completion**: 60% (6 stories complétées / 10 total)
+**Weighted Progress**: ~69% (incluant stories partielles: 0.5 à 20%, 0.7 à 70%)
 
 ### Timeline
 
@@ -162,12 +162,51 @@ cat docs/specs/epics/epic_0/EPIC_TRACKING.md
 Track epic-level milestones here:
 
 - [x] **Milestone 1**: Project initialized and Next.js working locally - ✅ COMPLETED
-- [ ] **Milestone 2**: All infrastructure configured (D1, R2, bindings) - 🚧 PARTIAL (40%)
-- [ ] **Milestone 3**: Security configured (Access, WAF) - Target: Week 2
-- [ ] **Milestone 4**: CI/CD pipeline functional and first deployment successful - Target: Week 2
-- [ ] **Milestone 5**: All tests passing and Epic 0 complete - Target: Week 2
+- [x] **Milestone 2**: Database infrastructure configured (D1 + Drizzle ORM) - ✅ COMPLETED
+- [ ] **Milestone 3**: All bindings configured (R2, KV, Durable Objects) - 🚧 PARTIAL (Story 0.5)
+- [ ] **Milestone 4**: Security configured (Access, WAF) - Target: Week 2
+- [ ] **Milestone 5**: CI/CD pipeline functional and first deployment successful - Target: Week 2
+- [ ] **Milestone 6**: All tests passing and Epic 0 complete - Target: Week 2
 
 ### Recent Updates
+
+**2025-11-10 (Late Afternoon)**: Story 0.7 (CI/CD) planned via story-phase-planner skill ! 📋
+
+- ✅ Story 0.7 : CI/CD GitHub Actions planifiée en 4 phases (5-6.5 jours estimés)
+  - Phase 1: D1 Migrations Automation (1.5-2d) 🔴 High risk
+  - Phase 2: Deployment Workflow (1.5-2d) 🟡 Medium risk
+  - Phase 3: Environment Management & Staging (1-1.5d) 🟢 Low risk
+  - Phase 4: Documentation & Final Validation (1d) 🟢 Low risk
+- **Current state**: 70% complete (quality pipeline fully functional)
+- **Missing pieces**: Database migrations automation + deployment workflow
+- **Total Phases (Epic)**: 12 (Story 0.1: 3, Story 0.4: 5, Story 0.7: 4)
+- Documentation complète générée: story spec + PHASES_PLAN.md (~1600 lines)
+- Prêt pour implémentation des 4 phases restantes (compléter les 30% manquants)
+
+**2025-11-10 (Afternoon)**: Comprehensive audit of remaining stories completed 🔍
+
+- 📊 **Progress audit results**:
+  - Story 0.5 (wrangler.toml bindings): **20%** (only D1 configured, need R2/KV/DO/WORKER_SELF_REFERENCE)
+  - Story 0.7 (CI/CD): **70%** 🎯 (excellent quality pipeline already in place! Missing D1 migrations + deployment)
+  - Stories 0.8, 0.9: Confirmed **0%** (not started)
+- 🎉 **Surprise discovery**: Story 0.7 has comprehensive GitHub Actions workflow with lint, tests, E2E, mutation testing, and build!
+- **Updated Epic Metrics**:
+  - Stories in progress: 2/10 (0.5 and 0.7)
+  - Stories not started: 2/10 (0.8 and 0.9)
+  - **Weighted Progress**: ~69%
+- 📝 **Missing**: Most stories (0.2, 0.3, 0.5-0.10) don't have story specs created via `/plan-story`
+
+**2025-11-10 (Morning)**: Story 0.4 completed! 🎉
+
+- ✅ **Story 0.4 (Drizzle ORM + Cloudflare D1) COMPLETED**: All 5 phases implemented successfully
+  - Phase 1: Drizzle Config & D1 Setup ✅
+  - Phase 2: Core Schema - Articles + Translations ✅
+  - Phase 3: Taxonomy Schema - Categories, Tags ✅
+  - Phase 4: Validation Chain - drizzle-zod ✅
+  - Phase 5: Access Layer + Integration Tests ✅
+- **Database infrastructure complete**: Full schema, migrations, validation, and access layer operational
+- **Epic Completion**: **60%** (6 stories complètes / 10 total)
+- Ready to focus on remaining infrastructure (Story 0.5) and security/CI-CD stories
 
 **2025-11-08 (Late Evening)**: Phase 4 documentation generated for Story 0.4! 📚
 
@@ -242,7 +281,7 @@ Track epic-level milestones here:
 - Story 0.4: `docs/specs/epics/epic_0/story_0_4/story_0.4.md` (created via /plan-story)
 - Story 0.5: `docs/specs/epics/epic_0/story_0_5/story_0.5.md` (created via /plan-story)
 - Story 0.6: `docs/specs/epics/epic_0/story_0_6/story_0.6.md` (created via /plan-story)
-- Story 0.7: `docs/specs/epics/epic_0/story_0_7/story_0.7.md` (created via /plan-story)
+- Story 0.7: `docs/specs/epics/epic_0/story_0_7/story_0.7.md` ✅ CREATED (via /plan-story)
 - Story 0.8: `docs/specs/epics/epic_0/story_0_8/story_0.8.md` (created via /plan-story)
 - Story 0.9: `docs/specs/epics/epic_0/story_0_9/story_0.9.md` (created via /plan-story)
 - Story 0.10: `docs/specs/epics/epic_0/story_0_10/story_0.10.md` (created via /plan-story)
@@ -251,6 +290,7 @@ Track epic-level milestones here:
 
 - Story 0.1: `docs/specs/epics/epic_0/story_0_1/implementation/PHASES_PLAN.md` ✅ PLANNED (3 phases)
 - Story 0.4: `docs/specs/epics/epic_0/story_0_4/implementation/PHASES_PLAN.md` ✅ PLANNED (5 phases)
+- Story 0.7: `docs/specs/epics/epic_0/story_0_7/implementation/PHASES_PLAN.md` ✅ PLANNED (4 phases)
 - Links for other stories will be added as they are planned
 
 ### Related Documentation
@@ -275,9 +315,10 @@ Track epic-level milestones here:
 
 - [x] First story planned (/plan-story) - Story 0.1 with 3 phases
 - [x] First story completed - Story 0.1 (100%)
-- [x] Additional stories completed - Stories 0.2, 0.6 (3/10 total)
-- [x] Progress metrics updated - 30% epic completion
-- [x] Stories in progress identified - 0.3 (60%), 0.5 (40%), 0.10 (33%)
+- [x] Additional stories completed - Stories 0.2, 0.3, 0.4, 0.6, 0.10 (6/10 total)
+- [x] Progress metrics updated - 60% epic completion, ~69% weighted
+- [x] Stories in progress identified - Story 0.5 (20%), Story 0.7 (70%)
+- [x] Comprehensive audit conducted - Real progress vs estimated progress verified
 
 ### Epic Completion
 
@@ -325,5 +366,5 @@ Track epic-level milestones here:
 ---
 
 **Epic Initialized**: 2025-11-06
-**Last Updated**: 2025-11-06
+**Last Updated**: 2025-11-10
 **Created by**: Claude Code (epic-initializer skill)
