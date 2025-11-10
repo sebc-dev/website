@@ -177,7 +177,7 @@ jobs:
       # ========================================================================
       # Explicitly run OpenNext Cloudflare adapter to generate .open-next/
       - name: Generate OpenNext output
-        run: npx @opennextjs/cloudflare
+        run: npx @opennextjs/cloudflare build
 
       # ========================================================================
       # Step 6: Deploy to Cloudflare Workers
