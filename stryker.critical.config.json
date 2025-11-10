@@ -11,8 +11,7 @@
     "src/lib/server/**/*.ts",
     "!src/lib/server/**/*.test.ts",
     "!src/lib/server/**/*.spec.ts",
-    "!src/lib/server/db/schema.ts",
-    "app/admin/actions.ts"
+    "!src/lib/server/db/schema.ts"
   ],
   "mutator": {
     "excludedMutations": ["StringLiteral", "ObjectLiteral"]

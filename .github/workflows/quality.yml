@@ -39,6 +39,7 @@ jobs:
         id: filter
         run: |
           # On pull_request, vérifier les fichiers changés
+          # Patterns critiques: app/admin/ (à venir), src/lib/server/ (actuel)
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             CRITICAL_CHANGED=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep -E '^(app/admin/|src/lib/server/)' || echo "")
             if [ -n "$CRITICAL_CHANGED" ]; then

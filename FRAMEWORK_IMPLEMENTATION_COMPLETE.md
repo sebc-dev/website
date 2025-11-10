@@ -225,15 +225,15 @@ This architecture provides:
 
 ### For Understanding
 
-4. **`.claude/skills/doc-validation-framework/SKILL.md`** - Expert methodology
-5. **`docs/frameworks/GENERIC_VALIDATION_FRAMEWORK.md`** - Complete framework
-6. **`docs/frameworks/AGENT_IMPLEMENTATION_GUIDE.md`** - Technical implementation
+1. **`.claude/skills/doc-validation-framework/SKILL.md`** - Expert methodology
+2. **`docs/frameworks/GENERIC_VALIDATION_FRAMEWORK.md`** - Complete framework
+3. **`docs/frameworks/AGENT_IMPLEMENTATION_GUIDE.md`** - Technical implementation
 
 ### For Learning by Example
 
-7. **`docs/frameworks/EXAMPLE_APPLICATION.md`** - Real-world validation example
-8. **`docs/frameworks/QUICK_START.md`** - Quick reference guide
-9. **`docs/frameworks/IMPLEMENTATION_PLAN.md`** - Detailed plan
+1. **`docs/frameworks/EXAMPLE_APPLICATION.md`** - Real-world validation example
+2. **`docs/frameworks/QUICK_START.md`** - Quick reference guide
+3. **`docs/frameworks/IMPLEMENTATION_PLAN.md`** - Detailed plan
 
 ---
 
