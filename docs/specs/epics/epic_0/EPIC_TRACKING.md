@@ -44,7 +44,7 @@ This epic contains **10 stories** as defined in the PRD:
 | 0.4   | Configurer Drizzle ORM + Cloudflare D1 | Schéma initial + migrations setup                             | ✅ COMPLETED   | 5      | 5/5                      |
 | 0.5   | Configurer wrangler.toml avec bindings | Config de base OK, bindings D1/R2/KV/DO manquants             | 🚧 IN PROGRESS | -      | 20%                      |
 | 0.6   | Configurer compatibility flags         | `nodejs_compat` + `compatibility_date: 2025-03-01`            | ✅ COMPLETED   | -      | ✅                       |
-| 0.7   | Mettre en place CI/CD GitHub Actions   | Pipeline de tests, build OpenNext, migrations D1, déploiement | 🚧 IN PROGRESS | 4      | 70% (Phase 1 docs ready) |
+| 0.7   | Mettre en place CI/CD GitHub Actions   | Pipeline de tests, build OpenNext, migrations D1, déploiement | 🚧 IN PROGRESS | 4      | 2/4 (Phase 1 ✅, Phase 2 ✅) |
 | 0.8   | Configurer Cloudflare Access           | Protection routes `/admin/*` avec Zero Trust                  | 📋 NOT STARTED | -      | 0%                       |
 | 0.9   | Configurer Cloudflare WAF              | Sécurité de base contre menaces web                           | 📋 NOT STARTED | -      | 0%                       |
 | 0.10  | Base tests & linting                   | ESLint + Vitest (avec tests) + Playwright configurés          | ✅ COMPLETED   | -      | ✅                       |
@@ -106,13 +106,13 @@ cat docs/specs/epics/epic_0/EPIC_TRACKING.md
 - **Stories Started**: 8 / 10
 - **Stories Completed**: 6 / 10 ✅
 - **Stories Planned**: 3 / 10 (Stories 0.1, 0.4, 0.7)
-- **Stories In Progress**: 2 / 10 (Story 0.5: 20%, Story 0.7: 70%)
+- **Stories In Progress**: 2 / 10 (Story 0.5: 20%, Story 0.7: 50%)
 - **Stories Not Started**: 2 / 10 (Stories 0.8, 0.9)
 - **Total Phases**: 12 (Story 0.1: 3 phases, Story 0.4: 5 phases, Story 0.7: 4 phases)
-- **Phases Completed**: 8 / 12 (Story 0.1: 3/3, Story 0.4: 5/5, Story 0.7: 0/4)
+- **Phases Completed**: 10 / 12 (Story 0.1: 3/3, Story 0.4: 5/5, Story 0.7: 2/4)
 
 **Epic Completion**: 60% (6 stories complétées / 10 total)
-**Weighted Progress**: ~69% (incluant stories partielles: 0.5 à 20%, 0.7 à 70%)
+**Weighted Progress**: ~67% (incluant stories partielles: 0.5 à 20%, 0.7 à 50%)
 
 ### Timeline
 
@@ -169,6 +169,41 @@ Track epic-level milestones here:
 - [ ] **Milestone 6**: All tests passing and Epic 0 complete - Target: Week 2
 
 ### Recent Updates
+
+**2025-11-10 (Night)**: Phase 2 IMPLEMENTATION COMPLETED for Story 0.7! 🚀
+
+- ✅ **Phase 2 (Deployment Workflow) COMPLETED**: All 5 atomic commits deployed
+  - Commit 1/5 (`6adb5d6`): Deployment workflow structure
+  - Commit 2/5 (`66f6494`): Workflow triggers and dependencies
+  - Commit 3/5 (`58ac13b`): Cloudflare Workers deployment job
+  - Commit 4/5 (`20ec37a`): Post-deployment verification
+  - Commit 5/5 (`9cfbf00`): Deployment logging and artifacts
+- **Total implementation**: 588 lines of GitHub Actions workflow
+- **Features delivered**:
+  - ✅ Automated deployment to Cloudflare Workers
+  - ✅ Manual and automatic triggers (workflow_dispatch + workflow_run)
+  - ✅ Health checks with retry logic (3 attempts, 10s delay)
+  - ✅ Deployment verification and rollback documentation
+  - ✅ GitHub environment tracking and artifacts (14-day retention)
+- **Story 0.7 Progress**: 2/4 phases complete (50%)
+- **Epic Progress**: 10/12 phases complete (83%)
+- Ready for Phase 3: Environment Management & Staging! 🎯
+
+**2025-11-10 (Evening)**: Phase 2 documentation generated for Story 0.7! 📚
+
+- ✅ **Phase 2 (Deployment Workflow) documentation complete**: 7 files, ~3,325 lines generated
+  - INDEX.md: Navigation hub and deployment overview (193 lines)
+  - IMPLEMENTATION_PLAN.md: 5 atomic commits strategy (459 lines)
+  - COMMIT_CHECKLIST.md: Per-commit detailed checklist (443 lines)
+  - ENVIRONMENT_SETUP.md: GitHub secrets & Cloudflare setup (502 lines)
+  - guides/REVIEW.md: Security-focused code review guide (542 lines)
+  - guides/TESTING.md: Workflow testing strategy (663 lines)
+  - validation/VALIDATION_CHECKLIST.md: Final validation (523 lines)
+- **Atomic commits**: 5 commits (Structure → Triggers → Deploy → Verify → Logging)
+- **Estimated time**: 3.5-5h implementation + 2-3h review
+- **Focus**: Secure deployment to Cloudflare Workers with health checks
+- **Phase 1 COMPLETED**: D1 Migrations automation implemented ✅
+- Ready for Phase 2 implementation!
 
 **2025-11-10 (Late Afternoon)**: Story 0.7 (CI/CD) planned via story-phase-planner skill ! 📋
 
