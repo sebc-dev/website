@@ -146,16 +146,17 @@ test.describe('HomePage - Visual Elements', () => {
   test('loading indicators are visible', async ({ page }) => {
     await page.goto('/');
 
-    // Verify loading dots container exists
+    // Verify loading dots container exists - find by gap-3 flex container with h-3 w-3 dots
     const dotsContainer = page.locator(
-      'div.mb-8.flex.items-center.justify-center',
+      'div[class*="gap-3"][class*="flex"][class*="items-center"][class*="justify-center"]',
     );
     await expect(dotsContainer).toBeVisible();
 
-    // Verify at least 3 pulsing dots exist (they have animate-pulse class)
-    const pulsingDots = page.locator('div[class*="animate-pulse"]');
+    // Verify exactly 3 pulsing dots exist - they have h-3 w-3 and animate-pulse classes
+    const pulsingDots = dotsContainer
+      .locator('div[class*="h-3"][class*="w-3"][class*="rounded-full"][class*="animate-pulse"]');
     const pulsingCount = await pulsingDots.count();
-    expect(pulsingCount).toBeGreaterThanOrEqual(3);
+    expect(pulsingCount).toBe(3);
   });
 
   /**
@@ -224,12 +225,10 @@ test.describe('HomePage - Animations', () => {
   test('badge has fade-in animation', async ({ page }) => {
     await page.goto('/');
 
-    // Verify animation class - find the badge by its specific styling
-    const badge = page
-      .locator(
-        'div[class*="inline-flex"][class*="gap-2"][class*="rounded-full"][class*="border"]',
-      )
-      .first();
+    // Verify animation class - find the badge by its specific styling and animation
+    const badge = page.locator(
+      'div[class*="inline-flex"][class*="gap-2"][class*="rounded-full"][class*="border"][class*="animate"]',
+    );
     const classes = await badge.getAttribute('class');
     expect(classes).toContain('animate');
   });
@@ -241,12 +240,10 @@ test.describe('HomePage - Animations', () => {
   test('elements have staggered animation timing', async ({ page }) => {
     await page.goto('/');
 
-    // Verify badge (0.6s animation)
-    const badge = page
-      .locator(
-        'div[class*="inline-flex"][class*="gap-2"][class*="rounded-full"][class*="border"]',
-      )
-      .first();
+    // Verify badge (0.6s animation) - must include animation timing in selector
+    const badge = page.locator(
+      'div[class*="inline-flex"][class*="gap-2"][class*="rounded-full"][class*="border"][class*="0.6s"]',
+    );
     const badgeClass = await badge.getAttribute('class');
     expect(badgeClass).toContain('0.6s');
 
@@ -295,9 +292,9 @@ test.describe('HomePage - Animations', () => {
       return window.getComputedStyle(el).animationDuration;
     });
 
-    // Animation duration should be very small (0.01ms or scientific notation like 1e-05s)
+    // Animation duration should be very small (0.01ms or scientific notation like 1e-05ms)
     const isReduced =
-      /^(0\.01ms|1e-05s)$/.test(computedStyle) ||
+      /^(0\.01ms|1e-05ms)$/.test(computedStyle) ||
       computedStyle === '0.01ms' ||
       computedStyle.includes('1e-05');
     expect(isReduced).toBe(true);
@@ -368,10 +365,12 @@ test.describe('HomePage - Responsive Design', () => {
   test('content is centered on all viewports', async ({ page }) => {
     await page.goto('/');
 
-    // Verify main container exists and is centered (specific selector for outer container)
-    const mainContainer = page.locator(
-      'div.bg-background.relative.flex.min-h-screen.items-center.justify-center.overflow-hidden',
-    );
+    // Verify main container exists and is centered (specific selector for outer container with exact class list)
+    const mainContainer = page
+      .locator(
+        'div[class*="bg-background"][class*="relative"][class*="flex"][class*="min-h-screen"][class*="items-center"][class*="justify-center"]',
+      )
+      .first();
     await expect(mainContainer).toBeVisible();
   });
 
