@@ -17,6 +17,45 @@
 
 name: Deploy to Cloudflare Workers
 
+# ============================================================================
+# Triggers Configuration (Commit 2)
+# ============================================================================
+#
+# This workflow supports two trigger mechanisms:
+#
+# 1. Manual Deployment (workflow_dispatch)
+#    - Allows developers to trigger deployments on-demand
+#    - Optional inputs for skip_verification and dry_run
+#    - Useful for emergency deployments or testing
+#
+# 2. Automatic Deployment (workflow_run)
+#    - Triggers after quality checks pass successfully
+#    - Limited to main/develop branches to avoid deploying feature branches
+#    - Ensures code quality before production deployment
+#    - Dependency: quality workflow must complete successfully
+#
+on:
+  workflow_dispatch:
+    description: "Manually trigger deployment to Cloudflare Workers"
+    inputs:
+      skip_verification:
+        description: "Skip health check verification after deployment (use with caution)"
+        required: false
+        type: boolean
+        default: false
+      dry_run:
+        description: "Run deployment steps without actually deploying (for testing)"
+        required: false
+        type: boolean
+        default: false
+
+  workflow_run:
+    workflows: ["Quality Checks"]
+    types: [completed]
+    branches:
+      - main
+      - develop
+
 permissions:
   contents: read
 
@@ -28,12 +67,71 @@ env:
   DEPLOYMENT_TIMEOUT: 15m
 
 jobs:
-  # Placeholder for deployment job
+  # ============================================================================
+  # Check workflow trigger status (Commit 2)
+  # ============================================================================
+  #
+  # For workflow_run triggers: Only proceed if quality workflow succeeded
+  # For manual triggers: Always proceed
+  #
+  check-trigger:
+    name: Validate Workflow Trigger
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+    outputs:
+      should-deploy: ${{ steps.trigger-check.outputs.should-deploy }}
+      trigger-type: ${{ steps.trigger-check.outputs.trigger-type }}
+
+    steps:
+      - name: Check trigger type
+        id: trigger-check
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "trigger-type=manual" >> $GITHUB_OUTPUT
+            echo "should-deploy=true" >> $GITHUB_OUTPUT
+            echo "Trigger Type: Manual Deployment (workflow_dispatch)"
+            echo "Skip Verification: ${{ github.event.inputs.skip_verification }}"
+            echo "Dry Run: ${{ github.event.inputs.dry_run }}"
+          elif [[ "${{ github.event_name }}" == "workflow_run" ]]; then
+            if [[ "${{ github.event.workflow_run.conclusion }}" == "success" ]]; then
+              echo "trigger-type=automatic" >> $GITHUB_OUTPUT
+              echo "should-deploy=true" >> $GITHUB_OUTPUT
+              echo "Trigger Type: Automatic Deployment (workflow_run)"
+              echo "Quality workflow completed successfully on branch: ${{ github.event.workflow_run.head_branch }}"
+            else
+              echo "trigger-type=automatic" >> $GITHUB_OUTPUT
+              echo "should-deploy=false" >> $GITHUB_OUTPUT
+              echo "Quality workflow failed. Deployment will not proceed."
+            fi
+          else
+            echo "trigger-type=unknown" >> $GITHUB_OUTPUT
+            echo "should-deploy=false" >> $GITHUB_OUTPUT
+          fi
+
+  # ============================================================================
+  # Deployment Job (Commit 2: Triggers configured, Commit 3: Add deployment)
+  # ============================================================================
+  #
+  # This job will be populated with deployment steps in Commit 3
+  # For now, it documents the trigger configuration and dependencies
+  #
   deploy:
     name: Deploy to Cloudflare Workers
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    needs: check-trigger
+    if: needs.check-trigger.outputs.should-deploy == 'true'
 
     steps:
-      - name: Placeholder
-        run: echo "Deployment workflow structure initialized. Triggers and deployment steps will be added in subsequent commits."
+      - name: Log deployment trigger
+        run: |
+          echo "=== Deployment Triggered ==="
+          echo "Trigger Type: ${{ needs.check-trigger.outputs.trigger-type }}"
+          echo "Branch: ${{ github.ref }}"
+          echo "Commit: ${{ github.sha }}"
+          echo "Actor: ${{ github.actor }}"
+          echo ""
+          echo "Deployment steps will be configured in Commit 3."
+          echo "For now, trigger configuration is complete and validated."
