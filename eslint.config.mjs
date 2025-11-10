@@ -25,6 +25,8 @@ export default [
     ignores: [
       '.next/**',
       '.open-next/**',
+      '.stryker-tmp/**',
+      'coverage/**',
       'out/**',
       'build/**',
       'node_modules/**',

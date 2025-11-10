@@ -2,121 +2,147 @@
 
 > Système automatisé de vérification de la qualité du code pour sebc.dev
 >
-> **Version:** 1.0.0 | **Date:** 2025-10-29
+> **Version:** 2.0.0 | **Date:** 2025-11-10
 
-## 📂 Structure du Dossier
+## 📂 Structure du Système
+
+Le système de qualité est intégré dans `.claude/` :
 
 ```
-quality-system/
-├── README.md                    # Ce fichier - Vue d'ensemble
+.claude/
+├── quality-system/              # 🎯 Système de qualité
+│   ├── README.md               # Ce fichier - Vue d'ensemble
+│   ├── INTEGRATION_STATUS.md   # Statut d'intégration
+│   ├── STACK_UPDATE.md         # Documentation des changements v2.0
+│   │
+│   ├── hooks/                  # 🎯 Scripts de hooks
+│   │   └── quality-check.sh   # Hook PostToolUse (prêt à configurer)
+│   │
+│   └── reports/                # 📊 Rapports générés (gitignored)
+│       ├── .gitignore
+│       └── quality-*.{json,md}
 │
-├── docs/                        # 📚 Documentation complète
-│   ├── INDEX.md                # Navigation rapide
-│   ├── SUMMARY.md              # Résumé (5-10 min)
-│   ├── VISUAL-GUIDE.md         # Diagrammes et flux
-│   ├── README.md               # Guide technique complet
-│   └── INSTALLATION-SUCCESS.txt # Message d'installation
-│
-├── hooks/                       # 🎯 Scripts de hooks
-│   └── quality-check.sh        # Hook PostToolUse automatique
-│
-├── skills/                      # 📦 Skills Claude
-│   └── quality-report/         # Skill de génération de rapports
-│       ├── SKILL.md            # Définition du skill
-│       ├── scripts/
-│       │   └── generate-quality-report.sh
-│       └── resources/
-│           └── report-template.md
-│
-├── reports/                     # 📊 Rapports générés (gitignored)
-│   ├── .gitignore
-│   └── quality-{timestamp}.{json,md}
-│
-└── scripts/                     # 🔧 Scripts utilitaires
-    └── test-installation.sh    # Validation de l'installation
+└── skills/                      # 📦 Skills Claude
+    └── quality-report/         # ✅ Skill intégré
+        ├── SKILL.md            # Définition du skill
+        ├── scripts/
+        │   └── generate-quality-report.sh
+        └── resources/
+            └── report-template.md
 ```
 
 ## 🚀 Démarrage Rapide
 
-### 1. Vérifier l'Installation
+### Utilisation Manuelle (Skill)
 
-```bash
-.claude/quality-system/scripts/test-installation.sh
-```
-
-### 2. Utilisation Automatique (Hook)
-
-**Aucune action nécessaire !** Le hook s'exécute automatiquement après chaque modification de fichier TypeScript/JavaScript.
-
-### 3. Utilisation Manuelle (Skill)
-
-Demandez à Claude :
+Demandez simplement à Claude :
 
 ```
 "Génère-moi un rapport de qualité du code"
 ```
 
+Les rapports sont générés dans `.claude/quality-system/reports/`
+
+### Utilisation Automatique (Hook - Optionnel)
+
+Pour activer les vérifications automatiques après chaque modification de fichier, consultez [INTEGRATION_STATUS.md](INTEGRATION_STATUS.md#configuration-requise-optionnelle).
+
 ## 📚 Documentation
 
-| Fichier                                        | Description         | Public       |
-| ---------------------------------------------- | ------------------- | ------------ |
-| [`docs/INDEX.md`](docs/INDEX.md)               | Navigation et index | Tous         |
-| [`docs/SUMMARY.md`](docs/SUMMARY.md)           | Résumé rapide       | Utilisateurs |
-| [`docs/VISUAL-GUIDE.md`](docs/VISUAL-GUIDE.md) | Diagrammes visuels  | Tous         |
-| [`docs/README.md`](docs/README.md)             | Guide complet       | Experts      |
+| Fichier                                        | Description                                 |
+| ---------------------------------------------- | ------------------------------------------- |
+| [README.md](README.md)                         | Ce fichier - Vue d'ensemble                 |
+| [INTEGRATION_STATUS.md](INTEGRATION_STATUS.md) | Statut d'intégration et configuration       |
+| [STACK_UPDATE.md](STACK_UPDATE.md)             | Documentation complète des changements v2.0 |
 
 ## 🔧 Composants
-
-### Hook Automatique
-
-- **Fichier:** `hooks/quality-check.sh`
-- **Déclenchement:** Après Write/Edit de fichiers TS/JS
-- **Configuration:** `../.claude/settings.json`
 
 ### Skill Manuel
 
 - **Nom:** `quality-report`
-- **Localisation:** `skills/quality-report/`
+- **Localisation:** `.claude/skills/quality-report/`
 - **Invocation:** Sur demande
+- **Statut:** ✅ Intégré et configuré dans `settings.local.json`
+
+### Hook Automatique (Optionnel)
+
+- **Fichier:** `hooks/quality-check.sh`
+- **Déclenchement:** Après Write/Edit de fichiers TS/JS
+- **Configuration:** `.claude/settings.local.json`
+- **Statut:** ✅ Prêt (non configuré par défaut)
 
 ## ✅ Vérifications Effectuées
 
-1. ✅ **TypeScript Type Check** (critique)
-2. ✅ **Biome Linting** (non-critique)
-3. ✅ **Biome Formatting** (automatique)
-4. ✅ **Tests Unitaires** (Vitest)
-5. ✅ **Couverture de Code** (avec seuils)
+### 🔍 Static Analysis
 
-## 🎓 Parcours Recommandés
+1. ✅ **TypeScript Type Check** (`tsc --noEmit`) - critique
+2. ✅ **ESLint** (`pnpm lint`) - non-critique
+3. ✅ **Prettier Format Check** (`pnpm format:check`) - non-critique
 
-### Débutant (15 min)
+### 🏗️ Architecture
 
-1. Lire [`docs/INSTALLATION-SUCCESS.txt`](docs/INSTALLATION-SUCCESS.txt)
-2. Parcourir [`docs/SUMMARY.md`](docs/SUMMARY.md)
-3. Tester en modifiant un fichier
+4. ✅ **Dependency Cruiser** (`pnpm arch:validate`) - validation d'architecture
 
-### Utilisateur (30 min)
+### 🧪 Tests
 
-1. Lire [`docs/SUMMARY.md`](docs/SUMMARY.md)
-2. Consulter [`docs/VISUAL-GUIDE.md`](docs/VISUAL-GUIDE.md)
-3. Tester les deux modes (auto et manuel)
+5. ✅ **Vitest Unit Tests** (`pnpm test`) - non-critique
+6. ✅ **Code Coverage** (`pnpm test:coverage`) - avec seuils
 
-### Expert (1h)
+### 🎭 E2E (Optionnel)
 
-1. Lire [`docs/README.md`](docs/README.md)
-2. Étudier les scripts dans `hooks/` et `skills/`
-3. Personnaliser selon vos besoins
+7. ⏸️ **Playwright E2E Tests** (`pnpm test:e2e`) - désactivé par défaut (trop lourd)
 
-## 🔗 Liens Rapides
+## 🔄 Stack Technique
 
-- **Configuration des hooks:** `../.claude/settings.json`
-- **Rapports générés:** `reports/`
-- **Script de test:** `scripts/test-installation.sh`
+Le système utilise la stack réelle du projet :
+
+- **Framework:** Next.js 15
+- **Runtime:** Cloudflare Workers
+- **Language:** TypeScript 5
+- **Linter:** ESLint
+- **Formatter:** Prettier
+- **Tests:** Vitest + Playwright
+- **Architecture:** Dependency Cruiser
+
+Voir [STACK_UPDATE.md](STACK_UPDATE.md) pour plus de détails.
+
+## 📊 Exemple de Rapport
+
+Les rapports générés incluent :
+
+- **Score global** avec badge (🟢 Excellent, 🟡 Bon, 🟠 À améliorer, 🔴 Critique)
+- **Métriques détaillées** (passed, failed, warnings)
+- **Détails par catégorie** (Static Analysis, Architecture, Tests)
+- **Recommandations automatiques** basées sur les résultats
+- **Commandes utiles** pour corriger les problèmes
+
+## 🎯 Configuration
+
+### Variables d'Environnement
+
+Pour personnaliser le comportement du rapport :
+
+```bash
+# Format du rapport (json, markdown, both)
+export QUALITY_REPORT_FORMAT="both"
+
+# Niveau de détail
+export QUALITY_REPORT_DETAILED="true"
+
+# Inclure les tests E2E (lent)
+export QUALITY_REPORT_E2E="false"
+```
+
+### Hook Automatique
+
+Pour activer le hook, voir [INTEGRATION_STATUS.md](INTEGRATION_STATUS.md) pour la configuration complète.
 
 ## 📞 Support
 
-Pour toute question, consultez d'abord [`docs/INDEX.md`](docs/INDEX.md) qui vous guidera vers la bonne documentation.
+- **Statut d'intégration:** [INTEGRATION_STATUS.md](INTEGRATION_STATUS.md)
+- **Détails des changements:** [STACK_UPDATE.md](STACK_UPDATE.md)
+- **Rapports générés:** `reports/`
 
 ---
 
-**Installation validée:** ✅ 12/12 tests passés
+**Version:** 2.0.0 | **Statut:** ✅ Complètement intégré et mis à jour

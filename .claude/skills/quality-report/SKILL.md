@@ -22,8 +22,8 @@ Ce skill exécute une suite complète de vérifications de qualité du code et g
    - Demander le niveau de détail souhaité
 
 2. **Exécuter le script de rapport** :
-   - Utiliser le script `scripts/generate-quality-report.sh` qui orchestrera toutes les vérifications
-   - Le script génère automatiquement un fichier JSON avec les résultats détaillés
+   - Utiliser le script `.claude/skills/quality-report/scripts/generate-quality-report.sh` qui orchestrera toutes les vérifications
+   - Le script génère automatiquement un fichier JSON avec les résultats détaillés dans `.claude/quality-system/reports/`
 
 3. **Analyser les résultats** :
    - Lire le fichier JSON généré
@@ -31,7 +31,7 @@ Ce skill exécute une suite complète de vérifications de qualité du code et g
    - Calculer un score de qualité global
 
 4. **Présenter le rapport** :
-   - Utiliser le template `resources/report-template.md` pour formater la sortie
+   - Utiliser le template `.claude/skills/quality-report/resources/report-template.md` pour formater la sortie
    - Inclure des recommandations basées sur les erreurs détectées
    - Proposer des actions correctives si nécessaire
 
@@ -49,8 +49,8 @@ Ce skill exécute une suite complète de vérifications de qualité du code et g
 
 **Actions du skill :**
 
-1. Exécuter `scripts/generate-quality-report.sh`
-2. Lire le JSON de résultats
+1. Exécuter `.claude/skills/quality-report/scripts/generate-quality-report.sh`
+2. Lire le JSON de résultats dans `.claude/quality-system/reports/`
 3. Formater selon le template Markdown
 4. Présenter le rapport avec recommandations
 
@@ -141,7 +141,7 @@ Si une vérification échoue de manière critique (typecheck failed, tests faile
 
 ## Notes importantes
 
-- Ce skill utilise les mêmes vérifications que le hook PostToolUse automatique
+- Ce skill utilise les mêmes vérifications que le hook PostToolUse automatique (`.claude/quality-system/hooks/quality-check.sh`)
 - Il peut être invoqué manuellement à tout moment
-- Les rapports sont sauvegardés dans `.claude/reports/quality-{timestamp}.md`
+- Les rapports sont sauvegardés dans `.claude/quality-system/reports/quality-{timestamp}.md`
 - Le script est non-bloquant : il rapporte les erreurs mais ne stoppe pas l'exécution
