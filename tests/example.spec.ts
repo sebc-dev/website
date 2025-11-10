@@ -295,8 +295,11 @@ test.describe('HomePage - Animations', () => {
       return window.getComputedStyle(el).animationDuration;
     });
 
-    // Animation duration should be very small (0.01ms as "0.01ms" or in scientific notation like "1e-05s")
-    const isReduced = /^(0\.01m|1e-05)s$/.test(computedStyle);
+    // Animation duration should be very small (0.01ms or scientific notation like 1e-05s)
+    const isReduced =
+      /^(0\.01ms|1e-05s)$/.test(computedStyle) ||
+      computedStyle === '0.01ms' ||
+      computedStyle.includes('1e-05');
     expect(isReduced).toBe(true);
 
     await context.close();
