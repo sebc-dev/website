@@ -147,14 +147,15 @@ test.describe('HomePage - Visual Elements', () => {
     await page.goto('/');
 
     // Verify loading dots container exists - find by mb-8 class to distinguish from info card
-    const dotsContainer = page.locator(
-      'div[class*="mb-8"][class*="flex"][class*="animate-"]',
-    ).nth(2); // Third animated element (after badge and title)
+    const dotsContainer = page
+      .locator('div[class*="mb-8"][class*="flex"][class*="animate-"]')
+      .nth(2); // Third animated element (after badge and title)
     await expect(dotsContainer).toBeVisible();
 
     // Verify exactly 3 pulsing dots exist - they have h-3 w-3 and animate-pulse classes
-    const pulsingDots = dotsContainer
-      .locator('div[class*="h-3"][class*="w-3"][class*="rounded-full"][class*="animate-pulse"]');
+    const pulsingDots = dotsContainer.locator(
+      'div[class*="h-3"][class*="w-3"][class*="rounded-full"][class*="animate-pulse"]',
+    );
     const pulsingCount = await pulsingDots.count();
     expect(pulsingCount).toBe(3);
   });
