@@ -426,7 +426,9 @@ jobs:
           mkdir -p "${LOGS_DIR}"
 
           DEPLOYMENT_TIMESTAMP="${{ steps.deployment-summary.outputs.deployment-timestamp }}"
-          LOG_FILENAME="deployment-${DEPLOYMENT_TIMESTAMP}.log"
+          # Replace colons with dashes for artifact-compatible filename
+          LOG_TIMESTAMP=$(echo "${DEPLOYMENT_TIMESTAMP}" | tr ':' '-')
+          LOG_FILENAME="deployment-${LOG_TIMESTAMP}.log"
           LOG_FILE="${LOGS_DIR}/${LOG_FILENAME}"
 
           # Create comprehensive deployment log file
