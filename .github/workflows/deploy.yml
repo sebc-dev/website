@@ -111,11 +111,18 @@ jobs:
           fi
 
   # ============================================================================
-  # Deployment Job (Commit 2: Triggers configured, Commit 3: Add deployment)
+  # Deployment Job (Commit 3: Cloudflare Workers Deployment)
   # ============================================================================
   #
-  # This job will be populated with deployment steps in Commit 3
-  # For now, it documents the trigger configuration and dependencies
+  # This job handles the complete deployment process:
+  # 1. Checkout code
+  # 2. Setup environment (pnpm, Node.js)
+  # 3. Install dependencies with locked versions
+  # 4. Build the application (OpenNext adapter for Cloudflare Workers)
+  # 5. Deploy to Cloudflare Workers using wrangler-action
+  #
+  # Security: Uses GitHub secrets for API token and account ID
+  # Timeout: 10 minutes to prevent hanging deployments
   #
   deploy:
     name: Deploy to Cloudflare Workers
@@ -125,13 +132,61 @@ jobs:
     if: needs.check-trigger.outputs.should-deploy == 'true'
 
     steps:
-      - name: Log deployment trigger
-        run: |
-          echo "=== Deployment Triggered ==="
-          echo "Trigger Type: ${{ needs.check-trigger.outputs.trigger-type }}"
-          echo "Branch: ${{ github.ref }}"
-          echo "Commit: ${{ github.sha }}"
-          echo "Actor: ${{ github.actor }}"
-          echo ""
-          echo "Deployment steps will be configured in Commit 3."
-          echo "For now, trigger configuration is complete and validated."
+      # ========================================================================
+      # Step 1: Checkout Code
+      # ========================================================================
+      # Clone the repository at the commit being deployed
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ========================================================================
+      # Step 2: Setup pnpm
+      # ========================================================================
+      # Configure pnpm package manager
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: "9.0.0"
+
+      # ========================================================================
+      # Step 3: Setup Node.js
+      # ========================================================================
+      # Install Node.js and configure pnpm cache
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          cache: "pnpm"
+
+      # ========================================================================
+      # Step 4: Install Dependencies
+      # ========================================================================
+      # Install dependencies with frozen lockfile to ensure reproducible builds
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # ========================================================================
+      # Step 5: Build Application
+      # ========================================================================
+      # Build Next.js application with OpenNext adapter for Cloudflare Workers
+      # Output: .open-next/ directory containing the worker and assets
+      - name: Build application
+        run: pnpm build
+
+      # ========================================================================
+      # Step 6: Deploy to Cloudflare Workers
+      # ========================================================================
+      # Deploy the built application to Cloudflare Workers using wrangler-action
+      # Secrets are passed securely and not exposed in logs
+      #
+      # Action: cloudflare/wrangler-action@v3 (official Cloudflare action)
+      # API Token: Required secret (CLOUDFLARE_API_TOKEN) with Workers Deploy permission
+      # Account ID: Required secret (CLOUDFLARE_ACCOUNT_ID)
+      # Command: wrangler deploy (deploys the worker from .open-next/)
+      #
+      - name: Deploy to Cloudflare Workers
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy

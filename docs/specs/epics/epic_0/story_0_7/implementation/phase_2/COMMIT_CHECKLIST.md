@@ -148,18 +148,18 @@ Part of Phase 2 - Commit 2/5"
 
 ### Implementation Tasks
 
-- [ ] Define `deploy` job with `runs-on: ubuntu-latest`
-- [ ] Add job timeout (10 minutes)
-- [ ] Add checkout step (`actions/checkout@v4`)
-- [ ] Add pnpm setup (`pnpm/action-setup@v4`)
-- [ ] Add Node.js setup (`actions/setup-node@v4`)
-- [ ] Configure pnpm cache for faster installs
-- [ ] Add dependencies installation step (`pnpm install --frozen-lockfile`)
-- [ ] Add build step (`pnpm build`)
-- [ ] Add Cloudflare deployment step using `cloudflare/wrangler-action@v3`
-- [ ] Configure wrangler-action with API token and account ID from secrets
-- [ ] Add deployment command: `wrangler deploy`
-- [ ] Set working directory for wrangler if needed
+- [x] Define `deploy` job with `runs-on: ubuntu-latest`
+- [x] Add job timeout (10 minutes)
+- [x] Add checkout step (`actions/checkout@v4`)
+- [x] Add pnpm setup (`pnpm/action-setup@v4`)
+- [x] Add Node.js setup (`actions/setup-node@v4`)
+- [x] Configure pnpm cache for faster installs
+- [x] Add dependencies installation step (`pnpm install --frozen-lockfile`)
+- [x] Add build step (`pnpm build`)
+- [x] Add Cloudflare deployment step using `cloudflare/wrangler-action@v3`
+- [x] Configure wrangler-action with API token and account ID from secrets
+- [x] Add deployment command: `wrangler deploy`
+- [x] Set working directory for wrangler if needed
 
 ### Validation
 
@@ -185,31 +185,31 @@ gh run view --log
 ### Review Checklist
 
 #### Job Configuration
-- [ ] Job name is descriptive: "Deploy to Cloudflare Workers"
-- [ ] Runs on `ubuntu-latest`
-- [ ] Job timeout set to 10 minutes
-- [ ] Job runs after migration job (if Phase 1 is complete)
+- [x] Job name is descriptive: "Deploy to Cloudflare Workers"
+- [x] Runs on `ubuntu-latest`
+- [x] Job timeout set to 10 minutes
+- [x] Job runs after check-trigger job (dependency satisfied)
 
 #### Build Steps
-- [ ] Checkout uses latest action version (`@v4`)
-- [ ] pnpm setup configured correctly
-- [ ] Node.js version matches project requirements (20.x from package.json)
-- [ ] pnpm cache configured for performance
-- [ ] Dependencies install uses `--frozen-lockfile`
-- [ ] Build command is correct (`pnpm build`)
+- [x] Checkout uses latest action version (`@v4`)
+- [x] pnpm setup configured correctly (v4, version 9.0.0)
+- [x] Node.js version matches project requirements (20.x)
+- [x] pnpm cache configured for performance
+- [x] Dependencies install uses `--frozen-lockfile`
+- [x] Build command is correct (`pnpm build`)
 
 #### Deployment Step
-- [ ] Uses official `cloudflare/wrangler-action@v3`
-- [ ] `apiToken` references secret: `${{ secrets.CLOUDFLARE_API_TOKEN }}`
-- [ ] `accountId` references secret: `${{ secrets.CLOUDFLARE_ACCOUNT_ID }}`
-- [ ] Command is correct: `wrangler deploy`
-- [ ] Working directory set if needed
+- [x] Uses official `cloudflare/wrangler-action@v3`
+- [x] `apiToken` references secret: `${{ secrets.CLOUDFLARE_API_TOKEN }}`
+- [x] `accountId` references secret: `${{ secrets.CLOUDFLARE_ACCOUNT_ID }}`
+- [x] Command is correct: `wrangler deploy`
+- [x] Working directory not needed (uses root .open-next/)
 
 #### Security
-- [ ] No hardcoded secrets or API tokens
-- [ ] Secrets properly referenced using `${{ secrets.NAME }}`
-- [ ] No secrets exposed in logs
-- [ ] Minimal permissions for job
+- [x] No hardcoded secrets or API tokens
+- [x] Secrets properly referenced using `${{ secrets.NAME }}`
+- [x] No secrets exposed in logs
+- [x] Minimal permissions for job
 
 ### Commit Message
 
