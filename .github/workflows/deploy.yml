@@ -1,0 +1,39 @@
+# GitHub Actions Workflow for Deployment to Cloudflare Workers
+#
+# Purpose:
+# This workflow automates the deployment of the Next.js application to Cloudflare Workers.
+# It serves as the final stage in the CI/CD pipeline after all quality checks pass.
+#
+# Triggers:
+# - Manual dispatch (workflow_dispatch) for on-demand deployments
+# - Automatic trigger after successful quality checks (workflow_run)
+#
+# Phases:
+# 1. Structure (Commit 1): Workflow file setup with permissions and concurrency
+# 2. Triggers (Commit 2): Add workflow_dispatch and workflow_run triggers
+# 3. Deployment (Commit 3): Configure Cloudflare Workers deployment
+# 4. Verification (Commit 4): Add post-deployment health checks
+# 5. Logging (Commit 5): Add deployment artifacts and summary
+
+name: Deploy to Cloudflare Workers
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DEPLOYMENT_TIMEOUT: 15m
+
+jobs:
+  # Placeholder for deployment job
+  deploy:
+    name: Deploy to Cloudflare Workers
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Placeholder
+        run: echo "Deployment workflow structure initialized. Triggers and deployment steps will be added in subsequent commits."
