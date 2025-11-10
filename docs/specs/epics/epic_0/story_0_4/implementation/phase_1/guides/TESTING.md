@@ -24,6 +24,7 @@ Phase 1 establishes database connectivity, so testing focuses on:
 ### Purpose
 
 Validate that:
+
 - D1 database connection can be established
 - Basic SQL queries execute successfully
 - Error handling works when binding is missing
@@ -179,9 +180,9 @@ open coverage/index.html
 
 ### Coverage Goals
 
-| File | Target Coverage | Critical Paths |
-|------|----------------|----------------|
-| `src/lib/server/db/index.ts` | 100% | All (only 20 lines) |
+| File                         | Target Coverage | Critical Paths      |
+| ---------------------------- | --------------- | ------------------- |
+| `src/lib/server/db/index.ts` | 100%            | All (only 20 lines) |
 
 ### Coverage Metrics
 
@@ -202,6 +203,7 @@ src/lib/server/db/index.ts    |  100.00 |   100.00 |  100.00 |  100.00
 **Purpose**: Verify D1 database is accessible via Wrangler CLI
 
 **Steps**:
+
 ```bash
 # List all D1 databases
 wrangler d1 list
@@ -219,6 +221,7 @@ wrangler d1 execute DB --remote --command "SELECT 1 as test"
 ```
 
 **Success Criteria**:
+
 - [ ] Database appears in `wrangler d1 list`
 - [ ] Local query returns `{"results":[{"test":1}],"success":true}`
 - [ ] No errors or warnings
@@ -230,6 +233,7 @@ wrangler d1 execute DB --remote --command "SELECT 1 as test"
 **Purpose**: Verify Drizzle Kit is configured correctly
 
 **Steps**:
+
 ```bash
 # Test Drizzle Studio help
 pnpm db:studio --help
@@ -248,6 +252,7 @@ pnpm type-check
 ```
 
 **Success Criteria**:
+
 - [ ] `pnpm db:studio --help` shows help text
 - [ ] `pnpm db:generate --help` shows help text
 - [ ] TypeScript compilation succeeds
@@ -260,6 +265,7 @@ pnpm type-check
 **Purpose**: Ensure all TypeScript code compiles without errors
 
 **Steps**:
+
 ```bash
 # Full type check
 pnpm type-check
@@ -273,6 +279,7 @@ pnpm tsc --noEmit src/lib/server/db/index.ts
 ```
 
 **Success Criteria**:
+
 - [ ] No type errors in console
 - [ ] D1Database type is recognized
 - [ ] DrizzleD1Database type imports correctly
@@ -285,6 +292,7 @@ pnpm tsc --noEmit src/lib/server/db/index.ts
 **Purpose**: Verify all added npm scripts work
 
 **Steps**:
+
 ```bash
 # Test each script in help mode
 pnpm db:generate --help
@@ -297,6 +305,7 @@ pnpm db:push --help
 ```
 
 **Success Criteria**:
+
 - [ ] All scripts execute without errors
 - [ ] Help text is displayed for each
 - [ ] Commands use correct flags (`--local`, `--remote`)
@@ -312,6 +321,7 @@ pnpm db:push --help
 **Cause**: Path alias not configured
 
 **Solution**:
+
 ```bash
 # Check tsconfig.json
 cat tsconfig.json | grep -A5 "paths"
@@ -330,6 +340,7 @@ cat vitest.config.ts | grep -A3 "alias"
 **Cause**: Miniflare not providing D1 binding in test environment
 
 **Solution**:
+
 ```bash
 # Check if wrangler.toml is accessible
 cat wrangler.toml | grep -A3 "d1_databases"
@@ -347,6 +358,7 @@ cat wrangler.toml | grep -A3 "d1_databases"
 **Cause**: D1 binding not initialized properly
 
 **Solution**:
+
 ```bash
 # Verify local D1 database exists
 ls -la .wrangler/state/d1/
@@ -365,6 +377,7 @@ wrangler dev --dry-run
 **Cause**: CI environment doesn't have D1 binding or Miniflare
 
 **Solution**:
+
 - Update CI workflow to install Wrangler
 - Add step to initialize local D1 before tests
 - Or use mocked D1 binding in tests
@@ -388,6 +401,7 @@ wrangler dev --dry-run
 ### GitHub Actions
 
 Tests run automatically on:
+
 - [ ] Pull requests to main
 - [ ] Push to main branch
 - [ ] Manual workflow dispatch
@@ -442,6 +456,7 @@ jobs:
 ### Required Checks
 
 All PRs must:
+
 - [ ] Pass all integration tests
 - [ ] Meet coverage threshold (>80%)
 - [ ] Pass TypeScript type checking
@@ -454,12 +469,14 @@ All PRs must:
 Before marking Phase 1 complete:
 
 ### Integration Tests
+
 - [ ] All 4 tests pass locally
 - [ ] Coverage for `db/index.ts` is 100%
 - [ ] Tests run successfully in CI
 - [ ] No flaky tests (consistent pass)
 
 ### Manual Verification
+
 - [ ] `wrangler d1 list` shows sebc-dev-db
 - [ ] `wrangler d1 execute DB --local --command "SELECT 1"` works
 - [ ] `pnpm db:studio --help` shows help
@@ -467,6 +484,7 @@ Before marking Phase 1 complete:
 - [ ] All npm scripts work
 
 ### Code Quality
+
 - [ ] No console errors when running tests
 - [ ] No TypeScript errors
 - [ ] Linter passes
@@ -479,12 +497,14 @@ Before marking Phase 1 complete:
 ### Writing Tests
 
 ✅ **Do**:
+
 - Test behavior, not implementation
 - Use descriptive test names (what is being tested)
 - Test both happy and error paths
 - Verify error messages are helpful
 
 ❌ **Don't**:
+
 - Test Drizzle internals (trust the library)
 - Over-mock (use real D1 binding when possible)
 - Write flaky tests
@@ -494,22 +514,22 @@ Before marking Phase 1 complete:
 
 ```typescript
 // Good
-it('should execute simple SELECT query')
-it('should throw error when DB binding is missing')
+it('should execute simple SELECT query');
+it('should throw error when DB binding is missing');
 
 // Bad
-it('works')
-it('test1')
+it('works');
+it('test1');
 ```
 
 ### Assertions
 
 ```typescript
 // Good - specific
-expect(result.results[0].result).toBe(1)
+expect(result.results[0].result).toBe(1);
 
 // Bad - too generic
-expect(result).toBeTruthy()
+expect(result).toBeTruthy();
 ```
 
 ---

@@ -22,9 +22,10 @@ Un Product Manager de Cloudflare (février 2025) a demandé du feedback sur ces 
 
 **Description** : La commande `wrangler dev -- npx next dev` casse la boucle de "fast-refresh" de Next.js.
 
-**Cause Racine** : Le proxy Wrangler ne parvient pas à relayer correctement la connexion WebSocket (ws://.../_next/webpack-hmr) nécessaire au HMR.
+**Cause Racine** : Le proxy Wrangler ne parvient pas à relayer correctement la connexion WebSocket (ws://.../\_next/webpack-hmr) nécessaire au HMR.
 
 **Symptômes** :
+
 - Tentatives de reconnexion sans fin dans la console
 - Modifications non appliquées sans rechargement complet
 - Destruction de la productivité en développement
@@ -38,6 +39,7 @@ Un Product Manager de Cloudflare (février 2025) a demandé du feedback sur ces 
 **Cause Racine** : La structure node_modules basée sur liens symboliques de pnpm empêche Wrangler de trouver les manifestes de build de Next.js.
 
 **Solution** : Ajouter à `.npmrc` :
+
 ```
 shamefully-hoist=true
 ```
@@ -49,6 +51,7 @@ shamefully-hoist=true
 **Description** : Connecter des outils comme Drizzle Studio à la base de données D1 locale simulée par Miniflare nécessite des manipulations manuelles.
 
 **Processus** :
+
 1. Trouver le fichier .sqlite caché dans `.wrangler/state/v3/d1/...`
 2. Utiliser des scripts shell manuels pour y accéder
 3. Aucune interface unifiée
@@ -58,6 +61,7 @@ shamefully-hoist=true
 ### L'Abstraction qui Fuit
 
 La commande "unifiée" `wrangler dev -- npx next dev` est une **abstraction qui fuit**. Elle tente de :
+
 - Simuler une plateforme cloud mondiale
 - Servir de proxy pour un serveur de développement local complexe
 
@@ -74,11 +78,13 @@ npx next dev
 ```
 
 **Caractéristiques** :
+
 - HMR fonctionne parfaitement
 - Aucun proxy Wrangler
 - Les données sont **mockées** ou connectées à une base **distante** (staging)
 
 **Avantages** :
+
 - Expérience de développement fluide
 - Accès à tous les outils Next.js (DevTools, Fast Refresh)
 
@@ -92,11 +98,13 @@ wrangler dev   # Sans npx next dev
 ```
 
 **Caractéristiques** :
+
 - Teste le build de production (opennextjs-cloudflare build)
 - Utilise les bindings locaux Miniflare
 - Mode sans HMR (similaire à la production)
 
 **Avantages** :
+
 - Fidélité réelle à l'environnement de production
 - Utilisation des bindings locaux pour D1, R2, etc.
 

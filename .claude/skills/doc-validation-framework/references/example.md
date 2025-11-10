@@ -31,6 +31,7 @@ Technical Density: Very High
 ### 1.2 Scan Rapide
 
 Agent identifie immédiatement:
+
 - **Primary Technology**: Next.js 15 + Cloudflare Workers
 - **Key Concepts**: 45+ distinct technical items mentioned
 - **Scope**: Full-stack architecture (frontend + backend + DB + infra)
@@ -612,6 +613,7 @@ Agent compile automatiquement toutes les sources à vérifier :
 ## 13. Validation Externe - Recherches à Faire
 
 ### 13.1 Official Documentation Review
+
 - [ ] Next.js 15 official docs (https://nextjs.org/docs)
   - Read: App Router, Server Components, Server Actions
   - Check: Breaking changes from v14, migration guide
@@ -641,6 +643,7 @@ Agent compile automatiquement toutes les sources à vérifier :
   - Check: Accessibility features, latest components
 
 ### 13.2 Breaking Changes & Deprecations
+
 - [ ] Check Next.js 15 release notes for breaking changes
 - [ ] Check Cloudflare Workers changelog
 - [ ] Check OpenNext issues & PRs for reported problems
@@ -648,6 +651,7 @@ Agent compile automatiquement toutes les sources à vérifier :
 - [ ] Check all package changelogs for deprecation warnings
 
 ### 13.3 Community & Issues
+
 - [ ] GitHub OpenNext issues (https://github.com/opennextjs/opennext/issues)
   - Search: D1, Next.js 15, Server Actions
   - Check: Open vs resolved issues, workarounds
@@ -661,6 +665,7 @@ Agent compile automatiquement toutes les sources à vérifier :
   - Check: Recent answers, accepted solutions
 
 ### 13.4 Blog Posts & Tutorials
+
 - [ ] Cloudflare blog announcements
   - Check: D1 features, Email Service, Workers updates
   - Read: Feature release dates
@@ -685,20 +690,20 @@ Agent génère automatiquement :
 ```markdown
 ## 14. Quick Reference
 
-| Domaine | Points critiques | Status |
-|---------|-----------------|--------|
-| **Framework** | Next.js 15, App Router, OpenNext | [ ] |
-| **Runtime** | Cloudflare Workers, nodejs_compat | [ ] |
-| **Database** | D1 maturity, Drizzle, migrations | [ ] |
-| **Auth** | Cloudflare Access, JWT, Better Auth | [ ] |
-| **i18n** | next-intl, route groups, messages | [ ] |
-| **UI** | shadcn/ui, TailwindCSS 4 | [ ] |
-| **Content** | MDX handling, SSR/SSG strategy | [ ] |
-| **Testing** | Vitest, Playwright, D1 seeding | [ ] |
-| **Déploiement** | GitHub Actions, Wrangler, pipeline | [ ] |
-| **Monitoring** | Health checks, logs, analytics | [ ] |
-| **Performance** | Core Web Vitals, optimization | [ ] |
-| **Security** | CSRF, validation, WAF | [ ] |
+| Domaine         | Points critiques                    | Status |
+| --------------- | ----------------------------------- | ------ |
+| **Framework**   | Next.js 15, App Router, OpenNext    | [ ]    |
+| **Runtime**     | Cloudflare Workers, nodejs_compat   | [ ]    |
+| **Database**    | D1 maturity, Drizzle, migrations    | [ ]    |
+| **Auth**        | Cloudflare Access, JWT, Better Auth | [ ]    |
+| **i18n**        | next-intl, route groups, messages   | [ ]    |
+| **UI**          | shadcn/ui, TailwindCSS 4            | [ ]    |
+| **Content**     | MDX handling, SSR/SSG strategy      | [ ]    |
+| **Testing**     | Vitest, Playwright, D1 seeding      | [ ]    |
+| **Déploiement** | GitHub Actions, Wrangler, pipeline  | [ ]    |
+| **Monitoring**  | Health checks, logs, analytics      | [ ]    |
+| **Performance** | Core Web Vitals, optimization       | [ ]    |
+| **Security**    | CSRF, validation, WAF               | [ ]    |
 
 Total Items: 127
 Fundamental: 23 items
@@ -843,6 +848,7 @@ Agent reads VALIDATION_CHECKLIST.md:
 Ce document montre comment le **framework générique** s'applique concrètement à un document réel.
 
 **Points clés:**
+
 - ✅ Processus systématique et reproductible
 - ✅ Exhaustif (127 items pour ce doc)
 - ✅ Traçable (chaque item a source)
@@ -850,6 +856,7 @@ Ce document montre comment le **framework générique** s'applique concrètement
 - ✅ Automatisable (peut être complètement scriptable)
 
 **Prochaines étapes:**
+
 1. Appliquer à d'autres documents du projet
 2. Implémenter automation pour web research
 3. Créer dashboard pour tracking validation status

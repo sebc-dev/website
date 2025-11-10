@@ -34,12 +34,14 @@ pnpm lint
 ### Review Checklist
 
 #### ENUM Definitions
+
 - [ ] `ComplexityEnum` includes exactly 3 values: 'beginner', 'intermediate', 'advanced'
 - [ ] `StatusEnum` includes exactly 2 values: 'draft', 'published'
 - [ ] ENUM values match story specification exactly
 - [ ] Types are const arrays for proper TypeScript inference
 
 #### Code Quality
+
 - [ ] No `any` types
 - [ ] Clear and consistent naming (PascalCase for types)
 - [ ] JSDoc comments present and meaningful
@@ -47,6 +49,7 @@ pnpm lint
 - [ ] No debug statements
 
 #### Project Standards
+
 - [ ] File follows project directory structure (`src/lib/server/db/`)
 - [ ] Imports are organized and clean
 - [ ] Coding style matches project conventions
@@ -103,6 +106,7 @@ pnpm lint
 ### Review Checklist
 
 #### Schema Structure
+
 - [ ] All 8 fields defined: id, categoryId, complexity, status, publishedAt, coverImage, createdAt, updatedAt
 - [ ] Field types match SQLite requirements (text for strings/UUIDs, integer for timestamps)
 - [ ] `id` is primary key
@@ -111,23 +115,27 @@ pnpm lint
 - [ ] `coverImage` is nullable (optional field)
 
 #### ENUM Constraints
+
 - [ ] `complexity` field uses ComplexityEnum values
 - [ ] `status` field uses StatusEnum values
 - [ ] ENUM constraints properly typed
 
 #### Timestamps
+
 - [ ] `createdAt` uses integer type with timestamp mode
 - [ ] `createdAt` has `defaultNow()` or equivalent
 - [ ] `updatedAt` uses integer type with timestamp mode
 - [ ] `updatedAt` has `defaultNow()` or equivalent
 
 #### Indexes
+
 - [ ] Index on `categoryId` for filtering by category
 - [ ] Index on `status` for filtering by draft/published
 - [ ] Index on `publishedAt` for sorting/filtering published articles
 - [ ] Indexes named clearly (e.g., `articles_categoryId_idx`)
 
 #### Type Safety
+
 - [ ] Table export is properly typed
 - [ ] Type inference works: `typeof articles.$inferSelect` gives correct type
 - [ ] No `any` types
@@ -190,32 +198,38 @@ pnpm lint
 ### Review Checklist
 
 #### Schema Structure
+
 - [ ] All 10 fields defined correctly
 - [ ] All required fields are non-nullable (title, slug, excerpt, seoTitle, seoDescription, contentMdx)
 - [ ] `id` is primary key
 - [ ] `articleId` references `articles.id`
 
 #### Foreign Key Relation
+
 - [ ] FK to `articles.id` defined with `references()`
 - [ ] ON DELETE CASCADE behavior configured
 - [ ] Drizzle relation properly typed
 
 #### Unique Constraints
+
 - [ ] Unique constraint on `(articleId, language)` composite key
 - [ ] Unique index on `slug` field for URL generation
 - [ ] Constraints prevent duplicate translations
 
 #### Language Field
+
 - [ ] Language field restricted to 'fr' | 'en'
 - [ ] Properly typed (not just `text()`)
 
 #### Indexes
+
 - [ ] Index on `articleId` for join performance
 - [ ] Index on `language` for filtering
 - [ ] Index on `slug` for URL lookups
 - [ ] Indexes named clearly
 
 #### Type Safety
+
 - [ ] Table export is properly typed
 - [ ] Type inference includes relation to articles
 - [ ] No `any` types
@@ -275,6 +289,7 @@ wrangler d1 execute DB --local --command="SELECT name FROM sqlite_master WHERE t
 ```
 
 **Expected Result**:
+
 - Migration SQL generated in `drizzle/migrations/0001_*.sql`
 - Migration applied without errors
 - Tables visible in local D1 database
@@ -282,6 +297,7 @@ wrangler d1 execute DB --local --command="SELECT name FROM sqlite_master WHERE t
 ### Review Checklist
 
 #### Migration SQL
+
 - [ ] CREATE TABLE for `articles` with all 8 columns
 - [ ] CREATE TABLE for `article_translations` with all 10 columns
 - [ ] FOREIGN KEY constraint from article_translations.articleId to articles.id
@@ -292,12 +308,14 @@ wrangler d1 execute DB --local --command="SELECT name FROM sqlite_master WHERE t
 - [ ] SQL syntax is valid SQLite
 
 #### Migration Application
+
 - [ ] `pnpm db:migrate:local` executes without errors
 - [ ] Tables created in local D1 database
 - [ ] Can query tables (even if empty)
 - [ ] Migration metadata tracked in `__drizzle_migrations` table
 
 #### Git Staging
+
 - [ ] Migration SQL file staged (`drizzle/migrations/0001_*.sql`)
 - [ ] Metadata files staged (`drizzle/migrations/meta/*`)
 - [ ] No unintended files included
@@ -373,6 +391,7 @@ wrangler d1 execute DB --local --command="SELECT * FROM article_translations WHE
 ```
 
 **Expected Result**:
+
 - 1 article in `articles` table
 - 2 translations in `article_translations` table
 - Foreign key relation works (articleId references valid article)
@@ -381,6 +400,7 @@ wrangler d1 execute DB --local --command="SELECT * FROM article_translations WHE
 ### Review Checklist
 
 #### Article Data
+
 - [ ] Article has valid id (UUID format or test id)
 - [ ] categoryId is NULL (valid since nullable)
 - [ ] complexity is valid ENUM value ('intermediate')
@@ -390,6 +410,7 @@ wrangler d1 execute DB --local --command="SELECT * FROM article_translations WHE
 - [ ] Timestamps are valid
 
 #### Translation Data (French)
+
 - [ ] articleId matches article id ('test-article-1')
 - [ ] language is 'fr'
 - [ ] slug is URL-friendly (lowercase, hyphens, no spaces)
@@ -397,6 +418,7 @@ wrangler d1 execute DB --local --command="SELECT * FROM article_translations WHE
 - [ ] Content is in French
 
 #### Translation Data (English)
+
 - [ ] articleId matches article id ('test-article-1')
 - [ ] language is 'en'
 - [ ] slug is URL-friendly and unique (different from French slug)
@@ -404,12 +426,14 @@ wrangler d1 execute DB --local --command="SELECT * FROM article_translations WHE
 - [ ] Content is in English
 
 #### SQL Quality
+
 - [ ] INSERT statements are valid SQLite syntax
 - [ ] Values properly quoted (strings in single quotes)
 - [ ] Timestamps are integers (not strings)
 - [ ] No SQL injection vulnerabilities
 
 #### npm Script
+
 - [ ] Script added to `package.json` under `scripts` section
 - [ ] Script name is `db:seed:articles`
 - [ ] Command uses `wrangler d1 execute` with correct flags
@@ -505,6 +529,7 @@ pnpm lint
 ```
 
 **Expected Result**:
+
 - All 38 tests pass (5 test suites)
 - No TypeScript errors
 - No ESLint warnings or errors
@@ -512,18 +537,21 @@ pnpm lint
 ### Review Checklist
 
 #### Test Structure
+
 - [x] File uses Vitest syntax (`describe`, `it`, `expect`)
 - [x] Tests organized into 5 logical suites
 - [x] Test isolation works (tests can run in any order)
 - [x] 616 lines with comprehensive documentation
 
 #### Test Suite 1: ENUM Type Definitions (7 tests)
+
 - [x] ComplexityEnum validation (3 values: beginner, intermediate, advanced)
 - [x] StatusEnum validation (2 values: draft, published)
 - [x] LanguageEnum validation (2 values: fr, en)
 - [x] ENUM are readonly const assertions
 
 #### Test Suite 2: Articles Table Schema (13 tests)
+
 - [x] Table properly defined
 - [x] All 8 required fields defined and tested
 - [x] Type inference for Article records works
@@ -532,6 +560,7 @@ pnpm lint
 - [x] Articles with different configurations work
 
 #### Test Suite 3: Article Translations Table Schema (10 tests)
+
 - [x] Table properly defined
 - [x] All 10 required fields defined and tested
 - [x] Type inference for ArticleTranslation records works
@@ -542,6 +571,7 @@ pnpm lint
 - [x] Timestamp fields (createdAt, updatedAt) defined
 
 #### Test Suite 4: Schema Relations and Constraints (5 tests)
+
 - [x] Foreign key relationship defined
 - [x] One-to-many relationship validated (article to translations)
 - [x] Unique constraint validation (articleId, language)
@@ -549,11 +579,13 @@ pnpm lint
 - [x] CASCADE delete behavior documented
 
 #### Test Suite 5: Complete Schema Validation (3 tests)
+
 - [x] Complete article with bilingual translations
 - [x] Schema constraints in place
 - [x] Data consistency across schema
 
 #### Code Quality
+
 - [x] No `any` types
 - [x] Clear, descriptive test names
 - [x] No commented-out tests
@@ -562,6 +594,7 @@ pnpm lint
 - [x] Comprehensive JSDoc comments
 
 #### Validation Results
+
 - [x] All 38 tests pass
 - [x] TypeScript: No errors
 - [x] ESLint: No warnings or errors
@@ -589,6 +622,7 @@ Part of Phase 2 - Commit 6/6"
 After all commits:
 
 ### Complete Phase Checklist
+
 - [ ] All 6 commits completed in order
 - [ ] All integration tests pass
 - [ ] TypeScript type-checking passes

@@ -36,20 +36,21 @@ Pour les développeurs et mainteneurs du projet, cet epic fournit une base techn
 
 This epic contains **10 stories** as defined in the PRD:
 
-| Story | Title | Description | Status | Phases | Progress |
-|-------|-------|-------------|--------|--------|----------|
-| 0.1 | Initialiser le projet Next.js 15 | Next.js 15.4.7 + React 19 + TypeScript 5 + App Router | ✅ COMPLETED | 3 | 3/3 |
-| 0.2 | Configurer adaptateur OpenNext | `@opennextjs/cloudflare` v1.3.0 installé et configuré | ✅ COMPLETED | - | ✅ |
-| 0.3 | Configurer TailwindCSS 4 + shadcn/ui | TailwindCSS 4 + shadcn/ui + palette projet (teal #14B8A6) | ✅ COMPLETED | - | ✅ |
-| 0.4 | Configurer Drizzle ORM + Cloudflare D1 | Schéma initial + migrations setup | 📋 PLANNED | 5 | 📋 Phase 2 docs ready |
-| 0.5 | Configurer wrangler.toml avec bindings | Config de base OK, bindings D1/R2/KV/DO manquants | 🚧 IN PROGRESS | - | 40% |
-| 0.6 | Configurer compatibility flags | `nodejs_compat` + `compatibility_date: 2025-03-01` | ✅ COMPLETED | - | ✅ |
-| 0.7 | Mettre en place CI/CD GitHub Actions | Pipeline de tests, build OpenNext, migrations D1, déploiement | 📋 NOT STARTED | - | 0% |
-| 0.8 | Configurer Cloudflare Access | Protection routes `/admin/*` avec Zero Trust | 📋 NOT STARTED | - | 0% |
-| 0.9 | Configurer Cloudflare WAF | Sécurité de base contre menaces web | 📋 NOT STARTED | - | 0% |
-| 0.10 | Base tests & linting | ESLint + Vitest (avec tests) + Playwright configurés | ✅ COMPLETED | - | ✅ |
+| Story | Title                                  | Description                                                   | Status         | Phases | Progress                 |
+| ----- | -------------------------------------- | ------------------------------------------------------------- | -------------- | ------ | ------------------------ |
+| 0.1   | Initialiser le projet Next.js 15       | Next.js 15.4.7 + React 19 + TypeScript 5 + App Router         | ✅ COMPLETED   | 3      | 3/3                      |
+| 0.2   | Configurer adaptateur OpenNext         | `@opennextjs/cloudflare` v1.3.0 installé et configuré         | ✅ COMPLETED   | -      | ✅                       |
+| 0.3   | Configurer TailwindCSS 4 + shadcn/ui   | TailwindCSS 4 + shadcn/ui + palette projet (teal #14B8A6)     | ✅ COMPLETED   | -      | ✅                       |
+| 0.4   | Configurer Drizzle ORM + Cloudflare D1 | Schéma initial + migrations setup                             | 📋 PLANNED     | 5      | 📋 Phase 2, 4 docs ready |
+| 0.5   | Configurer wrangler.toml avec bindings | Config de base OK, bindings D1/R2/KV/DO manquants             | 🚧 IN PROGRESS | -      | 40%                      |
+| 0.6   | Configurer compatibility flags         | `nodejs_compat` + `compatibility_date: 2025-03-01`            | ✅ COMPLETED   | -      | ✅                       |
+| 0.7   | Mettre en place CI/CD GitHub Actions   | Pipeline de tests, build OpenNext, migrations D1, déploiement | 📋 NOT STARTED | -      | 0%                       |
+| 0.8   | Configurer Cloudflare Access           | Protection routes `/admin/*` avec Zero Trust                  | 📋 NOT STARTED | -      | 0%                       |
+| 0.9   | Configurer Cloudflare WAF              | Sécurité de base contre menaces web                           | 📋 NOT STARTED | -      | 0%                       |
+| 0.10  | Base tests & linting                   | ESLint + Vitest (avec tests) + Playwright configurés          | ✅ COMPLETED   | -      | ✅                       |
 
 **Columns Explained**:
+
 - **Story**: Reference ID (e.g., 0.1, 0.2)
 - **Title**: Story name from PRD
 - **Description**: One-line summary of what the story delivers
@@ -127,6 +128,7 @@ cat docs/specs/epics/epic_0/EPIC_TRACKING.md
 ### Dependencies Between Stories
 
 **Sequential dependencies**:
+
 - Story 0.1 (Next.js init) **must** complete before all others
 - Story 0.2 (OpenNext adapter) depends on Story 0.1
 - Story 0.4 (Drizzle + D1) should complete before Story 0.7 (CI/CD with migrations)
@@ -134,10 +136,12 @@ cat docs/specs/epics/epic_0/EPIC_TRACKING.md
 - Story 0.8 (Cloudflare Access) can start after Story 0.5 (wrangler.toml configured)
 
 **Parallel work possible**:
+
 - Story 0.3 (TailwindCSS + shadcn/ui) can be done in parallel with Story 0.4, 0.5, 0.6
 - Story 0.9 (WAF) and 0.10 (tests & linting) can be done in parallel with other stories
 
 **Recommended order**:
+
 1. Story 0.1 (foundation)
 2. Stories 0.2, 0.3, 0.6 in parallel (framework setup)
 3. Stories 0.4, 0.5 in parallel (infrastructure)
@@ -165,7 +169,24 @@ Track epic-level milestones here:
 
 ### Recent Updates
 
+**2025-11-08 (Late Evening)**: Phase 4 documentation generated for Story 0.4! 📚
+
+- ✅ **Phase 4 (Validation Chain) documentation complete**: 7 files, ~3,400 lines generated
+  - INDEX.md: Navigation hub and validation chain overview (~350 lines)
+  - IMPLEMENTATION_PLAN.md: 5 atomic commits strategy (~650 lines)
+  - COMMIT_CHECKLIST.md: Per-commit detailed checklist (~500 lines)
+  - ENVIRONMENT_SETUP.md: Setup guide (~300 lines)
+  - guides/REVIEW.md: Code review guide (~700 lines)
+  - guides/TESTING.md: Unit testing strategy (~550 lines)
+  - validation/VALIDATION_CHECKLIST.md: Final validation (~350 lines)
+- **Atomic commits**: 5 commits (Install drizzle-zod → Generate schemas → Refinements → Helpers → Tests)
+- **Estimated time**: 3.5-4h implementation + 1.5-2h review
+- **Coverage target**: >85% for validation.ts
+- **Tech stack**: drizzle-zod auto-generation + Zod custom refinements
+- Ready for Phase 4 implementation!
+
 **2025-11-08 (Evening)**: Phase 2 documentation generated for Story 0.4! 📚
+
 - ✅ **Phase 2 (Core Schema) documentation complete**: 7 files, ~3,700 lines generated
   - INDEX.md: Navigation hub (~300 lines)
   - IMPLEMENTATION_PLAN.md: 6 atomic commits strategy (~500 lines)
@@ -180,6 +201,7 @@ Track epic-level milestones here:
 - Ready for Phase 2 implementation!
 
 **2025-11-08**: Story 0.4 planned via story-phase-planner skill ! 📋
+
 - ✅ Story 0.4 : Drizzle ORM + Cloudflare D1 planifiée en 5 phases (11 jours estimés)
   - Phase 1: Drizzle Config & D1 Setup (2d)
   - Phase 2: Core Schema - Articles + Translations (3d)
@@ -191,12 +213,14 @@ Track epic-level milestones here:
 - Prêt pour génération de docs détaillées par phase avec /generate-phase-doc
 
 **2025-11-06 (Late Evening)**: Stories 0.3 et 0.10 complétées à 100% ! 🎉
+
 - ✅ Story 0.3 : shadcn/ui installé + palette projet appliquée (teal + typographies Nunito Sans/JetBrains Mono)
 - ✅ Story 0.10 : Vitest configuré avec scripts + tests unitaires + Playwright E2E
 - **Epic Completion** : **50%** (5 stories complètes / 10 total)
 - **Weighted Progress** : ~54%
 
 **2025-11-06 (Evening)**: État des lieux complet effectué. Mise à jour du tracking pour refléter l'état réel du projet :
+
 - ✅ Stories 0.1, 0.2, 0.6 **COMPLÉTÉES** (30%)
 - 🚧 Stories 0.3, 0.5, 0.10 **EN COURS** (partielles : 60%, 40%, 33%)
 - 📋 Stories 0.4, 0.7, 0.8, 0.9 **PAS COMMENCÉES**
@@ -211,6 +235,7 @@ Track epic-level milestones here:
 ## 🔗 Reference Documents
 
 ### Story Specifications
+
 - Story 0.1: `docs/specs/epics/epic_0/story_0_1/story_0.1.md` (created via /plan-story)
 - Story 0.2: `docs/specs/epics/epic_0/story_0_2/story_0.2.md` (created via /plan-story)
 - Story 0.3: `docs/specs/epics/epic_0/story_0_3/story_0.3.md` (created via /plan-story)
@@ -223,11 +248,13 @@ Track epic-level milestones here:
 - Story 0.10: `docs/specs/epics/epic_0/story_0_10/story_0.10.md` (created via /plan-story)
 
 ### Phase Plans
+
 - Story 0.1: `docs/specs/epics/epic_0/story_0_1/implementation/PHASES_PLAN.md` ✅ PLANNED (3 phases)
 - Story 0.4: `docs/specs/epics/epic_0/story_0_4/implementation/PHASES_PLAN.md` ✅ PLANNED (5 phases)
 - Links for other stories will be added as they are planned
 
 ### Related Documentation
+
 - **PRD**: `docs/specs/PRD.md` (lines 586-598)
 - **Brief**: `docs/specs/Brief.md`
 - **Concept**: `docs/specs/Concept.md`
@@ -238,12 +265,14 @@ Track epic-level milestones here:
 ## 📋 Checklist
 
 ### Epic Setup
+
 - [x] EPIC_TRACKING.md created
 - [x] All stories from PRD added to table
 - [x] Dependencies documented
 - [ ] Team assigned (solo developer)
 
 ### During Epic Execution
+
 - [x] First story planned (/plan-story) - Story 0.1 with 3 phases
 - [x] First story completed - Story 0.1 (100%)
 - [x] Additional stories completed - Stories 0.2, 0.6 (3/10 total)
@@ -251,6 +280,7 @@ Track epic-level milestones here:
 - [x] Stories in progress identified - 0.3 (60%), 0.5 (40%), 0.10 (33%)
 
 ### Epic Completion
+
 - [ ] All stories planned
 - [ ] All stories in progress
 - [ ] All stories completed
@@ -262,6 +292,7 @@ Track epic-level milestones here:
 ## 🔧 Technical Notes
 
 ### Key Technologies
+
 - **Framework**: Next.js 15 with App Router
 - **Adapter**: @opennextjs/cloudflare (OpenNext)
 - **Runtime**: Cloudflare Workers (workerd)
@@ -271,18 +302,21 @@ Track epic-level milestones here:
 - **Tests**: Vitest (unit/component) + Playwright (E2E)
 
 ### Critical Configuration Points
+
 - `wrangler.toml`: Source of truth for all bindings
 - `compatibility_flags = ["nodejs_compat"]`: Non-negotiable requirement
 - `compatibility_date`: Must be recent (2025+)
 - Bindings required: D1, R2, KV, Durable Objects, WORKER_SELF_REFERENCE
 
 ### Design System
+
 - **Primary color**: Teal #14B8A6
 - **Background**: Anthracite #1A1D23
 - **Typography**: Nunito Sans (body) + JetBrains Mono (code)
 - **Components**: shadcn/ui (copy-paste approach)
 
 ### Security Requirements
+
 - Cloudflare Access protecting `/admin/*` routes
 - JWT validation (`Cf-Access-Jwt-Assertion`) in middleware
 - Cloudflare WAF enabled

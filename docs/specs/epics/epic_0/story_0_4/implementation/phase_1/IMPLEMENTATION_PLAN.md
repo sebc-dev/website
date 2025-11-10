@@ -36,6 +36,7 @@ Dependencies   Wrangler    Drizzle      Connection    Tests
 **Duration**: 30 min (implementation) + 15 min (review)
 
 **Content**:
+
 - Add `drizzle-orm` to dependencies (ORM core)
 - Add `drizzle-kit` to devDependencies (CLI for migrations)
 - Add `better-sqlite3` to devDependencies (local SQLite for Drizzle Studio)
@@ -43,11 +44,13 @@ Dependencies   Wrangler    Drizzle      Connection    Tests
 - Verify installation with `pnpm list drizzle-orm`
 
 **Why it's atomic**:
+
 - Single responsibility: Install dependencies
 - No external dependencies (just package manager)
 - Can be validated independently (check package.json and node_modules)
 
 **Technical Validation**:
+
 ```bash
 # Check packages installed
 pnpm list drizzle-orm drizzle-kit better-sqlite3
@@ -59,6 +62,7 @@ pnpm install
 **Expected Result**: All 3 packages installed without errors, listed in package.json
 
 **Review Criteria**:
+
 - [ ] `drizzle-orm` added with correct version (latest stable)
 - [ ] `drizzle-kit` added to devDependencies
 - [ ] `better-sqlite3` added to devDependencies (required for Drizzle Studio)
@@ -74,6 +78,7 @@ pnpm install
 **Duration**: 45 min (implementation) + 20 min (review)
 
 **Content**:
+
 - Run `wrangler d1 create sebc-dev-db` to create D1 database
 - Copy database ID from output
 - Add `[[d1_databases]]` binding to `wrangler.toml`:
@@ -93,11 +98,13 @@ pnpm install
 - Document the database ID in a comment for reference
 
 **Why it's atomic**:
+
 - Single responsibility: Configure Wrangler for D1
 - Depends only on Wrangler CLI being installed (prerequisite)
 - Can be validated independently (check wrangler.toml syntax)
 
 **Technical Validation**:
+
 ```bash
 # Verify D1 database exists
 wrangler d1 list
@@ -112,6 +119,7 @@ grep "binding.*DB" wrangler.toml
 **Expected Result**: D1 database created, binding configured in wrangler.toml, env vars documented
 
 **Review Criteria**:
+
 - [ ] Database created with correct name (`sebc-dev-db`)
 - [ ] Database ID matches the one from `wrangler d1 create` output
 - [ ] Binding name is `DB` (will be used in code as `env.DB`)
@@ -128,7 +136,9 @@ grep "binding.*DB" wrangler.toml
 **Duration**: 1h (implementation) + 30 min (review)
 
 **Content**:
+
 - Create `drizzle.config.ts` at project root:
+
   ```typescript
   import type { Config } from 'drizzle-kit';
 
@@ -144,6 +154,7 @@ grep "binding.*DB" wrangler.toml
     },
   } satisfies Config;
   ```
+
 - Add npm scripts to `package.json`:
   ```json
   {
@@ -163,11 +174,13 @@ grep "binding.*DB" wrangler.toml
   ```
 
 **Why it's atomic**:
+
 - Single responsibility: Configure Drizzle tooling
 - Depends on Commit 1 (drizzle-kit installed) and Commit 2 (D1 created)
 - Can be validated independently (run `pnpm db:studio --help`)
 
 **Technical Validation**:
+
 ```bash
 # Verify drizzle.config.ts syntax
 pnpm db:studio --help
@@ -183,6 +196,7 @@ pnpm run db:generate --help
 **Expected Result**: Drizzle config created, npm scripts functional, directory structure ready
 
 **Review Criteria**:
+
 - [ ] `drizzle.config.ts` uses correct dialect (`sqlite`)
 - [ ] Schema path points to future schema file (`./src/lib/server/db/schema.ts`)
 - [ ] Output directory for migrations is `./drizzle/migrations`
@@ -199,7 +213,9 @@ pnpm run db:generate --help
 **Duration**: 1h 15min (implementation) + 45 min (review)
 
 **Content**:
+
 - Create `src/lib/server/db/index.ts`:
+
   ```typescript
   import { drizzle } from 'drizzle-orm/d1';
   import type { DrizzleD1Database } from 'drizzle-orm/d1';
@@ -215,7 +231,7 @@ pnpm run db:generate --help
   export function getDb(env: { DB: D1Database }): DrizzleD1Database {
     if (!env.DB) {
       throw new Error(
-        'DB binding is not available. Ensure wrangler.toml is configured correctly and you are using the Cloudflare Workers runtime.'
+        'DB binding is not available. Ensure wrangler.toml is configured correctly and you are using the Cloudflare Workers runtime.',
       );
     }
 
@@ -228,17 +244,20 @@ pnpm run db:generate --help
    */
   export type Db = DrizzleD1Database;
   ```
+
 - Add JSDoc documentation explaining usage
 - Add error handling for missing DB binding
 - Export type alias for convenience
 
 **Why it's atomic**:
+
 - Single responsibility: Create connection utility
 - Depends on Commit 1 (drizzle-orm installed) and Commit 2 (DB binding configured)
 - Can be validated independently (TypeScript compilation)
 - No schema required yet (schema will be added in Phase 2)
 
 **Technical Validation**:
+
 ```bash
 # TypeScript check
 pnpm type-check
@@ -250,6 +269,7 @@ pnpm build
 **Expected Result**: Connection utility created, TypeScript compiles, ready for use in Phase 2
 
 **Review Criteria**:
+
 - [ ] Function `getDb()` accepts env parameter with DB binding
 - [ ] Returns correctly typed DrizzleD1Database
 - [ ] Error thrown if DB binding missing (defensive programming)
@@ -267,7 +287,9 @@ pnpm build
 **Duration**: 1h (implementation) + 45 min (review)
 
 **Content**:
+
 - Create `tests/integration/db-connection.test.ts`:
+
   ```typescript
   import { describe, it, expect, beforeAll } from 'vitest';
   import { getDb } from '@/lib/server/db';
@@ -295,24 +317,25 @@ pnpm build
     });
 
     it('should throw error if DB binding is missing', () => {
-      expect(() => getDb({} as any)).toThrow(
-        'DB binding is not available'
-      );
+      expect(() => getDb({} as any)).toThrow('DB binding is not available');
     });
   });
   ```
+
 - Configure Vitest to use Miniflare for D1 simulation
 - Add test setup to load D1 binding into global scope
 - Test basic connectivity with `SELECT 1`
 - Test error handling when binding is missing
 
 **Why it's atomic**:
+
 - Single responsibility: Validate connection works
 - Depends on all previous commits (needs everything set up)
 - Can be validated independently (run tests)
 - Completes Phase 1 objectives
 
 **Technical Validation**:
+
 ```bash
 # Run integration tests
 pnpm test:integration
@@ -324,6 +347,7 @@ pnpm test:coverage
 **Expected Result**: All tests pass, connection validated, Phase 1 complete
 
 **Review Criteria**:
+
 - [ ] Test imports `getDb` from correct path
 - [ ] Test uses Vitest syntax (describe, it, expect)
 - [ ] Tests cover happy path (SELECT 1 query works)
@@ -350,6 +374,7 @@ pnpm test:coverage
 ### Validation at Each Step
 
 After each commit:
+
 ```bash
 # Type-check (commits 3-5)
 pnpm type-check
@@ -370,30 +395,33 @@ All must pass before moving to next commit.
 
 ## 📊 Commit Metrics
 
-| Commit | Files | Lines | Implementation | Review | Total |
-|--------|-------|-------|----------------|--------|-------|
-| 1. Install Dependencies | 1 | ~50 | 30 min | 15 min | 45 min |
-| 2. Create D1 & Configure Wrangler | 2 | ~30 | 45 min | 20 min | 1h 5min |
-| 3. Configure Drizzle | 2 | ~60 | 1h | 30 min | 1h 30min |
-| 4. Create Connection Utility | 1 | ~80 | 1h 15min | 45 min | 2h |
-| 5. Add Connection Test | 1 | ~100 | 1h | 45 min | 1h 45min |
-| **TOTAL** | **7** | **~320** | **4h 30min** | **2h 55min** | **7h 25min** |
+| Commit                            | Files | Lines    | Implementation | Review       | Total        |
+| --------------------------------- | ----- | -------- | -------------- | ------------ | ------------ |
+| 1. Install Dependencies           | 1     | ~50      | 30 min         | 15 min       | 45 min       |
+| 2. Create D1 & Configure Wrangler | 2     | ~30      | 45 min         | 20 min       | 1h 5min      |
+| 3. Configure Drizzle              | 2     | ~60      | 1h             | 30 min       | 1h 30min     |
+| 4. Create Connection Utility      | 1     | ~80      | 1h 15min       | 45 min       | 2h           |
+| 5. Add Connection Test            | 1     | ~100     | 1h             | 45 min       | 1h 45min     |
+| **TOTAL**                         | **7** | **~320** | **4h 30min**   | **2h 55min** | **7h 25min** |
 
 ---
 
 ## ✅ Atomic Approach Benefits
 
 ### For Developers
+
 - 🎯 **Clear focus**: One thing at a time (install, configure, test)
 - 🧪 **Testable**: Each commit validated before moving on
 - 📝 **Documented**: Clear commit messages explain what and why
 
 ### For Reviewers
+
 - ⚡ **Fast review**: 15-45 min per commit (2.5-3h total)
 - 🔍 **Focused**: Single responsibility to check
 - ✅ **Quality**: Easier to spot issues in small diffs
 
 ### For the Project
+
 - 🔄 **Rollback-safe**: Can revert any commit without breaking others
 - 📚 **Historical**: Clear progression in git history
 - 🏗️ **Maintainable**: Easy to understand what changed when
@@ -405,6 +433,7 @@ All must pass before moving to next commit.
 ### Commit Messages
 
 Format:
+
 ```
 type(scope): short description (max 50 chars)
 
@@ -418,6 +447,7 @@ Part of Phase 1 - Commit X/5
 Types: `feat`, `chore`, `test`, `docs`
 
 Examples:
+
 ```
 chore(db): install Drizzle ORM dependencies
 
@@ -431,6 +461,7 @@ Part of Phase 1 - Commit 1/5
 ### Review Checklist
 
 Before committing:
+
 - [ ] Code follows project style guide
 - [ ] TypeScript compiles without errors
 - [ ] All validation commands pass
@@ -443,6 +474,7 @@ Before committing:
 ## ⚠️ Important Points
 
 ### Do's
+
 - ✅ Follow the commit order (1 → 2 → 3 → 4 → 5)
 - ✅ Validate after each commit (run commands listed above)
 - ✅ Write tests alongside code (Commit 5)
@@ -450,6 +482,7 @@ Before committing:
 - ✅ Test D1 connection thoroughly before moving to Phase 2
 
 ### Don'ts
+
 - ❌ Skip commits or combine them (loses atomic benefits)
 - ❌ Commit without running validations
 - ❌ Create schema in this phase (that's Phase 2)

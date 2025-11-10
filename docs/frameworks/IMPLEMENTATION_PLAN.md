@@ -19,17 +19,20 @@ Générer des checklists de validation précises et structurées pour tout docum
 D'après l'analyse du rapport `cas_usage_outils.md`, cette combinaison est optimale car:
 
 **1. Agent Skill (`doc-validation-framework`)**
+
 - Encapsule le savoir-faire complexe du framework (méthodologie, 8 types de propriétés)
 - Invocation autonome basée sur la sémantique (ligne 70-72 du rapport)
 - Chargement "just-in-time" du contexte (évite saturation du contexte)
 - Pattern: "Encapsulation de Connaissances Complexes" (ligne 78)
 
 **2. Custom Slash Command (`/generate-checklist`)**
+
 - Déclenchement manuel et déterministe par l'utilisateur
 - Point d'entrée clair et prévisible
 - Pattern: "commande qui instruit Claude d'utiliser une compétence" (ligne 99)
 
 **3. Subagent (`checklist-generator`)**
+
 - Isole la tâche complexe de génération de checklist
 - Protège le contexte principal de la "pollution" des détails (ligne 109)
 - Permet parallélisation future de multiples validations
@@ -58,11 +61,13 @@ D'après l'analyse du rapport `cas_usage_outils.md`, cette combinaison est optim
 ## 🔧 Composants à Implémenter
 
 ### 1. Agent Skill: `doc-validation-framework`
+
 **Emplacement**: `.claude/skills/doc-validation-framework/SKILL.md`
 
 Encapsule la méthodologie complète du framework de validation.
 
 **Contenu**:
+
 - Frontmatter YAML avec description sémantique
 - Résumé de la méthodologie (8 types de propriétés, 3 niveaux de criticité)
 - Instructions pour l'analyse documentaire
@@ -70,11 +75,13 @@ Encapsule la méthodologie complète du framework de validation.
 - Références aux documents de référence
 
 ### 2. Subagent: `checklist-generator`
+
 **Emplacement**: `.claude/agents/checklist-generator.md`
 
 Agent spécialisé qui analyse les documents et génère des checklists structurées.
 
 **Responsabilités**:
+
 - Lire et analyser le document cible ligne par ligne
 - Extraire 30-50 concepts techniques
 - Identifier 80-150 propriétés factuelles
@@ -84,25 +91,30 @@ Agent spécialisé qui analyse les documents et génère des checklists structur
 - Générer Markdown structuré avec Quick Reference et Research Section
 
 ### 3. Custom Slash Command: `/generate-checklist`
+
 **Emplacement**: `.claude/commands/generate-checklist.md`
 
 Point d'entrée manuel pour lancer une validation.
 
 **Utilisation**:
+
 ```bash
 /generate-checklist docs/specs/Architecture_technique.md
 /generate-checklist @docs/frameworks/GENERIC_VALIDATION_FRAMEWORK.md
 ```
 
 **Workflow**:
+
 1. Charge la Skill `doc-validation-framework`
 2. Délègue au Subagent `checklist-generator`
 3. Sauvegarde le résultat en `{document}.validation-checklist.md`
 
 ### 4. Configuration YAML
+
 **Emplacement**: `.claude/validation-config.yaml`
 
 Configuration réutilisable et partageable définissant:
+
 - Les 12 domaines standards
 - Les 8 types de propriétés
 - Les 3 niveaux de criticité
@@ -155,19 +167,25 @@ Agent externe:
 ## 🚀 Phases d'Évolution
 
 ### Phase 1 (Actuelle): Génération de Checklist
+
 **Statut**: Implémentation en cours
+
 - Génération manuelle de checklists via `/generate-checklist`
 - Checklists prêtes pour export vers agents externes
 - Validation manuelle par humain si nécessaire
 
 ### Phase 2: Semi-Automatisation
+
 **Statut**: Planifiée pour 2-3 semaines
+
 - Agent effectue recherches automatiques sur items critiques
 - Validation humaine des résultats
 - Rapports structurés générés automatiquement
 
 ### Phase 3: Automatisation Complète
+
 **Statut**: Planifiée pour 1-2 mois
+
 - Validation 100% automatique end-to-end
 - Tableaux de bord et métriques
 - Validations programmées régulièrement

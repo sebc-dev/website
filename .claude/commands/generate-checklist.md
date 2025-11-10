@@ -13,6 +13,7 @@ allowed-tools:
 This command orchestrates the generation of a comprehensive validation checklist for any technical document using the Document Validation Framework.
 
 The workflow:
+
 1. Load the doc-validation-framework skill for methodology
 2. Delegate analysis to checklist-generator subagent
 3. Generate structured Markdown checklist (80-150 items)
@@ -25,10 +26,13 @@ Generate a comprehensive validation checklist for: **$1**
 ## Instructions
 
 ### Step 1: Load Framework Expertise
+
 First, activate the `doc-validation-framework` skill to ensure you have the complete validation methodology available.
 
 ### Step 2: Delegate to Specialist
+
 You will now delegate to the `checklist-generator` subagent, which is a specialized agent trained to:
+
 - Analyze technical documents thoroughly
 - Extract 30-50 technical concepts
 - Identify 80-150 factual properties
@@ -39,9 +43,11 @@ You will now delegate to the `checklist-generator` subagent, which is a speciali
 - Identify research sources
 
 ### Step 3: Provide Document Path
+
 The document to analyze is located at: **$1**
 
 ### Step 4: Generate Checklist
+
 Instruct the checklist-generator subagent to:
 
 1. Read and analyze the entire document
@@ -89,6 +95,7 @@ Instruct the checklist-generator subagent to:
    - Release notes
 
 ### Step 5: Checklist Format
+
 The generated checklist must be structured as follows:
 
 ```markdown
@@ -101,17 +108,18 @@ The generated checklist must be structured as follows:
 ## Quick Reference
 
 | Criticality | Count | Percentage |
-|---|---|---|
-| Fundamental | X | X% |
-| Major | X | X% |
-| Secondary | X | X% |
-| **Total** | **X** | **100%** |
+| ----------- | ----- | ---------- |
+| Fundamental | X     | X%         |
+| Major       | X     | X%         |
+| Secondary   | X     | X%         |
+| **Total**   | **X** | **100%**   |
 
 ## Validation Checklist by Domain
 
 ### Domain 1: {DOMAIN_NAME} (X items)
 
 #### Fundamental Items
+
 - [ ] {Question about property 1}
   - **Type**: {Property Type}
   - **Source**: {URL}
@@ -123,43 +131,52 @@ The generated checklist must be structured as follows:
   - **Research**: {Hint for research}
 
 #### Major Items
+
 - [ ] {Question}
   - **Type**: {Property Type}
   - **Source**: {URL}
   - **Research**: {Hint}
 
 #### Secondary Items
+
 - [ ] {Question}
   - **Type**: {Property Type}
   - **Source**: {URL}
   - **Research**: {Hint}
 
 ### Domain 2: {DOMAIN_NAME} (X items)
+
 ... (repeat for all domains)
 
 ## Research Sources
 
 ### {TECHNOLOGY_1}
+
 - **Official Documentation**: {URL_OFFICIAL_DOCS}
 - **GitHub Repository**: {URL_GITHUB}
 - **Blog/Announcements**: {URL_BLOG}
 - **Status Page**: {URL_STATUS}
 
 ### {TECHNOLOGY_2}
+
 ... (repeat for all identified technologies)
 
 ## Notes & Findings
 
 ### Items Requiring Updates
+
 - List any items that need documentation updates
 
 ### Version Changes Detected
+
 - List any outdated versions found
 
 ### Breaking Changes
+
 - List any breaking changes discovered
 
 ### Deprecated Features
+
 - List any deprecated features identified
 
 ## Validation Summary
@@ -173,7 +190,9 @@ The generated checklist must be structured as follows:
 ```
 
 ### Step 6: Quality Standards
+
 The checklist must meet these standards:
+
 - ✅ 80-150 total validation items
 - ✅ 8-15 different domains represented
 - ✅ All 8 property types represented
@@ -183,17 +202,22 @@ The checklist must meet these standards:
 - ✅ Ready for external AI agents (Gemini, ChatGPT)
 
 ### Step 7: Save Output
+
 Save the generated checklist to:
+
 ```
 {DOCUMENT_DIRECTORY}/{DOCUMENT_NAME}.validation-checklist.md
 ```
 
 For example:
+
 - Input: `docs/specs/Architecture_technique.md`
 - Output: `docs/specs/Architecture_technique.md.validation-checklist.md`
 
 ### Step 8: Confirmation
+
 Once the checklist is generated, provide:
+
 1. File path where checklist was saved
 2. Summary statistics (total items, domain count, source count)
 3. List of domains covered
@@ -202,6 +226,7 @@ Once the checklist is generated, provide:
 ## Expected Outcome
 
 A complete, production-ready validation checklist that:
+
 - Can be imported into Markdown files or documents
 - Can be exported to Gemini, ChatGPT, or other research agents
 - Has clear checkboxes for each validation item

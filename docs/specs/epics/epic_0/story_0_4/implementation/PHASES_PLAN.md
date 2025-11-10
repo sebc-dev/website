@@ -18,6 +18,7 @@
 This story establishes the complete database foundation for sebc.dev by configuring Drizzle ORM as the type-safe ORM layer for Cloudflare D1. It encompasses installing Drizzle, creating the initial database schema for all core V1 entities (articles, article_translations, categories, tags, articleTags), setting up the migration workflow for both local and remote environments, implementing the type-safe validation chain (Drizzle → drizzle-zod → Zod), creating seed data for the 9 canonical categories, and building the database access layer with comprehensive testing.
 
 **Acceptance Criteria**:
+
 - Drizzle ORM installed and configured with Cloudflare D1 adapter
 - Complete database schema created for 5 tables (articles, article_translations, categories, tags, articleTags)
 - Migration system working (generate → apply local → apply remote)
@@ -51,6 +52,7 @@ This story is decomposed into **5 atomic phases** based on:
 ### Atomic Phase Principles
 
 Each phase follows these principles:
+
 - **Independent**: Can be implemented and tested separately
 - **Deliverable**: Produces tangible, working functionality
 - **Sized appropriately**: 2-3 days of work per phase
@@ -75,6 +77,7 @@ Foundation  Core Schema  Taxonomy    Validation  Access Layer
 **Objective**: Install Drizzle ORM, configure connection to Cloudflare D1, and validate basic connectivity
 
 **Scope**:
+
 - Install `drizzle-orm`, `drizzle-kit`, `@cloudflare/d1` dependencies
 - Create `drizzle.config.ts` with D1 connection settings
 - Create D1 database via `wrangler d1 create`
@@ -83,10 +86,12 @@ Foundation  Core Schema  Taxonomy    Validation  Access Layer
 - Set up npm scripts for migration workflow
 
 **Dependencies**:
+
 - Requires Story 0.1 ✅ COMPLETED (Next.js initialized)
 - Requires Story 0.5 🚧 IN PROGRESS (wrangler.toml exists, will add D1 binding)
 
 **Key Deliverables**:
+
 - [ ] Drizzle packages installed and listed in `package.json`
 - [ ] `drizzle.config.ts` created at project root
 - [ ] D1 database created (local + remote via Wrangler)
@@ -95,6 +100,7 @@ Foundation  Core Schema  Taxonomy    Validation  Access Layer
 - [ ] Connection test passing (simple query returns result)
 
 **Files Affected** (~6 files):
+
 - `package.json` (modified - add dependencies + scripts)
 - `drizzle.config.ts` (new)
 - `wrangler.toml` (modified - add D1 binding)
@@ -109,17 +115,20 @@ Foundation  Core Schema  Taxonomy    Validation  Access Layer
 **Risk Level**: 🟡 Medium
 
 **Risk Factors**:
+
 - D1 local setup with Wrangler/Miniflare can be tricky (HMR issues documented in Architecture doc)
 - First time configuring Drizzle with D1 adapter (less common than PostgreSQL/MySQL)
 - Environment variable configuration for local vs remote databases
 
 **Mitigation Strategies**:
+
 - Follow official Drizzle + Cloudflare D1 documentation closely
 - Use bi-modal development strategy (Architecture doc recommendation)
 - Test connection thoroughly before proceeding to schema definition
 - Document any workarounds needed for local development
 
 **Success Criteria**:
+
 - [ ] `pnpm install` completes without errors
 - [ ] `wrangler d1 create sebc-dev-db` creates database successfully
 - [ ] `pnpm db:studio` launches Drizzle Studio (can be used for schema inspection later)
@@ -127,6 +136,7 @@ Foundation  Core Schema  Taxonomy    Validation  Access Layer
 - [ ] npm scripts listed in README or dev docs
 
 **Technical Notes**:
+
 - Use `sqlite` dialect in drizzle.config.ts (D1 is SQLite-based)
 - Local D1 database persists in `.wrangler/state/d1/` (add to .gitignore)
 - Remote D1 requires `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` env vars
@@ -139,6 +149,7 @@ Foundation  Core Schema  Taxonomy    Validation  Access Layer
 **Objective**: Define and create the core database schema for articles and article_translations with foreign key relations
 
 **Scope**:
+
 - Create `src/lib/server/db/schema.ts` with Drizzle table definitions
 - Define `articles` table schema (id, categoryId, complexity, status, publishedAt, coverImage, timestamps)
 - Define `article_translations` table schema (id, articleId FK, language, title, slug, excerpt, seo fields, contentMdx, timestamps)
@@ -147,9 +158,11 @@ Foundation  Core Schema  Taxonomy    Validation  Access Layer
 - Apply migration locally and test with sample inserts
 
 **Dependencies**:
+
 - Requires Phase 1 (Drizzle configured and connected)
 
 **Key Deliverables**:
+
 - [ ] `src/lib/server/db/schema.ts` created with table definitions
 - [ ] `articles` table schema defined with all fields and types
 - [ ] `article_translations` table schema defined with FK to articles
@@ -161,6 +174,7 @@ Foundation  Core Schema  Taxonomy    Validation  Access Layer
 - [ ] Sample data inserted successfully (at least 1 article with 2 translations)
 
 **Files Affected** (~5 files):
+
 - `src/lib/server/db/schema.ts` (new - table definitions)
 - `drizzle/migrations/0001_initial_articles_schema.sql` (generated)
 - `drizzle/migrations/meta/` (generated - migration metadata)
@@ -174,12 +188,14 @@ Foundation  Core Schema  Taxonomy    Validation  Access Layer
 **Risk Level**: 🟡 Medium
 
 **Risk Factors**:
+
 - Complex foreign key relations (article_translations → articles)
 - ENUM types may need special handling in SQLite (D1)
 - Unique constraints on composite keys need careful definition
 - categoryId FK references categories table (not yet created - will use nullable or wait)
 
 **Mitigation Strategies**:
+
 - Start with articles table alone, then add article_translations
 - Use TEXT type for ENUMs with CHECK constraints (SQLite best practice)
 - Make categoryId nullable initially (will be populated after Phase 3)
@@ -187,6 +203,7 @@ Foundation  Core Schema  Taxonomy    Validation  Access Layer
 - Document schema relationships clearly (consider ERD diagram)
 
 **Success Criteria**:
+
 - [ ] `pnpm db:generate` creates migration SQL without errors
 - [ ] `pnpm db:migrate:local` applies migration successfully
 - [ ] Can insert article with status 'draft' and complexity 'intermediate'
@@ -196,6 +213,7 @@ Foundation  Core Schema  Taxonomy    Validation  Access Layer
 - [ ] Migration rollback documented (manual process)
 
 **Technical Notes**:
+
 - Use `sqliteTable()` from `drizzle-orm/sqlite-core`
 - Define ENUMs as: `text('status', { enum: ['draft', 'published'] })`
 - Use `uuid()` for primary keys or `text()` with UUID generation
@@ -210,6 +228,7 @@ Foundation  Core Schema  Taxonomy    Validation  Access Layer
 **Objective**: Define taxonomy tables (categories, tags, articleTags junction) and create seed script for 9 canonical categories
 
 **Scope**:
+
 - Define `categories` table schema (id, key, nameFr, nameEn, slugFr, slugEn, icon, color)
 - Define `tags` table schema (id, nameFr, nameEn, createdAt)
 - Define `articleTags` junction table (articleId FK, tagId FK, composite PK)
@@ -219,9 +238,11 @@ Foundation  Core Schema  Taxonomy    Validation  Access Layer
 - Apply migration and seed data
 
 **Dependencies**:
+
 - Requires Phase 2 (articles and article_translations tables exist)
 
 **Key Deliverables**:
+
 - [ ] `categories` table schema defined
 - [ ] `tags` table schema defined
 - [ ] `articleTags` table schema defined with composite primary key
@@ -241,6 +262,7 @@ Foundation  Core Schema  Taxonomy    Validation  Access Layer
 - [ ] Can query categories and retrieve all 9 records
 
 **Files Affected** (~6 files):
+
 - `src/lib/server/db/schema.ts` (modified - add 3 new tables)
 - `drizzle/migrations/0002_add_taxonomy_tables.sql` (generated)
 - `drizzle/migrations/meta/` (updated metadata)
@@ -255,15 +277,18 @@ Foundation  Core Schema  Taxonomy    Validation  Access Layer
 **Risk Level**: 🟢 Low
 
 **Risk Factors**:
+
 - Minimal risk - straightforward table definitions
 - Seed data requires accurate category metadata (icons, colors)
 
 **Mitigation Strategies**:
+
 - Use simple, clear table structures (no complex constraints)
 - Reference UX_UI_Spec.md for category icon/color assignments
 - Test seed script multiple times (should be idempotent or use INSERT OR IGNORE)
 
 **Success Criteria**:
+
 - [ ] All 3 tables created successfully
 - [ ] `pnpm db:seed` populates 9 categories without errors
 - [ ] Can query categories: `SELECT * FROM categories` returns 9 rows
@@ -272,6 +297,7 @@ Foundation  Core Schema  Taxonomy    Validation  Access Layer
 - [ ] ON DELETE CASCADE works (deleting article removes articleTags entries)
 
 **Technical Notes**:
+
 - Categories: `key` field is unique identifier (e.g., 'news', 'tutorial')
 - Categories: Non-deletable (enforced at application level, not DB constraint)
 - Junction table: `primaryKey: t => [t.articleId, t.tagId]`
@@ -280,6 +306,7 @@ Foundation  Core Schema  Taxonomy    Validation  Access Layer
 - Color: Hex code (e.g., '#14B8A6' for teal accent)
 
 **Seed Data Structure** (example):
+
 ```sql
 INSERT OR IGNORE INTO categories (id, key, nameFr, nameEn, slugFr, slugEn, icon, color) VALUES
   ('cat-1', 'news', 'Actualités', 'News', 'actualites', 'news', 'Newspaper', '#3B82F6'),
@@ -294,6 +321,7 @@ INSERT OR IGNORE INTO categories (id, key, nameFr, nameEn, slugFr, slugEn, icon,
 **Objective**: Set up drizzle-zod integration to auto-generate Zod schemas and implement validation helpers for Server Actions
 
 **Scope**:
+
 - Install `drizzle-zod` dependency
 - Generate Zod schemas from Drizzle schemas using `createInsertSchema` and `createSelectSchema`
 - Create validation helper utilities in `src/lib/server/db/validation.ts`
@@ -301,9 +329,11 @@ INSERT OR IGNORE INTO categories (id, key, nameFr, nameEn, slugFr, slugEn, icon,
 - Document validation chain pattern for future Server Actions
 
 **Dependencies**:
+
 - Requires Phase 3 (all schemas defined)
 
 **Key Deliverables**:
+
 - [ ] `drizzle-zod` installed
 - [ ] Zod insert schemas generated for all tables:
   - `insertArticleSchema`
@@ -317,6 +347,7 @@ INSERT OR IGNORE INTO categories (id, key, nameFr, nameEn, slugFr, slugEn, icon,
 - [ ] Unit tests for validation (valid data passes, invalid data fails with clear errors)
 
 **Files Affected** (~4 files):
+
 - `package.json` (modified - add drizzle-zod dependency)
 - `src/lib/server/db/validation.ts` (new - Zod schemas + helpers)
 - `src/lib/server/db/schema.ts` (modified - export schemas for drizzle-zod)
@@ -329,17 +360,20 @@ INSERT OR IGNORE INTO categories (id, key, nameFr, nameEn, slugFr, slugEn, icon,
 **Risk Level**: 🟡 Medium
 
 **Risk Factors**:
+
 - drizzle-zod auto-generation may not handle all edge cases (e.g., custom validations)
 - Need to refine generated schemas (e.g., add custom regex for slugs, email formats)
 - Type inference can be tricky with complex schemas
 
 **Mitigation Strategies**:
+
 - Start with basic auto-generated schemas, refine incrementally
 - Use `.extend()` on generated schemas to add custom validations
 - Test validation thoroughly with edge cases (empty strings, wrong types, etc.)
 - Document any manual refinements to generated schemas
 
 **Success Criteria**:
+
 - [ ] `createInsertSchema(articles)` generates valid Zod schema
 - [ ] Insert schema validates required fields (e.g., `title` cannot be empty)
 - [ ] Insert schema rejects invalid enums (e.g., `status: 'invalid'` fails)
@@ -348,6 +382,7 @@ INSERT OR IGNORE INTO categories (id, key, nameFr, nameEn, slugFr, slugEn, icon,
 - [ ] Validation errors are clear and actionable (Zod error messages)
 
 **Technical Notes**:
+
 - Auto-generate: `export const insertArticleSchema = createInsertSchema(articles)`
 - Refine: `insertArticleSchema.extend({ slug: z.string().regex(/^[a-z0-9-]+$/) })`
 - Use in Server Actions: `const validated = insertArticleSchema.parse(formData)`
@@ -355,6 +390,7 @@ INSERT OR IGNORE INTO categories (id, key, nameFr, nameEn, slugFr, slugEn, icon,
 - Handle relations: Use `.pick()` or `.omit()` to exclude/include FK fields
 
 **Validation Chain Example**:
+
 1. Drizzle schema defines structure: `articles` table
 2. drizzle-zod generates Zod schema: `insertArticleSchema`
 3. Server Action validates: `insertArticleSchema.parse(data)`
@@ -368,6 +404,7 @@ INSERT OR IGNORE INTO categories (id, key, nameFr, nameEn, slugFr, slugEn, icon,
 **Objective**: Create production-ready database access utilities, implement query helpers, and write comprehensive integration tests
 
 **Scope**:
+
 - Refactor `src/lib/server/db/index.ts` with connection pooling and error handling
 - Create query helper functions (e.g., `getArticleById`, `listArticlesByCategory`)
 - Implement mutation helpers (e.g., `createArticle`, `updateArticle`, `deleteArticle`)
@@ -376,10 +413,12 @@ INSERT OR IGNORE INTO categories (id, key, nameFr, nameEn, slugFr, slugEn, icon,
 - Document database access patterns and best practices
 
 **Dependencies**:
+
 - Requires Phase 4 (validation chain ready)
 - Requires all previous phases (complete schema + validation)
 
 **Key Deliverables**:
+
 - [ ] `src/lib/server/db/index.ts` - connection utility with error handling
 - [ ] `src/lib/server/db/queries/` - directory with query helpers:
   - `articles.ts` - article CRUD operations
@@ -396,6 +435,7 @@ INSERT OR IGNORE INTO categories (id, key, nameFr, nameEn, slugFr, slugEn, icon,
 - [ ] Documentation: database access patterns in README or `docs/dev/database.md`
 
 **Files Affected** (~12 files):
+
 - `src/lib/server/db/index.ts` (modified - enhanced connection)
 - `src/lib/server/db/queries/articles.ts` (new)
 - `src/lib/server/db/queries/translations.ts` (new)
@@ -416,17 +456,20 @@ INSERT OR IGNORE INTO categories (id, key, nameFr, nameEn, slugFr, slugEn, icon,
 **Risk Level**: 🟡 Medium
 
 **Risk Factors**:
+
 - Integration tests with D1 local database can be flaky
 - Test isolation requires careful seeding/resetting between tests
 - Transaction support may be limited in D1 (SQLite transactions)
 
 **Mitigation Strategies**:
+
 - Use Playwright test fixtures pattern for DB seeding (`beforeEach` with `wrangler d1 execute`)
 - Keep test data minimal (only what's needed per test)
 - Document any D1 transaction limitations
 - Separate read-only tests from mutation tests
 
 **Success Criteria**:
+
 - [ ] Can execute `getArticleById('some-id')` and retrieve article
 - [ ] Can list articles by category
 - [ ] Can create article with translations in single transaction
@@ -436,6 +479,7 @@ INSERT OR IGNORE INTO categories (id, key, nameFr, nameEn, slugFr, slugEn, icon,
 - [ ] Test coverage ≥ 70% for database access layer
 
 **Technical Notes**:
+
 - Use Drizzle's query builder API (type-safe): `db.select().from(articles).where(...)`
 - Transactions: `db.transaction(async (tx) => { ... })`
 - Error handling: Wrap DB calls in try-catch, parse D1 error codes
@@ -443,6 +487,7 @@ INSERT OR IGNORE INTO categories (id, key, nameFr, nameEn, slugFr, slugEn, icon,
 - Test reset: `DELETE FROM articles; DELETE FROM categories;` etc. (or drop/recreate tables)
 
 **Query Helper Example**:
+
 ```typescript
 // src/lib/server/db/queries/articles.ts
 export async function getArticleById(db: D1Database, id: string) {
@@ -461,6 +506,7 @@ export async function getArticleById(db: D1Database, id: string) {
 ```
 
 **Integration Test Example**:
+
 ```typescript
 // tests/integration/db-articles.test.ts
 import { describe, it, beforeEach, expect } from 'vitest';
@@ -469,8 +515,12 @@ import { execSync } from 'child_process';
 describe('Articles Database Operations', () => {
   beforeEach(() => {
     // Reset and seed test database
-    execSync('wrangler d1 execute DB --local --file=./tests/fixtures/reset-test-db.sql');
-    execSync('wrangler d1 execute DB --local --file=./tests/fixtures/seed-test-data.sql');
+    execSync(
+      'wrangler d1 execute DB --local --file=./tests/fixtures/reset-test-db.sql',
+    );
+    execSync(
+      'wrangler d1 execute DB --local --file=./tests/fixtures/seed-test-data.sql',
+    );
   });
 
   it('should retrieve article by id', async () => {
@@ -502,6 +552,7 @@ Phase 5 (Access Layer + Integration Tests)
 ### Critical Path
 
 **Must follow this order**:
+
 1. Phase 1 → Phase 2 → Phase 3 → Phase 4 → Phase 5 (strictly sequential)
 
 **Cannot be parallelized**: All phases depend on previous phases completing
@@ -509,21 +560,25 @@ Phase 5 (Access Layer + Integration Tests)
 ### Blocking Dependencies
 
 **Phase 1 blocks**:
+
 - Phase 2: Cannot define schema without Drizzle installed
 - Phase 3: Same
 - Phase 4: Same
 - Phase 5: Same
 
 **Phase 2 blocks**:
+
 - Phase 3: categories.id must exist before articles.categoryId can reference it (or nullable approach)
 - Phase 4: Need base schemas before generating Zod
 - Phase 5: Need tables before writing queries
 
 **Phase 3 blocks**:
+
 - Phase 4: Need complete schema before validation
 - Phase 5: Need all tables for comprehensive tests
 
 **Phase 4 blocks**:
+
 - Phase 5: Validation helpers used in access layer functions
 
 ---
@@ -532,32 +587,34 @@ Phase 5 (Access Layer + Integration Tests)
 
 ### Overall Estimates
 
-| Metric | Estimate | Notes |
-|--------|----------|-------|
-| **Total Phases** | 5 | Sequential, atomic phases |
-| **Total Duration** | 11 days | Based on sequential implementation |
-| **Parallel Duration** | N/A | Cannot parallelize (strict dependencies) |
-| **Total Commits** | ~24-31 | Across all phases |
-| **Total Files** | ~33 new, ~5 modified | Estimated |
-| **Test Coverage Target** | >70% | Across database access layer |
+| Metric                   | Estimate             | Notes                                    |
+| ------------------------ | -------------------- | ---------------------------------------- |
+| **Total Phases**         | 5                    | Sequential, atomic phases                |
+| **Total Duration**       | 11 days              | Based on sequential implementation       |
+| **Parallel Duration**    | N/A                  | Cannot parallelize (strict dependencies) |
+| **Total Commits**        | ~24-31               | Across all phases                        |
+| **Total Files**          | ~33 new, ~5 modified | Estimated                                |
+| **Test Coverage Target** | >70%                 | Across database access layer             |
 
 ### Per-Phase Timeline
 
-| Phase | Duration | Commits | Start After | Blocks |
-|-------|----------|---------|-------------|--------|
-| 1. Drizzle Config | 2d | 4-6 | - | Phase 2, 3, 4, 5 |
-| 2. Core Schema | 3d | 6-8 | Phase 1 | Phase 3, 4, 5 |
-| 3. Taxonomy Schema | 2d | 4-5 | Phase 2 | Phase 4, 5 |
-| 4. Validation Chain | 2d | 4-5 | Phase 3 | Phase 5 |
-| 5. Access Layer + Tests | 2d | 5-7 | Phase 4 | - |
+| Phase                   | Duration | Commits | Start After | Blocks           |
+| ----------------------- | -------- | ------- | ----------- | ---------------- |
+| 1. Drizzle Config       | 2d       | 4-6     | -           | Phase 2, 3, 4, 5 |
+| 2. Core Schema          | 3d       | 6-8     | Phase 1     | Phase 3, 4, 5    |
+| 3. Taxonomy Schema      | 2d       | 4-5     | Phase 2     | Phase 4, 5       |
+| 4. Validation Chain     | 2d       | 4-5     | Phase 3     | Phase 5          |
+| 5. Access Layer + Tests | 2d       | 5-7     | Phase 4     | -                |
 
 ### Resource Requirements
 
 **Team Composition**:
+
 - 1 developer: Full-stack (TypeScript, SQL, Drizzle ORM, testing)
 - 1 reviewer: Technical review of schema design and validation logic
 
 **External Dependencies**:
+
 - Cloudflare account with D1 access (already available)
 - Wrangler CLI installed and configured (from Story 0.1)
 - `wrangler.toml` with basic config (from Story 0.5)
@@ -569,18 +626,21 @@ Phase 5 (Access Layer + Integration Tests)
 ### High-Risk Phases
 
 **Phase 1: Drizzle Config & D1 Setup** 🟡
+
 - **Risk**: D1 local development with Wrangler can be problematic (HMR issues, pnpm incompatibility)
 - **Impact**: Could delay entire story if connection issues not resolved
 - **Mitigation**: Follow bi-modal development strategy (Architecture doc), test thoroughly before proceeding
 - **Contingency**: Use remote D1 for development if local issues persist (slower but functional)
 
 **Phase 2: Core Schema** 🟡
+
 - **Risk**: Complex foreign key relations, ENUM handling in SQLite
 - **Impact**: Schema errors could require migration rollback (manual process)
 - **Mitigation**: Review schema carefully, test constraints thoroughly, keep migrations small
 - **Contingency**: Manual migration edits if auto-generated SQL has issues
 
 **Phase 4: Validation Chain** 🟡
+
 - **Risk**: drizzle-zod may not auto-generate perfect schemas, need manual refinement
 - **Impact**: Could require more time than estimated to get validation right
 - **Mitigation**: Start simple, iterate on validation rules, extensive testing
@@ -588,14 +648,14 @@ Phase 5 (Access Layer + Integration Tests)
 
 ### Overall Story Risks
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|------------|--------|------------|
-| D1 local dev friction | High | Medium | Bi-modal development, test early |
-| Migration failures | Medium | High | Small migrations, test locally first |
-| Schema design errors | Low | High | Careful review, match Architecture doc models |
-| drizzle-zod limitations | Medium | Medium | Manual schema refinement if needed |
-| Test flakiness (D1 fixtures) | Medium | Low | Robust seeding/reset scripts |
-| D1 10GB limit (long-term) | Low | Critical | Monitor usage, plan sharding/migration Post-V1 |
+| Risk                         | Likelihood | Impact   | Mitigation                                     |
+| ---------------------------- | ---------- | -------- | ---------------------------------------------- |
+| D1 local dev friction        | High       | Medium   | Bi-modal development, test early               |
+| Migration failures           | Medium     | High     | Small migrations, test locally first           |
+| Schema design errors         | Low        | High     | Careful review, match Architecture doc models  |
+| drizzle-zod limitations      | Medium     | Medium   | Manual schema refinement if needed             |
+| Test flakiness (D1 fixtures) | Medium     | Low      | Robust seeding/reset scripts                   |
+| D1 10GB limit (long-term)    | Low        | Critical | Monitor usage, plan sharding/migration Post-V1 |
 
 ---
 
@@ -603,13 +663,13 @@ Phase 5 (Access Layer + Integration Tests)
 
 ### Test Coverage by Phase
 
-| Phase | Unit Tests | Integration Tests | E2E Tests |
-|-------|------------|-------------------|-----------|
-| 1. Drizzle Config | - | 1 test (connection) | - |
-| 2. Core Schema | - | 2 tests (articles, translations) | - |
-| 3. Taxonomy Schema | - | 1 test (categories, tags) | - |
-| 4. Validation Chain | 3 tests (validation logic) | - | - |
-| 5. Access Layer | - | 3 tests (CRUD operations) | - |
+| Phase               | Unit Tests                 | Integration Tests                | E2E Tests |
+| ------------------- | -------------------------- | -------------------------------- | --------- |
+| 1. Drizzle Config   | -                          | 1 test (connection)              | -         |
+| 2. Core Schema      | -                          | 2 tests (articles, translations) | -         |
+| 3. Taxonomy Schema  | -                          | 1 test (categories, tags)        | -         |
+| 4. Validation Chain | 3 tests (validation logic) | -                                | -         |
+| 5. Access Layer     | -                          | 3 tests (CRUD operations)        | -         |
 
 **Total**: 3 unit tests, 7 integration tests, 0 E2E (E2E will use this DB setup in future stories)
 
@@ -624,6 +684,7 @@ Phase 5 (Access Layer + Integration Tests)
 ### Quality Gates
 
 Each phase must pass:
+
 - [ ] All unit tests (>80% coverage on new code)
 - [ ] All integration tests (with D1 local database)
 - [ ] Linter with no errors (`pnpm lint`)
@@ -645,6 +706,7 @@ Each phase must pass:
 ### Documentation to Generate per Phase
 
 For each phase, use the `phase-doc-generator` skill to create:
+
 1. INDEX.md
 2. IMPLEMENTATION_PLAN.md
 3. COMMIT_CHECKLIST.md
@@ -658,12 +720,14 @@ For each phase, use the `phase-doc-generator` skill to create:
 ### Story-Level Documentation
 
 **This document** (PHASES_PLAN.md):
+
 - Strategic overview of all 5 phases
 - Phase coordination and dependencies
 - Cross-phase timeline and resource estimates
 - Overall story success criteria
 
 **Phase-level documentation** (generated separately for each phase):
+
 - Tactical implementation details (what to code)
 - Commit-by-commit checklists (atomic commits)
 - Specific technical validations (tests to write)
@@ -681,6 +745,7 @@ For each phase, use the `phase-doc-generator` skill to create:
    - Identify any missing phases or dependencies
 
 2. **Set up project structure**
+
    ```bash
    mkdir -p docs/specs/epics/epic_0/story_0_4/implementation/phase_1
    mkdir -p docs/specs/epics/epic_0/story_0_4/implementation/phase_2
@@ -722,6 +787,7 @@ For each phase:
 ### Progress Tracking
 
 Update this document as phases complete:
+
 - [ ] Phase 1: Drizzle Config & D1 Setup - Status, Actual duration, Notes
 - [ ] Phase 2: Core Schema - Status, Actual duration, Notes
 - [ ] Phase 3: Taxonomy Schema - Status, Actual duration, Notes
@@ -729,6 +795,7 @@ Update this document as phases complete:
 - [ ] Phase 5: Access Layer + Tests - Status, Actual duration, Notes
 
 **Update EPIC_TRACKING.md** after each phase:
+
 - Increment "Progress" column (e.g., "1/5" → "2/5" → "3/5" → "4/5" → "5/5")
 - Update "Status" to ✅ COMPLETED when all 5 phases done
 
@@ -739,6 +806,7 @@ Update this document as phases complete:
 ### Story Completion Criteria
 
 This story is considered complete when:
+
 - [ ] All 5 phases implemented and validated
 - [ ] All acceptance criteria from original spec met (AC1-AC7)
 - [ ] Test coverage >70% achieved for database access layer
@@ -749,31 +817,33 @@ This story is considered complete when:
 
 ### Quality Metrics
 
-| Metric | Target | Actual |
-|--------|--------|--------|
-| Test Coverage | >70% | - |
-| Type Safety | 100% (TypeScript strict mode) | - |
-| Code Review Approval | 100% (all commits reviewed) | - |
-| Migration Success Rate | 100% (all migrations apply without errors) | - |
-| Integration Tests Passing | 100% (all 7 tests pass) | - |
-| Validation Accuracy | 100% (all invalid data rejected, all valid data accepted) | - |
+| Metric                    | Target                                                    | Actual |
+| ------------------------- | --------------------------------------------------------- | ------ |
+| Test Coverage             | >70%                                                      | -      |
+| Type Safety               | 100% (TypeScript strict mode)                             | -      |
+| Code Review Approval      | 100% (all commits reviewed)                               | -      |
+| Migration Success Rate    | 100% (all migrations apply without errors)                | -      |
+| Integration Tests Passing | 100% (all 7 tests pass)                                   | -      |
+| Validation Accuracy       | 100% (all invalid data rejected, all valid data accepted) | -      |
 
 ### Performance Metrics (optional)
 
-| Metric | Target | Actual |
-|--------|--------|--------|
-| Query Response Time | <100ms (local D1) | - |
-| Migration Duration | <10s (for current schema) | - |
-| Schema Generation Time | <5s (`pnpm db:generate`) | - |
+| Metric                 | Target                    | Actual |
+| ---------------------- | ------------------------- | ------ |
+| Query Response Time    | <100ms (local D1)         | -      |
+| Migration Duration     | <10s (for current schema) | -      |
+| Schema Generation Time | <5s (`pnpm db:generate`)  | -      |
 
 ---
 
 ## 📚 Reference Documents
 
 ### Story Specification
+
 - Original spec: `docs/specs/epics/epic_0/story_0_4/story_0.4.md`
 
 ### Related Documentation
+
 - Epic overview: `docs/specs/epics/epic_0/EPIC_TRACKING.md`
 - PRD: `docs/specs/PRD.md` (EPIC 0.4, lines 591)
 - Architecture: `docs/specs/Architecture_technique.md` (Data models, lines 152-166)
@@ -782,6 +852,7 @@ This story is considered complete when:
   - Story 0.5 (wrangler.toml config) - 🚧 IN PROGRESS (40%)
 
 ### Generated Phase Documentation
+
 - Phase 1: `docs/specs/epics/epic_0/story_0_4/implementation/phase_1/INDEX.md` (to be generated)
 - Phase 2: `docs/specs/epics/epic_0/story_0_4/implementation/phase_2/INDEX.md` (to be generated)
 - Phase 3: `docs/specs/epics/epic_0/story_0_4/implementation/phase_3/INDEX.md` (to be generated)
@@ -789,6 +860,7 @@ This story is considered complete when:
 - Phase 5: `docs/specs/epics/epic_0/story_0_4/implementation/phase_5/INDEX.md` (to be generated)
 
 ### External Documentation
+
 - [Drizzle ORM Docs](https://orm.drizzle.team/docs/overview)
 - [Drizzle + Cloudflare D1 Guide](https://orm.drizzle.team/docs/get-started-sqlite#cloudflare-d1)
 - [drizzle-zod Documentation](https://orm.drizzle.team/docs/zod)

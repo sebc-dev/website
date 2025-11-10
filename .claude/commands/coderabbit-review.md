@@ -9,6 +9,7 @@ allowed-tools: Bash(coderabbit:*), TodoWrite
 Execute a comprehensive CodeRabbit review with intelligent analysis of suggestions.
 
 ⏱️ **Note**: CodeRabbit analysis can take 2-10 minutes depending on:
+
 - Project size (lines of code)
 - Number of files to analyze
 - Complexity of the codebase
@@ -22,6 +23,7 @@ The analysis will run in the background and you'll be notified when it's complet
    - **IMPORTANT**: Inform the user that CodeRabbit analysis can take several minutes depending on project size
    - Run `coderabbit --prompt-only $ARGUMENTS` in the background using the `run_in_background` parameter
    - Display a clear message:
+
      ```
      🔍 CodeRabbit is analyzing the codebase...
 
@@ -32,6 +34,7 @@ The analysis will run in the background and you'll be notified when it's complet
      📊 Progress updates will be shown every 30 seconds.
      💡 You can continue working while the analysis runs.
      ```
+
    - Monitor the background process periodically (every 30-60 seconds) to check for completion
    - Provide periodic status updates like:
      - "⏳ Still analyzing... (1 minute elapsed)"
@@ -50,6 +53,7 @@ The analysis will run in the background and you'll be notified when it's complet
    - **Severity**: Critical / High / Medium / Low
 
    ### 🔍 Pertinence Analysis
+
    Evaluate:
    - **Context Awareness**: Does the suggestion understand the code's purpose?
    - **Technical Validity**: Is the proposed change technically sound?
@@ -67,6 +71,7 @@ The analysis will run in the background and you'll be notified when it's complet
    - **Alternative Approach**: If rejecting, suggest better alternatives if applicable
 
    ### 📝 Implementation Notes
+
    If accepting, provide:
    - Specific steps to implement
    - Testing considerations
@@ -96,7 +101,7 @@ The analysis will run in the background and you'll be notified when it's complet
 
 ## Example Output Format
 
-```
+````
 # CodeRabbit Review Analysis
 
 Found 5 suggestions to review:
@@ -114,24 +119,29 @@ Found 5 suggestions to review:
 FROM node:20-alpine
 COPY . .
 RUN pnpm install
-```
+````
 
 ### Proposed Change:
+
 Use multi-stage build to reduce image size by 60%
 
 ### 🔍 Analysis:
+
 - ✅ Context aware: Understands Docker best practices
 - ✅ Technically valid: Multi-stage builds are proven approach
 - ✅ Project alignment: We already use standalone Next.js builds
 - ⚠️ Side effects: Requires adjusting CI/CD pipeline
 
 ### ⚖️ Risk vs Benefit:
+
 **Benefits**:
+
 - 60% smaller image size (faster deployments)
 - Better layer caching
 - Improved security (fewer dependencies in final image)
 
 **Risks**:
+
 - Requires testing deployment pipeline
 - May need to adjust docker-compose configuration
 
@@ -143,6 +153,7 @@ Use multi-stage build to reduce image size by 60%
 Significant performance improvement with manageable risk. We already use standalone builds, so this is a natural optimization. The effort is justified by long-term benefits.
 
 **Implementation Plan**:
+
 1. Create multi-stage Dockerfile
 2. Test local builds
 3. Update docker-compose.yml
@@ -152,6 +163,8 @@ Significant performance improvement with manageable risk. We already use standal
 ---
 
 [Continue with remaining suggestions...]
+
 ```
 
 Now, execute the analysis with the provided arguments: $ARGUMENTS
+```

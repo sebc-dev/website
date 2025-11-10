@@ -98,6 +98,7 @@ La cohérence éditoriale et la qualité du contenu sont garanties par cette sup
 ## V1 - Fondations (Q1 2025)
 
 ### Contenu & Rendu
+
 - Blog bilingue (FR/EN) avec support **MDX** et blocs de contenu flexibles réutilisables
 - **Internationalisation** avec **next-intl** :
   - Middleware pour gestion des préfixes `/fr` et `/en`
@@ -106,18 +107,21 @@ La cohérence éditoriale et la qualité du contenu sont garanties par cette sup
   - Support complet du Next.js App Router
 
 ### Hub de Recherche Avancée
+
 - Recherche textuelle + filtres taxonomiques dynamiques
 - Filtres multi-critères : mots-clés, 9 catégories, tags, niveau de complexité, durée de lecture, date
 - État maintenu dans l'URL via **URL Search Params**, mise à jour sans rechargement de page
 - Utilisation de **React Server Components** pour pré-chargement des données côté serveur
 
 ### Système de Taxonomie
+
 - 9 catégories avec identité visuelle distincte (icônes, couleurs, badges)
 - Indicateurs de niveau de complexité (Débutant/Intermédiaire/Avancé)
 - Tags et navigation dédiée
 - Métadonnées de frontmatter YAML typées dans les fichiers `.mdx`
 
 ### Expérience de Lecture Optimisée
+
 - Table des matières auto-générée avec temps de lecture par section
 - Indicateur de progression de lecture (composant React avec hooks)
 - Optimisation images via **Cloudflare Images** (transformation runtime, format=auto pour AVIF/WebP)
@@ -126,6 +130,7 @@ La cohérence éditoriale et la qualité du contenu sont garanties par cette sup
 - Utilisation de **next/image** avec loader Cloudflare
 
 ### Administration & Gestion de Contenu
+
 - **Panneau d'administration "from scratch"** construit avec :
   - **Next.js Server Actions** (fonctions async dans composants serveur)
   - **react-hook-form** + **Zod** pour validation
@@ -135,12 +140,14 @@ La cohérence éditoriale et la qualité du contenu sont garanties par cette sup
 - Sécurisé par **Cloudflare Access** (validation JWT dans middleware Next.js)
 
 ### Design & Interface
+
 - Design UI dark mode (vert canard #14B8A6 sur anthracite #1A1D23)
 - **TailwindCSS 4** avec configuration Next.js
 - Composants **shadcn/ui** (copy-paste, contrôle total)
 - Responsive design et accessibilité
 
 ### Architecture & Infrastructure
+
 - **Architecture Full Stack Next.js** (App Router) déployée sur **Cloudflare Workers**
 - **Adaptateur** : **@opennextjs/cloudflare** (adaptateur OpenNext communautaire)
 - Base de données **D1** avec migrations **Drizzle ORM**
@@ -150,15 +157,25 @@ La cohérence éditoriale et la qualité du contenu sont garanties par cette sup
 - Développement local unifié : `wrangler dev -- npx next dev` (HMR + bindings)
 
 ### Qualité & Tests
+
 - Tests composants avec **Vitest** + **@testing-library/react**
 - Tests E2E avec **Playwright** et fixtures de base de données (seeding via `wrangler d1 execute DB --local --file=./seed.sql`)
+- Tests mutation avec **Stryker.js** (validation qualité tests IA, mutation score > 80%)
+- Outils qualité :
+  - **ESLint (Flat Config)** : Support MDX, linting typé, validation Next.js
+  - **Prettier** : Formatage automatique avec plugin Tailwind CSS
+  - **dependency-cruiser** : Validation frontières client/serveur (critique pour App Router)
+  - **@next/bundle-analyzer** : Détection erreurs bundling
 - CI/CD avec **GitHub Actions** :
   1. Tests (composants + E2E)
-  2. Migrations D1 (`wrangler d1 migrations apply DB --remote`)
-  3. Build Next.js via OpenNext
-  4. Déploiement (`wrangler deploy`)
+  2. Lint + Validation architecture
+  3. Mutation testing (hebdomadaire ou PR critique)
+  4. Migrations D1 (`wrangler d1 migrations apply DB --remote`)
+  5. Build Next.js via OpenNext
+  6. Déploiement (`wrangler deploy`)
 
 ### SEO & Performance
+
 - Meta tags optimisés (Open Graph, Twitter Cards) via Next.js Metadata API
 - Sitemap généré automatiquement
 - Affichage public sans interactions utilisateur (V1)
@@ -178,6 +195,7 @@ La cohérence éditoriale et la qualité du contenu sont garanties par cette sup
 # Stack Technique
 
 ## Framework & Runtime
+
 - **Framework** : **Next.js 15** (App Router avec React Server Components)
 - **Adaptateur** : **@opennextjs/cloudflare** (OpenNext adapter - remplace l'ancien @cloudflare/next-on-pages obsolète)
 - **Runtime** : **Cloudflare Workers** (workerd)
@@ -185,6 +203,7 @@ La cohérence éditoriale et la qualité du contenu sont garanties par cette sup
 - **Prérequis** : Flag `nodejs_compat` obligatoire pour compatibilité Node.js APIs
 
 ## Base de Données & ORM
+
 - **Base de Données** : **Cloudflare D1** (SQLite serverless, mature en production 2025)
 - **ORM** : **Drizzle ORM** (avec drizzle-orm/d1)
 - **Migrations** : **Drizzle Kit** + **Wrangler** (workflow en deux étapes)
@@ -193,21 +212,25 @@ La cohérence éditoriale et la qualité du contenu sont garanties par cette sup
 - **Performance** : Réplication globale en lecture (beta) pour latence optimale
 
 ## Interface Utilisateur
+
 - **UI** : **TailwindCSS 4** + **shadcn/ui** (composants copy-paste)
 - **Rendu Contenu** : **MDX** (Markdown + composants React) via **next-mdx-remote** ou **@next/mdx**
 - **Internationalisation** : **next-intl** (optimisé pour App Router, typesafe)
 
 ## CMS & Gestion de Contenu
+
 - **CMS** : **Panneau d'administration personnalisé** (construit avec Next.js Server Actions et shadcn/ui)
 - **Formulaires** : **react-hook-form** + **Zod** (avec progressive enhancement)
 - **Stockage Média** : **Cloudflare R2** (via Presigned URLs générées par Route Handlers)
 
 ## Authentification & Sécurité
+
 - **Authentification (Admin V1)** : **Cloudflare Access** (Zero Trust) avec validation JWT `Cf-Access-Jwt-Assertion` via middleware Next.js (bibliothèque `jose`)
 - **Authentification (Utilisateurs Post-V1)** : **Better Auth** avec adaptateur `better-auth-cloudflare` (intégration native D1 + Drizzle + KV pour rate limiting)
 - **Sécurité (Réseau)** : **Cloudflare WAF** (Web Application Firewall)
 
 ## Infrastructure Cloudflare
+
 - **Configuration** : **wrangler.toml** (source de vérité pour bindings et infrastructure)
   - `compatibility_flags = ["nodejs_compat"]` (obligatoire)
   - `compatibility_date = "2025-03-25"` (date récente requise)
@@ -221,6 +244,7 @@ La cohérence éditoriale et la qualité du contenu sont garanties par cette sup
 - **Développement local** : `wrangler dev -- npx next dev` (HMR + bindings via Miniflare)
 
 ## Monitoring & Analytics
+
 - **Monitoring V1** : **Cloudflare Health Checks** + **Workers Metrics** & **Workers Logs**
 - **Observabilité** : Logs structurés JSON activés via `[observability]` dans wrangler.toml
   - `enabled = true`
@@ -230,6 +254,7 @@ La cohérence éditoriale et la qualité du contenu sont garanties par cette sup
 - **Backups** : **D1 Time Travel** (PITR sur 30 jours)
 
 ## Communication (Post-V1)
+
 - **Newsletter** : **Cloudflare Email Service** (service natif Workers, annoncé septembre 2025)
   - Binding natif dans wrangler.toml : `env.SEND_EMAIL.send(...)`
   - Configuration DNS automatique (SPF, DKIM, DMARC)

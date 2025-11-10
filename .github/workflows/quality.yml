@@ -1,0 +1,272 @@
+name: Quality & Tests
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+  schedule:
+    - cron: '0 2 * * 1' # Lundi 2h du matin (mutation testing hebdomadaire)
+
+# Permissions minimales requises (principe du moindre privilège)
+permissions:
+  contents: read # Lire le code source (checkout)
+  pull-requests: write # Commenter sur les PRs (mutation testing)
+  actions: read # Lire les statuts des actions
+  checks: write # Écrire les résultats de checks
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ============================================================================
+  # Détection des fichiers changés (conditionnels pour mutation testing)
+  # ============================================================================
+  detect-changes:
+    name: Detect Changed Files
+    runs-on: ubuntu-latest
+    outputs:
+      critical-files: ${{ steps.filter.outputs.critical }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for critical file changes
+        id: filter
+        run: |
+          # On pull_request, vérifier les fichiers changés
+          # Patterns critiques: app/admin/ (à venir), src/lib/server/ (actuel)
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            CRITICAL_CHANGED=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep -E '^(app/admin/|src/lib/server/)' || echo "")
+            if [ -n "$CRITICAL_CHANGED" ]; then
+              echo "critical=true" >> $GITHUB_OUTPUT
+            else
+              echo "critical=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            # Sur push ou schedule, toujours exécuter mutation testing
+            echo "critical=true" >> $GITHUB_OUTPUT
+          fi
+
+  # ============================================================================
+  # Qualité Standard : Rapide, exécuté sur chaque PR
+  # ============================================================================
+  standard-quality:
+    name: Code Quality (Lint, Format, Architecture, Tests)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check code formatting
+        run: pnpm format:check
+
+      - name: Lint code
+        run: pnpm lint
+
+      - name: Validate architecture rules
+        run: pnpm arch:validate
+
+      - name: Run unit & integration tests
+        run: pnpm test --run
+
+      - name: Generate coverage report
+        if: always()
+        run: pnpm test:coverage
+
+      - name: Upload coverage to Codecov
+        if: always()
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage/coverage-final.json
+          flags: unittests
+          fail_ci_if_error: false
+
+  # ============================================================================
+  # Tests E2E : Tests d'intégration complète du navigateur
+  # ============================================================================
+  e2e-tests:
+    name: E2E Tests (Playwright)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps
+
+      - name: Run E2E tests
+        run: pnpm test:e2e
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
+
+  # ============================================================================
+  # Mutation Testing : Validation de la qualité des tests (lent, conditionnel)
+  # ============================================================================
+  mutation-testing:
+    name: Mutation Testing
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    needs: detect-changes
+
+    # Exécuté si :
+    # - Schedule hebdomadaire
+    # - Push sur main/develop
+    # - PR avec changements critiques (app/admin/ ou src/lib/server/)
+    if: |
+      github.event_name == 'schedule' ||
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' && needs.detect-changes.outputs.critical-files == 'true')
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run mutation testing
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            # Mutation testing complet hebdomadaire
+            echo "🧬 Running comprehensive mutation testing..."
+            pnpm test:mutation
+          else
+            # Mutation testing sur fichiers critiques seulement
+            echo "🧬 Running critical paths mutation testing..."
+            pnpm test:mutation:critical
+          fi
+
+      - name: Upload mutation report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mutation-report-${{ github.run_id }}
+          path: reports/mutation/html
+          retention-days: 30
+
+      - name: Comment mutation results on PR
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '⚠️ **Mutation Testing Failed**\n\nThe mutation testing job has failed. This indicates that some of your tests may not be adequately validating the code changes.\n\nCheck the [mutation report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.'
+            })
+
+  # ============================================================================
+  # Build : Vérifier que le projet compile correctement
+  # ============================================================================
+  build:
+    name: Build Next.js Application
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: [standard-quality, e2e-tests]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build application
+        run: pnpm build
+
+      - name: Analyze bundle
+        run: pnpm bundle:analyze
+
+      - name: Upload build artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: .next/
+          retention-days: 5
+
+  # ============================================================================
+  # Status Check : Succès ou échec global
+  # ============================================================================
+  ci-success:
+    name: CI Pipeline Status
+    runs-on: ubuntu-latest
+    needs: [standard-quality, e2e-tests, build]
+    if: always()
+
+    steps:
+      - name: Check CI status
+        run: |
+          if [ "${{ needs.standard-quality.result }}" != "success" ] || \
+             [ "${{ needs.e2e-tests.result }}" != "success" ] || \
+             [ "${{ needs.build.result }}" != "success" ]; then
+            echo "❌ CI Pipeline failed"
+            exit 1
+          fi
+          echo "✅ CI Pipeline succeeded"

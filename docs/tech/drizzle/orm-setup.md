@@ -27,37 +27,37 @@ Créez votre schéma de base de données :
 
 ```typescript
 // src/db/schema.ts
-import { sqliteTable, text, integer, index } from "drizzle-orm/sqlite-core";
-import { relations } from "drizzle-orm";
+import { sqliteTable, text, integer, index } from 'drizzle-orm/sqlite-core';
+import { relations } from 'drizzle-orm';
 
 // Articles table
 export const articles = sqliteTable(
-  "articles",
+  'articles',
   {
-    id: text("id").primaryKey(),
-    title: text("title").notNull(),
-    slug: text("slug").notNull().unique(),
-    content: text("content").notNull(),
-    language: text("language").notNull().default("fr"),
-    createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
-    updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
-    published: integer("published", { mode: "boolean" }).default(false),
+    id: text('id').primaryKey(),
+    title: text('title').notNull(),
+    slug: text('slug').notNull().unique(),
+    content: text('content').notNull(),
+    language: text('language').notNull().default('fr'),
+    createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+    published: integer('published', { mode: 'boolean' }).default(false),
   },
   (table) => ({
-    slugIndex: index("idx_articles_slug").on(table.slug),
-    langIndex: index("idx_articles_language").on(table.language),
-  })
+    slugIndex: index('idx_articles_slug').on(table.slug),
+    langIndex: index('idx_articles_language').on(table.language),
+  }),
 );
 
 // Comments table (example of relations)
-export const comments = sqliteTable("comments", {
-  id: text("id").primaryKey(),
-  articleId: text("article_id")
+export const comments = sqliteTable('comments', {
+  id: text('id').primaryKey(),
+  articleId: text('article_id')
     .notNull()
-    .references(() => articles.id, { onDelete: "cascade" }),
-  author: text("author").notNull(),
-  content: text("content").notNull(),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+    .references(() => articles.id, { onDelete: 'cascade' }),
+  author: text('author').notNull(),
+  content: text('content').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
 });
 
 // Relations
@@ -77,12 +77,12 @@ export const commentsRelations = relations(comments, ({ one }) => ({
 
 ```typescript
 // drizzle.config.ts
-import { defineConfig } from "drizzle-kit";
+import { defineConfig } from 'drizzle-kit';
 
 export default defineConfig({
-  dialect: "sqlite",
-  schema: "./src/db/schema.ts",
-  out: "./drizzle/migrations",
+  dialect: 'sqlite',
+  schema: './src/db/schema.ts',
+  out: './drizzle/migrations',
   strict: true,
   verbose: true,
 });
@@ -92,8 +92,8 @@ export default defineConfig({
 
 ```typescript
 // src/db/index.ts
-import { drizzle } from "drizzle-orm/d1";
-import * as schema from "./schema";
+import { drizzle } from 'drizzle-orm/d1';
+import * as schema from './schema';
 
 export function getDrizzle(db: D1Database) {
   return drizzle(db, { schema });
@@ -106,15 +106,13 @@ export function getDrizzle(db: D1Database) {
 
 ```typescript
 // src/app/actions.ts
-"use server";
+'use server';
 
-import { eq, and, desc } from "drizzle-orm";
-import { articles } from "@/db/schema";
-import { getDrizzle } from "@/db";
+import { eq, and, desc } from 'drizzle-orm';
+import { articles } from '@/db/schema';
+import { getDrizzle } from '@/db';
 
-export async function getArticles(
-  env: CloudflareEnv
-) {
+export async function getArticles(env: CloudflareEnv) {
   const db = getDrizzle(env.DB);
 
   const result = await db
@@ -127,10 +125,7 @@ export async function getArticles(
   return result;
 }
 
-export async function getArticleBySlug(
-  env: CloudflareEnv,
-  slug: string
-) {
+export async function getArticleBySlug(env: CloudflareEnv, slug: string) {
   const db = getDrizzle(env.DB);
 
   const result = await db
@@ -153,7 +148,7 @@ export async function createArticle(
     slug: string;
     content: string;
     language: string;
-  }
+  },
 ) {
   const db = getDrizzle(env.DB);
   const now = new Date();
@@ -182,7 +177,7 @@ export async function createArticle(
 export async function updateArticle(
   env: CloudflareEnv,
   id: string,
-  data: Partial<typeof articles.$inferInsert>
+  data: Partial<typeof articles.$inferInsert>,
 ) {
   const db = getDrizzle(env.DB);
 
@@ -202,10 +197,7 @@ export async function updateArticle(
 ### Delete (Suppression)
 
 ```typescript
-export async function deleteArticle(
-  env: CloudflareEnv,
-  id: string
-) {
+export async function deleteArticle(env: CloudflareEnv, id: string) {
   const db = getDrizzle(env.DB);
 
   await db.delete(articles).where(eq(articles.id, id));
@@ -218,9 +210,9 @@ Intégrez Drizzle avec Zod pour une validation complète :
 
 ```typescript
 // src/lib/validation.ts
-import { z } from "zod";
-import { createInsertSchema } from "drizzle-zod";
-import { articles } from "@/db/schema";
+import { z } from 'zod';
+import { createInsertSchema } from 'drizzle-zod';
+import { articles } from '@/db/schema';
 
 // Génère un schéma Zod du schéma Drizzle
 export const insertArticleSchema = createInsertSchema(articles)
@@ -232,7 +224,11 @@ export const insertArticleSchema = createInsertSchema(articles)
   })
   .extend({
     title: z.string().min(5).max(255),
-    slug: z.string().min(3).max(100).regex(/^[a-z0-9-]+$/),
+    slug: z
+      .string()
+      .min(3)
+      .max(100)
+      .regex(/^[a-z0-9-]+$/),
     content: z.string().min(50),
   });
 
@@ -244,10 +240,7 @@ export type InsertArticle = z.infer<typeof insertArticleSchema>;
 ### Avec Relations
 
 ```typescript
-export async function getArticleWithComments(
-  env: CloudflareEnv,
-  id: string
-) {
+export async function getArticleWithComments(env: CloudflareEnv, id: string) {
   const db = getDrizzle(env.DB);
 
   const result = await db.query.articles.findFirst({

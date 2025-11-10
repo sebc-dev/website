@@ -1,36 +1,197 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# sebc.dev
 
-## Getting Started
+Blog technique bilingue (FR/EN) sur l'IA, l'UX et les bonnes pratiques d'ingénierie logicielle.
 
-First, run the development server:
+**Stack** : Next.js 15 + Cloudflare Workers + D1 + R2 + TypeScript + React 19
+
+## 🚀 Démarrage
+
+### Prérequis
+
+- Node.js 20+
+- pnpm 8+
+- Wrangler CLI
+
+### Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# Cloner le repo
+git clone https://github.com/YOUR_USER/website
+cd website
+
+# Installer les dépendances
+pnpm install
+
+# Copier les variables d'environnement
+cp .env.example .env
+
+# Démarrer le serveur de développement
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the site.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📖 Documentation
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Architecture & Setup
 
-## Learn More
+- **[Brief Projet](docs/specs/Brief.md)** - Vue d'ensemble du projet
+- **[Architecture Technique](docs/specs/Architecture_technique.md)** - Stack technique détaillée
+- **[Concept du Produit](docs/specs/Concept.md)** - Vision et fonctionnalités
 
-To learn more about Next.js, take a look at the following resources:
+### CI/CD & Quality
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **[Pipeline GitHub Actions](.github/CI_CD_PIPELINE.md)** - Description complète du pipeline
+- **[Branch Protection Setup](.github/BRANCH_PROTECTION_SETUP.md)** - Configuration des règles de branches
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Développement Local
 
-## Deploy on Vercel
+- **[CLAUDE.md](CLAUDE.md)** - Instructions pour Claude Code
+- **[Environment Setup](docs/environment-setup.md)** - Configuration de l'environnement
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🛠️ Scripts
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Développement
+
+```bash
+pnpm dev              # Démarrer le serveur de dev (Turbopack)
+pnpm build            # Build production
+pnpm start            # Lancer le serveur production
+```
+
+### Quality & Testing
+
+```bash
+# Linting & Formatting
+pnpm lint             # Run ESLint
+pnpm lint:fix         # Auto-fix linting issues
+pnpm format:check     # Check Prettier formatting
+pnpm format           # Format all files
+
+# Tests
+pnpm test             # Run unit/integration tests
+pnpm test:coverage    # Generate coverage report
+pnpm test:e2e         # Run Playwright E2E tests
+pnpm test:e2e:ui      # Run E2E tests with UI
+pnpm test:e2e:debug   # Debug E2E tests
+
+# Mutation Testing (AI-generated tests validation)
+pnpm test:mutation              # Full mutation testing
+pnpm test:mutation:critical     # Critical paths only
+
+# Architecture & Performance
+pnpm arch:validate    # Validate dependency architecture
+pnpm bundle:analyze   # Analyze bundle size
+
+# All checks
+pnpm quality:check    # Format + Lint + Architecture validation
+```
+
+### Database
+
+```bash
+pnpm db:generate      # Generate Drizzle migrations
+pnpm db:migrate:local # Apply migrations locally
+pnpm db:migrate:remote # Apply migrations to production
+pnpm db:seed          # Seed database with sample data
+pnpm db:studio        # Open Drizzle Studio
+```
+
+## ✨ Code Quality Tools
+
+This project includes a comprehensive quality suite:
+
+- **ESLint** - TypeScript type-aware linting with React, Testing Library, and more
+- **Prettier** - Automatic code formatting with Tailwind CSS sorting
+- **dependency-cruiser** - Architectural validation (prevent server code leakage)
+- **Stryker.js** - Mutation testing for AI-generated test validation
+
+All tools are integrated with:
+
+- **GitHub Actions** - Automated CI/CD pipeline on every PR
+- **VSCode** - Auto-format on save + auto-fix on save
+- **Pre-commit hooks** - Validate locally before pushing
+
+See [CI/CD Pipeline Documentation](.github/CI_CD_PIPELINE.md) for details.
+
+## 📊 GitHub Actions Pipeline
+
+The project has a comprehensive CI/CD pipeline that runs on:
+
+- **Every Pull Request** to `main` or `develop`
+- **Every Push** to `main` or `develop`
+- **Weekly Schedule** (Mondays 2 AM UTC)
+
+### Pipeline Jobs
+
+1. ✓ **Code Quality** - Lint, Format, Architecture, Unit Tests
+2. 🎭 **E2E Tests** - Playwright browser automation tests
+3. 🏗️ **Build** - Verify Next.js build succeeds
+4. 🧬 **Mutation Testing** - Validate test quality (conditional)
+
+All jobs must pass before merging to `main`.
+
+**Setup** : See [Branch Protection Setup](.github/BRANCH_PROTECTION_SETUP.md)
+
+## 📁 Project Structure
+
+```
+/app                    - Next.js App Router pages & layouts
+/src
+  /components          - React components (shadcn/ui)
+  /lib
+    /server            - Server-only utilities & actions
+    /utils             - Shared utilities
+/tests                 - Playwright E2E tests
+/docs
+  /specs               - Product & technical specifications
+  /research            - Research documents & insights
+/.github
+  /workflows           - GitHub Actions CI/CD pipelines
+/.claude               - Claude Code configuration & skills
+/drizzle               - Database schema & migrations
+```
+
+## 🔐 Security
+
+- **Cloudflare Access** - Zero Trust authentication for `/admin`
+- **WAF** - Cloudflare Web Application Firewall
+- **Secrets Management** - Environment variables via `.dev.vars` + `wrangler secret`
+- **Code Scanning** - ESLint + TypeScript strict mode
+
+## 🌍 Deployment
+
+The project is deployed to **Cloudflare Workers** using OpenNext adapter.
+
+```bash
+# Preview locally
+pnpm preview
+
+# Deploy to production
+pnpm deploy
+```
+
+## 🤝 Contributing
+
+1. Create a feature branch from `develop`
+2. Make your changes
+3. Ensure all local checks pass: `pnpm quality:check`
+4. Push and create a Pull Request
+5. Wait for GitHub Actions to pass
+6. Request review and merge when approved
+
+## 📚 Resources
+
+- [Next.js Docs](https://nextjs.org/docs)
+- [Cloudflare Workers](https://developers.cloudflare.com/workers)
+- [Drizzle ORM](https://orm.drizzle.team)
+- [shadcn/ui](https://ui.shadcn.com)
+- [Tailwind CSS](https://tailwindcss.com)
+
+## 📄 License
+
+MIT
+
+---
+
+**Questions?** See [CLAUDE.md](CLAUDE.md) for development help with Claude Code.

@@ -25,12 +25,14 @@ compatibility_flags = ["nodejs_compat"]
 ### La Tension Architecturale
 
 Next.js s'attend à un environnement d'exécution Node.js complet avec accès à :
+
 - `process` global
 - Module `fs` (file system)
 - `async_hooks`
 - Autres APIs Node.js spécifiques
 
 **Cloudflare Workers (workerd)** n'est **pas** Node.js. C'est un runtime basé sur :
+
 - Isolats V8 (V8 isolates)
 - Standards web (Web APIs)
 - Conçu pour la vitesse et la performance
@@ -66,6 +68,7 @@ Ce flag est un point de friction architecturale. Les problèmes suivants se prod
 ### Monitoring Recommandé
 
 Lors de la migration vers Workers, vérifiez :
+
 - Temps d'exécution des Server Actions
 - Comportement des dépendances utilisant `fs`, `path`, etc.
 - Limites CPU atteintes inopinément

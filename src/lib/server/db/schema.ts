@@ -10,7 +10,14 @@
  * @see https://orm.drizzle.team/docs/column-types/sqlite
  */
 
-import { sqliteTable, text, integer, index, unique, primaryKey } from 'drizzle-orm/sqlite-core';
+import {
+  index,
+  integer,
+  primaryKey,
+  sqliteTable,
+  text,
+  unique,
+} from 'drizzle-orm/sqlite-core';
 
 // ============================================================================
 // ENUM Definitions
@@ -64,30 +71,28 @@ export type Status = (typeof StatusEnum)[number];
  * are referenced by existing articles.
  *
  * Relationships:
- * - One category -> Many articles (articles.categoryId foreign key)
+ * - One category -\> Many articles (articles.categoryId foreign key)
  *
- * @field id - Unique identifier (text, e.g., 'cat-1' to 'cat-9')
- * @field key - Machine-readable key (unique, lowercase, hyphens, e.g., 'news', 'tutorial')
- * @field nameFr - French display name (e.g., 'Actualités')
- * @field nameEn - English display name (e.g., 'News')
- * @field slugFr - French URL slug (e.g., 'actualites')
- * @field slugEn - English URL slug (e.g., 'news')
- * @field icon - Lucide React icon name (e.g., 'Newspaper', 'BookOpen')
- * @field color - Hex color code for UI display (e.g., '#3B82F6')
+ * Fields:
+ * - id - Unique identifier (text, e.g., 'cat-1' to 'cat-9')
+ * - key - Machine-readable key (unique, lowercase, hyphens, e.g., 'news', 'tutorial')
+ * - nameFr - French display name (e.g., 'Actualités')
+ * - nameEn - English display name (e.g., 'News')
+ * - slugFr - French URL slug (e.g., 'actualites')
+ * - slugEn - English URL slug (e.g., 'news')
+ * - icon - Lucide React icon name (e.g., 'Newspaper', 'BookOpen')
+ * - color - Hex color code for UI display (e.g., '#3B82F6')
  */
-export const categories = sqliteTable(
-	'categories',
-	{
-		id: text('id').primaryKey(),
-		key: text('key').notNull().unique(),
-		nameFr: text('name_fr').notNull(),
-		nameEn: text('name_en').notNull(),
-		slugFr: text('slug_fr').notNull(),
-		slugEn: text('slug_en').notNull(),
-		icon: text('icon').notNull(),
-		color: text('color').notNull()
-	}
-);
+export const categories = sqliteTable('categories', {
+  id: text('id').primaryKey(),
+  key: text('key').notNull().unique(),
+  nameFr: text('name_fr').notNull(),
+  nameEn: text('name_en').notNull(),
+  slugFr: text('slug_fr').notNull(),
+  slugEn: text('slug_en').notNull(),
+  icon: text('icon').notNull(),
+  color: text('color').notNull(),
+});
 
 /**
  * TypeScript type inference for Category records
@@ -109,41 +114,42 @@ export type Category = typeof categories.$inferSelect;
  * Supports bilingual content (FR/EN) with proper foreign key relations.
  *
  * Relationships:
- * - One article -> Many translations (article_translations)
- * - One article -> One category (categories, created in Phase 3)
+ * - One article -\> Many translations (article_translations)
+ * - One article -\> One category (categories, created in Phase 3)
  *
- * @field id - Unique identifier (UUID or text)
- * @field categoryId - Foreign key to categories table (nullable until Phase 3)
- * @field complexity - Technical difficulty level (beginner, intermediate, advanced)
- * @field status - Publication status (draft, published)
- * @field publishedAt - Publication timestamp (null for drafts)
- * @field coverImage - Cover image path/URL (nullable)
- * @field createdAt - Record creation timestamp
- * @field updatedAt - Last modification timestamp
+ * Fields:
+ * - id - Unique identifier (UUID or text)
+ * - categoryId - Foreign key to categories table (nullable until Phase 3)
+ * - complexity - Technical difficulty level (beginner, intermediate, advanced)
+ * - status - Publication status (draft, published)
+ * - publishedAt - Publication timestamp (null for drafts)
+ * - coverImage - Cover image path/URL (nullable)
+ * - createdAt - Record creation timestamp
+ * - updatedAt - Last modification timestamp
  */
 export const articles = sqliteTable(
-	'articles',
-	{
-		id: text('id').primaryKey(),
-		categoryId: text('category_id').references(() => categories.id), // FK to categories (nullable)
-		complexity: text('complexity', { enum: ComplexityEnum }).notNull(),
-		status: text('status', { enum: StatusEnum }).notNull().default('draft'),
-		publishedAt: integer('published_at', { mode: 'timestamp' }),
-		coverImage: text('cover_image'),
-		createdAt: integer('created_at', { mode: 'timestamp' })
-			.notNull()
-			.$defaultFn(() => new Date()),
-		updatedAt: integer('updated_at', { mode: 'timestamp' })
-			.notNull()
-			.$defaultFn(() => new Date())
-			.$onUpdate(() => new Date())
-	},
-	(table) => ({
-		// Indexes for query performance
-		categoryIdIdx: index('articles_category_id_idx').on(table.categoryId),
-		statusIdx: index('articles_status_idx').on(table.status),
-		publishedAtIdx: index('articles_published_at_idx').on(table.publishedAt)
-	})
+  'articles',
+  {
+    id: text('id').primaryKey(),
+    categoryId: text('category_id').references(() => categories.id), // FK to categories (nullable)
+    complexity: text('complexity', { enum: ComplexityEnum }).notNull(),
+    status: text('status', { enum: StatusEnum }).notNull().default('draft'),
+    publishedAt: integer('published_at', { mode: 'timestamp' }),
+    coverImage: text('cover_image'),
+    createdAt: integer('created_at', { mode: 'timestamp' })
+      .notNull()
+      .$defaultFn(() => new Date()),
+    updatedAt: integer('updated_at', { mode: 'timestamp' })
+      .notNull()
+      .$defaultFn(() => new Date())
+      .$onUpdate(() => new Date()),
+  },
+  (table) => ({
+    // Indexes for query performance
+    categoryIdIdx: index('articles_category_id_idx').on(table.categoryId),
+    statusIdx: index('articles_status_idx').on(table.status),
+    publishedAtIdx: index('articles_published_at_idx').on(table.publishedAt),
+  }),
 );
 
 /**
@@ -175,58 +181,60 @@ export type Language = (typeof LanguageEnum)[number];
  * the articles table can have multiple translations (one per language).
  *
  * Relationships:
- * - Many translations -> One article (foreign key with CASCADE delete)
+ * - Many translations -\> One article (foreign key with CASCADE delete)
  *
  * Constraints:
  * - Unique (articleId, language): One translation per language per article
  * - Unique slug: URL-friendly slugs must be globally unique
  *
- * @field id - Unique identifier (UUID or text)
- * @field articleId - Foreign key to articles.id (CASCADE on delete)
- * @field language - Content language ('fr' or 'en')
- * @field title - Article title in this language
- * @field slug - URL-friendly slug for routing (must be unique)
- * @field excerpt - Short summary/preview text
- * @field seoTitle - SEO-optimized title for meta tags
- * @field seoDescription - SEO meta description
- * @field contentMdx - Full article content in MDX format
- * @field createdAt - Record creation timestamp
- * @field updatedAt - Last modification timestamp
+ * Fields:
+ * - id - Unique identifier (UUID or text)
+ * - articleId - Foreign key to articles.id (CASCADE on delete)
+ * - language - Content language ('fr' or 'en')
+ * - title - Article title in this language
+ * - slug - URL-friendly slug for routing (must be unique)
+ * - excerpt - Short summary/preview text
+ * - seoTitle - SEO-optimized title for meta tags
+ * - seoDescription - SEO meta description
+ * - contentMdx - Full article content in MDX format
+ * - createdAt - Record creation timestamp
+ * - updatedAt - Last modification timestamp
  */
 export const article_translations = sqliteTable(
-	'article_translations',
-	{
-		id: text('id').primaryKey(),
-		articleId: text('article_id')
-			.notNull()
-			.references(() => articles.id, { onDelete: 'cascade' }),
-		language: text('language', { enum: LanguageEnum }).notNull(),
-		title: text('title').notNull(),
-		slug: text('slug').notNull(),
-		excerpt: text('excerpt').notNull(),
-		seoTitle: text('seo_title').notNull(),
-		seoDescription: text('seo_description').notNull(),
-		contentMdx: text('content_mdx').notNull(),
-		createdAt: integer('created_at', { mode: 'timestamp' })
-			.notNull()
-			.$defaultFn(() => new Date()),
-		updatedAt: integer('updated_at', { mode: 'timestamp' })
-			.notNull()
-			.$defaultFn(() => new Date())
-			.$onUpdate(() => new Date())
-	},
-	(table) => ({
-		// Indexes for query performance
-		articleIdIdx: index('article_translations_article_id_idx').on(table.articleId),
-		languageIdx: index('article_translations_language_idx').on(table.language),
-		slugIdx: index('article_translations_slug_idx').on(table.slug),
-		// Unique constraints
-		uniqueArticleLanguage: unique('article_translations_unique_article_language').on(
-			table.articleId,
-			table.language
-		),
-		uniqueSlug: unique('article_translations_unique_slug').on(table.slug)
-	})
+  'article_translations',
+  {
+    id: text('id').primaryKey(),
+    articleId: text('article_id')
+      .notNull()
+      .references(() => articles.id, { onDelete: 'cascade' }),
+    language: text('language', { enum: LanguageEnum }).notNull(),
+    title: text('title').notNull(),
+    slug: text('slug').notNull(),
+    excerpt: text('excerpt').notNull(),
+    seoTitle: text('seo_title').notNull(),
+    seoDescription: text('seo_description').notNull(),
+    contentMdx: text('content_mdx').notNull(),
+    createdAt: integer('created_at', { mode: 'timestamp' })
+      .notNull()
+      .$defaultFn(() => new Date()),
+    updatedAt: integer('updated_at', { mode: 'timestamp' })
+      .notNull()
+      .$defaultFn(() => new Date())
+      .$onUpdate(() => new Date()),
+  },
+  (table) => ({
+    // Indexes for query performance
+    articleIdIdx: index('article_translations_article_id_idx').on(
+      table.articleId,
+    ),
+    languageIdx: index('article_translations_language_idx').on(table.language),
+    slugIdx: index('article_translations_slug_idx').on(table.slug),
+    // Unique constraints
+    uniqueArticleLanguage: unique(
+      'article_translations_unique_article_language',
+    ).on(table.articleId, table.language),
+    uniqueSlug: unique('article_translations_unique_slug').on(table.slug),
+  }),
 );
 
 /**
@@ -252,20 +260,21 @@ export type ArticleTranslation = typeof article_translations.$inferSelect;
  * across language versions.
  *
  * Relationships:
- * - Many tags -> Many articles (via articleTags junction table)
+ * - Many tags -\> Many articles (via articleTags junction table)
  *
- * @field id - Unique identifier (UUID or text)
- * @field nameFr - French tag name (e.g., 'TypeScript', 'React')
- * @field nameEn - English tag name (e.g., 'TypeScript', 'React')
- * @field createdAt - Record creation timestamp
+ * Fields:
+ * - id - Unique identifier (UUID or text)
+ * - nameFr - French tag name (e.g., 'TypeScript', 'React')
+ * - nameEn - English tag name (e.g., 'TypeScript', 'React')
+ * - createdAt - Record creation timestamp
  */
 export const tags = sqliteTable('tags', {
-	id: text('id').primaryKey(),
-	nameFr: text('name_fr').notNull(),
-	nameEn: text('name_en').notNull(),
-	createdAt: integer('created_at', { mode: 'timestamp' })
-		.notNull()
-		.$defaultFn(() => new Date())
+  id: text('id').primaryKey(),
+  nameFr: text('name_fr').notNull(),
+  nameEn: text('name_en').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' })
+    .notNull()
+    .$defaultFn(() => new Date()),
 });
 
 /**
@@ -297,23 +306,24 @@ export type Tag = typeof tags.$inferSelect;
  * - Foreign key to articles.id (ON DELETE CASCADE)
  * - Foreign key to tags.id (ON DELETE CASCADE)
  *
- * @field articleId - Foreign key to articles.id
- * @field tagId - Foreign key to tags.id
+ * Fields:
+ * - articleId - Foreign key to articles.id
+ * - tagId - Foreign key to tags.id
  */
 export const articleTags = sqliteTable(
-	'article_tags',
-	{
-		articleId: text('article_id')
-			.notNull()
-			.references(() => articles.id, { onDelete: 'cascade' }),
-		tagId: text('tag_id')
-			.notNull()
-			.references(() => tags.id, { onDelete: 'cascade' })
-	},
-	(table) => ({
-		// Composite primary key prevents duplicate article-tag pairs
-		pk: primaryKey({ columns: [table.articleId, table.tagId] })
-	})
+  'article_tags',
+  {
+    articleId: text('article_id')
+      .notNull()
+      .references(() => articles.id, { onDelete: 'cascade' }),
+    tagId: text('tag_id')
+      .notNull()
+      .references(() => tags.id, { onDelete: 'cascade' }),
+  },
+  (table) => ({
+    // Composite primary key prevents duplicate article-tag pairs
+    pk: primaryKey({ columns: [table.articleId, table.tagId] }),
+  }),
 );
 
 /**

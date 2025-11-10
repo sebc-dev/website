@@ -13,6 +13,7 @@ purpose: Servir de base pour générer des checklists de validation pour n'impor
 Ce framework fournit une **méthodologie systématique et réutilisable** pour évaluer la qualité, l'exactitude et la fraîcheur d'informations de n'importe quel document technique.
 
 Il peut être utilisé par :
+
 - Un agent IA pour générer automatiquement des checklists de validation
 - Des humains pour valider manuellement des documents
 - Des pipelines CI/CD pour auditer la documentation
@@ -22,26 +23,33 @@ Il peut être utilisé par :
 ## Principes Fondamentaux
 
 ### 1. Exhaustivité Hiérarchique
+
 Structurer la validation par **niveaux de profondeur** :
+
 - **Niveau 1** : Concepts généraux & architecture
 - **Niveau 2** : Composants & technologies spécifiques
 - **Niveau 3** : Versions, configurations, edge cases
 
 ### 2. Traçabilité des Sources
+
 Chaque affirmation doit pointer vers :
+
 - Documentation officielle
 - Repositories GitHub
 - Blog posts / announcements officiels
 - Community resources
 
 ### 3. Détection de Fraîcheur
+
 Identifier les informations susceptibles de devenir obsolètes :
+
 - Versions de software
 - APIs & patterns
 - Breaking changes
 - Recommendations
 
 ### 4. Validation Bidirectionnelle
+
 - **Positif** : Vérifier que X est supporté/recommandé
 - **Négatif** : Vérifier que Y est obsolète/deprecated
 
@@ -133,6 +141,7 @@ Chaque domaine doit suivre ce template :
 ## [X]. [NOM DOMAINE]
 
 ### [X.1] [Technologie Principale]
+
 - [ ] **[Propriété affirmée]** : [Détail]
   - Source: [URL ou référence]
   - À vérifier: [Questions spécifiques]
@@ -144,6 +153,7 @@ Chaque domaine doit suivre ce template :
   - Criticité: [Fondamental/Majeur/Secondaire]
 
 ### [X.2] [Technologie Secondaire]
+
 - [ ] ...
 ```
 
@@ -152,6 +162,7 @@ Chaque domaine doit suivre ce template :
 ## Catégories de Propriétés à Valider
 
 ### Type 1 : Propriétés de Version
+
 **Question:** "La version X.Y.Z affirmée est-elle correcte ?"
 
 ```
@@ -166,6 +177,7 @@ Exemple:
 ```
 
 ### Type 2 : Propriétés de Disponibilité
+
 **Question:** "La feature X est-elle disponible/GA/beta ?"
 
 ```
@@ -180,6 +192,7 @@ Exemple:
 ```
 
 ### Type 3 : Propriétés de Support
+
 **Question:** "X supporte-t-il Y ?"
 
 ```
@@ -194,6 +207,7 @@ Exemple:
 ```
 
 ### Type 4 : Propriétés de Recommandation
+
 **Question:** "X est-il toujours recommandé en 2025 ?"
 
 ```
@@ -208,6 +222,7 @@ Exemple:
 ```
 
 ### Type 5 : Propriétés de Dépression
+
 **Question:** "X est-il vraiment déprécié/obsolète ?"
 
 ```
@@ -222,6 +237,7 @@ Exemple:
 ```
 
 ### Type 6 : Propriétés de Limitation
+
 **Question:** "La limite X est-elle exacte ?"
 
 ```
@@ -236,6 +252,7 @@ Exemple:
 ```
 
 ### Type 7 : Propriétés de Pattern
+
 **Question:** "Le pattern X est-il une best practice reconnue ?"
 
 ```
@@ -250,6 +267,7 @@ Exemple:
 ```
 
 ### Type 8 : Propriétés d'Intégration
+
 **Question:** "A et B s'intègrent-ils bien ensemble ?"
 
 ```
@@ -282,6 +300,7 @@ Exemple:
 ### Étapes du Processus
 
 #### Phase 1 : Analyse du Document
+
 ```
 1. Lire le document complet
 2. Extraire tous les concepts techniques mentionnés
@@ -291,6 +310,7 @@ Exemple:
 ```
 
 #### Phase 2 : Identification des Sources
+
 ```
 1. Pour chaque affirmation, identifier la source officielle
 2. Chercher la documentation pertinente
@@ -300,6 +320,7 @@ Exemple:
 ```
 
 #### Phase 3 : Génération de Questions
+
 ```
 1. Convertir chaque affirmation en question de validation
 2. Écrire des sous-questions détaillées
@@ -308,6 +329,7 @@ Exemple:
 ```
 
 #### Phase 4 : Structuration du Checklist
+
 ```
 1. Organiser par domaines logiques
 2. Ordonner par criticité (Fondamental → Secondaire)
@@ -359,6 +381,7 @@ Un document MARKDOWN structuré contenant :
 ### Sections Obligatoires
 
 1. **En-tête YAML**
+
    ```yaml
    ---
    created: [Date]
@@ -406,26 +429,31 @@ Un document MARKDOWN structuré contenant :
 Une checklist de validation de qualité doit avoir :
 
 ### ✅ Complétude
+
 - [ ] Tous les concepts techniques du document couverts
 - [ ] Aucune affirmation laissée non vérifiée
 - [ ] Dépendances entre concepts identifiées
 
 ### ✅ Clarté
+
 - [ ] Questions sans ambiguïté
 - [ ] Chaque checkbox correspond à une assertion unique
 - [ ] Langage précis et technique
 
 ### ✅ Traçabilité
+
 - [ ] Chaque affirmation a une source
 - [ ] URLs valides et à jour
 - [ ] Références croisées claires
 
 ### ✅ Actualisabilité
+
 - [ ] Processus clair pour mettre à jour le checklist
 - [ ] Sections facilement maintenables
 - [ ] Versioning du checklist lui-même
 
 ### ✅ Utilisabilité
+
 - [ ] Format lisible par humain ET machine
 - [ ] Cases [ ] cochables et traçables
 - [ ] Sections autonomes (peut être utilisées indépendamment)
@@ -469,6 +497,7 @@ Une checklist de validation de qualité doit avoir :
 Selon le type de document, certains domaines reviennent souvent :
 
 ### Pour Documents Architecture Technique
+
 - Framework & Runtime
 - Database & ORM
 - Storage & Media
@@ -483,6 +512,7 @@ Selon le type de document, certains domaines reviennent souvent :
 - Architecture Patterns
 
 ### Pour Documents de Design
+
 - Design Principles
 - Component Library
 - Color Palette
@@ -493,6 +523,7 @@ Selon le type de document, certains domaines reviennent souvent :
 - Brand Guidelines
 
 ### Pour Documents de Configuration
+
 - Environment Setup
 - Package Versions
 - Build Configuration
@@ -509,9 +540,9 @@ Selon le type de document, certains domaines reviennent souvent :
 
 validation_config:
   document:
-    path: "{{ document_path }}"
-    type: "{{ document_type }}" # architecture|design|guide|spec|config
-    language: "{{ language }}" # fr|en
+    path: '{{ document_path }}'
+    type: '{{ document_type }}' # architecture|design|guide|spec|config
+    language: '{{ language }}' # fr|en
 
   analysis:
     extraction:
@@ -530,7 +561,7 @@ validation_config:
       include_breaking_changes: true # Signaler breaking changes
 
   output:
-    format: "markdown"
+    format: 'markdown'
     include_table_of_contents: true
     include_quick_reference: true
     include_research_section: true
@@ -604,6 +635,7 @@ Issue Severity =
 Ce framework fournit une **méthodologie robuste et réutilisable** pour évaluer n'importe quel document technique.
 
 **Points clés :**
+
 - ✅ Exhaustif : Couvre tous les aspects du document
 - ✅ Systématique : Processus clair et reproductible
 - ✅ Traçable : Sources vérifiables pour chaque affirmation
@@ -611,6 +643,7 @@ Ce framework fournit une **méthodologie robuste et réutilisable** pour évalue
 - ✅ Automatisable : Peut être implémenté par un agent IA
 
 **Prochaines étapes:**
+
 1. Implémenter un agent basé sur ce framework
 2. Tester sur plusieurs types de documents
 3. Raffiner les catégories & patterns

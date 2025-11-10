@@ -7,6 +7,7 @@ Complete guide for reviewing the Phase 2 implementation: Core Database Schema (A
 ## 🎯 Review Objective
 
 Validate that the implementation:
+
 - ✅ Correctly defines articles and article_translations tables with proper fields and types
 - ✅ Implements foreign key relations with CASCADE delete behavior
 - ✅ Adds unique constraints to prevent duplicate translations and slugs
@@ -22,11 +23,13 @@ Validate that the implementation:
 Phase 2 is split into **6 atomic commits**. You can:
 
 **Option A: Commit-by-commit review** (recommended)
+
 - Easier to digest (15-40 min per commit)
 - Progressive validation
 - Targeted feedback
 
 **Option B: Global review at once**
+
 - Faster (2-3h total)
 - Immediate overview
 - Requires more focus
@@ -45,6 +48,7 @@ Phase 2 is split into **6 atomic commits**. You can:
 #### Review Checklist
 
 ##### ENUM Definitions
+
 - [ ] File created at correct path: `src/lib/server/db/schema.ts`
 - [ ] `ComplexityEnum` defined with exactly 3 values: 'beginner', 'intermediate', 'advanced'
 - [ ] `StatusEnum` defined with exactly 2 values: 'draft', 'published'
@@ -53,11 +57,13 @@ Phase 2 is split into **6 atomic commits**. You can:
 - [ ] Types are exported for use in application code
 
 ##### Documentation
+
 - [ ] JSDoc comments explain purpose of each ENUM value
 - [ ] File header comment describes purpose of schema file
 - [ ] Comments are clear and concise
 
 ##### Code Quality
+
 - [ ] No `any` types anywhere
 - [ ] Imports are clean and organized
 - [ ] Naming follows conventions (PascalCase for types)
@@ -92,6 +98,7 @@ pnpm lint
 #### Review Checklist
 
 ##### Schema Structure
+
 - [ ] `articles` table defined using `sqliteTable()` from drizzle-orm/sqlite-core
 - [ ] All 8 required fields present:
   - [ ] `id`: text UUID primary key
@@ -104,6 +111,7 @@ pnpm lint
   - [ ] `updatedAt`: integer timestamp with default
 
 ##### Field Types and Constraints
+
 - [ ] `id` is primary key
 - [ ] `categoryId` is nullable (allows Phase 2 to work before Phase 3)
 - [ ] `complexity` uses ComplexityEnum values
@@ -114,12 +122,14 @@ pnpm lint
 - [ ] Timestamps have `defaultNow()` or equivalent
 
 ##### Indexes
+
 - [ ] Index on `categoryId` for filtering by category
 - [ ] Index on `status` for filtering by draft/published
 - [ ] Index on `publishedAt` for sorting/filtering
 - [ ] Indexes are named clearly (e.g., `articles_categoryId_idx`)
 
 ##### Type Safety
+
 - [ ] Table properly exported
 - [ ] Type inference works: `typeof articles.$inferSelect` gives correct type
 - [ ] No `any` types
@@ -154,6 +164,7 @@ pnpm tsc --noEmit
 #### Review Checklist
 
 ##### Schema Structure
+
 - [ ] `article_translations` table defined using `sqliteTable()`
 - [ ] All 10 required fields present:
   - [ ] `id`: text UUID primary key
@@ -169,11 +180,13 @@ pnpm tsc --noEmit
   - [ ] `updatedAt`: integer timestamp
 
 ##### Foreign Key Relation
+
 - [ ] FK to `articles.id` defined with `references(() => articles.id)`
 - [ ] ON DELETE CASCADE configured
 - [ ] Relation is properly typed in Drizzle
 
 ##### Unique Constraints
+
 - [ ] Unique constraint on composite key `(articleId, language)`
   - Prevents duplicate translations for same article
 - [ ] Unique index on `slug` field
@@ -181,16 +194,19 @@ pnpm tsc --noEmit
 - [ ] Constraints are named clearly
 
 ##### Language Field
+
 - [ ] Language restricted to 'fr' | 'en' (not just text)
 - [ ] Properly typed for TypeScript autocomplete
 
 ##### Indexes
+
 - [ ] Index on `articleId` for join performance
 - [ ] Index on `language` for filtering by language
 - [ ] Index on `slug` for URL lookups
 - [ ] Indexes named clearly
 
 ##### Type Safety
+
 - [ ] Table properly exported
 - [ ] Type inference includes relation to articles
 - [ ] No `any` types
@@ -224,6 +240,7 @@ pnpm tsc --noEmit
 #### Review Checklist
 
 ##### Migration SQL Quality
+
 - [ ] CREATE TABLE statement for `articles` with all 8 columns
 - [ ] CREATE TABLE statement for `article_translations` with all 10 columns
 - [ ] FOREIGN KEY constraint from `article_translations.articleId` to `articles.id`
@@ -234,6 +251,7 @@ pnpm tsc --noEmit
 - [ ] SQL syntax is valid SQLite (no MySQL/PostgreSQL-specific syntax)
 
 ##### Migration Application
+
 - [ ] Migration applied to local D1 without errors
 - [ ] Tables created successfully
 - [ ] Can query tables (even if empty):
@@ -244,11 +262,13 @@ pnpm tsc --noEmit
 - [ ] Migration metadata tracked in `__drizzle_migrations` table
 
 ##### Migration Metadata
+
 - [ ] `drizzle/migrations/meta/_journal.json` updated correctly
 - [ ] Migration hash/timestamp present
 - [ ] No duplicate migration entries
 
 ##### Git Hygiene
+
 - [ ] Only migration files committed (no unrelated changes)
 - [ ] Migration SQL file named correctly (timestamped)
 - [ ] Metadata files included
@@ -283,6 +303,7 @@ wrangler d1 execute DB --local --command="SELECT name FROM sqlite_master WHERE t
 #### Review Checklist
 
 ##### Article Data Quality
+
 - [ ] 1 article inserted with valid test id (e.g., 'test-article-1')
 - [ ] `categoryId` is NULL (valid since nullable)
 - [ ] `complexity` is valid ENUM value ('beginner', 'intermediate', or 'advanced')
@@ -292,6 +313,7 @@ wrangler d1 execute DB --local --command="SELECT name FROM sqlite_master WHERE t
 - [ ] `createdAt` and `updatedAt` are valid integer timestamps
 
 ##### French Translation Quality
+
 - [ ] `articleId` matches article id ('test-article-1')
 - [ ] `language` is 'fr'
 - [ ] `title` is in French
@@ -302,6 +324,7 @@ wrangler d1 execute DB --local --command="SELECT name FROM sqlite_master WHERE t
 - [ ] All required fields are non-null
 
 ##### English Translation Quality
+
 - [ ] `articleId` matches article id ('test-article-1')
 - [ ] `language` is 'en'
 - [ ] `title` is in English
@@ -312,6 +335,7 @@ wrangler d1 execute DB --local --command="SELECT name FROM sqlite_master WHERE t
 - [ ] All required fields are non-null
 
 ##### SQL Quality
+
 - [ ] INSERT statements are valid SQLite syntax
 - [ ] String values properly quoted (single quotes)
 - [ ] Timestamps are integers (not quoted strings)
@@ -319,6 +343,7 @@ wrangler d1 execute DB --local --command="SELECT name FROM sqlite_master WHERE t
 - [ ] Uses `INSERT OR IGNORE` or similar for idempotency (optional but good practice)
 
 ##### npm Script
+
 - [ ] Script added to `package.json` under `scripts` section
 - [ ] Script named `db:seed:articles`
 - [ ] Command uses correct syntax: `wrangler d1 execute DB --local --file=./drizzle/seeds/sample-articles.sql`
@@ -357,12 +382,14 @@ wrangler d1 execute DB --local --command="SELECT * FROM article_translations WHE
 #### Review Checklist
 
 ##### Test File Structure
+
 - [ ] Uses Vitest syntax (`describe`, `it`, `expect`, `beforeEach`)
 - [ ] Imports are clean and organized
 - [ ] Database connection properly set up
 - [ ] `beforeEach` hook resets database state (deletes all data)
 
 ##### Test Suite 1: Articles Table
+
 - [ ] Test: Insert article with valid data succeeds
 - [ ] Test: Query article by id returns correct data
 - [ ] Test: All fields are populated correctly
@@ -370,6 +397,7 @@ wrangler d1 execute DB --local --command="SELECT * FROM article_translations WHE
 - [ ] Assertions are specific and meaningful
 
 ##### Test Suite 2: Translations Table
+
 - [ ] Test: Insert 2 translations (FR + EN) for same article succeeds
 - [ ] Test: Query translations by articleId returns both
 - [ ] Test: Language field ('fr', 'en') is correct
@@ -377,6 +405,7 @@ wrangler d1 execute DB --local --command="SELECT * FROM article_translations WHE
 - [ ] Assertions verify all fields
 
 ##### Test Suite 3: Unique Constraints
+
 - [ ] Test: Duplicate (articleId, language) insertion fails with constraint error
 - [ ] Test: Duplicate slug insertion fails with constraint error
 - [ ] Test: Error type is checked (constraint violation, not generic error)
@@ -384,18 +413,21 @@ wrangler d1 execute DB --local --command="SELECT * FROM article_translations WHE
 - [ ] Valid data still works (positive test alongside negative tests)
 
 ##### Test Suite 4: Foreign Key Cascade
+
 - [ ] Test: Insert article with translations
 - [ ] Test: Delete article
 - [ ] Test: Query translations returns empty (CASCADE deleted them)
 - [ ] Test verifies CASCADE behavior explicitly
 
 ##### Test Suite 5: ENUM Validation
+
 - [ ] Test: Invalid complexity value (e.g., 'expert') fails
 - [ ] Test: Invalid status value (e.g., 'archived') fails
 - [ ] Test: Valid ENUM values work correctly
 - [ ] Error handling is proper (catches correct error type)
 
 ##### Code Quality
+
 - [ ] No `any` types
 - [ ] Test descriptions are clear (describe what's being tested)
 - [ ] No commented-out tests without explanation
@@ -404,12 +436,14 @@ wrangler d1 execute DB --local --command="SELECT * FROM article_translations WHE
 - [ ] Each test is focused (tests one thing)
 
 ##### Test Isolation
+
 - [ ] `beforeEach` properly cleans database
 - [ ] Tests can run in any order (no inter-dependencies)
 - [ ] No hardcoded data from other tests
 - [ ] Each test creates its own test data
 
 ##### Database Handling
+
 - [ ] Uses local D1 database (not remote)
 - [ ] Database connection is properly configured
 - [ ] No hardcoded database paths
@@ -443,6 +477,7 @@ pnpm test:coverage tests/integration/articles-schema.test.ts
 After reviewing all commits:
 
 ### Architecture & Design
+
 - [ ] Schema matches specification in story_0.4.md
 - [ ] Tables follow naming conventions (snake_case for DB, camelCase for TS)
 - [ ] Foreign key relations are logical and correct
@@ -450,6 +485,7 @@ After reviewing all commits:
 - [ ] ENUM types prevent invalid data
 
 ### Code Quality
+
 - [ ] Consistent code style throughout
 - [ ] Clear and descriptive naming
 - [ ] Appropriate comments where needed
@@ -457,6 +493,7 @@ After reviewing all commits:
 - [ ] No debug statements (console.log, etc.)
 
 ### Testing
+
 - [ ] All features tested (insertion, querying, constraints, cascades, ENUMs)
 - [ ] Edge cases covered (duplicates, invalid values, cascades)
 - [ ] Test coverage >80%
@@ -464,12 +501,14 @@ After reviewing all commits:
 - [ ] Tests are stable (no flaky tests)
 
 ### Type Safety
+
 - [ ] No `any` types (unless absolutely necessary and documented)
 - [ ] Proper type inference from Drizzle schemas
 - [ ] TypeScript autocomplete works for all table fields
 - [ ] Exported types for application use
 
 ### Database Design
+
 - [ ] Tables normalized appropriately (1-to-many between articles and translations)
 - [ ] Foreign keys enforce referential integrity
 - [ ] Unique constraints prevent data anomalies
@@ -477,12 +516,14 @@ After reviewing all commits:
 - [ ] No redundant data
 
 ### Migration Quality
+
 - [ ] Generated SQL is valid SQLite
 - [ ] Migration applies without errors
 - [ ] Migration is versioned and tracked
 - [ ] No destructive changes (safe for future rollback strategy)
 
 ### Documentation
+
 - [ ] Schema fields documented with JSDoc or comments
 - [ ] ENUM values explained
 - [ ] Complex logic has explanatory comments
@@ -546,6 +587,7 @@ Use this template for feedback:
 ## 🎯 Review Actions
 
 ### If Approved ✅
+
 1. Merge the commits to main branch
 2. Update `INDEX.md` status to ✅ COMPLETED
 3. Update `EPIC_TRACKING.md` (Phase 2 complete, 2/5)
@@ -553,12 +595,14 @@ Use this template for feedback:
 5. Prepare for Phase 3
 
 ### If Changes Requested 🔧
+
 1. Create detailed feedback using template above
 2. Discuss with developer (schedule code review meeting if needed)
 3. Developer makes fixes
 4. Re-review after fixes (quick pass, 30-60 min)
 
 ### If Rejected ❌
+
 1. Document major issues clearly
 2. Schedule discussion with developer and tech lead
 3. Plan rework strategy (may need to adjust PHASES_PLAN.md)

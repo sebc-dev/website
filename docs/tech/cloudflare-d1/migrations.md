@@ -15,11 +15,13 @@ drizzle-kit generate
 ```
 
 **Ce que cela fait** :
+
 1. Compare votre schéma Drizzle (`schema.ts`) avec un snapshot
 2. Génère les fichiers SQL de migration dans `./drizzle/migrations/`
 3. Met à jour le snapshot pour la prochaine comparaison
 
 **Exemple généré** :
+
 ```sql
 -- drizzle/migrations/0001_create_articles.sql
 CREATE TABLE articles (
@@ -45,6 +47,7 @@ wrangler d1 migrations apply --remote
 ```
 
 **Ce que cela fait** :
+
 1. Identifie les migrations non encore exécutées
 2. Exécute les fichiers SQL contre la base D1
 3. Enregistre l'état des migrations dans D1 (`_cf_KV` table interne)
@@ -56,12 +59,12 @@ wrangler d1 migrations apply --remote
 Dans `drizzle.config.ts` :
 
 ```typescript
-import { defineConfig } from "drizzle-kit";
+import { defineConfig } from 'drizzle-kit';
 
 export default defineConfig({
-  dialect: "sqlite",
-  schema: "./src/db/schema.ts",
-  out: "./drizzle/migrations",
+  dialect: 'sqlite',
+  schema: './src/db/schema.ts',
+  out: './drizzle/migrations',
   dbCredentials: {
     // Pour local dev, non requis
     // Wrangler gérera la base
@@ -92,14 +95,14 @@ database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 
 ```typescript
 // src/db/schema.ts
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
 
-export const articles = sqliteTable("articles", {
-  id: text("id").primaryKey(),
-  title: text("title").notNull(),
-  content: text("content").notNull(),
-  language: text("language").notNull(), // Nouveau champ
-  createdAt: integer("created_at", { mode: "timestamp" }),
+export const articles = sqliteTable('articles', {
+  id: text('id').primaryKey(),
+  title: text('title').notNull(),
+  content: text('content').notNull(),
+  language: text('language').notNull(), // Nouveau champ
+  createdAt: integer('created_at', { mode: 'timestamp' }),
 });
 ```
 
@@ -142,6 +145,7 @@ Ne mélangez pas les responsabilités.
 ### Versioning des Migrations
 
 Chaque migration est un fichier numéroté :
+
 - `0001_create_articles.sql`
 - `0002_add_language.sql`
 - `0003_create_comments.sql`

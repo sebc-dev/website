@@ -27,6 +27,7 @@ Automatically generates **7 professional documentation files** (~3400 lines) for
 ### Prerequisites
 
 Before using this skill, you should have:
+
 1. **PRD** at `docs/specs/PRD.md`
 2. **Story extracted** (via `/plan-story` command)
 3. **PHASES_PLAN.md** created at `docs/specs/epics/epic_X/story_X_Y/implementation/PHASES_PLAN.md`
@@ -72,6 +73,7 @@ Just describe what you need using trigger keywords:
 ```
 
 Claude will automatically detect and invoke the skill based on these keywords:
+
 - "generate phase documentation"
 - "create implementation docs"
 - "phase planning"
@@ -93,6 +95,7 @@ Story: Epic 1 Story 1.1
 ```
 
 The skill will ask you for:
+
 1. Story reference (e.g., "Epic 1 Story 1.1")
 2. Phase number (e.g., "3")
 3. Phase name (e.g., "Article Pages")
@@ -105,6 +108,7 @@ The skill will ask you for:
 ### Model-Invoked Skill Architecture
 
 This is a **model-invoked skill**, meaning Claude autonomously decides when to use it based on:
+
 1. **Trigger keywords** in your request (see description in SKILL.md)
 2. **Context matching** with the skill's capabilities
 3. **Task requirements** aligning with documentation generation
@@ -121,18 +125,21 @@ This is different from **user-invoked** slash commands where you explicitly type
 This skill is **Tier 2 (Tactical)** in a two-tier documentation strategy:
 
 **Tier 1 - Strategic** ([story-phase-planner](../story-phase-planner/)):
+
 - Analyzes complete user story
 - Breaks down into optimal number of phases (adaptive sizing based on complexity)
 - Creates PHASES_PLAN.md with high-level overview
 - Use first: `/plan-story`
 
 **Tier 2 - Tactical** (this skill):
+
 - Generates detailed docs for ONE phase
 - Creates 7 implementation documents
 - Provides commit-by-commit guidance
 - Use after planning: `/generate-phase-doc`
 
 **Complete Workflow**:
+
 ```
 1. Story Spec → [story-phase-planner] → PHASES_PLAN.md
 2. For each phase → [phase-doc-generator] → 7 detailed docs
@@ -154,6 +161,7 @@ This skill is **Tier 2 (Tactical)** in a two-tier documentation strategy:
 ```
 
 This creates `PHASES_PLAN.md` which:
+
 - Breaks down the story into phases
 - Identifies dependencies
 - Provides estimates
@@ -178,30 +186,36 @@ Create a markdown file describing what needs to be implemented (either for a sto
 # Phase 3 - Authentication System
 
 ## Objective
+
 Implement JWT-based authentication with role-based access control.
 
 ## Scope
+
 - User login/logout endpoints
 - JWT token generation and validation
 - Protected route middleware
 - Role-based permissions
 
 ## Files to Create/Modify
+
 - `src/auth/jwt.ts` (new)
 - `src/middleware/auth.ts` (new)
 - `src/routes/auth.ts` (new)
 - `src/types/user.ts` (modify)
 
 ## Dependencies
+
 - jsonwebtoken ^9.0.0
 - bcrypt ^5.1.0
 
 ## Tests
+
 - Unit tests for JWT utils
 - Integration tests for auth endpoints
 - E2E tests for login flow
 
 ## Validation
+
 - All endpoints return correct status codes
 - Tokens are validated properly
 - Unauthorized access is blocked
@@ -210,6 +224,7 @@ Implement JWT-based authentication with role-based access control.
 ### 2. Tech Stack Configuration (Optional)
 
 The agent can infer from your spec, or you can provide:
+
 - **Framework**: Next.js, Django, Express, etc.
 - **Language**: TypeScript, Python, JavaScript
 - **Package Manager**: pnpm, npm, yarn
@@ -240,23 +255,27 @@ docs/implementation/phase_X/
 ### Key Features
 
 **Atomic Commit Strategy**:
+
 - Breaks phase into optimal number of independent commits (adaptive sizing: 1-20+ as needed)
 - Each commit has single responsibility
 - Progressive validation at each step
 - Facilitates review and rollback
 
 **Comprehensive Checklists**:
+
 - Implementation tasks per commit
 - Validation commands
 - Review criteria
 - Testing strategies
 
 **Time Estimates**:
+
 - Implementation time per commit
 - Review time per commit
 - Total phase duration
 
 **Quality Standards**:
+
 - Type safety (if applicable)
 - Test coverage targets (>80%)
 - Code quality metrics
@@ -269,6 +288,7 @@ docs/implementation/phase_X/
 ### Step 1: Analyze Specification
 
 The agent reads your technical spec and extracts:
+
 - Phase objectives and scope
 - Features to implement
 - Files to create/modify
@@ -279,6 +299,7 @@ The agent reads your technical spec and extracts:
 ### Step 2: Plan Atomic Commits
 
 Breaks the implementation into the optimal number of atomic commits (adaptive sizing: 1-20+ as needed) based on:
+
 - **Single responsibility**: Each commit does one thing
 - **Independence**: Can be tested and validated alone
 - **Size**: Typically 50-300 lines (reviewable in 15-90 min)
@@ -289,6 +310,7 @@ Breaks the implementation into the optimal number of atomic commits (adaptive si
 ### Step 3: Generate Documentation
 
 Creates all 7 documents with:
+
 - Detailed implementation steps
 - Validation commands adapted to your stack
 - Review checklists
@@ -298,6 +320,7 @@ Creates all 7 documents with:
 ### Step 4: Validate and Deliver
 
 Ensures:
+
 - All files created
 - No placeholders left
 - Commands work with your stack
@@ -311,12 +334,14 @@ Ensures:
 ### 🧑‍💻 For Developers
 
 **Benefits**:
+
 - Step-by-step implementation guide
 - Clear commit boundaries
 - Validation at each step
 - Ready-to-use commit messages
 
 **Workflow**:
+
 1. Read IMPLEMENTATION_PLAN.md (15 min)
 2. Follow COMMIT_CHECKLIST.md for each commit
 3. Validate after each commit
@@ -325,12 +350,14 @@ Ensures:
 ### 👀 For Code Reviewers
 
 **Benefits**:
+
 - Commit-by-commit review guide
 - Clear review criteria
 - Pre-defined checklists
 - Expected outcomes documented
 
 **Workflow**:
+
 1. Review IMPLEMENTATION_PLAN.md for strategy
 2. Use guides/REVIEW.md for each commit
 3. Validate against VALIDATION_CHECKLIST.md
@@ -338,12 +365,14 @@ Ensures:
 ### 📊 For Tech Leads
 
 **Benefits**:
+
 - Progress tracking
 - Quality metrics
 - Time estimates
 - Standardized process
 
 **Workflow**:
+
 1. Check INDEX.md for status
 2. Review IMPLEMENTATION_PLAN.md for metrics
 3. Use VALIDATION_CHECKLIST.md for approval
@@ -364,6 +393,7 @@ Ensures:
 ```
 
 **Key File**: `SKILL.md` contains:
+
 - **YAML Frontmatter**: Metadata (name, description, version, allowed-tools)
 - **Instructions**: Complete agent workflow and templates
 - **Examples**: Concrete use cases
@@ -371,6 +401,7 @@ Ensures:
 ### Default Settings
 
 If not specified, the skill uses:
+
 - Package manager: **pnpm**
 - Test framework: **Vitest**
 - Linter: **Biome**
@@ -405,24 +436,28 @@ Output: docs/phases/phase_3/
 **Key Principle**: The number of commits should reflect the actual work, not fit an arbitrary template.
 
 **Complexity-Based Sizing**:
+
 - 🟢 **Simple Phase** (1-3 commits): Configuration changes, small fixes, minor features
 - 🟡 **Medium Phase** (4-8 commits): Standard features with types, logic, integration, tests
 - 🟠 **Complex Phase** (9-15 commits): Multi-component features with extensive integration
 - 🔴 **Very Complex Phase** (15+ commits): Large-scale features (consider splitting the phase)
 
 **What Matters Most**:
+
 1. **Independence**: Can each commit be reviewed and understood separately?
 2. **Value**: Does each commit represent meaningful progress?
 3. **Safety**: Can we rollback individual commits if needed?
 4. **Reviewability**: Is each commit digestible (typically 15-90 min review)?
 
 **Red Flags**:
+
 - ❌ Combining unrelated changes to hit a target count
 - ❌ Splitting work artificially to avoid "too many commits"
 - ❌ Commits that can't compile/run independently (when they should)
 - ❌ Commits larger than 1000 lines (unless justified: migrations, generated code, etc.)
 
 **Green Lights**:
+
 - ✅ Each commit tells a clear story
 - ✅ Commit progression is logical
 - ✅ Each commit can be validated independently
@@ -443,6 +478,7 @@ Commit 5: Tests
 ```
 
 Each commit:
+
 - Compiles successfully
 - Passes all tests
 - Can be reviewed independently
@@ -487,6 +523,7 @@ Each commit:
 ### Implementation Quality
 
 After using these docs, expect:
+
 - **Test Coverage**: >80%
 - **Type Safety**: 100% (if applicable)
 - **Code Review**: Faster, more focused
@@ -540,11 +577,13 @@ Agent reduces to 3-4 commits for straightforward implementations.
 ### Example 1: Authentication System
 
 **Input**:
+
 - Phase: 3
 - Name: "Authentication System"
 - Spec: `docs/specs/auth_phase.md`
 
 **Output**: 7 files with 5 atomic commits
+
 1. User types and interfaces
 2. JWT utilities
 3. Auth middleware
@@ -554,11 +593,13 @@ Agent reduces to 3-4 commits for straightforward implementations.
 ### Example 2: Database Integration
 
 **Input**:
+
 - Phase: 2
 - Name: "Database Integration"
 - Spec: `docs/specs/db_integration.md`
 
 **Output**: 7 files with 4 atomic commits
+
 1. Database schema types
 2. Connection configuration
 3. CRUD operations
@@ -571,6 +612,7 @@ Agent reduces to 3-4 commits for straightforward implementations.
 ### Updating During Implementation
 
 If you discover changes needed:
+
 1. Update the relevant doc (e.g., IMPLEMENTATION_PLAN.md)
 2. Ensure consistency with other docs
 3. Update cross-references
@@ -612,14 +654,17 @@ If you discover changes needed:
 ## 📖 Related Resources
 
 ### Atomic Commits
+
 - [How to Write a Git Commit Message](https://chris.beams.io/posts/git-commit/)
 - [The Art of the Commit](https://alistapart.com/article/the-art-of-the-commit/)
 
 ### Code Review
+
 - [Google Engineering Practices](https://google.github.io/eng-practices/review/)
 - [Effective Code Review](https://www.oreilly.com/library/view/effective-code-review/9781098129613/)
 
 ### Testing
+
 - [Testing Best Practices](https://testingjavascript.com/)
 - [The Practical Test Pyramid](https://martinfowler.com/articles/practical-test-pyramid.html)
 
@@ -634,6 +679,7 @@ This skill is part of your project and follows your project's license.
 ## 🤝 Contributing
 
 To improve this skill:
+
 1. Edit `prompt.md` to update templates or logic
 2. Update this README with new features
 3. Test with various project types
@@ -669,6 +715,7 @@ To improve this skill:
 **Current Version**: 2.2.0
 
 **What's New in 2.2.0**:
+
 - ✅ **Adaptive Sizing**: Removed arbitrary "3-7 commits" limitation
 - ✅ **Complexity-Based Planning**: Supports 1-20+ commits based on actual work complexity
 - ✅ **Complexity Assessment**: Simple (1-3), Medium (4-8), Complex (9-15), Very Complex (15+)
@@ -677,6 +724,7 @@ To improve this skill:
 - ✅ **Enhanced Examples**: Updated all examples to reflect flexible commit counts
 
 **Previous Versions**:
+
 - **2.1.0**: Proper YAML frontmatter, trigger keywords, allowed-tools restriction
 - **2.0.0**: Generic, project-agnostic version
 - **1.x**: Initial project-specific version
@@ -686,6 +734,7 @@ To improve this skill:
 ## 📜 File Structure Changes (v2.1.0)
 
 **Before** (v2.0.0):
+
 ```
 .claude/skills/phase-doc-generator/
 ├── skill.json          # Metadata
@@ -696,6 +745,7 @@ To improve this skill:
 ```
 
 **After** (v2.1.0):
+
 ```
 .claude/skills/phase-doc-generator/
 ├── SKILL.md           # ⭐ Main file (frontmatter + instructions)

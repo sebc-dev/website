@@ -17,6 +17,7 @@ In Claude Code, type:
 ```
 
 This will:
+
 1. ✅ Load the validation framework methodology
 2. ✅ Analyze the document
 3. ✅ Extract concepts and properties
@@ -28,6 +29,7 @@ This will:
 ### Step 2: Review the Generated Checklist
 
 Open the generated file to see:
+
 - Quick Reference table (criticality distribution)
 - Validation items organized by domain
 - Checkboxes for each item
@@ -36,6 +38,7 @@ Open the generated file to see:
 ### Step 3: Export to Research Agent
 
 Copy the Markdown content and paste into:
+
 - **Gemini**: https://gemini.google.com
 - **ChatGPT**: https://chat.openai.com
 - **Any other agent**: That supports Markdown
@@ -43,6 +46,7 @@ Copy the Markdown content and paste into:
 ### Step 4: Let Agent Research Items
 
 Prompt the agent with something like:
+
 ```
 Here is a validation checklist for a technical document.
 Please research each item using the provided sources.
@@ -60,6 +64,7 @@ Provide your findings in a structured report.
 ### Step 5: Review and Update
 
 Review the agent's findings and:
+
 - Update documentation with corrections
 - Note version changes
 - Track breaking changes
@@ -74,25 +79,29 @@ Review the agent's findings and:
 **Goal**: Ensure Architecture_technique.md is current
 
 **Step 1: Generate Checklist**
+
 ```bash
 /generate-checklist docs/specs/Architecture_technique.md
 ```
 
 **Output Structure**:
+
 ```markdown
 # Architecture_technique.md - Validation Checklist
 
 ## Quick Reference
-| Criticality | Count | % |
-|---|---|---|
-| Fundamental | 23 | 18% |
-| Major | 45 | 35% |
-| Secondary | 59 | 47% |
-| Total | 127 | 100% |
+
+| Criticality | Count | %    |
+| ----------- | ----- | ---- |
+| Fundamental | 23    | 18%  |
+| Major       | 45    | 35%  |
+| Secondary   | 59    | 47%  |
+| Total       | 127   | 100% |
 
 ## Validation Checklist by Domain
 
 ### Domain 1: Framework & Runtime (15 items)
+
 - [ ] Is Next.js 15.0+ the current version?
   - Type: Version
   - Source: https://nextjs.org/releases
@@ -104,18 +113,23 @@ Review the agent's findings and:
   - Research: Check current best practices
 
 ### Domain 2: Database & ORM (12 items)
+
 ... (continues for all 12 domains)
 
 ## Research Sources
+
 ### Next.js
+
 - Official Docs: https://nextjs.org/docs
 - GitHub: https://github.com/vercel/next.js
 - Releases: https://nextjs.org/releases
 
 ### Cloudflare D1
+
 ... (all technologies)
 
 ## Notes & Findings
+
 [Space for documenting findings]
 ```
 
@@ -127,6 +141,7 @@ Agent visits each source URL and validates claims
 
 **Step 4: Review Findings Report**
 Agent provides structured findings like:
+
 ```
 VALIDATION REPORT - Architecture_technique.md
 
@@ -159,11 +174,13 @@ Update docs based on agent's findings
 **Goal**: Ensure the validation framework itself is accurate
 
 **Step 1: Generate Checklist**
+
 ```bash
 /generate-checklist docs/frameworks/GENERIC_VALIDATION_FRAMEWORK.md
 ```
 
 **What gets validated**:
+
 - Framework methodology accuracy
 - 8 property types relevance
 - 12 domains appropriateness
@@ -171,6 +188,7 @@ Update docs based on agent's findings
 - Process steps completeness
 
 **Example checklist items**:
+
 - [ ] Are the 8 property types comprehensive?
 - [ ] Do the 12 domains cover all technical areas?
 - [ ] Is the criticality distribution realistic?
@@ -186,12 +204,14 @@ Update docs based on agent's findings
 **Scenario**: Planning to migrate from one framework to another
 
 **Why validate**:
+
 - Ensure documentation is accurate
 - Identify version mismatches
 - Detect breaking changes
 - Plan for deprecations
 
 **Steps**:
+
 1. `/generate-checklist docs/specs/Architecture_technique.md`
 2. Let agent research current versions
 3. Review compatibility with new framework
@@ -204,6 +224,7 @@ Update docs based on agent's findings
 **Scenario**: Keep documentation fresh monthly
 
 **Steps**:
+
 1. First Monday of month: `/generate-checklist docs/specs/*.md`
 2. Send checklists to agent for research
 3. Collect findings in structured report
@@ -218,6 +239,7 @@ Update docs based on agent's findings
 **Scenario**: Add validation to PR review
 
 **Steps**:
+
 1. When docs are modified
 2. Generate checklist for changed file
 3. Have reviewer use checklist to verify claims
@@ -231,6 +253,7 @@ Update docs based on agent's findings
 **Scenario**: Help new member understand current stack
 
 **Steps**:
+
 1. Generate checklist for Architecture_technique.md
 2. Share with new member
 3. New member researches items using provided sources
@@ -244,6 +267,7 @@ Update docs based on agent's findings
 ### Type 1: Version Claims
 
 **Example Item**:
+
 ```markdown
 - [ ] Is Next.js version 15.0+ current?
   - Type: Version
@@ -252,6 +276,7 @@ Update docs based on agent's findings
 ```
 
 **What to research**:
+
 - Is this version current?
 - When was it released?
 - Are there newer versions?
@@ -262,6 +287,7 @@ Update docs based on agent's findings
 ### Type 2: Availability Claims
 
 **Example Item**:
+
 ```markdown
 - [ ] Is Cloudflare D1 production-ready?
   - Type: Availability
@@ -270,6 +296,7 @@ Update docs based on agent's findings
 ```
 
 **What to research**:
+
 - What is current status (Alpha/Beta/GA)?
 - Are there limitations?
 - What's the SLA?
@@ -280,6 +307,7 @@ Update docs based on agent's findings
 ### Type 3: Support Claims
 
 **Example Item**:
+
 ```markdown
 - [ ] Does Next.js support WebAssembly?
   - Type: Support
@@ -288,6 +316,7 @@ Update docs based on agent's findings
 ```
 
 **What to research**:
+
 - Is feature still supported?
 - Any known issues?
 - Performance considerations?
@@ -298,6 +327,7 @@ Update docs based on agent's findings
 ### Type 4: Recommendation Claims
 
 **Example Item**:
+
 ```markdown
 - [ ] Are Server Components the recommended approach?
   - Type: Recommendation
@@ -306,6 +336,7 @@ Update docs based on agent's findings
 ```
 
 **What to research**:
+
 - Is this still best practice?
 - Any caveats?
 - When did this become recommended?
@@ -316,6 +347,7 @@ Update docs based on agent's findings
 ### Type 5: Deprecation Claims
 
 **Example Item**:
+
 ```markdown
 - [ ] Are class components deprecated?
   - Type: Deprecation
@@ -324,6 +356,7 @@ Update docs based on agent's findings
 ```
 
 **What to research**:
+
 - What is deprecation status?
 - When will it be removed?
 - What's the migration path?
@@ -334,6 +367,7 @@ Update docs based on agent's findings
 ### Type 6: Limitation Claims
 
 **Example Item**:
+
 ```markdown
 - [ ] Is 2MB the correct bundle size limit?
   - Type: Limitation
@@ -342,6 +376,7 @@ Update docs based on agent's findings
 ```
 
 **What to research**:
+
 - What are exact current limits?
 - Are there exceptions?
 - How to handle large bundles?
@@ -352,6 +387,7 @@ Update docs based on agent's findings
 ### Type 7: Pattern Claims
 
 **Example Item**:
+
 ```markdown
 - [ ] Is server-first rendering the recommended pattern?
   - Type: Pattern
@@ -360,6 +396,7 @@ Update docs based on agent's findings
 ```
 
 **What to research**:
+
 - Is pattern still recommended?
 - When did it become standard?
 - What are alternatives?
@@ -370,6 +407,7 @@ Update docs based on agent's findings
 ### Type 8: Integration Claims
 
 **Example Item**:
+
 ```markdown
 - [ ] Does Next.js → Cloudflare → D1 integration work?
   - Type: Integration
@@ -378,6 +416,7 @@ Update docs based on agent's findings
 ```
 
 **What to research**:
+
 - Does integration still work?
 - Version compatibility?
 - Known issues?
@@ -388,72 +427,84 @@ Update docs based on agent's findings
 ## Domains Explained
 
 ### Framework & Runtime (15 items)
+
 - Next.js version and features
 - React version and paradigm
 - Runtime environment
 - Adapters and compatibility
 
 ### Database & ORM (12 items)
+
 - Database technology choices
 - ORM library features
 - Schema design approach
 - Migration strategy
 
 ### Storage & Media (10 items)
+
 - File storage solution
 - CDN configuration
 - Image optimization
 - Asset management
 
 ### Authentication & Security (12 items)
+
 - Auth method (OAuth, JWT, etc.)
 - Security headers
 - Encryption approach
 - Compliance requirements
 
 ### Internationalization (8 items)
+
 - i18n library choice
 - Multi-language support
 - Language switching
 - Regional customization
 
 ### Content & Rendering (15 items)
+
 - Rendering strategy (SSR, CSR, SSG)
 - Content sources
 - Data fetching approach
 - Caching strategy
 
 ### UI & Styling (12 items)
+
 - CSS approach (Tailwind, CSS modules)
 - Component library
 - Design system
 - Theming support
 
 ### Testing (10 items)
+
 - Test framework
 - Testing strategy
 - Test coverage
 - Testing tools
 
 ### Deployment & CI/CD (15 items)
+
 - Deployment platform
 - CI/CD tool
 - Environment management
 - Release process
 
 ### Infrastructure & Monitoring (10 items)
+
 - Monitoring solution
 - Logging infrastructure
 - Error tracking
 - Performance monitoring
 
 ### Performance & Web Vitals (12 items)
+
 - Web Vitals targets
 - Bundle size limits
 - Load time targets
 - Optimization strategies
 
 ### Architecture Patterns (12 items)
+
 - Architectural style
 - API design patterns
 - State management
@@ -464,30 +515,35 @@ Update docs based on agent's findings
 ## Best Practices
 
 ### 1. Be Systematic
+
 - Start with Fundamental items (highest priority)
 - Then Major items
 - Finally Secondary items
 - Don't skip items
 
 ### 2. Use Official Sources
+
 - Prefer official documentation
 - Check GitHub releases for version info
 - Trust status pages for service status
 - Cross-reference multiple sources
 
 ### 3. Document Findings
+
 - Note exactly what you found
 - Include dates of research
 - Link to specific documentation
 - Note any caveats
 
 ### 4. Track Changes
+
 - Mark items that need updates
 - Note specific version changes
 - Document breaking changes
 - Plan remediation
 
 ### 5. Review Periodically
+
 - Monthly audits recommended
 - Update checklist as docs change
 - Track trends over time
@@ -500,6 +556,7 @@ Update docs based on agent's findings
 ### Issue: Checklist generation takes too long
 
 **Solution**:
+
 - Document might be very large
 - Framework is doing thorough analysis
 - Typical time is 5-15 minutes
@@ -509,6 +566,7 @@ Update docs based on agent's findings
 ### Issue: Too many items in checklist
 
 **Solution**:
+
 - Framework targets 80-150 items (intentional)
 - This ensures comprehensive validation
 - Can be exported in batches if needed
@@ -517,6 +575,7 @@ Update docs based on agent's findings
 ### Issue: Some questions seem unclear
 
 **Solution**:
+
 - Questions are designed to be researchable
 - Use the provided sources
 - Consult the framework documentation
@@ -525,6 +584,7 @@ Update docs based on agent's findings
 ### Issue: Research findings contradict documentation
 
 **Solution**:
+
 - This is expected and valuable finding
 - Document the conflict clearly
 - Research with additional sources
@@ -536,7 +596,9 @@ Update docs based on agent's findings
 ## Tips & Tricks
 
 ### Tip 1: Batch Validation
+
 Generate checklists for multiple documents:
+
 ```bash
 /generate-checklist docs/specs/Architecture_technique.md
 /generate-checklist docs/specs/UX_UI_Spec.md
@@ -544,27 +606,35 @@ Generate checklists for multiple documents:
 ```
 
 ### Tip 2: Focus on Criticality
+
 If time is limited:
+
 1. Focus on Fundamental items first (15-20%)
 2. Then Major items (30-40%)
 3. Secondary items as time allows
 
 ### Tip 3: Team Validation
+
 Assign different domains to team members:
+
 - Person A: Framework & Runtime
 - Person B: Database & Storage
 - Person C: Auth & Security
 - Etc.
 
 ### Tip 4: Scheduled Validations
+
 Set monthly reminders:
+
 - First Monday: Generate checklists
 - Week 1: Send to research agent
 - Week 2: Review findings
 - Week 3-4: Update documentation
 
 ### Tip 5: Integration with CI/CD
+
 Future Phase 2/3:
+
 - Add validation to PR checks
 - Auto-generate checklists on doc changes
 - Integrate research agent findings
@@ -575,6 +645,7 @@ Future Phase 2/3:
 ## Next Steps
 
 ### Ready to Start?
+
 1. Read `.claude/VALIDATION_FRAMEWORK_README.md` (overview)
 2. Run `/generate-checklist docs/specs/Architecture_technique.md` (test)
 3. Review generated checklist (understand structure)
@@ -582,12 +653,14 @@ Future Phase 2/3:
 5. Review findings (learn about your documentation)
 
 ### Want to Understand Deeper?
+
 1. Read `docs/frameworks/GENERIC_VALIDATION_FRAMEWORK.md` (methodology)
 2. Review `.claude/skills/doc-validation-framework/SKILL.md` (expertise)
 3. Check `docs/frameworks/AGENT_IMPLEMENTATION_GUIDE.md` (implementation)
 4. Study `docs/frameworks/EXAMPLE_APPLICATION.md` (real example)
 
 ### Ready for Team Adoption?
+
 1. Share this guide with team
 2. Set up monthly validation schedule
 3. Create team process for findings
@@ -599,6 +672,7 @@ Future Phase 2/3:
 ## Support
 
 For questions or issues:
+
 1. Check `.claude/VALIDATION_FRAMEWORK_README.md`
 2. Review framework SKILL.md for methodology
 3. Consult this usage guide

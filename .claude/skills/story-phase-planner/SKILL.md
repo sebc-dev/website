@@ -28,11 +28,10 @@ When activated, collect these inputs from the user:
 2. **PRD Path** (default: `docs/specs/PRD.md`)
 3. **Epic Directory** (will be auto-created if needed, or detected from epic folder)
 
-Optional:
-4. **Project Tech Stack** (to assess technical dependencies)
-5. **Team Size** (to estimate phase durations)
+Optional: 4. **Project Tech Stack** (to assess technical dependencies) 5. **Team Size** (to estimate phase durations)
 
 **Context Documents** (read for story understanding):
+
 - **PRD.md**: `docs/specs/PRD.md` - Full product requirements with acceptance criteria
 - **Frontend_Specification.md**: `docs/specs/Frontend_Specification.md` - Technical architecture details
 - **UX_UI_Spec.md**: `docs/specs/UX_UI_Spec.md` - User experience requirements and design specifications
@@ -51,12 +50,14 @@ docs/specs/epics/epic_X/story_X_Y/
 ```
 
 **story_X.Y.md** contains:
+
 - Story description extracted from PRD
 - Acceptance criteria
 - Technical requirements
 - Dependencies on other stories
 
 **PHASES_PLAN.md** provides:
+
 - Story overview and objectives
 - Phase breakdown strategy
 - Summary of each phase (objective, scope, dependencies)
@@ -68,7 +69,7 @@ docs/specs/epics/epic_X/story_X_Y/
 
 ## 📋 PHASES_PLAN.md Template
 
-```markdown
+````markdown
 # Story {X.Y} - Phases Implementation Plan
 
 **Story**: {Story Name}
@@ -87,6 +88,7 @@ docs/specs/epics/epic_X/story_X_Y/
 **Story Objective**: {1-2 paragraphs describing what this story achieves}
 
 **Acceptance Criteria**:
+
 - [Criterion 1]
 - [Criterion 2]
 - [Criterion 3]
@@ -110,6 +112,7 @@ This story is decomposed into **{N} atomic phases** based on:
 ### Atomic Phase Principles
 
 Each phase follows these principles:
+
 - **Independent**: Can be implemented and tested separately
 - **Deliverable**: Produces tangible, working functionality
 - **Sized appropriately**: Typically 2-5 days of work
@@ -120,8 +123,8 @@ Each phase follows these principles:
 
 \```
 [Phase 1] → [Phase 2] → [Phase 3] → [Phase 4] → [Phase 5]
-   ↓           ↓           ↓           ↓           ↓
-Foundation   Core        Features   Integration  Polish
+↓ ↓ ↓ ↓ ↓
+Foundation Core Features Integration Polish
 \```
 
 ---
@@ -133,19 +136,23 @@ Foundation   Core        Features   Integration  Polish
 **Objective**: {One sentence describing what this phase achieves}
 
 **Scope**:
+
 - {Feature/Component 1}
 - {Feature/Component 2}
 - {Feature/Component 3}
 
 **Dependencies**:
+
 - None (Foundation phase) / Requires Phase {X}
 
 **Key Deliverables**:
+
 - [ ] {Deliverable 1}
 - [ ] {Deliverable 2}
 - [ ] {Deliverable 3}
 
 **Files Affected** (~{X} files):
+
 - `{path/to/file1}` (new/modified)
 - `{path/to/file2}` (new/modified)
 - `{path/to/file3}` (new/modified)
@@ -157,19 +164,23 @@ Foundation   Core        Features   Integration  Polish
 **Risk Level**: 🟢 Low | 🟡 Medium | 🔴 High
 
 **Risk Factors** (if any):
+
 - {Risk 1 description}
 - {Risk 2 description}
 
 **Mitigation Strategies**:
+
 - {Strategy 1}
 - {Strategy 2}
 
 **Success Criteria**:
+
 - [ ] {Criterion 1}
 - [ ] {Criterion 2}
 - [ ] Tests: {Expected test coverage or count}
 
 **Technical Notes**:
+
 - {Important technical consideration 1}
 - {Important technical consideration 2}
 
@@ -187,27 +198,30 @@ Foundation   Core        Features   Integration  Polish
 
 \```
 Phase 1 (Foundation)
-    ↓
+↓
 Phase 2 (Core Logic) ← Phase 3 (Data Layer)
-    ↓                       ↓
+↓ ↓
 Phase 4 (Integration) ←─────┘
-    ↓
+↓
 Phase 5 (UI & UX)
-    ↓
+↓
 Phase 6 (Testing & Validation)
 \```
 
 ### Critical Path
 
 **Must follow this order**:
+
 1. Phase {X} → Phase {Y} → Phase {Z}
 
 **Can be parallelized**:
+
 - Phase {A} and Phase {B} (independent, can work simultaneously)
 
 ### Blocking Dependencies
 
 **Phase {X} blocks**:
+
 - Phase {Y}: {Reason}
 - Phase {Z}: {Reason}
 
@@ -217,33 +231,35 @@ Phase 6 (Testing & Validation)
 
 ### Overall Estimates
 
-| Metric | Estimate | Notes |
-|--------|----------|-------|
-| **Total Phases** | {N} | Atomic, independent phases |
-| **Total Duration** | {X-Y} weeks | Based on sequential implementation |
-| **Parallel Duration** | {X-Y} weeks | If phases {A, B} parallelized |
-| **Total Commits** | ~{XX-YY} | Across all phases |
-| **Total Files** | ~{XX} new, ~{YY} modified | Estimated |
-| **Test Coverage Target** | >{XX}% | Across all phases |
+| Metric                   | Estimate                  | Notes                              |
+| ------------------------ | ------------------------- | ---------------------------------- |
+| **Total Phases**         | {N}                       | Atomic, independent phases         |
+| **Total Duration**       | {X-Y} weeks               | Based on sequential implementation |
+| **Parallel Duration**    | {X-Y} weeks               | If phases {A, B} parallelized      |
+| **Total Commits**        | ~{XX-YY}                  | Across all phases                  |
+| **Total Files**          | ~{XX} new, ~{YY} modified | Estimated                          |
+| **Test Coverage Target** | >{XX}%                    | Across all phases                  |
 
 ### Per-Phase Timeline
 
-| Phase | Duration | Commits | Start After | Blocks |
-|-------|----------|---------|-------------|--------|
-| 1. {Name} | {X}d | {Y} | - | Phase 2, 3 |
-| 2. {Name} | {X}d | {Y} | Phase 1 | Phase 4 |
-| 3. {Name} | {X}d | {Y} | Phase 1 | Phase 4 |
-| 4. {Name} | {X}d | {Y} | Phase 2, 3 | Phase 5 |
-| 5. {Name} | {X}d | {Y} | Phase 4 | - |
+| Phase     | Duration | Commits | Start After | Blocks     |
+| --------- | -------- | ------- | ----------- | ---------- |
+| 1. {Name} | {X}d     | {Y}     | -           | Phase 2, 3 |
+| 2. {Name} | {X}d     | {Y}     | Phase 1     | Phase 4    |
+| 3. {Name} | {X}d     | {Y}     | Phase 1     | Phase 4    |
+| 4. {Name} | {X}d     | {Y}     | Phase 2, 3  | Phase 5    |
+| 5. {Name} | {X}d     | {Y}     | Phase 4     | -          |
 
 ### Resource Requirements
 
 **Team Composition**:
+
 - {N} developer(s): {Skill requirements}
 - {N} reviewer(s): {Review requirements}
 - DevOps: {Infrastructure requirements}
 
 **External Dependencies**:
+
 - {Service/API 1}: {Why needed}
 - {Package/Library 2}: {Why needed}
 
@@ -254,19 +270,21 @@ Phase 6 (Testing & Validation)
 ### High-Risk Phases
 
 **Phase {X}: {Name}** 🔴
+
 - **Risk**: {Description of risk}
 - **Impact**: {What happens if this fails}
 - **Mitigation**: {How to reduce risk}
 - **Contingency**: {Backup plan}
 
 **Phase {Y}: {Name}** 🟡
+
 - **Risk**: {Description of risk}
 - **Mitigation**: {How to reduce risk}
 
 ### Overall Story Risks
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|------------|--------|------------|
+| Risk     | Likelihood   | Impact       | Mitigation |
+| -------- | ------------ | ------------ | ---------- |
 | {Risk 1} | High/Med/Low | High/Med/Low | {Strategy} |
 | {Risk 2} | High/Med/Low | High/Med/Low | {Strategy} |
 
@@ -276,12 +294,12 @@ Phase 6 (Testing & Validation)
 
 ### Test Coverage by Phase
 
-| Phase | Unit Tests | Integration Tests | E2E Tests |
-|-------|------------|-------------------|-----------|
-| 1. {Name} | {XX} tests | {YY} tests | - |
-| 2. {Name} | {XX} tests | {YY} tests | - |
-| ... | ... | ... | ... |
-| {N}. {Name} | {XX} tests | {YY} tests | {ZZ} tests |
+| Phase       | Unit Tests | Integration Tests | E2E Tests  |
+| ----------- | ---------- | ----------------- | ---------- |
+| 1. {Name}   | {XX} tests | {YY} tests        | -          |
+| 2. {Name}   | {XX} tests | {YY} tests        | -          |
+| ...         | ...        | ...               | ...        |
+| {N}. {Name} | {XX} tests | {YY} tests        | {ZZ} tests |
 
 ### Test Milestones
 
@@ -292,6 +310,7 @@ Phase 6 (Testing & Validation)
 ### Quality Gates
 
 Each phase must pass:
+
 - [ ] All unit tests (>80% coverage)
 - [ ] All integration tests
 - [ ] Linter with no errors
@@ -306,6 +325,7 @@ Each phase must pass:
 ### Documentation to Generate per Phase
 
 For each phase, use the `phase-doc-generator` skill to create:
+
 1. INDEX.md
 2. IMPLEMENTATION_PLAN.md
 3. COMMIT_CHECKLIST.md
@@ -319,12 +339,14 @@ For each phase, use the `phase-doc-generator` skill to create:
 ### Story-Level Documentation
 
 **This document** (PHASES_PLAN.md):
+
 - Strategic overview
 - Phase coordination
 - Cross-phase dependencies
 - Overall timeline
 
 **Phase-level documentation** (generated separately):
+
 - Tactical implementation details
 - Commit-by-commit checklists
 - Specific technical validations
@@ -342,9 +364,11 @@ For each phase, use the `phase-doc-generator` skill to create:
 
 2. **Set up project structure**
    \```bash
-   mkdir -p docs/implementation/epic_{X}/story_{X}_{Y}/phase_1
-   mkdir -p docs/implementation/epic_{X}/story_{X}_{Y}/phase_2
+   mkdir -p docs/implementation/epic*{X}/story*{X}_{Y}/phase_1
+   mkdir -p docs/implementation/epic_{X}/story*{X}*{Y}/phase_2
+
    # ... for each phase
+
    \```
 
 3. **Generate detailed documentation for Phase 1**
@@ -379,6 +403,7 @@ For each phase:
 ### Progress Tracking
 
 Update this document as phases complete:
+
 - [ ] Phase 1: {Name} - Status, Actual duration, Notes
 - [ ] Phase 2: {Name} - Status, Actual duration, Notes
 - [ ] Phase 3: {Name} - Status, Actual duration, Notes
@@ -392,6 +417,7 @@ Update this document as phases complete:
 ### Story Completion Criteria
 
 This story is considered complete when:
+
 - [ ] All {N} phases implemented and validated
 - [ ] All acceptance criteria from original spec met
 - [ ] Test coverage >{XX}% achieved
@@ -402,27 +428,30 @@ This story is considered complete when:
 
 ### Quality Metrics
 
-| Metric | Target | Actual |
-|--------|--------|--------|
-| Test Coverage | >{XX}% | - |
-| Type Safety | 100% (if applicable) | - |
-| Code Review Approval | 100% | - |
-| Performance | {metric} | - |
-| Accessibility | {standard} | - |
+| Metric               | Target               | Actual |
+| -------------------- | -------------------- | ------ |
+| Test Coverage        | >{XX}%               | -      |
+| Type Safety          | 100% (if applicable) | -      |
+| Code Review Approval | 100%                 | -      |
+| Performance          | {metric}             | -      |
+| Accessibility        | {standard}           | -      |
 
 ---
 
 ## 📚 Reference Documents
 
 ### Story Specification
+
 - Original spec: {path to story spec}
 
 ### Related Documentation
+
 - Epic overview: {path if exists}
 - Previous stories: {list if applicable}
 - Technical architecture: {path if exists}
 
 ### Generated Phase Documentation
+
 - Phase 1: `docs/implementation/epic_{X}/story_{X}_{Y}/phase_1/INDEX.md`
 - Phase 2: `docs/implementation/epic_{X}/story_{X}_{Y}/phase_2/INDEX.md`
 - [Links will be added as phases are documented]
@@ -433,7 +462,7 @@ This story is considered complete when:
 **Last Updated**: {Date}
 **Created by**: Claude Code (story-phase-planner skill)
 **Story Status**: {Current status}
-```
+````
 
 ---
 
@@ -442,6 +471,7 @@ This story is considered complete when:
 ### Step 1: Collect Inputs
 
 Ask the user for:
+
 1. Story reference (e.g., "Epic 1 Story 1.1")
 2. PRD path (default: `docs/specs/PRD.md`)
 3. Output directory (default: `docs/specs/epics/epic_X/story_X_Y/`)
@@ -450,6 +480,7 @@ Ask the user for:
 ### Step 2: Initialize Epic If Needed
 
 Check if epic folder exists and has EPIC_TRACKING.md:
+
 - **If missing**: Create the epic folder and EPIC_TRACKING.md (auto-initialize via epic-initializer logic)
 - **If exists**: Continue to story extraction
 
@@ -458,6 +489,7 @@ This ensures the epic has proper tracking before the story is added.
 ### Step 3: Extract Story from PRD
 
 Read the PRD file and extract the specified story:
+
 - **Story identification**: Locate the Epic and Story sections in the PRD
 - **Story objectives**: What needs to be achieved
 - **Acceptance criteria**: Success conditions (EF/ENF references)
@@ -473,21 +505,25 @@ Create `story_X.Y.md` file with extracted information in `docs/specs/epics/epic_
 Analyze the story and identify logical breakpoints based on:
 
 **Technical Dependencies**:
+
 - Foundation before features
 - Data layer before UI
 - Core logic before integrations
 
 **Risk Management**:
+
 - High-risk items isolated
 - Proof-of-concepts first
 - Critical path identified
 
 **Value Delivery**:
+
 - Each phase delivers working functionality
 - Incremental user value
 - Testable milestones
 
 **Team Dynamics**:
+
 - Parallelizable work identified
 - Skill-appropriate sizing
 - Review-friendly chunks
@@ -497,6 +533,7 @@ Analyze the story and identify logical breakpoints based on:
 **Analyze story complexity** using these factors:
 
 **Complexity Indicators**:
+
 - Number of features/components (more features = more phases)
 - Technical dependencies (complex dependencies = more phases)
 - External integrations (each integration may need a phase)
@@ -508,24 +545,28 @@ Analyze the story and identify logical breakpoints based on:
 **Complexity Assessment**:
 
 🟢 **Simple Story** (1-3 phases):
+
 - Single feature or small enhancement
 - Few dependencies
 - Minimal new code (<500 lines)
 - Example: "Add email field to user profile"
 
 🟡 **Medium Story** (4-6 phases):
+
 - Multiple related features
 - Some dependencies
 - Moderate code volume (500-2000 lines)
 - Example: "User registration with email verification"
 
 🟠 **Complex Story** (7-10 phases):
+
 - Multiple interrelated features
 - Significant dependencies
 - Large code volume (2000-5000 lines)
 - Example: "E-commerce product catalog with search"
 
 🔴 **Very Complex Story** (10+ phases):
+
 - Many features with complex interactions
 - Heavy dependencies and integrations
 - Very large scope (5000+ lines)
@@ -533,6 +574,7 @@ Analyze the story and identify logical breakpoints based on:
 - **⚠️ Consider**: Should this be split into multiple stories?
 
 **Phase Sizing Guidelines** (flexible, not strict):
+
 - **Optimal**: 2-5 days of work per phase
 - **Acceptable**: 1-7 days if justified
 - **Warning**: <1 day (too granular) or >7 days (too large)
@@ -561,6 +603,7 @@ Analyze the story and identify logical breakpoints based on:
 
 **Sub-Phases** (for complex phases):
 If a phase is complex but should remain atomic, use sub-phases:
+
 - Phase 3: API Integration
   - Sub-phase 3.1: OAuth setup
   - Sub-phase 3.2: Endpoint implementation
@@ -569,6 +612,7 @@ If a phase is complex but should remain atomic, use sub-phases:
 ### Step 6: Assess Dependencies
 
 For each phase, identify:
+
 - **Requires**: Which phases must complete first
 - **Blocks**: Which phases depend on this one
 - **Parallel opportunities**: Which phases can run simultaneously
@@ -581,12 +625,14 @@ Create dependency graph showing critical path.
 For each phase, estimate:
 
 **Complexity** (Low/Medium/High):
+
 - New patterns vs established patterns
 - Number of integrations
 - Code volume
 - Testing requirements
 
 **Duration** (in days):
+
 - Low complexity: 1-2 days
 - Medium complexity: 2-4 days
 - High complexity: 4-7 days
@@ -594,6 +640,7 @@ For each phase, estimate:
 **Commit count**: Adaptive sizing based on phase complexity (1-20+ commits as needed)
 
 **Risk level** (🟢 Low / 🟡 Medium / 🔴 High):
+
 - Technical unknowns
 - External dependencies
 - Performance concerns
@@ -604,6 +651,7 @@ For each phase, estimate:
 Create the strategic plan document using the template above.
 
 **Adaptation rules**:
+
 - Replace `{X.Y}` with actual story reference
 - Replace `{N}` with actual phase count
 - Fill all `{placeholders}` with story-specific content
@@ -621,6 +669,7 @@ mkdir -p docs/specs/epics/epic_X/story_X_Y/implementation
 ### Step 10: Update EPIC_TRACKING.md
 
 Update the epic's tracking file with story information:
+
 - Add story to table if not already present
 - Set **Phases** column to phase count (e.g., "5")
 - Update **Status** to 🚧 IN PROGRESS
@@ -629,6 +678,7 @@ Update the epic's tracking file with story information:
 ### Step 11: Validate Generation
 
 Check:
+
 - [ ] PHASES_PLAN.md created successfully
 - [ ] No placeholder text left (`{`, `[` not replaced)
 - [ ] Phase count is justified by story complexity
@@ -650,22 +700,27 @@ Output a summary:
 ## ✅ Story Phases Plan Generated
 
 ### 📁 File Created
+
 - PHASES_PLAN.md (~{XXX} lines)
   Location: {output_dir}/PHASES_PLAN.md
 
 ### 🎯 Phase Breakdown
+
 Story "{Story Name}" decomposed into {N} phases:
+
 1. Phase 1 - {Name} ({X}d, {Y} commits, {Risk})
 2. Phase 2 - {Name} ({X}d, {Y} commits, {Risk})
-...
+   ...
 
 ### 📊 Overall Metrics
+
 - Total estimated duration: {X-Y} weeks
 - Total estimated commits: ~{XX}
 - Parallelization opportunities: {List}
 - High-risk phases: {List}
 
 ### 🚀 Next Steps
+
 1. Review PHASES_PLAN.md with your team
 2. Adjust estimates or phase breakdown if needed
 3. For each phase, generate detailed implementation docs:
@@ -673,6 +728,7 @@ Story "{Story Name}" decomposed into {N} phases:
    - Or say: "Generate implementation docs for Phase {N}"
 
 ### 🔗 Reference
+
 - Story spec: {path}
 - Phases plan: {output_dir}/PHASES_PLAN.md
 
@@ -690,18 +746,21 @@ Story "{Story Name}" decomposed into {N} phases:
 **Guidelines** (not strict limits):
 
 🔴 **Too Small** (<1 day, <2 commits):
+
 - ❌ Too much overhead relative to value
 - ❌ Context switching costs high
 - ❌ Review fatigue for team
 - **Action**: Combine with related work if possible
 
 🟡 **Small but Valid** (1-2 days, 2-4 commits):
+
 - ✅ Acceptable if work is truly independent
 - ✅ Good for high-risk items (isolate risk)
 - ✅ Good for proof-of-concepts
 - **Example**: "Add database index" or "Security patch"
 
 🟢 **Optimal** (2-5 days, 4-8 commits):
+
 - ✅ Sweet spot for most work
 - ✅ Focused and reviewable
 - ✅ Safe rollback scope
@@ -709,12 +768,14 @@ Story "{Story Name}" decomposed into {N} phases:
 - ✅ Clear milestones
 
 🟡 **Large but Valid** (5-7 days, 8-12 commits):
+
 - ✅ Acceptable if work is cohesive
 - ⚠️ Consider splitting if possible
 - ✅ Ensure good commit atomicity within phase
 - **Example**: "Complete admin dashboard" or "Payment gateway integration"
 
 🔴 **Too Large** (>7 days, >12 commits):
+
 - ❌ Hard to review as a unit
 - ❌ Risky to roll back
 - ❌ Delayed integration feedback
@@ -728,21 +789,17 @@ Story "{Story Name}" decomposed into {N} phases:
 A good phase should answer "yes" to these questions:
 
 **Independence**:
+
 1. Can this phase be tested independently?
 2. Can this phase be rolled back without breaking others?
 3. Are dependencies on other phases minimal and explicit?
 
-**Value**:
-4. Does this phase deliver tangible, working functionality?
-5. Is there a clear success criteria for this phase?
-6. Can we demo/validate this phase in isolation?
+**Value**: 4. Does this phase deliver tangible, working functionality? 5. Is there a clear success criteria for this phase? 6. Can we demo/validate this phase in isolation?
 
-**Size**:
-7. Can this phase be reviewed in reasonable time (30min-2h)?
-8. Is the scope cohesive (single clear purpose)?
-9. Is it sized for continuous delivery (not blocking releases)?
+**Size**: 7. Can this phase be reviewed in reasonable time (30min-2h)? 8. Is the scope cohesive (single clear purpose)? 9. Is it sized for continuous delivery (not blocking releases)?
 
 **Flexibility**:
+
 - Phase can be 1 day if it's genuinely simple
 - Phase can be 7+ days if it's cohesive and complex
 - What matters: independence, value, reviewability
@@ -750,11 +807,13 @@ A good phase should answer "yes" to these questions:
 ### Dependency Minimization
 
 Prefer:
+
 - **Sequential independence**: Phase N doesn't need Phase N-1's output
 - **Parallel opportunities**: Phases A and B can proceed simultaneously
 - **Loose coupling**: Phases interact through stable interfaces
 
 Avoid:
+
 - **Circular dependencies**: Phase A needs B, B needs A
 - **Hidden dependencies**: Undocumented assumptions
 - **Tight coupling**: Changes in one phase break others
@@ -764,6 +823,7 @@ Avoid:
 ## 🚨 Important Guidelines
 
 ### Do's
+
 - ✅ Analyze story thoroughly before decomposing
 - ✅ Consider technical dependencies carefully
 - ✅ Identify parallelization opportunities
@@ -777,6 +837,7 @@ Avoid:
 - ✅ Place PHASES_PLAN.md in `story_X_Y/implementation/` folder
 
 ### Don'ts
+
 - ❌ Create phases that are too granular (<1 day)
 - ❌ Create phases that are too large (>7 days)
 - ❌ Ignore technical dependencies
@@ -796,6 +857,7 @@ Avoid:
 **Complexity**: 🟢 Simple (minimal scope, existing infrastructure)
 
 **Phase Breakdown**:
+
 1. **Phase 1**: Email template & notification service integration (1d, Low risk, 3 commits)
 2. **Phase 2**: Password reset trigger & tests (1.5d, Low risk, 4 commits)
 
@@ -811,6 +873,7 @@ Avoid:
 **Complexity**: 🟡 Medium (multiple features, moderate dependencies)
 
 **Phase Breakdown**:
+
 1. **Phase 1**: Product data models & database schema (2d, Low risk, 5 commits)
 2. **Phase 2**: Product API endpoints (REST) (3d, Medium risk, 6 commits)
 3. **Phase 3**: Search & filter logic (3d, High risk - performance, 7 commits)
@@ -829,6 +892,7 @@ Avoid:
 **Complexity**: 🟠 Complex (many features, complex data model, integrations)
 
 **Phase Breakdown**:
+
 1. **Phase 1**: Multi-tenant data model & migrations (3d, Medium risk, 6 commits)
 2. **Phase 2**: Tenant isolation & access control (4d, High risk - security, 8 commits)
 3. **Phase 3**: Analytics data pipeline (4d, High risk - performance, 7 commits)
@@ -883,6 +947,7 @@ Avoid:
 **Complexity**: 🟢 Trivial (CSS change only)
 
 **Phase Breakdown**:
+
 1. **Phase 1**: Update button styles & visual regression tests (0.5d, Low risk, 2 commits)
 
 **Total**: 0.5 days, ~2 commits

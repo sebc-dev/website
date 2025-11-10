@@ -2,25 +2,27 @@
 created: 2025-10-22T08:41:16 (UTC +02:00)
 tags: []
 source: https://docs.claude.com/en/docs/claude-code/sub-agents
-author: 
+author:
 ---
 
 # Subagents - Claude Docs
 
 > ## Excerpt
+>
 > Create and use specialized AI subagents in Claude Code for task-specific workflows and improved context management.
 
 ---
+
 Custom subagents in Claude Code are specialized AI assistants that can be invoked to handle specific types of tasks. They enable more efficient problem-solving by providing task-specific configurations with customized system prompts, tools and a separate context window.
 
 ## What are subagents?
 
 Subagents are pre-configured AI personalities that Claude Code can delegate tasks to. Each subagent:
 
--   Has a specific purpose and expertise area
--   Uses its own context window separate from the main conversation
--   Can be configured with specific tools it’s allowed to use
--   Includes a custom system prompt that guides its behavior
+- Has a specific purpose and expertise area
+- Uses its own context window separate from the main conversation
+- Can be configured with specific tools it’s allowed to use
+- Includes a custom system prompt that guides its behavior
 
 When Claude Code encounters a task that matches a subagent’s expertise, it can delegate that task to the specialized subagent, which works independently and returns results.
 
@@ -36,10 +38,10 @@ To create your first subagent:
 
 Subagents are stored as Markdown files with YAML frontmatter in two possible locations:
 
-| Type | Location | Scope | Priority |
-| --- | --- | --- | --- |
-| **Project subagents** | `.claude/agents/` | Available in current project | Highest |
-| **User subagents** | `~/.claude/agents/` | Available across all projects | Lower |
+| Type                  | Location            | Scope                         | Priority |
+| --------------------- | ------------------- | ----------------------------- | -------- |
+| **Project subagents** | `.claude/agents/`   | Available in current project  | Highest  |
+| **User subagents**    | `~/.claude/agents/` | Available across all projects | Lower    |
 
 When subagent names conflict, project-level subagents take precedence over user-level subagents.
 
@@ -47,10 +49,10 @@ When subagent names conflict, project-level subagents take precedence over user-
 
 [Plugins](https://docs.claude.com/en/docs/claude-code/plugins) can provide custom subagents that integrate seamlessly with Claude Code. Plugin agents work identically to user-defined agents and appear in the `/agents` interface. **Plugin agent locations**: Plugins include agents in their `agents/` directory (or custom paths specified in the plugin manifest). **Using plugin agents**:
 
--   Plugin agents appear in `/agents` alongside your custom agents
--   Can be invoked explicitly: “Use the code-reviewer agent from the security-plugin”
--   Can be invoked automatically by Claude when appropriate
--   Can be managed (viewed, inspected) through `/agents` interface
+- Plugin agents appear in `/agents` alongside your custom agents
+- Can be invoked explicitly: “Use the code-reviewer agent from the security-plugin”
+- Can be invoked automatically by Claude when appropriate
+- Can be managed (viewed, inspected) through `/agents` interface
 
 See the [plugin components reference](https://docs.claude.com/en/docs/claude-code/plugins-reference#agents) for details on creating plugin agents.
 
@@ -71,10 +73,10 @@ claude --agents '{
 
 **Priority**: CLI-defined subagents have lower priority than project-level subagents but higher priority than user-level subagents. **Use case**: This approach is useful for:
 
--   Quick testing of subagent configurations
--   Session-specific subagents that don’t need to be saved
--   Automation scripts that need custom subagents
--   Sharing subagent definitions in documentation or scripts
+- Quick testing of subagent configurations
+- Session-specific subagents that don’t need to be saved
+- Automation scripts that need custom subagents
+- Sharing subagent definitions in documentation or scripts
 
 For detailed information about the JSON format and all available options, see the [CLI reference documentation](https://docs.claude.com/en/docs/claude-code/cli-reference#agents-flag-format).
 
@@ -100,20 +102,20 @@ the subagent should follow.
 
 #### Configuration fields
 
-| Field | Required | Description |
-| --- | --- | --- |
-| `name` | Yes | Unique identifier using lowercase letters and hyphens |
-| `description` | Yes | Natural language description of the subagent’s purpose |
-| `tools` | No | Comma-separated list of specific tools. If omitted, inherits all tools from the main thread |
-| `model` | No | Model to use for this subagent. Can be a model alias (`sonnet`, `opus`, `haiku`) or `'inherit'` to use the main conversation’s model. If omitted, defaults to the [configured subagent model](https://docs.claude.com/en/docs/claude-code/model-config) |
+| Field         | Required | Description                                                                                                                                                                                                                                             |
+| ------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`        | Yes      | Unique identifier using lowercase letters and hyphens                                                                                                                                                                                                   |
+| `description` | Yes      | Natural language description of the subagent’s purpose                                                                                                                                                                                                  |
+| `tools`       | No       | Comma-separated list of specific tools. If omitted, inherits all tools from the main thread                                                                                                                                                             |
+| `model`       | No       | Model to use for this subagent. Can be a model alias (`sonnet`, `opus`, `haiku`) or `'inherit'` to use the main conversation’s model. If omitted, defaults to the [configured subagent model](https://docs.claude.com/en/docs/claude-code/model-config) |
 
 ### Model selection
 
 The `model` field allows you to control which [AI model](https://docs.claude.com/en/docs/claude-code/model-config) the subagent uses:
 
--   **Model alias**: Use one of the available aliases: `sonnet`, `opus`, or `haiku`
--   **`'inherit'`**: Use the same model as the main conversation (useful for consistency)
--   **Omitted**: If not specified, uses the default model configured for subagents (`sonnet`)
+- **Model alias**: Use one of the available aliases: `sonnet`, `opus`, or `haiku`
+- **`'inherit'`**: Use the same model as the main conversation (useful for consistency)
+- **Omitted**: If not specified, uses the default model configured for subagents (`sonnet`)
 
 ### Available tools
 
@@ -121,8 +123,8 @@ Subagents can be granted access to any of Claude Code’s internal tools. See th
 
 You have two options for configuring tools:
 
--   **Omit the `tools` field** to inherit all tools from the main thread (default), including MCP tools
--   **Specify individual tools** as a comma-separated list for more granular control (can be edited manually or via `/agents`)
+- **Omit the `tools` field** to inherit all tools from the main thread (default), including MCP tools
+- **Specify individual tools** as a comma-separated list for more granular control (can be edited manually or via `/agents`)
 
 **MCP Tools**: Subagents can access MCP tools from configured MCP servers. When the `tools` field is omitted, subagents inherit all MCP tools available to the main thread.
 
@@ -134,12 +136,12 @@ The `/agents` command provides a comprehensive interface for subagent management
 
 This opens an interactive menu where you can:
 
--   View all available subagents (built-in, user, and project)
--   Create new subagents with guided setup
--   Edit existing custom subagents, including their tool access
--   Delete custom subagents
--   See which subagents are active when duplicates exist
--   **Easily manage tool permissions** with a complete list of available tools
+- View all available subagents (built-in, user, and project)
+- Create new subagents with guided setup
+- Edit existing custom subagents, including their tool access
+- Delete custom subagents
+- See which subagents are active when duplicates exist
+- **Easily manage tool permissions** with a complete list of available tools
 
 ### Direct file management
 
@@ -166,9 +168,9 @@ mkdir -p ~/.claude/agents
 
 Claude Code proactively delegates tasks based on:
 
--   The task description in your request
--   The `description` field in subagent configurations
--   Current context and available tools
+- The task description in your request
+- The `description` field in subagent configurations
+- Current context and available tools
 
 ### Explicit invocation
 
@@ -289,11 +291,11 @@ Always ensure queries are efficient and cost-effective.
 
 ## Best practices
 
--   **Start with Claude-generated agents**: We highly recommend generating your initial subagent with Claude and then iterating on it to make it personally yours. This approach gives you the best results - a solid foundation that you can customize to your specific needs.
--   **Design focused subagents**: Create subagents with single, clear responsibilities rather than trying to make one subagent do everything. This improves performance and makes subagents more predictable.
--   **Write detailed prompts**: Include specific instructions, examples, and constraints in your system prompts. The more guidance you provide, the better the subagent will perform.
--   **Limit tool access**: Only grant tools that are necessary for the subagent’s purpose. This improves security and helps the subagent focus on relevant actions.
--   **Version control**: Check project subagents into version control so your team can benefit from and improve them collaboratively.
+- **Start with Claude-generated agents**: We highly recommend generating your initial subagent with Claude and then iterating on it to make it personally yours. This approach gives you the best results - a solid foundation that you can customize to your specific needs.
+- **Design focused subagents**: Create subagents with single, clear responsibilities rather than trying to make one subagent do everything. This improves performance and makes subagents more predictable.
+- **Write detailed prompts**: Include specific instructions, examples, and constraints in your system prompts. The more guidance you provide, the better the subagent will perform.
+- **Limit tool access**: Only grant tools that are necessary for the subagent’s purpose. This improves security and helps the subagent focus on relevant actions.
+- **Version control**: Check project subagents into version control so your team can benefit from and improve them collaboratively.
 
 ## Advanced usage
 
@@ -311,10 +313,10 @@ Claude Code intelligently selects subagents based on context. Make your `descrip
 
 ## Performance considerations
 
--   **Context efficiency**: Agents help preserve main context, enabling longer overall sessions
--   **Latency**: Subagents start off with a clean slate each time they are invoked and may add latency as they gather context that they require to do their job effectively.
+- **Context efficiency**: Agents help preserve main context, enabling longer overall sessions
+- **Latency**: Subagents start off with a clean slate each time they are invoked and may add latency as they gather context that they require to do their job effectively.
 
--   [Plugins](https://docs.claude.com/en/docs/claude-code/plugins) - Extend Claude Code with custom agents through plugins
--   [Slash commands](https://docs.claude.com/en/docs/claude-code/slash-commands) - Learn about other built-in commands
--   [Settings](https://docs.claude.com/en/docs/claude-code/settings) - Configure Claude Code behavior
--   [Hooks](https://docs.claude.com/en/docs/claude-code/hooks) - Automate workflows with event handlers
+- [Plugins](https://docs.claude.com/en/docs/claude-code/plugins) - Extend Claude Code with custom agents through plugins
+- [Slash commands](https://docs.claude.com/en/docs/claude-code/slash-commands) - Learn about other built-in commands
+- [Settings](https://docs.claude.com/en/docs/claude-code/settings) - Configure Claude Code behavior
+- [Hooks](https://docs.claude.com/en/docs/claude-code/hooks) - Automate workflows with event handlers

@@ -9,6 +9,7 @@ Complete testing strategy for Phase 3: Taxonomy Schemas.
 Phase 3 uses **integration testing** to validate taxonomy database operations with a real Cloudflare D1 instance.
 
 **Testing Layers**:
+
 1. **Integration Tests**: Database operations with local D1 (primary focus)
 2. **Schema Validation**: Type-checking and migration generation (automated)
 3. **Manual QA**: Seed script execution and data verification (one-time)
@@ -23,6 +24,7 @@ Phase 3 uses **integration testing** to validate taxonomy database operations wi
 ### Purpose
 
 Test that taxonomy tables (categories, tags, articleTags) work correctly with real D1 database operations including:
+
 - Querying canonical categories
 - CRUD operations on tags
 - Many-to-Many relationships via articleTags junction
@@ -97,7 +99,9 @@ import { categories, tags, articleTags } from '@/lib/server/db/schema';
 describe('Categories Operations', () => {
   beforeEach(() => {
     // Seed canonical categories before each test
-    execSync('wrangler d1 execute DB --local --file=./drizzle/seeds/categories.sql');
+    execSync(
+      'wrangler d1 execute DB --local --file=./drizzle/seeds/categories.sql',
+    );
   });
 
   it('should retrieve all 9 canonical categories', async () => {
@@ -116,6 +120,7 @@ describe('Categories Operations', () => {
 **Purpose**: Verify canonical categories are seeded and queryable
 
 **Tests**:
+
 1. **Retrieve all 9 canonical categories**
    - Query: `SELECT * FROM categories`
    - Assert: Array has length 9
@@ -137,6 +142,7 @@ describe('Categories Operations', () => {
    - Validates: Unique constraint works
 
 **Example Test**:
+
 ```typescript
 it('should retrieve all 9 canonical categories', async () => {
   const allCategories = await db.select().from(categories);
@@ -144,11 +150,17 @@ it('should retrieve all 9 canonical categories', async () => {
   expect(allCategories).toHaveLength(9);
 
   // Verify all expected keys exist
-  const keys = allCategories.map(cat => cat.key).sort();
+  const keys = allCategories.map((cat) => cat.key).sort();
   expect(keys).toEqual([
-    'behind-scenes', 'case-study', 'deep-analysis',
-    'learning-path', 'news', 'quick-tips',
-    'retrospective', 'tool-test', 'tutorial'
+    'behind-scenes',
+    'case-study',
+    'deep-analysis',
+    'learning-path',
+    'news',
+    'quick-tips',
+    'retrospective',
+    'tool-test',
+    'tutorial',
   ]);
 });
 ```
@@ -160,6 +172,7 @@ it('should retrieve all 9 canonical categories', async () => {
 **Purpose**: Verify tags table CRUD operations
 
 **Tests**:
+
 1. **Insert tag with bilingual names**
    - Action: Insert tag with nameFr='TypeScript', nameEn='TypeScript'
    - Assert: Insert succeeds, returns ID
@@ -183,14 +196,18 @@ it('should retrieve all 9 canonical categories', async () => {
    - Validates: DELETE operations
 
 **Example Test**:
+
 ```typescript
 it('should insert tag with bilingual names', async () => {
-  const [newTag] = await db.insert(tags).values({
-    id: 'tag-typescript',
-    nameFr: 'TypeScript',
-    nameEn: 'TypeScript',
-    createdAt: new Date()
-  }).returning();
+  const [newTag] = await db
+    .insert(tags)
+    .values({
+      id: 'tag-typescript',
+      nameFr: 'TypeScript',
+      nameEn: 'TypeScript',
+      createdAt: new Date(),
+    })
+    .returning();
 
   expect(newTag).toBeDefined();
   expect(newTag.nameFr).toBe('TypeScript');
@@ -205,6 +222,7 @@ it('should insert tag with bilingual names', async () => {
 **Purpose**: Verify Many-to-Many relationship and constraints
 
 **Tests**:
+
 1. **Link article to tag**
    - Prerequisite: Article and tag exist
    - Action: Insert into articleTags
@@ -237,31 +255,39 @@ it('should insert tag with bilingual names', async () => {
    - Validates: ON DELETE CASCADE for tags
 
 **Example Test**:
+
 ```typescript
 it('should cascade delete articleTags when article deleted', async () => {
   // Setup: Create article and tag
-  const [article] = await db.insert(articles).values({
-    id: 'article-test-1',
-    categoryId: 'cat-1',
-    complexity: 'beginner',
-    status: 'draft'
-  }).returning();
+  const [article] = await db
+    .insert(articles)
+    .values({
+      id: 'article-test-1',
+      categoryId: 'cat-1',
+      complexity: 'beginner',
+      status: 'draft',
+    })
+    .returning();
 
-  const [tag] = await db.insert(tags).values({
-    id: 'tag-test-1',
-    nameFr: 'Test',
-    nameEn: 'Test',
-    createdAt: new Date()
-  }).returning();
+  const [tag] = await db
+    .insert(tags)
+    .values({
+      id: 'tag-test-1',
+      nameFr: 'Test',
+      nameEn: 'Test',
+      createdAt: new Date(),
+    })
+    .returning();
 
   // Link article to tag
   await db.insert(articleTags).values({
     articleId: article.id,
-    tagId: tag.id
+    tagId: tag.id,
   });
 
   // Verify link exists
-  const links = await db.select()
+  const links = await db
+    .select()
     .from(articleTags)
     .where(eq(articleTags.articleId, article.id));
   expect(links).toHaveLength(1);
@@ -270,7 +296,8 @@ it('should cascade delete articleTags when article deleted', async () => {
   await db.delete(articles).where(eq(articles.id, article.id));
 
   // Verify articleTags cascade deleted
-  const linksAfterDelete = await db.select()
+  const linksAfterDelete = await db
+    .select()
     .from(articleTags)
     .where(eq(articleTags.articleId, article.id));
   expect(linksAfterDelete).toHaveLength(0);
@@ -309,12 +336,12 @@ xdg-open coverage/index.html
 
 ### Coverage Goals
 
-| Area | Target | Notes |
-|------|--------|-------|
-| **Categories queries** | >80% | Should cover SELECT operations |
-| **Tags CRUD** | >80% | Insert, update, delete, select |
-| **ArticleTags junction** | >90% | Critical for relationships |
-| **Overall taxonomy** | >80% | Across all taxonomy operations |
+| Area                     | Target | Notes                          |
+| ------------------------ | ------ | ------------------------------ |
+| **Categories queries**   | >80%   | Should cover SELECT operations |
+| **Tags CRUD**            | >80%   | Insert, update, delete, select |
+| **ArticleTags junction** | >90%   | Critical for relationships     |
+| **Overall taxonomy**     | >80%   | Across all taxonomy operations |
 
 **Note**: Integration tests focus on database operations, not application logic. 80%+ coverage is excellent for DB tests.
 
@@ -327,10 +354,12 @@ xdg-open coverage/index.html
 #### Issue: Tests fail with "Database not found"
 
 **Symptoms**:
+
 - Error: `Error: Database with ID 'DB' not found`
 - Tests can't connect to D1
 
 **Solutions**:
+
 1. Verify `wrangler.toml` has D1 binding:
    ```bash
    cat wrangler.toml | grep -A 3 "d1_databases"
@@ -346,6 +375,7 @@ xdg-open coverage/index.html
 4. Update binding in `wrangler.toml`
 
 **Verify Fix**:
+
 ```bash
 wrangler d1 execute DB --local --command "SELECT 1;"
 ```
@@ -355,10 +385,12 @@ wrangler d1 execute DB --local --command "SELECT 1;"
 #### Issue: Tests fail with "Table not found"
 
 **Symptoms**:
+
 - Error: `no such table: categories`
 - Tests can't find taxonomy tables
 
 **Solutions**:
+
 1. Verify migration applied:
    ```bash
    wrangler d1 execute DB --local --command "SELECT name FROM sqlite_master WHERE type='table';"
@@ -373,6 +405,7 @@ wrangler d1 execute DB --local --command "SELECT 1;"
    ```
 
 **Verify Fix**:
+
 ```bash
 wrangler d1 execute DB --local --command "SELECT COUNT(*) FROM categories;"
 # Should return 9
@@ -383,11 +416,13 @@ wrangler d1 execute DB --local --command "SELECT COUNT(*) FROM categories;"
 #### Issue: Tests are flaky (pass sometimes, fail others)
 
 **Symptoms**:
+
 - Tests pass on first run, fail on second
 - Inconsistent results
 - Error: "UNIQUE constraint failed"
 
 **Solutions**:
+
 1. Ensure `beforeEach` hook resets database state:
    ```typescript
    beforeEach(async () => {
@@ -395,7 +430,9 @@ wrangler d1 execute DB --local --command "SELECT COUNT(*) FROM categories;"
      await db.delete(articleTags);
      await db.delete(tags);
      // Re-seed categories
-     execSync('wrangler d1 execute DB --local --file=./drizzle/seeds/categories.sql');
+     execSync(
+       'wrangler d1 execute DB --local --file=./drizzle/seeds/categories.sql',
+     );
    });
    ```
 2. Use unique IDs per test (if not resetting):
@@ -412,10 +449,12 @@ wrangler d1 execute DB --local --command "SELECT COUNT(*) FROM categories;"
 #### Issue: Tests are slow (>30 seconds)
 
 **Symptoms**:
+
 - Integration tests take a long time
 - Database operations are slow
 
 **Solutions**:
+
 1. **Expected behavior**: D1 local can be slower than traditional databases
 2. Minimize test data (only seed what's needed)
 3. Use fewer database operations per test
@@ -423,6 +462,7 @@ wrangler d1 execute DB --local --command "SELECT COUNT(*) FROM categories;"
 5. Consider mocking for unit tests (but keep integration tests with real D1)
 
 **Acceptable Performance**:
+
 - Integration test suite: <10 seconds for 10-15 tests
 - If >30 seconds, consider optimizing or splitting tests
 
@@ -448,6 +488,7 @@ DEBUG=drizzle:* pnpm test tests/integration/taxonomy-schema.test.ts
 ### GitHub Actions (or other CI)
 
 Integration tests should run automatically on:
+
 - [ ] Pull requests to main branch
 - [ ] Push to main branch
 - [ ] Scheduled nightly builds (optional)
@@ -505,6 +546,7 @@ jobs:
 ### Required Checks
 
 All PRs must pass:
+
 - [ ] Type-check (`pnpm tsc --noEmit`)
 - [ ] Linter (`pnpm lint`)
 - [ ] Integration tests (`pnpm test:integration`)
@@ -532,6 +574,7 @@ Before merging Phase 3:
 ### Writing Tests
 
 ✅ **Do**:
+
 - Test behavior (categories queryable, tags insertable, cascade deletes work)
 - Use descriptive test names ("should prevent duplicate article-tag pairs")
 - One assertion focus per test (easier to debug failures)
@@ -539,6 +582,7 @@ Before merging Phase 3:
 - Clean up test data or reset state in `beforeEach`
 
 ❌ **Don't**:
+
 - Test Drizzle ORM internals (trust the library)
 - Over-mock (use real D1 for integration tests)
 - Write flaky tests (ensure consistent state)
@@ -603,6 +647,7 @@ A: Not recommended. D1 has quirks (SQLite-based but with differences). Test agai
 - [Testing Best Practices](https://kentcdodds.com/blog/write-tests)
 
 ### Project-Specific Docs
+
 - [PHASES_PLAN.md](../PHASES_PLAN.md) - Phase 3 testing requirements
 - [Story Spec](../../story_0.4.md) - AC7: Testing & Documentation
 - [Architecture Doc](/docs/specs/Architecture_technique.md) - Testing strategy

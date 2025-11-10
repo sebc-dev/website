@@ -34,7 +34,7 @@ Le composant `next/image` par défaut utilise le service d'optimisation de Verce
 
 ```typescript
 // src/lib/image-loader.ts
-import type { ImageLoaderProps } from "next/image";
+import type { ImageLoaderProps } from 'next/image';
 
 export function cloudflareImageLoader({
   src,
@@ -42,13 +42,13 @@ export function cloudflareImageLoader({
   quality,
 }: ImageLoaderProps): string {
   // Format: https://yourcdn.com/image.jpg?width=800&quality=75
-  const url = new URL(src, "https://yourcdn.com");
+  const url = new URL(src, 'https://yourcdn.com');
 
   // Ajouter les paramètres de transformation
-  url.searchParams.set("width", width.toString());
-  url.searchParams.set("quality", (quality || 75).toString());
+  url.searchParams.set('width', width.toString());
+  url.searchParams.set('quality', (quality || 75).toString());
   // Format automatiquement détecté (webp si supporté)
-  url.searchParams.set("format", "auto");
+  url.searchParams.set('format', 'auto');
 
   return url.toString();
 }
@@ -58,20 +58,20 @@ export function cloudflareImageLoader({
 
 ```typescript
 // next.config.ts
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   images: {
-    loader: "custom",
-    loaderFile: "./src/lib/image-loader.ts",
+    loader: 'custom',
+    loaderFile: './src/lib/image-loader.ts',
     // Domaines autorisés
     domains: [
-      "yourcdn.com",
-      "images.yourdomain.com",
-      "cloudflare-cdn.example.com",
+      'yourcdn.com',
+      'images.yourdomain.com',
+      'cloudflare-cdn.example.com',
     ],
     // Formats optimisés
-    formats: ["image/webp", "image/avif"],
+    formats: ['image/webp', 'image/avif'],
   },
 };
 
@@ -169,10 +169,7 @@ await db.insert(articles).values({
 ### Redimensionnement Dynamique
 
 ```typescript
-function getResponsiveImage(
-  baseSrc: string,
-  sizes: number[]
-) {
+function getResponsiveImage(baseSrc: string, sizes: number[]) {
   return sizes.map((size) => ({
     src: `${baseSrc}?width=${size}&quality=75&format=auto`,
     size,
@@ -180,7 +177,7 @@ function getResponsiveImage(
 }
 
 // Utilisation
-const src = "https://images.yourdomain.com/article-hero.jpg";
+const src = 'https://images.yourdomain.com/article-hero.jpg';
 const responsive = getResponsiveImage(src, [640, 750, 828, 1080, 1200]);
 ```
 
@@ -203,12 +200,12 @@ const optimizedUrl = `${imageUrl}?format=auto`;
 
 ### Comparaison de Performance
 
-| Aspect | Vercel | Cloudflare |
-|--------|--------|-----------|
-| **Latence** | ~200ms | ~50ms (edge) |
-| **Coût** | Variable | Prédictible |
-| **Formats** | Limités | webp, avif, jpeg |
-| **Cache** | Vercel CDN | Cloudflare Edge |
+| Aspect      | Vercel     | Cloudflare       |
+| ----------- | ---------- | ---------------- |
+| **Latence** | ~200ms     | ~50ms (edge)     |
+| **Coût**    | Variable   | Prédictible      |
+| **Formats** | Limités    | webp, avif, jpeg |
+| **Cache**   | Vercel CDN | Cloudflare Edge  |
 
 ## Considérations
 
