@@ -173,6 +173,13 @@ jobs:
         run: pnpm build
 
       # ========================================================================
+      # Step 5b: Generate OpenNext Cloudflare Adapter Output
+      # ========================================================================
+      # Explicitly run OpenNext Cloudflare adapter to generate .open-next/
+      - name: Generate OpenNext output
+        run: npx @opennextjs/cloudflare
+
+      # ========================================================================
       # Step 6: Deploy to Cloudflare Workers
       # ========================================================================
       # Deploy the built application to Cloudflare Workers using wrangler-action
