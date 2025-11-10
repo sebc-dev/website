@@ -246,3 +246,30 @@
    CUSTOM VARIANTS
    ============================================ */
 @custom-variant dark (&:is(.dark *));
+
+/* ============================================
+   ACCESSIBILITY - Reduced Motion Support
+   ============================================ */
+
+/**
+ * Respects user's motion preference from operating system
+ *
+ * Disables all animations and transitions for users who have set
+ * "prefers-reduced-motion: reduce" in their accessibility settings.
+ *
+ * This is critical for users with:
+ * - Vestibular disorders (inner ear problems affecting balance/motion perception)
+ * - Motion sensitivity / migraines triggered by motion
+ * - Cognitive processing disorders affected by animations
+ *
+ * @accessibility WCAG 2.1 Success Criterion 2.3.3: Animation from Interactions
+ * @see https://www.w3.org/WAI/WCAG21/Understanding/animation-from-interactions
+ * @see https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion
+ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
