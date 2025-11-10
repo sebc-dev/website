@@ -7,6 +7,7 @@ This document provides a detailed checklist for each of the 5 atomic commits in 
 ## 📋 Commit 1: Configure GitHub Secrets and Environment
 
 **Files**:
+
 - `docs/deployment/secrets-setup-guide.md` (new, ~50-80 lines)
 - GitHub repository settings (via UI)
 
@@ -140,6 +141,7 @@ Part of Epic 0, Story 0.7, Phase 1 - Commit 1/5"
 ## 📋 Commit 2: Create Migration Workflow Structure
 
 **Files**:
+
 - `.github/workflows/migrate.yml` (new, ~80-100 lines)
 
 **Estimated Duration**: 45-60 minutes
@@ -269,6 +271,7 @@ Part of Epic 0, Story 0.7, Phase 1 - Commit 2/5"
 ## 📋 Commit 3: Implement Migration Execution with Error Handling
 
 **Files**:
+
 - `.github/workflows/migrate.yml` (modify, add ~100-150 lines)
 
 **Estimated Duration**: 60-90 minutes
@@ -371,6 +374,7 @@ git push origin feat/phase1-migration-execution
 ```
 
 **Expected Result**:
+
 - Migration executes successfully
 - Logs captured and uploaded
 - Errors caught and reported
@@ -438,6 +442,7 @@ Part of Epic 0, Story 0.7, Phase 1 - Commit 3/5"
 ## 📋 Commit 4: Add Migration Validation and Testing
 
 **Files**:
+
 - `.github/workflows/migrate.yml` (modify, add ~70-100 lines)
 - `scripts/validate-migration.sh` (new, optional, ~50-80 lines)
 - `docs/deployment/migration-testing.md` (new, ~80-120 lines)
@@ -451,7 +456,7 @@ Part of Epic 0, Story 0.7, Phase 1 - Commit 3/5"
 - [ ] Add step: "Validate migration files" before migration execution
 - [ ] Create validation script or inline validation:
   - [ ] Check `drizzle/migrations/` directory exists
-  - [ ] Check migration files follow naming convention (0000_*.sql, etc.)
+  - [ ] Check migration files follow naming convention (0000\_\*.sql, etc.)
   - [ ] Verify files are not empty
   - [ ] Check for SQL syntax errors (basic validation)
 - [ ] Fail fast if validation fails (don't attempt migration)
@@ -484,6 +489,7 @@ Part of Epic 0, Story 0.7, Phase 1 - Commit 3/5"
 
 - [ ] Create file: `docs/deployment/migration-testing.md`
 - [ ] Document: How to test migrations locally
+
   ```bash
   # Test locally
   wrangler d1 migrations apply DB --local
@@ -491,6 +497,7 @@ Part of Epic 0, Story 0.7, Phase 1 - Commit 3/5"
   # Verify
   wrangler d1 execute DB --local --command="SELECT * FROM [table];"
   ```
+
 - [ ] Document: How to test in CI without affecting production
   - [ ] Use feature branches
   - [ ] Use development database
@@ -542,6 +549,7 @@ echo "CRETE TABLE invalid;" > drizzle/migrations/test_invalid.sql
 ```
 
 **Expected Result**:
+
 - Validation catches invalid migrations
 - Post-migration verification confirms success
 - Documentation is complete and usable
@@ -613,6 +621,7 @@ Part of Epic 0, Story 0.7, Phase 1 - Commit 4/5"
 ## 📋 Commit 5: Document Rollback Procedures and Troubleshooting
 
 **Files**:
+
 - `docs/deployment/migration-rollback.md` (new, ~100-150 lines)
 - `docs/deployment/migration-troubleshooting.md` (new, ~100-150 lines)
 - `README.md` (update, add migration section, optional)
@@ -730,6 +739,7 @@ Part of Epic 0, Story 0.7, Phase 1 - Commit 4/5"
 - [ ] Brief overview of migration workflow
 - [ ] Link to detailed documentation
 - [ ] Quick commands for developers:
+
   ```bash
   # Test migrations locally
   pnpm db:migrate:local
@@ -767,6 +777,7 @@ wrangler d1 migrations apply DB --local
 ```
 
 **Expected Result**:
+
 - Complete rollback documentation
 - Comprehensive troubleshooting guide
 - Clear operational procedures
@@ -912,6 +923,7 @@ Phase 1 is complete when:
 ### Time Management
 
 If running over estimated time:
+
 - Focus on core functionality first (Commits 1-3)
 - Documentation (Commits 4-5) can be refined later if needed
 - Ensure Commit 3 (execution) is thoroughly tested - it's the highest risk
@@ -926,6 +938,7 @@ If running over estimated time:
 ### Getting Help
 
 If stuck:
+
 - Review IMPLEMENTATION_PLAN.md for context
 - Check external links (Wrangler docs, GitHub Actions docs)
 - Ask for peer review early

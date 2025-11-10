@@ -13,11 +13,13 @@ This guide explains how to create and configure Cloudflare API credentials for G
 ### Why This Matters
 
 The CI/CD pipeline needs secure credentials to:
+
 - Apply database migrations automatically
 - Deploy code to Cloudflare Workers
 - Verify infrastructure changes
 
 This guide ensures credentials are:
+
 - **Secure**: API tokens with minimal required permissions
 - **Rotatable**: Clear procedures for token rotation and revocation
 - **Auditable**: Traceable to specific GitHub Actions workflows
@@ -46,6 +48,7 @@ Before starting this guide, you need:
 4. Or use direct link: https://dash.cloudflare.com/profile/api-tokens
 
 You should see:
+
 - Existing API tokens (if any)
 - Button "Create Token" (top right)
 - Button "Create Custom Token"
@@ -61,6 +64,7 @@ You should see:
 Fill in the custom token form as follows:
 
 #### Token Name
+
 ```
 GitHub Actions - D1 Migrations & Deployment
 ```
@@ -84,6 +88,7 @@ Add exactly these two permissions:
    - This allows deploying to Cloudflare Workers
 
 **Visual Guide**:
+
 ```
 Permissions:
 ├─ Account
@@ -100,6 +105,7 @@ Permissions:
 5. Click **"Continue"** or **"Review"**
 
 **Why these permissions?**
+
 - **Cloudflare D1 | Edit**: Allows reading and applying migrations
 - **Workers Scripts | Edit**: Allows deploying updated Worker code
 - **Specific account**: Restricts token to your account only
@@ -117,6 +123,7 @@ Permissions:
 #### IP Address Filtering - Leave Empty
 
 The **"Client IP Address Filtering"** section should be left empty because:
+
 - GitHub Actions runners have dynamic IPs
 - We cannot whitelist specific GitHub IP ranges reliably
 - The token permissions are restricted enough (not overly broad)
@@ -148,6 +155,7 @@ The **"Client IP Address Filtering"** section should be left empty because:
 5. Keep this token secure until you add it to GitHub
 
 **Token Format Example** (partial):
+
 ```
 cloudflare-api-token-v1.0_abc123def456ghi789...
 ```
@@ -163,22 +171,26 @@ The Account ID is needed in GitHub Actions workflows to identify which Cloudflar
 ### Step 1: Find Your Account ID
 
 Method A: From any page in Cloudflare Dashboard
+
 1. Look at the **right sidebar**
 2. Find **"Account ID"** (usually near "Account Name")
 3. Copy the Account ID (32-character string, looks like: `abc1234def567ghi890jklmno123456`)
 
 Method B: From the URL
+
 1. Go to Cloudflare Dashboard
 2. Navigate to any page (e.g., Workers, D1, Domains)
 3. Look at the URL: `https://dash.cloudflare.com/{account-id}/...`
 4. The part between slashes is your Account ID
 
 Method C: From wrangler CLI
+
 ```bash
 npx wrangler whoami
 ```
 
 Output will include:
+
 ```
 You are logged in with an API Token.
 Account Name: Your Account Name
@@ -188,6 +200,7 @@ Account ID: abc1234def567ghi890jklmno123456
 ### Step 2: Verify Account ID Format
 
 Your Account ID should be:
+
 - 32 characters long
 - Hexadecimal (letters A-F and numbers 0-9)
 - Example: `a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6`
@@ -226,6 +239,7 @@ Your Account ID should be:
 3. Click **"Add secret"** button
 
 **Verification**: Both secrets should now appear:
+
 ```
 Repository secrets:
 ├─ CLOUDFLARE_API_TOKEN (Updated now)
@@ -341,6 +355,7 @@ If you need to immediately revoke access (e.g., security incident):
 **Symptoms**: GitHub Actions workflow fails with "Unauthorized" or "Invalid token"
 
 **Causes**:
+
 - Token not correctly copied
 - Token expired or revoked
 - Token doesn't have correct permissions
@@ -349,6 +364,7 @@ If you need to immediately revoke access (e.g., security incident):
 **Solutions**:
 
 1. **Verify token exists locally**:
+
    ```bash
    export CLOUDFLARE_API_TOKEN="your-token-here"
    npx wrangler whoami
@@ -374,6 +390,7 @@ If you need to immediately revoke access (e.g., security incident):
 **Symptoms**: Workflow fails with "Account not found" or "Forbidden"
 
 **Causes**:
+
 - Account ID in GitHub secret is wrong
 - Account ID doesn't match the token's account
 - Account ID missing or empty
@@ -386,6 +403,7 @@ If you need to immediately revoke access (e.g., security incident):
    - Verify it's 32 characters and looks like: `abc1234def567...`
 
 2. **Get correct Account ID**:
+
    ```bash
    npx wrangler whoami
    # Look for "Account ID" line
@@ -403,6 +421,7 @@ If you need to immediately revoke access (e.g., security incident):
 **Symptoms**: Token exists but doesn't have permission to perform action
 
 **Causes**:
+
 - Token doesn't have D1:Edit permission
 - Token doesn't have Workers Scripts:Edit permission
 - Token restricted to different account
@@ -426,6 +445,7 @@ If you need to immediately revoke access (e.g., security incident):
 **Symptoms**: Workflow references `${{ secrets.CLOUDFLARE_API_TOKEN }}` but it's empty
 
 **Causes**:
+
 - Secret name misspelled in workflow (case-sensitive)
 - Secret not pushed to main branch
 - Secret deleted accidentally
@@ -437,6 +457,7 @@ If you need to immediately revoke access (e.g., security incident):
    - Look for both `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`
 
 2. **Check secret name in workflow**:
+
    ```yaml
    # Correct (exact matching):
    env:
@@ -459,6 +480,7 @@ If you need to immediately revoke access (e.g., security incident):
 ### Do's
 
 ✅ **DO**:
+
 - Store secrets in GitHub repository secrets (GitHub encrypts them)
 - Use environment secrets in Phase 3 for environment-specific tokens
 - Rotate tokens regularly (every 6-12 months)
@@ -469,6 +491,7 @@ If you need to immediately revoke access (e.g., security incident):
 ### Don'ts
 
 ❌ **DON'T**:
+
 - Commit tokens to Git repository (even with git-secrets configured)
 - Share tokens via email, Slack, or unencrypted channels
 - Use tokens locally in shell history (it's cached in `~/.bash_history`)

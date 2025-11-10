@@ -26,6 +26,7 @@ Secrets    Structure   Migrations     Testing         Rollback
 ```
 
 **Progression**:
+
 1. **Foundation** (Commit 1): Secure secrets management
 2. **Infrastructure** (Commit 2): Workflow file structure and triggers
 3. **Core Logic** (Commit 3): Migration execution with error handling
@@ -39,6 +40,7 @@ Secrets    Structure   Migrations     Testing         Rollback
 ### Commit 1: Configure GitHub Secrets and Environment
 
 **Files**:
+
 - `.github/workflows/README.md` or `docs/deployment/secrets-setup-guide.md` (new, documentation)
 - GitHub repository settings (via UI - document in commit message)
 
@@ -46,6 +48,7 @@ Secrets    Structure   Migrations     Testing         Rollback
 **Duration**: 30-45 min (implementation) + 15-20 min (review)
 
 **Content**:
+
 - Document required GitHub secrets (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`)
 - Create Cloudflare API token with appropriate permissions (Workers:Edit, D1:Edit)
 - Add secrets to GitHub repository via UI (Settings → Secrets and variables → Actions)
@@ -53,12 +56,14 @@ Secrets    Structure   Migrations     Testing         Rollback
 - Verify secrets are accessible (can test in later commits)
 
 **Why it's atomic**:
+
 - **Single responsibility**: Secrets configuration only
 - **No code dependencies**: Pure infrastructure setup
 - **Can be validated independently**: Check GitHub UI for secret existence
 - **Safe to rollback**: Removing secrets doesn't break existing code
 
 **Technical Validation**:
+
 ```bash
 # Verify secrets exist in GitHub repository
 # Manual check: GitHub → Settings → Secrets and variables → Actions
@@ -68,6 +73,7 @@ Secrets    Structure   Migrations     Testing         Rollback
 **Expected Result**: Secrets configured and documented, ready for use in workflow
 
 **Review Criteria**:
+
 - [ ] Documentation clearly explains how to create Cloudflare API token
 - [ ] Required permissions for API token are documented (Workers:Edit, D1:Edit)
 - [ ] Both secrets (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`) are added
@@ -80,6 +86,7 @@ Secrets    Structure   Migrations     Testing         Rollback
 ### Commit 2: Create Migration Workflow Structure
 
 **Files**:
+
 - `.github/workflows/migrate.yml` (new) OR
 - `.github/workflows/deploy.yml` (new, includes migration job)
 
@@ -87,6 +94,7 @@ Secrets    Structure   Migrations     Testing         Rollback
 **Duration**: 45-60 min (implementation) + 20-30 min (review)
 
 **Content**:
+
 - Create workflow file with basic structure
 - Define workflow triggers:
   - `workflow_dispatch` (manual trigger)
@@ -99,12 +107,14 @@ Secrets    Structure   Migrations     Testing         Rollback
 - No migration execution yet (that's Commit 3)
 
 **Why it's atomic**:
+
 - **Single responsibility**: Workflow structure and setup only
 - **No migration logic**: Just the scaffolding
 - **Can be validated independently**: Workflow file syntax can be checked
 - **Safe to test**: No actual migration commands, so no risk to database
 
 **Technical Validation**:
+
 ```bash
 # Validate workflow syntax
 npx action-validator .github/workflows/migrate.yml
@@ -116,6 +126,7 @@ npx action-validator .github/workflows/migrate.yml
 **Expected Result**: Valid workflow file that can be triggered (but does nothing with DB yet)
 
 **Review Criteria**:
+
 - [ ] Workflow file uses proper YAML syntax
 - [ ] Triggers are appropriate (`workflow_dispatch`, `workflow_call`)
 - [ ] Concurrency group prevents parallel migrations
@@ -130,12 +141,14 @@ npx action-validator .github/workflows/migrate.yml
 ### Commit 3: Implement Migration Execution with Error Handling
 
 **Files**:
+
 - `.github/workflows/migrate.yml` (modify - add migration steps)
 
 **Size**: ~100-150 lines (additions to workflow)
 **Duration**: 60-90 min (implementation) + 30-45 min (review)
 
 **Content**:
+
 - Add migration execution step using `wrangler d1 migrations apply`
 - Use secrets for Cloudflare authentication
 - Add error handling:
@@ -149,12 +162,14 @@ npx action-validator .github/workflows/migrate.yml
 - Ensure migrations run before deployment (job dependency for Phase 2)
 
 **Why it's atomic**:
+
 - **Single responsibility**: Migration execution logic only
 - **Builds on Commit 2**: Uses existing workflow structure
 - **Can be validated independently**: Test with actual migration
 - **Critical logic isolated**: Error handling is the most important part
 
 **Technical Validation**:
+
 ```bash
 # Test migration locally first
 wrangler d1 migrations apply DB --local
@@ -169,6 +184,7 @@ wrangler d1 migrations apply DB --remote --dry-run  # if supported
 **Expected Result**: Migrations execute successfully, errors are caught and reported
 
 **Review Criteria**:
+
 - [ ] Migration command uses correct syntax: `npx wrangler d1 migrations apply DB --remote`
 - [ ] Secrets are properly injected as environment variables
 - [ ] Error handling covers multiple failure scenarios
@@ -184,6 +200,7 @@ wrangler d1 migrations apply DB --remote --dry-run  # if supported
 ### Commit 4: Add Migration Validation and Testing
 
 **Files**:
+
 - `.github/workflows/migrate.yml` (modify - add validation steps)
 - `scripts/validate-migration.sh` (new, optional validation script)
 - `docs/deployment/migration-testing.md` (new, testing guide)
@@ -192,6 +209,7 @@ wrangler d1 migrations apply DB --remote --dry-run  # if supported
 **Duration**: 45-60 min (implementation) + 20-30 min (review)
 
 **Content**:
+
 - Add pre-migration validation step:
   - Check migration files exist
   - Verify database connection
@@ -207,12 +225,14 @@ wrangler d1 migrations apply DB --remote --dry-run  # if supported
 - Add workflow status badge to README (optional)
 
 **Why it's atomic**:
+
 - **Single responsibility**: Validation and testing only
 - **Builds on Commit 3**: Adds safety checks around migration
 - **Can be validated independently**: Run validation scripts alone
 - **Increases confidence**: Makes migration process more reliable
 
 **Technical Validation**:
+
 ```bash
 # Run validation script locally
 ./scripts/validate-migration.sh
@@ -230,6 +250,7 @@ wrangler d1 execute DB --local --command="SELECT name FROM sqlite_master WHERE t
 **Expected Result**: Migrations are validated before and after execution, reducing risk
 
 **Review Criteria**:
+
 - [ ] Pre-migration checks prevent invalid migrations from running
 - [ ] Post-migration verification confirms success
 - [ ] Validation doesn't block valid migrations
@@ -243,6 +264,7 @@ wrangler d1 execute DB --local --command="SELECT name FROM sqlite_master WHERE t
 ### Commit 5: Document Rollback Procedures and Troubleshooting
 
 **Files**:
+
 - `docs/deployment/migration-rollback.md` (new)
 - `docs/deployment/migration-troubleshooting.md` (new)
 - `README.md` (update - add migration section, optional)
@@ -251,6 +273,7 @@ wrangler d1 execute DB --local --command="SELECT name FROM sqlite_master WHERE t
 **Duration**: 60-90 min (implementation) + 30-45 min (review)
 
 **Content**:
+
 - **Rollback documentation**:
   - How to use D1 Time Travel for point-in-time recovery
   - Manual rollback procedures via wrangler CLI
@@ -269,12 +292,14 @@ wrangler d1 execute DB --local --command="SELECT name FROM sqlite_master WHERE t
 - Update README with migration workflow info (if appropriate)
 
 **Why it's atomic**:
+
 - **Single responsibility**: Documentation only
 - **No code changes**: Pure knowledge capture
 - **Can be validated independently**: Review documentation quality
 - **Critical for production**: Rollback procedures save the day during incidents
 
 **Technical Validation**:
+
 ```bash
 # Test rollback procedure in local environment
 # 1. Apply migration locally
@@ -293,6 +318,7 @@ cat docs/deployment/migration-troubleshooting.md
 **Expected Result**: Complete operational documentation for migration management
 
 **Review Criteria**:
+
 - [ ] Rollback procedures are step-by-step and actionable
 - [ ] D1 Time Travel usage is clearly explained
 - [ ] Troubleshooting covers common issues (at least 5-7 scenarios)
@@ -330,6 +356,7 @@ cat docs/deployment/migration-troubleshooting.md
 ### Validation at Each Step
 
 After each commit:
+
 ```bash
 # Verify workflow syntax (Commits 2-4)
 npx action-validator .github/workflows/migrate.yml
@@ -351,14 +378,14 @@ All must pass before moving to next commit.
 
 ## 📊 Commit Metrics
 
-| Commit | Files | Lines | Implementation | Review | Total |
-|--------|-------|-------|----------------|--------|-------|
-| 1. Secrets Setup | 1-2 | ~50-80 | 30-45 min | 15-20 min | ~45-65 min |
-| 2. Workflow Structure | 1 | ~80-100 | 45-60 min | 20-30 min | ~65-90 min |
-| 3. Migration Execution | 1 | ~100-150 | 60-90 min | 30-45 min | ~90-135 min |
-| 4. Validation & Testing | 2-3 | ~70-100 | 45-60 min | 20-30 min | ~65-90 min |
-| 5. Rollback Docs | 2-3 | ~150-200 | 60-90 min | 30-45 min | ~90-135 min |
-| **TOTAL** | **7-10** | **~450-630** | **4-5.5h** | **2-2.5h** | **6-8h** |
+| Commit                  | Files    | Lines        | Implementation | Review     | Total       |
+| ----------------------- | -------- | ------------ | -------------- | ---------- | ----------- |
+| 1. Secrets Setup        | 1-2      | ~50-80       | 30-45 min      | 15-20 min  | ~45-65 min  |
+| 2. Workflow Structure   | 1        | ~80-100      | 45-60 min      | 20-30 min  | ~65-90 min  |
+| 3. Migration Execution  | 1        | ~100-150     | 60-90 min      | 30-45 min  | ~90-135 min |
+| 4. Validation & Testing | 2-3      | ~70-100      | 45-60 min      | 20-30 min  | ~65-90 min  |
+| 5. Rollback Docs        | 2-3      | ~150-200     | 60-90 min      | 30-45 min  | ~90-135 min |
+| **TOTAL**               | **7-10** | **~450-630** | **4-5.5h**     | **2-2.5h** | **6-8h**    |
 
 **Note**: Times are estimates. Adjust based on experience with CI/CD and Cloudflare.
 
@@ -394,6 +421,7 @@ All must pass before moving to next commit.
 ### Commit Messages
 
 Format (using Gitmoji convention):
+
 ```
 🔧 type(scope): short description (max 50 chars)
 
@@ -405,6 +433,7 @@ Part of Epic 0, Story 0.7, Phase 1 - Commit X/5
 ```
 
 **Gitmoji Types** (from `/docs/gitmoji.md`):
+
 - `🔧` - Add or update configuration files (Commits 1, 2)
 - `✨` - Introduce new features (Commit 3)
 - `✅` - Add, update, or pass tests (Commit 4)
@@ -413,6 +442,7 @@ Part of Epic 0, Story 0.7, Phase 1 - Commit X/5
 ### Examples:
 
 **Commit 1**:
+
 ```
 🔧 chore(ci): configure Cloudflare secrets for D1 migrations
 
@@ -424,6 +454,7 @@ Part of Epic 0, Story 0.7, Phase 1 - Commit 1/5
 ```
 
 **Commit 3**:
+
 ```
 ✨ feat(ci): implement automated D1 migration execution
 
@@ -477,6 +508,7 @@ Before committing:
 **Why**: This commit actually runs migrations against the database. A bug here could corrupt data.
 
 **Extra precautions**:
+
 1. ✅ Test migration locally extensively before Commit 3
 2. ✅ Test workflow on a feature branch first (not main)
 3. ✅ Use a development database for initial testing
@@ -485,6 +517,7 @@ Before committing:
 6. ✅ Get peer review before merging Commit 3
 
 **Validation steps for Commit 3**:
+
 ```bash
 # 1. Test locally
 wrangler d1 migrations apply DB --local

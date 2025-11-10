@@ -1,6 +1,6 @@
 ---
 description: Collect and analyze GitHub PRs with comprehensive AI review insights
-argument-hint: [optional: PR numbers separated by commas, e.g., "123,456"]
+argument-hint: [optional: PR numbers separated by commas, e.g., '123,456']
 allowed-tools: Bash(gh:*), Skill(github-pr-collector), Task(pr-review-analyzer), TodoWrite
 ---
 
@@ -128,6 +128,7 @@ PRs Analyzed: [count]
 [High-level overview of findings]
 
 ### Key Metrics
+
 - Total Comments: [count]
 - 🔴 Critical Issues: [count]
 - 🟠 Major Issues: [count]
@@ -135,6 +136,7 @@ PRs Analyzed: [count]
 - 🔵 Trivial Issues: [count]
 
 ### Top 3 Concerns
+
 1. [Critical issue #1]
 2. [Critical issue #2]
 3. [Critical issue #3]
@@ -148,10 +150,12 @@ PRs Analyzed: [count]
 **Review Summary**: [Brief summary]
 
 #### Key Issues:
+
 - 🔴 [Critical issue description]
 - 🟠 [Major issue description]
 
 #### Recommended Actions:
+
 1. [Action item 1]
 2. [Action item 2]
 
@@ -162,34 +166,41 @@ PRs Analyzed: [count]
 ## 🔄 Cross-PR Patterns
 
 ### Recurring Issues
+
 1. **[Pattern name]** - Appears in [X] PRs
    - Description: [details]
    - Recommendation: [solution]
 
 ### Positive Trends
+
 1. **[Good practice]** - Observed in [X] PRs
    - Keep doing: [details]
 
 ## ✅ Recommended Actions
 
 ### Immediate (Before Merge)
+
 - [ ] [Action 1] - PR #[number]
 - [ ] [Action 2] - PR #[number]
 
 ### Short Term (This Sprint)
+
 - [ ] [Action 1]
 - [ ] [Action 2]
 
 ### Long Term (Process Improvements)
+
 - [ ] [Improvement 1]
 - [ ] [Improvement 2]
 
 ## 📚 Learning Opportunities
 
 ### Documentation Needs
+
 - [Topic to document]
 
 ### Team Training
+
 - [Skill or practice to reinforce]
 
 ## 🔗 Resources
@@ -255,6 +266,7 @@ For each error, provide clear instructions on how to resolve it.
 User runs `/pr-collect` for the first time on their repository.
 
 Expected flow:
+
 1. Check environment and dependencies
 2. Collect PR data (may be slow first time)
 3. Analyze with AI
@@ -266,6 +278,7 @@ Expected flow:
 User runs `/pr-collect 123,456` to analyze specific PRs.
 
 Expected flow:
+
 1. Validate PR numbers exist
 2. Collect only specified PRs
 3. Focused analysis on those PRs
@@ -276,6 +289,7 @@ Expected flow:
 User runs `/pr-collect` after previous analysis.
 
 Expected flow:
+
 1. Check for new/updated PRs
 2. Incremental collection
 3. Compare with previous analysis

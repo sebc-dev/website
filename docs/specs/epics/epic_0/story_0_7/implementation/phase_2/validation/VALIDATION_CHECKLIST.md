@@ -15,6 +15,7 @@ Complete validation checklist before marking Phase 2 as complete.
 - [ ] Commit messages include "Part of Phase 2 - Commit X/5"
 
 **Validation**:
+
 ```bash
 # View commit history
 git log --oneline --no-merges | head -5
@@ -35,6 +36,7 @@ git log --format="%s" | head -5
 - [ ] No syntax errors reported by actionlint
 
 **Validation**:
+
 ```bash
 # Validate YAML syntax
 pnpm exec actionlint .github/workflows/deploy.yml
@@ -51,21 +53,25 @@ cat .github/workflows/deploy.yml | head -30
 ## ✅ 3. Workflow Configuration
 
 ### Permissions
+
 - [ ] Minimal workflow permissions (`contents: read`)
 - [ ] Job permissions are appropriate (no unnecessary write access)
 - [ ] Follows least-privilege principle
 
 ### Concurrency
+
 - [ ] Concurrency group configured: `deploy-${{ github.ref }}`
 - [ ] `cancel-in-progress: true` set
 - [ ] Prevents overlapping deployments
 
 ### Timeouts
+
 - [ ] Workflow timeout set (15 minutes)
 - [ ] Job timeout set (10 minutes)
 - [ ] Timeouts are reasonable for deployment tasks
 
 **Validation**:
+
 ```bash
 # Check permissions and concurrency
 cat .github/workflows/deploy.yml | grep -A 5 "permissions:\|concurrency:"
@@ -86,6 +92,7 @@ cat .github/workflows/deploy.yml | grep "timeout"
 - [ ] No redundant or conflicting triggers
 
 **Validation**:
+
 ```bash
 # Check triggers
 cat .github/workflows/deploy.yml | grep -A 20 "on:"
@@ -102,6 +109,7 @@ gh workflow list | grep -i deploy
 ## ✅ 5. Build and Deployment
 
 ### Build Steps
+
 - [ ] Checkout uses pinned version (`actions/checkout@v4`)
 - [ ] pnpm setup configured correctly
 - [ ] Node.js version matches project (20.x)
@@ -111,6 +119,7 @@ gh workflow list | grep -i deploy
 - [ ] Build output verified before deployment
 
 ### Deployment Step
+
 - [ ] Uses official action: `cloudflare/wrangler-action@v3`
 - [ ] Action version pinned (not `@latest`)
 - [ ] `apiToken` uses secret: `${{ secrets.CLOUDFLARE_API_TOKEN }}`
@@ -119,6 +128,7 @@ gh workflow list | grep -i deploy
 - [ ] Working directory set appropriately (if needed)
 
 **Validation**:
+
 ```bash
 # Check build and deployment steps
 cat .github/workflows/deploy.yml | grep -A 30 "deploy:"
@@ -136,6 +146,7 @@ gh run watch
 ## ✅ 6. Security
 
 ### Secrets Handling (CRITICAL)
+
 - [ ] **NO hardcoded secrets or API tokens**
 - [ ] **All secrets referenced via `${{ secrets.NAME }}`**
 - [ ] **No secrets echoed to logs**
@@ -143,17 +154,20 @@ gh run watch
 - [ ] No sensitive data in comments
 
 ### Action Security
+
 - [ ] All actions pinned to specific versions
 - [ ] Actions from trusted sources (GitHub, Cloudflare official)
 - [ ] No third-party actions without security review
 
 ### Deployment Security
+
 - [ ] Deployment requires quality checks to pass (workflow_run dependency)
 - [ ] Deployment limited to specific branches
 - [ ] Minimal permissions for all jobs
 - [ ] No write permissions unless justified
 
 **Validation**:
+
 ```bash
 # Check for hardcoded secrets (should return nothing sensitive)
 grep -i "token\|secret\|password" .github/workflows/deploy.yml | grep -v "secrets\."
@@ -179,6 +193,7 @@ cat .github/workflows/deploy.yml | grep -A 5 "permissions:"
 - [ ] Error messages are descriptive
 
 **Validation**:
+
 ```bash
 # Check health check step
 cat .github/workflows/deploy.yml | grep -A 20 "health check\|verification"
@@ -203,6 +218,7 @@ gh run watch --log | grep -A 10 "verification"
 - [ ] Workflow summary is user-friendly
 
 **Validation**:
+
 ```bash
 # Check logging and artifact steps
 cat .github/workflows/deploy.yml | grep -A 15 "summary\|artifact"
@@ -229,6 +245,7 @@ gh run view --log | grep -A 5 "Upload artifact"
 - [ ] Workflow runs at appropriate time (after quality passes)
 
 **Validation**:
+
 ```bash
 # Check workflow dependencies
 cat .github/workflows/deploy.yml | grep -A 10 "workflow_run:"
@@ -255,6 +272,7 @@ gh run list --limit 5
 - [ ] Build produces deployable artifacts
 
 **Validation**:
+
 ```bash
 # Verify secrets
 gh secret list | grep CLOUDFLARE
@@ -272,6 +290,7 @@ ls -la .open-next/worker.js
 ## ✅ 11. Testing
 
 ### Manual Testing
+
 - [ ] Manual trigger tested (`workflow_dispatch`)
 - [ ] Automatic trigger tested (`workflow_run`)
 - [ ] Branch filtering tested
@@ -279,17 +298,20 @@ ls -la .open-next/worker.js
 - [ ] End-to-end deployment tested
 
 ### Failure Scenarios
+
 - [ ] Missing secrets failure tested (or reviewed)
 - [ ] Build failure blocks deployment (tested or reviewed)
 - [ ] Health check failure triggers workflow failure
 
 ### Test Results
+
 - [ ] All syntax validation passes
 - [ ] All integration tests pass
 - [ ] Deployment succeeds consistently (≥99% success rate target)
 - [ ] Worker accessible after deployment
 
 **Validation**:
+
 ```bash
 # Run complete test suite (see guides/TESTING.md)
 
@@ -318,6 +340,7 @@ curl -I "$WORKER_URL"
 - [ ] INDEX.md updated with phase status
 
 **Validation**:
+
 ```bash
 # Review documentation
 ls -la docs/specs/epics/epic_0/story_0_7/implementation/phase_2/
@@ -357,6 +380,7 @@ ls -la docs/specs/epics/epic_0/story_0_7/implementation/phase_2/
 - [ ] Health check passes consistently
 
 **Validation**:
+
 ```bash
 # Full deployment test
 gh workflow run deploy.yml
@@ -422,14 +446,14 @@ gh run view | grep -i artifact
 
 ## 📊 Success Metrics
 
-| Metric                   | Target   | Actual | Status |
-| ------------------------ | -------- | ------ | ------ |
-| Commits                  | 5        | -      | ⏳     |
-| Workflow Syntax Valid    | ✅       | -      | ⏳     |
-| Deployment Success Rate  | ≥99%     | -      | ⏳     |
-| Health Check Coverage    | 100%     | -      | ⏳     |
-| Deployment Duration      | <10 min  | -      | ⏳     |
-| Security Issues          | 0        | -      | ⏳     |
+| Metric                  | Target  | Actual | Status |
+| ----------------------- | ------- | ------ | ------ |
+| Commits                 | 5       | -      | ⏳     |
+| Workflow Syntax Valid   | ✅      | -      | ⏳     |
+| Deployment Success Rate | ≥99%    | -      | ⏳     |
+| Health Check Coverage   | 100%    | -      | ⏳     |
+| Deployment Duration     | <10 min | -      | ⏳     |
+| Security Issues         | 0       | -      | ⏳     |
 
 ---
 
@@ -488,6 +512,7 @@ Select one:
 **CRITICAL**: Security reviewer must sign off before approval.
 
 **Security Checklist**:
+
 - [ ] No hardcoded secrets in workflow
 - [ ] All secrets properly referenced
 - [ ] No sensitive data in logs or artifacts
@@ -495,8 +520,8 @@ Select one:
 - [ ] Minimal permissions enforced
 - [ ] Deployment limited to authorized branches
 
-**Security Reviewer**: ________________
-**Date**: ________________
+**Security Reviewer**: **\*\***\_\_\_\_**\*\***
+**Date**: **\*\***\_\_\_\_**\*\***
 **Sign-Off**: [ ] APPROVED / [ ] REJECTED
 
 ---

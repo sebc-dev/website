@@ -40,6 +40,7 @@ YAML syntax ✓      Trigger logic ✓    Wrangler deploy ✓  Health check ✓ 
 ### Commit 1: Create Deployment Workflow Structure
 
 **Files**:
+
 - `.github/workflows/deploy.yml` (new)
 
 **Size**: ~40 lines
@@ -47,6 +48,7 @@ YAML syntax ✓      Trigger logic ✓    Wrangler deploy ✓  Health check ✓ 
 **Duration**: 30-45 min (implementation) + 20-30 min (review)
 
 **Content**:
+
 - Basic workflow file structure
 - Workflow name and description
 - Minimal permissions (contents: read)
@@ -54,12 +56,14 @@ YAML syntax ✓      Trigger logic ✓    Wrangler deploy ✓  Health check ✓ 
 - Placeholder jobs structure
 
 **Why it's atomic**:
+
 - Single responsibility: Establish workflow file
 - No external dependencies yet
 - Can be validated for YAML syntax independently
 - Sets foundation for all subsequent commits
 
 **Technical Validation**:
+
 ```bash
 # Validate YAML syntax
 pnpm exec actionlint .github/workflows/deploy.yml
@@ -71,6 +75,7 @@ cat .github/workflows/deploy.yml
 **Expected Result**: Valid YAML file with basic workflow structure, no syntax errors
 
 **Review Criteria**:
+
 - [ ] YAML syntax is valid
 - [ ] Workflow name is descriptive
 - [ ] Permissions follow least-privilege principle
@@ -82,6 +87,7 @@ cat .github/workflows/deploy.yml
 ### Commit 2: Configure Workflow Triggers and Dependencies
 
 **Files**:
+
 - `.github/workflows/deploy.yml` (modify)
 
 **Size**: ~30 lines added/modified
@@ -89,6 +95,7 @@ cat .github/workflows/deploy.yml
 **Duration**: 40-60 min (implementation) + 25-35 min (review)
 
 **Content**:
+
 - `workflow_dispatch` trigger for manual deployments
 - `workflow_run` trigger to run after quality workflow succeeds
 - Input parameters for manual trigger (optional flags)
@@ -96,12 +103,14 @@ cat .github/workflows/deploy.yml
 - Dependencies on migration workflow completion
 
 **Why it's atomic**:
+
 - Single responsibility: Define when deployment runs
 - Isolated trigger configuration
 - Can be tested manually without actual deployment
 - No Cloudflare interaction yet
 
 **Technical Validation**:
+
 ```bash
 # Validate workflow syntax
 pnpm exec actionlint .github/workflows/deploy.yml
@@ -113,6 +122,7 @@ gh workflow run deploy.yml
 **Expected Result**: Workflow can be triggered manually, syntax validates correctly
 
 **Review Criteria**:
+
 - [ ] `workflow_dispatch` configured for manual deployments
 - [ ] `workflow_run` configured to trigger after quality workflow
 - [ ] Conditional logic correctly handles different trigger types
@@ -124,6 +134,7 @@ gh workflow run deploy.yml
 ### Commit 3: Add Cloudflare Deployment Job
 
 **Files**:
+
 - `.github/workflows/deploy.yml` (modify)
 
 **Size**: ~50 lines added
@@ -131,6 +142,7 @@ gh workflow run deploy.yml
 **Duration**: 60-90 min (implementation) + 35-45 min (review)
 
 **Content**:
+
 - `deploy` job definition
 - Checkout code step
 - Setup pnpm and Node.js
@@ -140,12 +152,14 @@ gh workflow run deploy.yml
 - Deployment timeout (10 minutes)
 
 **Why it's atomic**:
+
 - Single responsibility: Deploy to Cloudflare
 - Self-contained deployment logic
 - Can be tested in isolation (manual trigger)
 - Core functionality of the phase
 
 **Technical Validation**:
+
 ```bash
 # Validate workflow syntax
 pnpm exec actionlint .github/workflows/deploy.yml
@@ -160,6 +174,7 @@ gh run list --workflow=deploy.yml --limit 1
 **Expected Result**: Application successfully deploys to Cloudflare Workers
 
 **Review Criteria**:
+
 - [ ] Uses official `cloudflare/wrangler-action@v3`
 - [ ] Secrets are properly referenced (not hardcoded)
 - [ ] Build step completes successfully before deployment
@@ -172,6 +187,7 @@ gh run list --workflow=deploy.yml --limit 1
 ### Commit 4: Implement Deployment Verification and Health Check
 
 **Files**:
+
 - `.github/workflows/deploy.yml` (modify)
 
 **Size**: ~35 lines added
@@ -179,6 +195,7 @@ gh run list --workflow=deploy.yml --limit 1
 **Duration**: 45-70 min (implementation) + 30-40 min (review)
 
 **Content**:
+
 - Post-deployment verification step
 - HTTP health check to deployed Worker URL
 - Retry logic for health check (3 attempts, 10s delay)
@@ -186,12 +203,14 @@ gh run list --workflow=deploy.yml --limit 1
 - Rollback instructions in case of failure
 
 **Why it's atomic**:
+
 - Single responsibility: Verify deployment success
 - Independent verification logic
 - Can be tested after deployment
 - Improves deployment reliability
 
 **Technical Validation**:
+
 ```bash
 # Validate workflow syntax
 pnpm exec actionlint .github/workflows/deploy.yml
@@ -206,6 +225,7 @@ gh run view --log
 **Expected Result**: Health check successfully validates deployed Worker is accessible
 
 **Review Criteria**:
+
 - [ ] Health check targets correct Worker URL
 - [ ] Retry logic handles transient failures (CDN propagation)
 - [ ] Success criteria are clearly defined (HTTP 200)
@@ -218,6 +238,7 @@ gh run view --log
 ### Commit 5: Add Deployment Logging and Artifact Upload
 
 **Files**:
+
 - `.github/workflows/deploy.yml` (modify)
 
 **Size**: ~30 lines added
@@ -225,6 +246,7 @@ gh run view --log
 **Duration**: 35-50 min (implementation) + 20-30 min (review)
 
 **Content**:
+
 - Deployment summary output (URL, timestamp, commit SHA)
 - Upload deployment logs as artifacts
 - Deployment metrics collection (duration, size)
@@ -232,12 +254,14 @@ gh run view --log
 - Link to deployed Worker in workflow summary
 
 **Why it's atomic**:
+
 - Single responsibility: Observability and logging
 - Non-critical enhancement
 - Can be added without affecting core deployment
 - Improves debugging and tracking
 
 **Technical Validation**:
+
 ```bash
 # Validate workflow syntax
 pnpm exec actionlint .github/workflows/deploy.yml
@@ -255,6 +279,7 @@ gh run view
 **Expected Result**: Deployment logs and metrics are captured, artifacts are uploaded
 
 **Review Criteria**:
+
 - [ ] Deployment summary includes all key information
 - [ ] Artifacts retention is set appropriately (14 days)
 - [ ] Logs don't expose sensitive information
@@ -290,6 +315,7 @@ gh run view
 ### Validation at Each Step
 
 After each commit:
+
 ```bash
 # Validate YAML syntax
 pnpm exec actionlint .github/workflows/deploy.yml
@@ -310,14 +336,14 @@ All must pass before moving to next commit.
 
 ## 📊 Commit Metrics
 
-| Commit | Files | Lines | Implementation | Review | Total   |
-| ------ | ----- | ----- | -------------- | ------ | ------- |
-| 1. Workflow Structure     | 1 | ~40   | 30-45 min | 20-30 min | 50-75 min   |
-| 2. Triggers & Dependencies| 1 | ~30   | 40-60 min | 25-35 min | 65-95 min   |
-| 3. Cloudflare Deployment  | 1 | ~50   | 60-90 min | 35-45 min | 95-135 min  |
-| 4. Deployment Verification| 1 | ~35   | 45-70 min | 30-40 min | 75-110 min  |
-| 5. Logging & Artifacts    | 1 | ~30   | 35-50 min | 20-30 min | 55-80 min   |
-| **TOTAL** | **1** | **~185** | **3.5-5h** | **2-3h** | **5.5-8h** |
+| Commit                     | Files | Lines    | Implementation | Review    | Total      |
+| -------------------------- | ----- | -------- | -------------- | --------- | ---------- |
+| 1. Workflow Structure      | 1     | ~40      | 30-45 min      | 20-30 min | 50-75 min  |
+| 2. Triggers & Dependencies | 1     | ~30      | 40-60 min      | 25-35 min | 65-95 min  |
+| 3. Cloudflare Deployment   | 1     | ~50      | 60-90 min      | 35-45 min | 95-135 min |
+| 4. Deployment Verification | 1     | ~35      | 45-70 min      | 30-40 min | 75-110 min |
+| 5. Logging & Artifacts     | 1     | ~30      | 35-50 min      | 20-30 min | 55-80 min  |
+| **TOTAL**                  | **1** | **~185** | **3.5-5h**     | **2-3h**  | **5.5-8h** |
 
 ---
 
@@ -348,6 +374,7 @@ All must pass before moving to next commit.
 ### Commit Messages
 
 Format:
+
 ```
 feat(ci): <short description> (max 50 chars)
 
@@ -361,6 +388,7 @@ Part of Phase 2 - Commit X/5
 Types: `feat` (new deployment workflow), `fix`, `refactor`, `chore`
 
 Examples:
+
 - `feat(ci): create deployment workflow structure`
 - `feat(ci): configure deployment triggers and dependencies`
 - `feat(ci): add Cloudflare Workers deployment job`
@@ -370,6 +398,7 @@ Examples:
 ### Review Checklist
 
 Before committing:
+
 - [ ] Workflow syntax is valid (actionlint passes)
 - [ ] No hardcoded secrets or sensitive data
 - [ ] Follows GitHub Actions best practices

@@ -65,13 +65,13 @@ actionlint -color .github/workflows/deploy.yml
 
 ### Common Syntax Issues
 
-| Issue                    | Example                        | Fix                                    |
-| ------------------------ | ------------------------------ | -------------------------------------- |
-| Missing required field   | Job without `runs-on`          | Add `runs-on: ubuntu-latest`           |
-| Invalid syntax           | `if: ${{ var }}`               | Use `if: var` (no need for `${{ }}`)   |
-| Undefined secret         | `${{ secrets.MISSING }}`       | Add secret to GitHub repository        |
-| Tabs instead of spaces   | Indentation uses tabs          | Replace tabs with spaces (2 or 4)      |
-| Invalid action version   | `actions/checkout@vInvalid`    | Use valid version like `@v4`           |
+| Issue                  | Example                     | Fix                                  |
+| ---------------------- | --------------------------- | ------------------------------------ |
+| Missing required field | Job without `runs-on`       | Add `runs-on: ubuntu-latest`         |
+| Invalid syntax         | `if: ${{ var }}`            | Use `if: var` (no need for `${{ }}`) |
+| Undefined secret       | `${{ secrets.MISSING }}`    | Add secret to GitHub repository      |
+| Tabs instead of spaces | Indentation uses tabs       | Replace tabs with spaces (2 or 4)    |
+| Invalid action version | `actions/checkout@vInvalid` | Use valid version like `@v4`         |
 
 ### Validation Checklist
 
@@ -96,12 +96,14 @@ Verify workflow triggers correctly and executes all jobs.
 **Purpose**: Verify manual deployments work from any branch.
 
 **Prerequisites**:
+
 - [ ] GitHub secrets configured
 - [ ] Branch with workflow changes pushed
 
 **Steps**:
 
 1. **Trigger workflow manually**:
+
    ```bash
    # Using GitHub CLI
    gh workflow run deploy.yml
@@ -111,6 +113,7 @@ Verify workflow triggers correctly and executes all jobs.
    ```
 
 2. **Monitor execution**:
+
    ```bash
    # Watch workflow run
    gh run watch
@@ -120,6 +123,7 @@ Verify workflow triggers correctly and executes all jobs.
    ```
 
 3. **Check workflow status**:
+
    ```bash
    # List recent runs
    gh run list --workflow=deploy.yml --limit 5
@@ -139,6 +143,7 @@ Verify workflow triggers correctly and executes all jobs.
 ```
 
 **Success Criteria**:
+
 - Workflow status: ✅ Success
 - Deployment job: ✅ Success
 - Health check: HTTP 200
@@ -151,12 +156,14 @@ Verify workflow triggers correctly and executes all jobs.
 **Purpose**: Verify deployment runs automatically after quality workflow succeeds.
 
 **Prerequisites**:
+
 - [ ] Quality workflow (`.github/workflows/quality.yml`) exists
 - [ ] Changes pushed to main or develop branch
 
 **Steps**:
 
 1. **Push changes to trigger quality workflow**:
+
    ```bash
    git checkout main
    git pull
@@ -168,11 +175,13 @@ Verify workflow triggers correctly and executes all jobs.
    ```
 
 2. **Wait for quality workflow to complete**:
+
    ```bash
    gh run watch --workflow=quality.yml
    ```
 
 3. **Verify deployment workflow triggered**:
+
    ```bash
    # Check deployment workflow runs
    gh run list --workflow=deploy.yml --limit 1
@@ -195,6 +204,7 @@ Verify workflow triggers correctly and executes all jobs.
 ```
 
 **Success Criteria**:
+
 - Quality workflow: ✅ Success
 - Deployment workflow triggered within 1-2 minutes
 - Deployment status: ✅ Success
@@ -207,6 +217,7 @@ Verify workflow triggers correctly and executes all jobs.
 **Purpose**: Verify deployment only runs for allowed branches.
 
 **Prerequisites**:
+
 - [ ] Workflow configured with branch filters
 
 **Test 3a: Allowed Branch (main)**
@@ -251,17 +262,20 @@ Verify deployed Worker is functional and accessible.
 **Steps**:
 
 1. **Trigger deployment**:
+
    ```bash
    gh workflow run deploy.yml
    gh run watch
    ```
 
 2. **Extract Worker URL from logs**:
+
    ```bash
    gh run view --log | grep -i "published" | grep -o "https://[^ ]*"
    ```
 
 3. **Manually verify health check**:
+
    ```bash
    WORKER_URL="<extracted-url>"
 
@@ -286,6 +300,7 @@ Verify deployed Worker is functional and accessible.
 ```
 
 **Success Criteria**:
+
 - HTTP status: 200 OK
 - Response time: < 1000ms
 - Content-Type header present
@@ -327,6 +342,7 @@ Verify workflow handles failures gracefully and provides useful error messages.
 **Steps** (⚠️ destructive test, use test repository):
 
 1. **Remove secret temporarily**:
+
    ```bash
    # Backup secret value first!
    gh secret list | grep CLOUDFLARE_API_TOKEN
@@ -336,12 +352,14 @@ Verify workflow handles failures gracefully and provides useful error messages.
    ```
 
 2. **Trigger workflow**:
+
    ```bash
    gh workflow run deploy.yml
    gh run watch
    ```
 
 3. **Check error message**:
+
    ```bash
    gh run view --log | grep -i "error"
    ```
@@ -361,6 +379,7 @@ Verify workflow handles failures gracefully and provides useful error messages.
 ```
 
 **Success Criteria**:
+
 - Workflow fails (not hangs)
 - Error message identifies missing secret
 - No partial deployment
@@ -374,6 +393,7 @@ Verify workflow handles failures gracefully and provides useful error messages.
 **Steps**:
 
 1. **Introduce build error** (test branch):
+
    ```bash
    git checkout -b test-build-failure
 
@@ -385,17 +405,20 @@ Verify workflow handles failures gracefully and provides useful error messages.
    ```
 
 2. **Trigger workflow**:
+
    ```bash
    gh workflow run deploy.yml
    gh run watch
    ```
 
 3. **Verify build fails**:
+
    ```bash
    gh run view --log | grep -i "build"
    ```
 
 4. **Verify deployment blocked**:
+
    ```bash
    gh run view --log | grep -i "deploy"
    ```
@@ -416,6 +439,7 @@ Verify workflow handles failures gracefully and provides useful error messages.
 ```
 
 **Success Criteria**:
+
 - Build failure detected
 - Deployment does not run
 - No broken code deployed
@@ -453,6 +477,7 @@ cat .github/workflows/deploy.yml | grep -A 20 "health check"
 **Steps**:
 
 1. **Make code change**:
+
    ```bash
    git checkout main
    git pull
@@ -465,21 +490,25 @@ cat .github/workflows/deploy.yml | grep -A 20 "health check"
    ```
 
 2. **Monitor quality workflow**:
+
    ```bash
    gh run watch --workflow=quality.yml
    ```
 
 3. **Verify deployment triggers**:
+
    ```bash
    gh run list --workflow=deploy.yml --limit 1
    ```
 
 4. **Monitor deployment**:
+
    ```bash
    gh run watch --workflow=deploy.yml
    ```
 
 5. **Verify Worker updated**:
+
    ```bash
    # Get Worker URL from logs
    WORKER_URL=$(gh run view --log --workflow=deploy.yml | grep -o "https://[^ ]*workers.dev" | head -1)
@@ -501,6 +530,7 @@ cat .github/workflows/deploy.yml | grep -A 20 "health check"
 ```
 
 **Success Criteria**:
+
 - Total time: < 15 minutes (quality + deployment)
 - All workflows succeed
 - Worker updated with latest commit
@@ -562,17 +592,20 @@ sleep 15 && curl -I "<worker-url>"
 Before marking Phase 2 complete:
 
 ### Syntax Validation
+
 - [ ] `actionlint` passes with no errors
 - [ ] YAML syntax is valid
 - [ ] All required fields present
 
 ### Workflow Execution
+
 - [ ] Manual trigger works (`workflow_dispatch`)
 - [ ] Automatic trigger works (`workflow_run`)
 - [ ] Branch filtering works correctly
 - [ ] Concurrency group prevents overlapping deployments
 
 ### Deployment
+
 - [ ] Build succeeds
 - [ ] Deployment to Cloudflare succeeds
 - [ ] Worker is accessible after deployment
@@ -580,12 +613,14 @@ Before marking Phase 2 complete:
 - [ ] Deployment logs captured
 
 ### Error Handling
+
 - [ ] Missing secrets cause clear failure
 - [ ] Build failures block deployment
 - [ ] Health check failures trigger workflow failure
 - [ ] Error messages are actionable
 
 ### Integration
+
 - [ ] End-to-end workflow completes successfully
 - [ ] Deployed commit matches pushed commit
 - [ ] Worker reflects latest changes
@@ -606,16 +641,16 @@ Before marking Phase 2 complete:
 
 ### Test Results
 
-| Test                        | Status | Duration | Notes                    |
-| --------------------------- | ------ | -------- | ------------------------ |
-| Syntax Validation           | ✅     | 1 min    | No errors                |
-| Manual Trigger              | ✅     | 8 min    | Deployed successfully    |
-| Automatic Trigger           | ✅     | 12 min   | Triggered after quality  |
-| Branch Filtering            | ✅     | 5 min    | Only main deploys        |
-| Health Check                | ✅     | 30 sec   | HTTP 200                 |
-| Missing Secrets Failure     | ✅     | 2 min    | Clear error message      |
-| Build Failure Blocks Deploy | ✅     | 4 min    | No deployment executed   |
-| End-to-End Deployment       | ✅     | 14 min   | All steps successful     |
+| Test                        | Status | Duration | Notes                   |
+| --------------------------- | ------ | -------- | ----------------------- |
+| Syntax Validation           | ✅     | 1 min    | No errors               |
+| Manual Trigger              | ✅     | 8 min    | Deployed successfully   |
+| Automatic Trigger           | ✅     | 12 min   | Triggered after quality |
+| Branch Filtering            | ✅     | 5 min    | Only main deploys       |
+| Health Check                | ✅     | 30 sec   | HTTP 200                |
+| Missing Secrets Failure     | ✅     | 2 min    | Clear error message     |
+| Build Failure Blocks Deploy | ✅     | 4 min    | No deployment executed  |
+| End-to-End Deployment       | ✅     | 14 min   | All steps successful    |
 
 ### Summary
 

@@ -418,23 +418,23 @@ Phase 4 (Documentation)
 
 ### Overall Estimates
 
-| Metric                   | Estimate                   | Notes                              |
-| ------------------------ | -------------------------- | ---------------------------------- |
-| **Total Phases**         | 4                          | Atomic, sequential phases          |
-| **Total Duration**       | 5-6.5 days                 | Sequential implementation required |
-| **Parallel Duration**    | 5-6.5 days                 | No parallelization possible        |
-| **Total Commits**        | ~17-22                     | Across all phases                  |
-| **Total Files**          | ~4 new, ~3 modified        | Workflows + documentation          |
-| **Test Coverage Target** | N/A (infrastructure work)  | Focus on integration validation    |
+| Metric                   | Estimate                  | Notes                              |
+| ------------------------ | ------------------------- | ---------------------------------- |
+| **Total Phases**         | 4                         | Atomic, sequential phases          |
+| **Total Duration**       | 5-6.5 days                | Sequential implementation required |
+| **Parallel Duration**    | 5-6.5 days                | No parallelization possible        |
+| **Total Commits**        | ~17-22                    | Across all phases                  |
+| **Total Files**          | ~4 new, ~3 modified       | Workflows + documentation          |
+| **Test Coverage Target** | N/A (infrastructure work) | Focus on integration validation    |
 
 ### Per-Phase Timeline
 
-| Phase | Duration | Commits | Start After | Blocks     |
-| ----- | -------- | ------- | ----------- | ---------- |
-| 1     | 1.5-2d   | 5-7     | -           | Phase 2    |
-| 2     | 1.5-2d   | 5-6     | Phase 1     | Phase 3    |
-| 3     | 1-1.5d   | 4-5     | Phase 2     | Phase 4    |
-| 4     | 1d       | 3-4     | Phase 3     | -          |
+| Phase | Duration | Commits | Start After | Blocks  |
+| ----- | -------- | ------- | ----------- | ------- |
+| 1     | 1.5-2d   | 5-7     | -           | Phase 2 |
+| 2     | 1.5-2d   | 5-6     | Phase 1     | Phase 3 |
+| 3     | 1-1.5d   | 4-5     | Phase 2     | Phase 4 |
+| 4     | 1d       | 3-4     | Phase 3     | -       |
 
 ### Resource Requirements
 
@@ -489,13 +489,13 @@ Phase 4 (Documentation)
 
 ### Overall Story Risks
 
-| Risk                       | Likelihood | Impact | Mitigation                                |
-| -------------------------- | ---------- | ------ | ----------------------------------------- |
-| Migration data corruption  | Low        | High   | Test extensively, document rollback       |
-| Deployment failures        | Medium     | Medium | Staging env, health checks, manual deploy |
-| Secrets exposure           | Low        | High   | Use GitHub Environment secrets, audit     |
-| Configuration drift        | Medium     | Low    | Document differences, IaC approach        |
-| Incomplete documentation   | Low        | Medium | Test procedures, peer review              |
+| Risk                      | Likelihood | Impact | Mitigation                                |
+| ------------------------- | ---------- | ------ | ----------------------------------------- |
+| Migration data corruption | Low        | High   | Test extensively, document rollback       |
+| Deployment failures       | Medium     | Medium | Staging env, health checks, manual deploy |
+| Secrets exposure          | Low        | High   | Use GitHub Environment secrets, audit     |
+| Configuration drift       | Medium     | Low    | Document differences, IaC approach        |
+| Incomplete documentation  | Low        | Medium | Test procedures, peer review              |
 
 ---
 
@@ -503,12 +503,12 @@ Phase 4 (Documentation)
 
 ### Test Coverage by Phase
 
-| Phase | Integration Tests | Manual Tests | E2E Validation |
-| ----- | ----------------- | ------------ | -------------- |
-| 1     | Migration dry-run | CI execution | Database state |
-| 2     | Deployment smoke  | CI execution | Site access    |
+| Phase | Integration Tests | Manual Tests  | E2E Validation |
+| ----- | ----------------- | ------------- | -------------- |
+| 1     | Migration dry-run | CI execution  | Database state |
+| 2     | Deployment smoke  | CI execution  | Site access    |
 | 3     | Multi-env deploy  | Approval flow | Both envs      |
-| 4     | N/A               | Runbook test | Full workflow  |
+| 4     | N/A               | Runbook test  | Full workflow  |
 
 ### Test Milestones
 
@@ -589,6 +589,7 @@ Each phase must pass:
    - Confirm Cloudflare account access and permissions
 
 2. **Prepare Cloudflare secrets**
+
    ```bash
    # Generate API token at Cloudflare dashboard
    # Permissions needed: Workers Scripts:Edit, Account:D1:Edit
@@ -662,13 +663,13 @@ This story is considered complete when:
 
 ### Quality Metrics
 
-| Metric                  | Target    | Actual | Notes                                    |
-| ----------------------- | --------- | ------ | ---------------------------------------- |
-| Migration Success Rate  | 100%      | -      | All migrations apply without errors      |
-| Deployment Success Rate | ≥99%      | -      | Occasional failures acceptable (network) |
-| Rollback Time           | <5 min    | -      | Time to revert failed deployment         |
-| Documentation Complete  | 100%      | -      | All procedures documented                |
-| Workflow Execution Time | <10 min   | -      | Migrations + deployment time             |
+| Metric                  | Target  | Actual | Notes                                    |
+| ----------------------- | ------- | ------ | ---------------------------------------- |
+| Migration Success Rate  | 100%    | -      | All migrations apply without errors      |
+| Deployment Success Rate | ≥99%    | -      | Occasional failures acceptable (network) |
+| Rollback Time           | <5 min  | -      | Time to revert failed deployment         |
+| Documentation Complete  | 100%    | -      | All procedures documented                |
+| Workflow Execution Time | <10 min | -      | Migrations + deployment time             |
 
 ### Validation Checklist
 
@@ -731,6 +732,7 @@ Before marking story complete:
 ### Phase Completion Updates
 
 **Phase 1**: NOT STARTED
+
 - Start Date: TBD
 - Completion Date: TBD
 - Actual Duration: TBD
@@ -738,6 +740,7 @@ Before marking story complete:
 - Notes: TBD
 
 **Phase 2**: NOT STARTED
+
 - Start Date: TBD
 - Completion Date: TBD
 - Actual Duration: TBD
@@ -745,6 +748,7 @@ Before marking story complete:
 - Notes: TBD
 
 **Phase 3**: NOT STARTED
+
 - Start Date: TBD
 - Completion Date: TBD
 - Actual Duration: TBD
@@ -752,6 +756,7 @@ Before marking story complete:
 - Notes: TBD
 
 **Phase 4**: NOT STARTED
+
 - Start Date: TBD
 - Completion Date: TBD
 - Actual Duration: TBD

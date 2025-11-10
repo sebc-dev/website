@@ -34,10 +34,10 @@ This guide covers all environment setup needed for Phase 2: Deployment Workflow.
 
 You must configure these GitHub repository secrets before deploying:
 
-| Secret Name                | Description                          | Where to Get It                             | Required |
-| -------------------------- | ------------------------------------ | ------------------------------------------- | -------- |
-| `CLOUDFLARE_API_TOKEN`     | API token for Wrangler deployments   | Cloudflare Dashboard → API Tokens           | Yes      |
-| `CLOUDFLARE_ACCOUNT_ID`    | Cloudflare account identifier        | Cloudflare Dashboard → Workers → Overview   | Yes      |
+| Secret Name             | Description                        | Where to Get It                           | Required |
+| ----------------------- | ---------------------------------- | ----------------------------------------- | -------- |
+| `CLOUDFLARE_API_TOKEN`  | API token for Wrangler deployments | Cloudflare Dashboard → API Tokens         | Yes      |
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare account identifier      | Cloudflare Dashboard → Workers → Overview | Yes      |
 
 ### Step 1: Generate Cloudflare API Token
 
@@ -174,16 +174,16 @@ cat wrangler.jsonc
   "workers_dev": true,
   "main": ".open-next/worker.js",
   "assets": {
-    "directory": ".open-next/assets"
+    "directory": ".open-next/assets",
   },
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "sebc-dev-db",
       "database_id": "<your-d1-database-id>",
-      "migrations_dir": "drizzle/migrations"
-    }
-  ]
+      "migrations_dir": "drizzle/migrations",
+    },
+  ],
 }
 ```
 
@@ -299,17 +299,20 @@ ls -la .open-next/
 ### Issue: "CLOUDFLARE_API_TOKEN secret not found"
 
 **Symptoms**:
+
 - Workflow fails with error: `Error: Required secret not found`
 - Deployment step cannot authenticate
 
 **Solutions**:
 
 1. **Verify secret exists**:
+
    ```bash
    gh secret list | grep CLOUDFLARE_API_TOKEN
    ```
 
 2. **Re-add secret**:
+
    ```bash
    gh secret set CLOUDFLARE_API_TOKEN
    # Paste token, Ctrl+D
@@ -323,6 +326,7 @@ ls -la .open-next/
    ```
 
 **Verify Fix**:
+
 ```bash
 gh workflow run deploy.yml
 gh run watch
@@ -333,6 +337,7 @@ gh run watch
 ### Issue: "Account ID mismatch"
 
 **Symptoms**:
+
 - Deployment fails with: `Account ID mismatch`
 - Wrangler cannot find resources
 
@@ -350,6 +355,7 @@ gh run watch
    ```
 
 **Verify Fix**:
+
 ```bash
 npx wrangler whoami
 # Verify account ID matches
@@ -360,18 +366,21 @@ npx wrangler whoami
 ### Issue: "Worker deployment fails with 'not found'"
 
 **Symptoms**:
+
 - Deployment fails: `Worker not found`
 - First deployment attempts fail
 
 **Solutions**:
 
 1. **Check wrangler.jsonc name**:
+
    ```bash
    cat wrangler.jsonc | grep '"name"'
    # Should match your Worker name
    ```
 
 2. **Create Worker manually (first time)**:
+
    ```bash
    npx wrangler deploy
    # This creates the Worker if it doesn't exist
@@ -382,6 +391,7 @@ npx wrangler whoami
    - Verify Worker exists with correct name
 
 **Verify Fix**:
+
 ```bash
 npx wrangler deployments list
 ```
@@ -391,6 +401,7 @@ npx wrangler deployments list
 ### Issue: "API Token permissions insufficient"
 
 **Symptoms**:
+
 - Deployment fails: `Insufficient permissions`
 - 403 Forbidden errors
 
@@ -410,6 +421,7 @@ npx wrangler deployments list
    ```
 
 **Verify Fix**:
+
 ```bash
 npx wrangler whoami
 # Should show all required permissions
@@ -420,12 +432,14 @@ npx wrangler whoami
 ### Issue: "Build artifacts not found"
 
 **Symptoms**:
+
 - Deployment fails: `.open-next/worker.js not found`
 - Wrangler cannot find entrypoint
 
 **Solutions**:
 
 1. **Verify build completes**:
+
    ```bash
    pnpm build
    ls .open-next/worker.js
@@ -442,6 +456,7 @@ npx wrangler whoami
    ```
 
 **Verify Fix**:
+
 ```bash
 gh workflow run deploy.yml
 gh run watch --log | grep "build"
@@ -454,32 +469,38 @@ gh run watch --log | grep "build"
 Complete this checklist before starting Phase 2 implementation:
 
 ### GitHub Configuration
+
 - [ ] GitHub Actions enabled for repository
 - [ ] Admin access to repository settings
 - [ ] GitHub CLI authenticated (`gh auth status`)
 
 ### Cloudflare Configuration
+
 - [ ] Cloudflare account accessible
 - [ ] API token generated with correct permissions
 - [ ] Account ID obtained from dashboard
 - [ ] D1 database exists (from Story 0.4)
 
 ### Secrets Configuration
+
 - [ ] `CLOUDFLARE_API_TOKEN` secret added to GitHub
 - [ ] `CLOUDFLARE_ACCOUNT_ID` secret added to GitHub
 - [ ] Secrets verified with `gh secret list`
 
 ### Local Tools
+
 - [ ] `gh` CLI installed and authenticated
 - [ ] `actionlint` installed (optional)
 - [ ] `wrangler` accessible via `npx wrangler`
 
 ### Project Configuration
+
 - [ ] `wrangler.jsonc` exists and configured
 - [ ] OpenNext build succeeds (`pnpm build`)
 - [ ] `.open-next/worker.js` generated
 
 ### Verification Tests
+
 - [ ] GitHub secrets accessible in workflows
 - [ ] Wrangler authentication works
 - [ ] Build produces deployable artifacts

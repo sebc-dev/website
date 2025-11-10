@@ -36,21 +36,21 @@ name: Deploy to Cloudflare Workers
 #
 on:
   workflow_dispatch:
-    description: "Manually trigger deployment to Cloudflare Workers"
+    description: 'Manually trigger deployment to Cloudflare Workers'
     inputs:
       skip_verification:
-        description: "Skip health check verification after deployment (use with caution)"
+        description: 'Skip health check verification after deployment (use with caution)'
         required: false
         type: boolean
         default: false
       dry_run:
-        description: "Run deployment steps without actually deploying (for testing)"
+        description: 'Run deployment steps without actually deploying (for testing)'
         required: false
         type: boolean
         default: false
 
   workflow_run:
-    workflows: ["Quality Checks"]
+    workflows: ['Quality Checks']
     types: [completed]
     branches:
       - main
@@ -146,7 +146,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: "9.0.0"
+          version: '9.0.0'
 
       # ========================================================================
       # Step 3: Setup Node.js
@@ -155,8 +155,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20.x"
-          cache: "pnpm"
+          node-version: '20.x'
+          cache: 'pnpm'
 
       # ========================================================================
       # Step 4: Install Dependencies

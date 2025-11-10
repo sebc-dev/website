@@ -9,13 +9,14 @@ export default defineConfig({
     environment: 'happy-dom',
     setupFiles: ['./vitest.setup.ts'],
     include: ['**/*.{test,spec}.{ts,tsx}'],
-    exclude: ['node_modules', '.next', 'tests/**/*.spec.ts'],
+    exclude: ['node_modules', '.next', '.stryker-tmp', 'tests/**/*.spec.ts'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
       exclude: [
         'node_modules/',
         '.next/',
+        '.stryker-tmp/',
         'tests/',
         '**/*.config.{ts,js}',
         '**/types.ts',

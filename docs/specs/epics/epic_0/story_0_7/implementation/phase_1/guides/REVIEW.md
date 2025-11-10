@@ -24,12 +24,14 @@ Validate that the implementation:
 Phase 1 is split into **5 atomic commits**. You can:
 
 **Option A: Commit-by-commit review** (recommended ✅)
+
 - Easier to digest (15-45 min per commit)
 - Progressive validation
 - Targeted feedback
 - Total time: ~2-2.5 hours across 5 commits
 
 **Option B: Global review at once**
+
 - Faster (~2-3h total)
 - Immediate overview
 - Requires more focus
@@ -43,6 +45,7 @@ Phase 1 is split into **5 atomic commits**. You can:
 ### Commit 1: Configure GitHub Secrets and Environment
 
 **Files**:
+
 - `docs/deployment/secrets-setup-guide.md` (new, ~50-80 lines)
 - GitHub repository secrets (via UI)
 
@@ -91,6 +94,7 @@ Phase 1 is split into **5 atomic commits**. You can:
 #### Technical Validation
 
 **Manual Checks**:
+
 ```bash
 # Verify secrets exist in GitHub repository
 # GitHub → Settings → Secrets and variables → Actions
@@ -116,6 +120,7 @@ Phase 1 is split into **5 atomic commits**. You can:
 ### Commit 2: Create Migration Workflow Structure
 
 **Files**:
+
 - `.github/workflows/migrate.yml` (new, ~80-100 lines)
 
 **Review Duration**: 20-30 minutes
@@ -209,6 +214,7 @@ npx action-validator .github/workflows/migrate.yml
 ### Commit 3: Implement Migration Execution with Error Handling
 
 **Files**:
+
 - `.github/workflows/migrate.yml` (modify, add ~100-150 lines)
 
 **Review Duration**: 30-45 minutes
@@ -313,6 +319,7 @@ wrangler d1 migrations apply DB --local
 ```
 
 **Reviewer Verification**:
+
 - [ ] Developer provided evidence of testing (logs, screenshots)
 - [ ] Error scenarios tested and handled correctly
 - [ ] No test shortcuts taken
@@ -347,6 +354,7 @@ wrangler d1 migrations apply DB --local
 ### Commit 4: Add Migration Validation and Testing
 
 **Files**:
+
 - `.github/workflows/migrate.yml` (modify, add ~70-100 lines)
 - `scripts/validate-migration.sh` (new, optional, ~50-80 lines)
 - `docs/deployment/migration-testing.md` (new, ~80-120 lines)
@@ -451,6 +459,7 @@ cat docs/deployment/migration-testing.md
 ### Commit 5: Document Rollback Procedures and Troubleshooting
 
 **Files**:
+
 - `docs/deployment/migration-rollback.md` (new, ~100-150 lines)
 - `docs/deployment/migration-troubleshooting.md` (new, ~100-150 lines)
 - `README.md` (update, optional)

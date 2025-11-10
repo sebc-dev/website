@@ -54,6 +54,7 @@ npx wrangler d1 migrations apply DB --local
 ```
 
 **Verification**:
+
 ```bash
 # Verify tables exist
 npx wrangler d1 execute DB --local --command="SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;"
@@ -66,6 +67,7 @@ npx wrangler d1 execute DB --local --command="SELECT COUNT(*) as count FROM cate
 ```
 
 **Success Criteria**:
+
 - [ ] All migrations applied without errors
 - [ ] Tables exist in database
 - [ ] Schema matches expected structure
@@ -86,6 +88,7 @@ npx wrangler d1 migrations apply DB --local
 ```
 
 **Success Criteria**:
+
 - [ ] Command succeeds (exit code 0)
 - [ ] No errors logged
 - [ ] Database state unchanged
@@ -122,6 +125,7 @@ npx wrangler d1 execute DB --local --command="SELECT name FROM sqlite_master WHE
 ```
 
 **Success Criteria**:
+
 - [ ] Test migration applied successfully
 - [ ] Manual rollback successful
 - [ ] Cleanup complete
@@ -150,6 +154,7 @@ rm drizzle/migrations/9998_invalid.sql
 ```
 
 **Success Criteria**:
+
 - [ ] Invalid SQL detected
 - [ ] Clear error message
 - [ ] Migration doesn't partially apply
@@ -184,6 +189,7 @@ Test the complete CI/CD migration workflow in GitHub Actions.
 ### Test Environment Options
 
 **Option A: Development Database** (recommended ✅)
+
 - Create separate D1 database for testing (`sebc-test-db` or similar)
 - Update `wrangler.jsonc` temporarily with test database ID
 - Commit to feature branch
@@ -191,6 +197,7 @@ Test the complete CI/CD migration workflow in GitHub Actions.
 - Safely test without affecting production
 
 **Option B: Production Database with Caution** (⚠️ higher risk)
+
 - Use existing `sebc-dev-db`
 - Only test on feature branch first
 - Verify migrations are safe (no DROP TABLE, etc.)
@@ -224,6 +231,7 @@ git push origin feat/phase1-test-migrations
 ```
 
 **Expected Results**:
+
 - [ ] Workflow starts and runs to completion
 - [ ] All setup steps succeed (checkout, pnpm, node.js, install)
 - [ ] Migration step executes
@@ -232,6 +240,7 @@ git push origin feat/phase1-test-migrations
 - [ ] Workflow status: Success (green checkmark)
 
 **Failure Scenarios to Check**:
+
 - If migration fails → Workflow should fail (red X)
 - If secrets missing → Clear error message about authentication
 - If database not found → Clear error message
@@ -279,6 +288,7 @@ git push
 ```
 
 **Expected Results**:
+
 - [ ] Test workflow successfully calls migration workflow
 - [ ] Migration workflow executes
 - [ ] workflow_call trigger works as expected
@@ -307,6 +317,7 @@ Test that concurrency group prevents parallel migrations.
 ```
 
 **Expected Results**:
+
 - [ ] Only one migration runs at a time
 - [ ] Second workflow queues, doesn't cancel first
 - [ ] No race conditions or database locks
@@ -351,6 +362,7 @@ git push
 ```
 
 **Expected Results**:
+
 - [ ] Workflow detects migration failure
 - [ ] Workflow fails (doesn't succeed despite error)
 - [ ] Error message is clear and actionable
@@ -389,6 +401,7 @@ Test that missing or invalid secrets cause appropriate failures.
 ```
 
 **Expected Results**:
+
 - [ ] Missing secret causes clear error
 - [ ] Invalid secret causes authentication error
 - [ ] Error messages help debug the issue
@@ -421,6 +434,7 @@ rm drizzle/migrations/9996_empty.sql
 ```
 
 **Expected Results**:
+
 - [ ] Valid migrations pass validation
 - [ ] Invalid migrations caught by validation
 - [ ] Validation errors are clear
@@ -444,6 +458,7 @@ npx wrangler d1 execute DB --remote --command="SELECT COUNT(*) FROM articles;"
 ```
 
 **Expected Results**:
+
 - [ ] Schema verification queries succeed
 - [ ] Expected tables exist
 - [ ] Health checks pass
@@ -454,19 +469,19 @@ npx wrangler d1 execute DB --remote --command="SELECT COUNT(*) FROM articles;"
 
 ### Manual Test Scenarios
 
-| Test | Type | Status | Notes |
-|------|------|--------|-------|
-| 1. Fresh database migration | Local | ⏳ | Apply migrations to clean DB |
-| 2. Idempotent migrations | Local | ⏳ | No-op when re-run |
-| 3. Rollback simulation | Local | ⏳ | Manual rollback procedure |
-| 4. Invalid migration detection | Local | ⏳ | SQL syntax errors caught |
-| 5. Manual workflow trigger | CI | ⏳ | workflow_dispatch works |
-| 6. Workflow call trigger | CI | ⏳ | workflow_call works |
-| 7. Concurrent prevention | CI | ⏳ | Concurrency group effective |
-| 8. Failed migration handling | CI | ⏳ | Errors caught and logged |
-| 9. Secrets validation | CI | ⏳ | Missing/invalid secrets fail |
-| 10. Pre-migration validation | CI | ⏳ | Validation catches issues |
-| 11. Post-migration verification | CI | ⏳ | Schema verified after migration |
+| Test                            | Type  | Status | Notes                           |
+| ------------------------------- | ----- | ------ | ------------------------------- |
+| 1. Fresh database migration     | Local | ⏳     | Apply migrations to clean DB    |
+| 2. Idempotent migrations        | Local | ⏳     | No-op when re-run               |
+| 3. Rollback simulation          | Local | ⏳     | Manual rollback procedure       |
+| 4. Invalid migration detection  | Local | ⏳     | SQL syntax errors caught        |
+| 5. Manual workflow trigger      | CI    | ⏳     | workflow_dispatch works         |
+| 6. Workflow call trigger        | CI    | ⏳     | workflow_call works             |
+| 7. Concurrent prevention        | CI    | ⏳     | Concurrency group effective     |
+| 8. Failed migration handling    | CI    | ⏳     | Errors caught and logged        |
+| 9. Secrets validation           | CI    | ⏳     | Missing/invalid secrets fail    |
+| 10. Pre-migration validation    | CI    | ⏳     | Validation catches issues       |
+| 11. Post-migration verification | CI    | ⏳     | Schema verified after migration |
 
 **Target**: All tests passing ✅
 
@@ -479,6 +494,7 @@ npx wrangler d1 execute DB --remote --command="SELECT COUNT(*) FROM articles;"
 #### Issue: Local migrations fail with "Database not found"
 
 **Solution**:
+
 ```bash
 # Verify wrangler.jsonc configuration
 cat wrangler.jsonc | grep -A 5 d1_databases
@@ -492,6 +508,7 @@ npx wrangler d1 list
 #### Issue: Workflow fails with "Unauthorized"
 
 **Solution**:
+
 ```bash
 # Check GitHub secrets exist
 # GitHub → Settings → Secrets → Actions
@@ -507,6 +524,7 @@ npx wrangler whoami
 #### Issue: Migrations applied twice
 
 **Solution**:
+
 ```bash
 # Check migration status
 npx wrangler d1 migrations list DB --local
@@ -520,6 +538,7 @@ npx wrangler d1 migrations list DB --local
 #### Issue: Workflow succeeds but migrations not applied
 
 **Solution**:
+
 ```bash
 # Check workflow logs carefully
 # Look for "No migrations to apply" message

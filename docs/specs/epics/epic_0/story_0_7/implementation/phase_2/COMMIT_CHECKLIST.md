@@ -37,6 +37,7 @@ cat .github/workflows/deploy.yml
 ### Review Checklist
 
 #### Workflow Configuration
+
 - [ ] Workflow name is descriptive and clear
 - [ ] Permissions follow least-privilege principle (`contents: read`)
 - [ ] Concurrency group configured: `group: deploy-${{ github.ref }}`
@@ -44,12 +45,14 @@ cat .github/workflows/deploy.yml
 - [ ] Workflow timeout is reasonable (15 minutes)
 
 #### File Structure
+
 - [ ] File location correct: `.github/workflows/deploy.yml`
 - [ ] YAML syntax is valid (no tabs, proper indentation)
 - [ ] Comments explain purpose and structure
 - [ ] Placeholder jobs structure is clear
 
 #### Code Quality
+
 - [ ] Clear naming conventions
 - [ ] No hardcoded values that should be variables
 - [ ] Comments are helpful and concise
@@ -107,6 +110,7 @@ gh run list --workflow=deploy.yml --limit 5
 ### Review Checklist
 
 #### Trigger Configuration
+
 - [x] `workflow_dispatch` configured with clear description
 - [x] Input parameters are optional and documented
 - [x] `workflow_run` triggers after quality workflow completes successfully
@@ -114,12 +118,14 @@ gh run list --workflow=deploy.yml --limit 5
 - [x] Trigger types are clearly documented in comments
 
 #### Conditional Logic
+
 - [x] Conditions use proper GitHub Actions syntax
 - [x] Branch filters are correct
 - [x] Workflow dependencies are explicit
 - [x] No redundant triggers
 
 #### Code Quality
+
 - [x] Input parameters have descriptions
 - [x] Default values are sensible
 - [x] Comments explain trigger strategy
@@ -185,12 +191,14 @@ gh run view --log
 ### Review Checklist
 
 #### Job Configuration
+
 - [x] Job name is descriptive: "Deploy to Cloudflare Workers"
 - [x] Runs on `ubuntu-latest`
 - [x] Job timeout set to 10 minutes
 - [x] Job runs after check-trigger job (dependency satisfied)
 
 #### Build Steps
+
 - [x] Checkout uses latest action version (`@v4`)
 - [x] pnpm setup configured correctly (v4, version 9.0.0)
 - [x] Node.js version matches project requirements (20.x)
@@ -199,6 +207,7 @@ gh run view --log
 - [x] Build command is correct (`pnpm build`)
 
 #### Deployment Step
+
 - [x] Uses official `cloudflare/wrangler-action@v3`
 - [x] `apiToken` references secret: `${{ secrets.CLOUDFLARE_API_TOKEN }}`
 - [x] `accountId` references secret: `${{ secrets.CLOUDFLARE_ACCOUNT_ID }}`
@@ -206,6 +215,7 @@ gh run view --log
 - [x] Working directory not needed (uses root .open-next/)
 
 #### Security
+
 - [x] No hardcoded secrets or API tokens
 - [x] Secrets properly referenced using `${{ secrets.NAME }}`
 - [x] No secrets exposed in logs
@@ -266,6 +276,7 @@ gh run view
 ### Review Checklist
 
 #### Health Check Configuration
+
 - [x] Health check targets correct Worker URL
 - [x] URL is retrieved from wrangler deploy output or configured
 - [x] HTTP method is appropriate (GET for health check)
@@ -273,18 +284,21 @@ gh run view
 - [x] Timeout per request is reasonable (10 seconds)
 
 #### Retry Logic
+
 - [x] Retry count is appropriate (3 attempts)
 - [x] Delay between retries allows for CDN propagation (10 seconds)
 - [x] Retry logic handles transient failures gracefully
 - [x] Final failure triggers workflow failure
 
 #### Error Handling
+
 - [x] Failed health check triggers workflow failure
 - [x] Error messages are descriptive
 - [x] Deployment status reported correctly
 - [x] Rollback instructions documented in comments
 
 #### Code Quality
+
 - [x] Bash scripts are clean and readable
 - [x] Error messages don't leak sensitive info
 - [x] Step names are descriptive
@@ -349,6 +363,7 @@ gh run download <run-id>
 ### Review Checklist
 
 #### Deployment Summary
+
 - [x] Summary includes Worker URL
 - [x] Summary includes deployment timestamp
 - [x] Summary includes commit SHA
@@ -356,6 +371,7 @@ gh run download <run-id>
 - [x] Summary format is user-friendly
 
 #### Artifact Upload
+
 - [x] Deployment logs uploaded as artifact
 - [x] Artifact name is descriptive (e.g., `deployment-logs-<timestamp>`)
 - [x] Retention period set appropriately (14 days)
@@ -363,11 +379,13 @@ gh run download <run-id>
 - [x] Artifact size is reasonable
 
 #### GitHub Deployment Tracking
+
 - [x] Deployment environment configured (if applicable)
 - [x] Environment URL set to Worker URL
 - [x] Deployment status tracked correctly
 
 #### Code Quality
+
 - [x] Workflow summary uses GitHub Actions syntax (`$GITHUB_STEP_SUMMARY`)
 - [x] Markdown formatting is correct
 - [x] No sensitive data in logs or summary

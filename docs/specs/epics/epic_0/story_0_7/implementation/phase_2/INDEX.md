@@ -44,14 +44,14 @@ Create an automated deployment workflow that safely deploys the Next.js applicat
 
 ## 📚 Available Documents
 
-| Document                                                                       | Description                        | For Who    | Duration  |
-| ------------------------------------------------------------------------------ | ---------------------------------- | ---------- | --------- |
-| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)**                         | Atomic strategy in 5 commits       | Developer  | 15 min    |
-| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)**                               | Detailed checklist per commit      | Developer  | Reference |
-| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)**                             | GitHub secrets & Cloudflare setup  | DevOps/Dev | 20 min    |
-| **[guides/REVIEW.md](./guides/REVIEW.md)**                                     | Code review guide                  | Reviewer   | 30 min    |
-| **[guides/TESTING.md](./guides/TESTING.MD)**                                   | Testing guide (workflow validation)| QA/Dev     | 20 min    |
-| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist         | Tech Lead  | 30 min    |
+| Document                                                                       | Description                         | For Who    | Duration  |
+| ------------------------------------------------------------------------------ | ----------------------------------- | ---------- | --------- |
+| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)**                         | Atomic strategy in 5 commits        | Developer  | 15 min    |
+| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)**                               | Detailed checklist per commit       | Developer  | Reference |
+| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)**                             | GitHub secrets & Cloudflare setup   | DevOps/Dev | 20 min    |
+| **[guides/REVIEW.md](./guides/REVIEW.md)**                                     | Code review guide                   | Reviewer   | 30 min    |
+| **[guides/TESTING.md](./guides/TESTING.MD)**                                   | Testing guide (workflow validation) | QA/Dev     | 20 min    |
+| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist          | Tech Lead  | 30 min    |
 
 ---
 
@@ -149,13 +149,13 @@ cat docs/specs/epics/epic_0/story_0_7/implementation/phase_2/validation/VALIDATI
 
 ## 📊 Metrics
 
-| Metric                  | Target      | Actual |
-| ----------------------- | ----------- | ------ |
-| **Total Commits**       | 5           | 5      |
-| **Implementation Time** | 4-6h        | ~2h    |
-| **Review Time**         | 2-3h        | N/A    |
-| **Deployment Success**  | ≥99%        | TBD    |
-| **Rollback Time**       | <5 min      | TBD    |
+| Metric                  | Target | Actual |
+| ----------------------- | ------ | ------ |
+| **Total Commits**       | 5      | 5      |
+| **Implementation Time** | 4-6h   | ~2h    |
+| **Review Time**         | 2-3h   | N/A    |
+| **Deployment Success**  | ≥99%   | TBD    |
+| **Rollback Time**       | <5 min | TBD    |
 
 ---
 

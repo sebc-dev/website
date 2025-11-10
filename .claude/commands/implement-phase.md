@@ -1,6 +1,7 @@
 ---
 description: Implement a single commit from phase documentation using the phase-implementer agent
-argument-hint: [optional: story reference and phase number, e.g., "Epic 1 Story 1.1 Phase 1"]
+argument-hint:
+  [optional: story reference and phase number, e.g., 'Epic 1 Story 1.1 Phase 1']
 allowed-tools: Task, TodoWrite
 ---
 

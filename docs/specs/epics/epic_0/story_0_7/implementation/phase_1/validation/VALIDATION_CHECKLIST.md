@@ -52,6 +52,7 @@ Complete validation checklist before marking Phase 1 as complete.
 ### Validation
 
 **Manual Check**:
+
 ```bash
 # Verify secrets exist in GitHub UI
 # GitHub → Settings → Secrets and variables → Actions
@@ -309,7 +310,7 @@ cat docs/deployment/migration-troubleshooting.md
 ### Migration Files
 
 - [ ] Migration files exist in `drizzle/migrations/`
-- [ ] Migration files follow naming convention (0000_*.sql, etc.)
+- [ ] Migration files follow naming convention (0000\_\*.sql, etc.)
 - [ ] Migrations are from Story 0.4 (articles, categories)
 - [ ] No test migrations committed accidentally
 
@@ -365,6 +366,7 @@ cat package.json | grep -E "(wrangler|drizzle)"
 ### Validation
 
 **Security Audit**:
+
 - [ ] Code review completed (see guides/REVIEW.md)
 - [ ] No security issues identified
 - [ ] Peer review approved
@@ -460,14 +462,14 @@ cat package.json | grep -E "(wrangler|drizzle)"
 
 ### Completion Metrics
 
-| Metric | Target | Actual | Status |
-|--------|--------|--------|--------|
-| Commits | 5 | - | ⏳ |
-| Workflow Files | 1 | - | ⏳ |
-| Documentation Files | 4-5 | - | ⏳ |
-| Migration Success Rate | 100% | - | ⏳ |
-| Test Scenarios Passed | 11/11 | - | ⏳ |
-| Security Issues | 0 | - | ⏳ |
+| Metric                 | Target | Actual | Status |
+| ---------------------- | ------ | ------ | ------ |
+| Commits                | 5      | -      | ⏳     |
+| Workflow Files         | 1      | -      | ⏳     |
+| Documentation Files    | 4-5    | -      | ⏳     |
+| Migration Success Rate | 100%   | -      | ⏳     |
+| Test Scenarios Passed  | 11/11  | -      | ⏳     |
+| Security Issues        | 0      | -      | ⏳     |
 
 ### Quality Metrics
 
@@ -589,6 +591,7 @@ After Phase 1 is complete and approved:
 4. [ ] Begin Phase 2 implementation
 
 Phase 2 will build on Phase 1:
+
 - Migrations (Phase 1) will run before deployment
 - Deployment workflow will trigger migrations automatically
 - Complete CI/CD pipeline: Tests → Migrations → Deployment

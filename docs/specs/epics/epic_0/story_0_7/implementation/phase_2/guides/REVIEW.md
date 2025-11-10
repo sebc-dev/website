@@ -49,6 +49,7 @@ Phase 2 is split into **5 atomic commits**. You can:
 #### Review Checklist
 
 ##### Workflow Configuration
+
 - [ ] Workflow name is descriptive: "Deploy to Cloudflare Workers"
 - [ ] Permissions are minimal: `contents: read` only
 - [ ] Concurrency group configured: `deploy-${{ github.ref }}`
@@ -56,11 +57,13 @@ Phase 2 is split into **5 atomic commits**. You can:
 - [ ] Workflow timeout is reasonable (15 minutes)
 
 ##### YAML Syntax
+
 - [ ] Valid YAML (no tabs, proper indentation)
 - [ ] Keys are correctly quoted where needed
 - [ ] Structure follows GitHub Actions schema
 
 ##### Code Quality
+
 - [ ] Clear comments explaining workflow purpose
 - [ ] Placeholder job structure is logical
 - [ ] Naming conventions are consistent
@@ -94,6 +97,7 @@ cat .github/workflows/deploy.yml | head -20
 #### Review Checklist
 
 ##### Trigger Configuration
+
 - [ ] `workflow_dispatch` configured for manual deployments
 - [ ] Input parameters are optional and well-documented
 - [ ] `workflow_run` triggers after quality workflow succeeds
@@ -101,12 +105,14 @@ cat .github/workflows/deploy.yml | head -20
 - [ ] Trigger conditions are explicit and correct
 
 ##### Logic and Conditions
+
 - [ ] Branch filters work correctly
 - [ ] Workflow dependencies are properly declared
 - [ ] Conditional logic uses correct GitHub Actions syntax
 - [ ] No redundant or conflicting triggers
 
 ##### Documentation
+
 - [ ] Input parameters have clear descriptions
 - [ ] Default values are sensible
 - [ ] Comments explain trigger strategy
@@ -146,12 +152,14 @@ gh workflow list | grep -i deploy
 #### Review Checklist
 
 ##### Job Configuration
+
 - [ ] Job name is descriptive
 - [ ] Runs on `ubuntu-latest` (or appropriate runner)
 - [ ] Job timeout set appropriately (10 minutes)
 - [ ] Dependencies on migration job declared (if Phase 1 complete)
 
 ##### Build Steps
+
 - [ ] Checkout uses pinned version: `actions/checkout@v4`
 - [ ] pnpm setup configured correctly
 - [ ] Node.js version matches project (20.x)
@@ -161,6 +169,7 @@ gh workflow list | grep -i deploy
 - [ ] Build output is verified before deployment
 
 ##### Deployment Step
+
 - [ ] Uses official action: `cloudflare/wrangler-action@v3`
 - [ ] Action version is pinned (not `@latest`)
 - [ ] `apiToken` uses secret: `${{ secrets.CLOUDFLARE_API_TOKEN }}`
@@ -169,6 +178,7 @@ gh workflow list | grep -i deploy
 - [ ] Working directory set if needed
 
 ##### **Security** (CRITICAL)
+
 - [ ] **NO hardcoded API tokens or secrets**
 - [ ] **Secrets properly referenced**: `${{ secrets.NAME }}`
 - [ ] **No secrets echoed or printed to logs**
@@ -231,6 +241,7 @@ gh run watch
 #### Review Checklist
 
 ##### Health Check Configuration
+
 - [ ] Health check targets correct Worker URL
 - [ ] URL is retrieved from wrangler output or environment variable
 - [ ] HTTP method is appropriate (GET)
@@ -238,6 +249,7 @@ gh run watch
 - [ ] Timeout per request is reasonable (10 seconds)
 
 ##### Retry Logic
+
 - [ ] Retry count is appropriate (3 attempts)
 - [ ] Delay between retries allows for CDN propagation (10+ seconds)
 - [ ] Retry logic handles transient failures gracefully
@@ -245,6 +257,7 @@ gh run watch
 - [ ] Final failure triggers workflow failure
 
 ##### Error Handling
+
 - [ ] Failed health check triggers workflow failure (`exit 1`)
 - [ ] Error messages are descriptive and actionable
 - [ ] Deployment status reported correctly
@@ -252,6 +265,7 @@ gh run watch
 - [ ] No sensitive data in error messages
 
 ##### Verification Logic
+
 - [ ] Bash scripts are clean and readable
 - [ ] Error handling is robust (`set -e` or equivalent)
 - [ ] Step continues on error only when appropriate
@@ -290,6 +304,7 @@ gh run view
 #### Review Checklist
 
 ##### Deployment Summary
+
 - [ ] Summary includes Worker URL
 - [ ] Summary includes deployment timestamp
 - [ ] Summary includes commit SHA deployed
@@ -298,6 +313,7 @@ gh run view
 - [ ] Summary uses `$GITHUB_STEP_SUMMARY` correctly
 
 ##### Artifact Upload
+
 - [ ] Deployment logs uploaded as artifact
 - [ ] Artifact name is descriptive and timestamped
 - [ ] Artifact retention set appropriately (14 days recommended)
@@ -305,12 +321,14 @@ gh run view
 - [ ] Artifact size is reasonable (< 10MB typically)
 
 ##### GitHub Deployment Tracking
+
 - [ ] GitHub environment configured (if using environments)
 - [ ] Environment URL set to Worker URL
 - [ ] Deployment status tracked correctly
 - [ ] Environment variables don't leak sensitive data
 
 ##### Code Quality
+
 - [ ] Markdown formatting in summary is correct
 - [ ] No sensitive data in logs or summary
 - [ ] Step names are descriptive
@@ -421,11 +439,13 @@ Use this template for feedback:
 ### 🔧 Required Changes
 
 #### Security
+
 1. **[File/Line]**: [Issue description]
    - **Why**: [Security implication]
    - **Suggestion**: [How to fix]
 
 #### Functionality
+
 1. **[File/Line]**: [Issue description]
    - **Why**: [Impact on deployment]
    - **Suggestion**: [How to fix]
@@ -481,6 +501,7 @@ Use this template for feedback:
 **CRITICAL**: Complete this security checklist before approval.
 
 ### Secrets Management
+
 - [ ] No hardcoded secrets anywhere in workflow
 - [ ] All secrets referenced via `${{ secrets.NAME }}`
 - [ ] No secrets echoed to logs (`echo ${{ secrets.NAME }}`)
@@ -488,22 +509,26 @@ Use this template for feedback:
 - [ ] Secrets not passed as CLI arguments where logged
 
 ### Permissions
+
 - [ ] Workflow permissions are minimal (`contents: read`)
 - [ ] Job permissions don't grant unnecessary access
 - [ ] No `write` permissions unless justified
 
 ### Action Security
+
 - [ ] All actions pinned to specific versions (not `@latest`)
 - [ ] Actions from trusted sources (GitHub, Cloudflare)
 - [ ] No third-party actions without review
 
 ### Deployment Safety
+
 - [ ] Deployment requires quality checks to pass
 - [ ] Deployment limited to specific branches
 - [ ] Manual approval required for production (Phase 3)
 - [ ] Rollback procedures documented
 
 ### Data Exposure
+
 - [ ] No sensitive data in workflow summary
 - [ ] No sensitive data in artifacts
 - [ ] No sensitive data in logs

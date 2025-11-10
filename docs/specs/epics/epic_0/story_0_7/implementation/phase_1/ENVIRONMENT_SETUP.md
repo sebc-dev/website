@@ -56,6 +56,7 @@ pnpm install --frozen-lockfile
 **No new packages required for Phase 1!** ✅
 
 The migration automation uses:
+
 - `wrangler` (already in devDependencies)
 - `drizzle-orm` (already in dependencies)
 - GitHub Actions runners (provided by GitHub)
@@ -149,6 +150,7 @@ npx wrangler d1 list
 4. Click **"Add secret"**
 
 **Verification**: You should see both secrets:
+
 - `CLOUDFLARE_API_TOKEN` (Updated X seconds/minutes ago)
 - `CLOUDFLARE_ACCOUNT_ID` (Updated X seconds/minutes ago)
 
@@ -179,13 +181,14 @@ Your `wrangler.jsonc` should already be configured from Story 0.4:
       "binding": "DB",
       "database_name": "sebc-dev-db",
       "database_id": "6615b6d8-2522-46dc-9051-bc0813b42240",
-      "migrations_dir": "drizzle/migrations"
-    }
-  ]
+      "migrations_dir": "drizzle/migrations",
+    },
+  ],
 }
 ```
 
 **Verify**:
+
 - [x] `binding` is "DB" (used in migration commands)
 - [x] `database_id` matches your D1 database ID
 - [x] `migrations_dir` points to "drizzle/migrations"
@@ -340,6 +343,7 @@ npx wrangler d1 migrations apply DB --remote --dry-run  # if supported
 **Symptoms**: `npx wrangler --version` fails
 
 **Solution**:
+
 ```bash
 # Install dependencies
 pnpm install --frozen-lockfile
@@ -355,6 +359,7 @@ ls node_modules/.bin/wrangler
 **Symptoms**: wrangler command fails with module error
 
 **Solution**:
+
 ```bash
 # Clear cache and reinstall
 rm -rf node_modules pnpm-lock.yaml
@@ -368,11 +373,13 @@ pnpm install
 **Symptoms**: Migration or query commands fail with "Database not found"
 
 **Causes**:
+
 - Wrong binding name
 - `wrangler.jsonc` not found
 - Database ID incorrect
 
 **Solution**:
+
 ```bash
 # Verify wrangler.jsonc exists
 cat wrangler.jsonc
@@ -392,6 +399,7 @@ npx wrangler d1 list
 **Symptoms**: Remote wrangler commands fail with auth errors
 
 **Causes**:
+
 - Token expired or revoked
 - Wrong token copied
 - Insufficient permissions
@@ -399,6 +407,7 @@ npx wrangler d1 list
 **Solution**:
 
 1. **Verify token locally**:
+
    ```bash
    export CLOUDFLARE_API_TOKEN="your-token"
    npx wrangler whoami
@@ -421,10 +430,12 @@ npx wrangler d1 list
 **Symptoms**: Commands fail with "Account not found" or "Forbidden"
 
 **Causes**:
+
 - Wrong Account ID
 - Account ID not provided
 
 **Solution**:
+
 ```bash
 # Get Account ID from wrangler
 npx wrangler whoami
@@ -441,6 +452,7 @@ npx wrangler whoami
 **Symptoms**: Workflow uses secrets but fails with auth errors
 
 **Causes**:
+
 - Secret name typo (case-sensitive)
 - Secret not set
 - Workflow not referencing secrets correctly
@@ -453,6 +465,7 @@ npx wrangler whoami
    - Check spelling (case-sensitive)
 
 2. **Test secrets in workflow** (temporary debug step):
+
    ```yaml
    # Add to workflow for debugging (REMOVE AFTER TESTING!)
    - name: Debug - Check secrets exist
