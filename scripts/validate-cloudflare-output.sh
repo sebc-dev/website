@@ -115,7 +115,7 @@ echo ""
 echo "Checking Worker bundle size (Cloudflare limit: 1MB)..."
 
 WORKER_SIZE=$(stat -f%z "$WORKER_FILE" 2>/dev/null || stat -c%s "$WORKER_FILE" 2>/dev/null || echo 0)
-WORKER_SIZE_FORMATTED=$(format_size $WORKER_SIZE)
+WORKER_SIZE_FORMATTED=$(format_size "$WORKER_SIZE")
 
 echo "  Worker size: $WORKER_SIZE_FORMATTED"
 
