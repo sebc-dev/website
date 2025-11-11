@@ -18,30 +18,6 @@ concurrency:
 
 jobs:
   # ==========================================================================
-  # Package Version Validation
-  # ==========================================================================
-  # Validates that all package versions in package.json exist on npm registry
-  # Catches typos and non-existent versions early
-  # DISABLED: Cloudflare has constraints on Next.js versions
-  # ==========================================================================
-  validate-packages:
-    name: Validate Package Versions
-    runs-on: ubuntu-latest
-    if: false # Disabled due to Cloudflare version constraints
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Run package validation
-        run: node scripts/validate-package-versions.cjs
-
-  # ==========================================================================
   # Environment Variables Validation
   # ==========================================================================
   # Validates consistency between .env.example, GitHub workflows, and code
@@ -127,6 +103,26 @@ jobs:
           echo "✅ All dependency placements are correct"
 
   # ==========================================================================
+  # Wrangler Configuration Check
+  # ==========================================================================
+  # Validates wrangler.jsonc configuration for:
+  # - nodejs_compat flag (CRITICAL for Next.js compatibility)
+  # - Binding configuration (D1, R2, KV, Durable Objects)
+  # - Compatibility date (should be recent)
+  # - Worker name and service bindings
+  # ==========================================================================
+  validate-wrangler:
+    name: Validate Wrangler Configuration
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate Wrangler Configuration
+        run: bash scripts/validate-wrangler-config.sh
+
+  # ==========================================================================
   # TypeScript Configuration Check
   # ==========================================================================
   # Validates TypeScript compiles without errors
@@ -169,6 +165,7 @@ jobs:
     needs:
       - validate-env-vars
       - validate-dependency-placement
+      - validate-wrangler
       - validate-typescript
     if: always()
 
@@ -179,10 +176,12 @@ jobs:
           echo "  Package Versions: DISABLED (Cloudflare constraints)"
           echo "  Environment Variables: ${{ needs.validate-env-vars.result }}"
           echo "  Dependency Placement: ${{ needs.validate-dependency-placement.result }}"
+          echo "  Wrangler Configuration: ${{ needs.validate-wrangler.result }}"
           echo "  TypeScript: ${{ needs.validate-typescript.result }}"
 
           if [ "${{ needs.validate-env-vars.result }}" != "success" ] || \
              [ "${{ needs.validate-dependency-placement.result }}" != "success" ] || \
+             [ "${{ needs.validate-wrangler.result }}" != "success" ] || \
              [ "${{ needs.validate-typescript.result }}" != "success" ]; then
             echo ""
             echo "❌ Some validations failed"

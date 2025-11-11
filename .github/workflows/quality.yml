@@ -198,6 +198,25 @@ jobs:
           path: reports/mutation/html
           retention-days: 30
 
+      - name: Track mutation score metrics
+        if: always()
+        continue-on-error: true
+        run: |
+          # Check if Stryker report exists
+          if [ -f "reports/mutation/stryker-report.json" ]; then
+            bash scripts/track-mutation-score.sh
+          else
+            echo "⚠ Stryker report not found - skipping mutation score tracking"
+          fi
+
+      - name: Upload mutation metrics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mutation-metrics-${{ github.run_number }}
+          path: .mutation-metrics/
+          retention-days: 30
+
       - name: Comment mutation results on PR
         if: failure() && github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -240,8 +259,26 @@ jobs:
       - name: Build application
         run: pnpm build
 
+      - name: Generate OpenNext output
+        run: npx @opennextjs/cloudflare build
+
+      - name: Validate Cloudflare Output
+        run: bash scripts/validate-cloudflare-output.sh
+
       - name: Analyze bundle
         run: pnpm bundle:analyze
+
+      - name: Track bundle size metrics
+        if: always()
+        run: bash scripts/track-bundle-size.sh
+
+      - name: Upload bundle metrics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundle-metrics-${{ github.run_number }}
+          path: .bundle-metrics/
+          retention-days: 30
 
       - name: Upload build artifacts
         if: success()

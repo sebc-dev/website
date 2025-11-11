@@ -157,18 +157,14 @@ cd "$PROJECT_DIR"
 log_section "🔧 Configuration Validation"
 
 # Vérification 0.1: Environment Variables Consistency
+# Also runs in CI: validation.yml -> validate-env-vars job
+# Uses the same script (scripts/validate-env-vars.cjs) for consistency
 run_check "Environment Variables" "node scripts/validate-env-vars.cjs" true false
 
-# Vérification 0.2: Package Versions Validity (skip in pre-commit - too slow)
-# This validation makes HTTP calls to npm registry which can take 30-60 seconds
-# It runs in CI instead (see .github/workflows/validation.yml)
-if [ "${SKIP_PACKAGE_VALIDATION:-false}" = "true" ]; then
-    log_info "Package validation skipped (too slow for pre-commit) - runs in CI instead"
-    RESULTS+=("⊘ Package Versions (skipped - runs in CI)")
-    CHECKS_SKIPPED=$((CHECKS_SKIPPED + 1))
-else
-    run_check "Package Versions" "node scripts/validate-package-versions.cjs" true false
-fi
+# Vérification 0.2: Package Versions Validity (REMOVED)
+# This validation was disabled due to Cloudflare version constraints on Next.js
+# Previously made HTTP calls to npm registry (30-60 seconds)
+# If needed in the future, enable in validation.yml only (not in pre-commit due to slowness)
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # 🎨 CODE FORMATTING & LINTING (Staged Files Only)
@@ -194,7 +190,15 @@ if [ "$RUN_TS_CHECKS" = true ]; then
     log_section "🔍 Static Analysis"
 
     # Vérification 1: TypeScript Type Check
-    run_check "TypeScript Type Check" "pnpm exec tsc --noEmit" true true
+    # SKIP in pre-commit (runs in validation.yml CI job instead - faster CI)
+    # TypeScript compilation is slow and should run in CI pipeline, not locally
+    if [ "${SKIP_TYPESCRIPT:-false}" = "true" ]; then
+        log_info "TypeScript check skipped (runs in validation.yml CI job)"
+        RESULTS+=("⊘ TypeScript Type Check (skipped - runs in CI)")
+        CHECKS_SKIPPED=$((CHECKS_SKIPPED + 1))
+    else
+        run_check "TypeScript Type Check" "pnpm exec tsc --noEmit" true true
+    fi
 
     # Vérification 2: ESLint (Full codebase)
     run_check "ESLint (Full codebase)" "pnpm lint" false true
