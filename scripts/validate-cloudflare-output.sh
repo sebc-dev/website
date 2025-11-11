@@ -82,19 +82,16 @@ fi
 log_pass ".open-next directory exists"
 
 # =========================================================================
-# Check 2: Required subdirectories
+# Check 2: Required assets directory
 # =========================================================================
 echo ""
 echo "Checking required OpenNext subdirectories..."
 
-REQUIRED_DIRS=("worker" "assets")
-for dir in "${REQUIRED_DIRS[@]}"; do
-  if [ -d "$OPEN_NEXT_DIR/$dir" ]; then
-    log_pass ".open-next/$dir/ exists"
-  else
-    log_error "Required directory missing: .open-next/$dir/"
-  fi
-done
+if [ -d "$OPEN_NEXT_DIR/assets" ]; then
+  log_pass ".open-next/assets/ exists"
+else
+  log_error "Required directory missing: .open-next/assets/"
+fi
 
 # =========================================================================
 # Check 3: Worker bundle file
@@ -102,14 +99,14 @@ done
 echo ""
 echo "Checking Worker bundle..."
 
-WORKER_FILE="$OPEN_NEXT_DIR/worker/index.js"
+WORKER_FILE="$OPEN_NEXT_DIR/worker.js"
 if [ ! -f "$WORKER_FILE" ]; then
   log_error "Worker entry point not found: $WORKER_FILE"
-  echo "  → OpenNext adapter must generate worker/index.js"
+  echo "  → OpenNext adapter must generate worker.js"
   exit 1
 fi
 
-log_pass "Worker entry point found: worker/index.js"
+log_pass "Worker entry point found: worker.js"
 
 # =========================================================================
 # Check 4: Worker bundle size
@@ -245,7 +242,7 @@ else
   echo ""
   echo "CRITICAL ISSUES:"
   echo "- Worker bundle must be < 1MB (Cloudflare hard limit)"
-  echo "- .open-next/worker/index.js must exist"
+  echo "- .open-next/worker.js must exist"
   echo "- .open-next/assets must be present"
   echo ""
   exit 1
