@@ -249,33 +249,21 @@ jobs:
 
     steps:
       # ========================================================================
-      # Step 1: Construct Worker URL
+      # Step 1: Construct and Validate Worker URL
       # ========================================================================
-      # Constructs the Worker URL from CLOUDFLARE_WORKER_NAME and subdomain
-      # Format: https://<worker-name>.chauveau-sebastien.workers.dev
-      # The subdomain (chauveau-sebastien) is specific to the Cloudflare account
+      # Uses centralized script to:
+      # - Validate CLOUDFLARE_WORKER_NAME is configured
+      # - Extract worker name from wrangler.jsonc
+      # - Verify strict name consistency (GitHub Secret matches wrangler.jsonc)
+      # - Construct the Worker URL
+      # - Provide clear error messages for troubleshooting
       #
-      - name: Construct Worker URL
+      - name: Construct and Validate Worker URL
         id: worker-url
+        env:
+          CLOUDFLARE_WORKER_NAME: ${{ secrets.CLOUDFLARE_WORKER_NAME }}
         run: |
-          # Get worker name from secrets
-          WORKER_NAME="${{ secrets.CLOUDFLARE_WORKER_NAME }}"
-
-          # Validate that CLOUDFLARE_WORKER_NAME is configured
-          if [[ -z "$WORKER_NAME" ]]; then
-            echo "❌ ERROR: CLOUDFLARE_WORKER_NAME not configured"
-            echo "Please add CLOUDFLARE_WORKER_NAME as an environment secret:"
-            echo "  1. Go to Settings > Environments > production"
-            echo "  2. Add new secret: CLOUDFLARE_WORKER_NAME"
-            echo "  3. Value: your-worker-name (e.g., sebc-dev-prod)"
-            exit 1
-          fi
-
-          # Construct Worker URL using account-specific subdomain
-          WORKER_URL="https://${WORKER_NAME}.chauveau-sebastien.workers.dev"
-
-          echo "worker-url=${WORKER_URL}" >> $GITHUB_OUTPUT
-          echo "✅ Worker URL constructed: ${WORKER_URL}"
+          bash scripts/build-worker-url.sh
 
       # ========================================================================
       # Step 2: Health Check with Retry Logic
@@ -439,14 +427,10 @@ jobs:
           if [[ "$VERIFY_JOB_RESULT" == "success" ]]; then
             WORKER_URL="${{ needs.verify-deployment.outputs.worker-url }}"
           else
-            # Fallback: Construct Worker URL from CLOUDFLARE_WORKER_NAME for skipped verification
-            WORKER_NAME="${{ secrets.CLOUDFLARE_WORKER_NAME }}"
-            if [[ -n "$WORKER_NAME" ]]; then
-              WORKER_URL="https://${WORKER_NAME}.chauveau-sebastien.workers.dev"
-            else
-              echo "⚠️ WARNING: Worker URL not available - CLOUDFLARE_WORKER_NAME not configured"
-              WORKER_URL="[Worker URL not available]"
-            fi
+            # Fallback: Use centralized script to construct Worker URL for skipped verification
+            # This ensures consistency and validates worker name configuration
+            export CLOUDFLARE_WORKER_NAME="${{ secrets.CLOUDFLARE_WORKER_NAME }}"
+            WORKER_URL=$(bash scripts/build-worker-url.sh 2>/dev/null || echo "[Worker URL construction failed]")
           fi
 
           # Save summary as environment variable and output for reuse
