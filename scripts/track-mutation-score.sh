@@ -182,7 +182,9 @@ fi
 
 # Create badge markdown
 BADGE_URL="https://img.shields.io/badge/mutation--score-${MUTATION_SCORE}%25-${BADGE_COLOR}"
-BADGE_MARKDOWN="[![Mutation Score](${BADGE_URL})](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-unknown/repo}"
+GITHUB_RUN_ID="${GITHUB_RUN_ID:-0}"
+BADGE_MARKDOWN="[![Mutation Score](${BADGE_URL})](https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID})"
 
 mkdir -p "$METRICS_DIR"
 echo "$BADGE_MARKDOWN" > "$METRICS_DIR/badge.md"
@@ -230,7 +232,9 @@ echo "Saving detailed report..."
 
   echo "## Full Report"
   echo ""
-  echo "[View full mutation report in artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+  GITHUB_REPOSITORY="${GITHUB_REPOSITORY:-unknown/repo}"
+  GITHUB_RUN_ID="${GITHUB_RUN_ID:-0}"
+  echo "[View full mutation report in artifacts](https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID})"
   echo ""
 } > "$METRICS_DIR/latest-report.md"
 
