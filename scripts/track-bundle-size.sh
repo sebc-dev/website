@@ -53,22 +53,22 @@ log_info() {
 
 format_size() {
   local bytes=$1
-  if [ $bytes -lt 1024 ]; then
+  if [ "$bytes" -lt 1024 ]; then
     echo "${bytes}B"
-  elif [ $bytes -lt $((1024 * 1024)) ]; then
-    echo "$(( bytes / 1024 ))KB"
+  elif [ "$bytes" -lt $((1024 * 1024)) ]; then
+    echo "$((bytes / 1024))KB"
   else
-    echo "$(( bytes / (1024 * 1024) ))MB"
+    echo "$((bytes / (1024 * 1024)))MB"
   fi
 }
 
 calculate_percent_change() {
   local old=$1
   local new=$2
-  if [ $old -eq 0 ]; then
+  if [ "$old" -eq 0 ]; then
     echo 0
   else
-    echo $(( (new - old) * 100 / old ))
+    echo "$((($new - $old) * 100 / $old))"
   fi
 }
 
