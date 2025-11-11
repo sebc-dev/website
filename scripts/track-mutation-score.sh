@@ -92,6 +92,12 @@ extract_metrics() {
         ' "${REPORT_FILE}" 2>/dev/null || echo "0")
     fi
 
+    # Validate mutation_score is a valid number (integer or decimal)
+    if ! [[ "${mutation_score}" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
+        log_warning "Invalid mutation_score value: '${mutation_score}' - defaulting to 0"
+        mutation_score="0"
+    fi
+
     # Try to extract from files array
     if jq -e '.files' "${REPORT_FILE}" > /dev/null 2>&1; then
         # Count mutants by status across all files
@@ -174,6 +180,12 @@ Overall Metrics:
 
 Status:
 EOF
+
+    # Validate mutation_score is a valid number before awk comparisons
+    if ! [[ "${mutation_score}" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
+        log_warning "Invalid mutation_score value: '${mutation_score}' - defaulting to 0"
+        mutation_score="0"
+    fi
 
     # Add status based on mutation score
     if awk -v score="${mutation_score}" 'BEGIN { exit !(score >= 85) }'; then
