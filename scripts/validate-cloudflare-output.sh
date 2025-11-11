@@ -54,9 +54,9 @@ log_info() {
 
 format_size() {
   local bytes=$1
-  if [ $bytes -lt 1024 ]; then
+  if [ "$bytes" -lt 1024 ]; then
     echo "${bytes}B"
-  elif [ $bytes -lt $((1024 * 1024)) ]; then
+  elif [ "$bytes" -lt $((1024 * 1024)) ]; then
     echo "$(( bytes / 1024 ))KB"
   else
     echo "$(( bytes / (1024 * 1024) ))MB"
@@ -122,7 +122,7 @@ WORKER_SIZE_FORMATTED=$(format_size $WORKER_SIZE)
 
 echo "  Worker size: $WORKER_SIZE_FORMATTED"
 
-if [ $WORKER_SIZE -gt $MAX_WORKER_SIZE ]; then
+if [ "$WORKER_SIZE" -gt "$MAX_WORKER_SIZE" ]; then
   log_error "Worker bundle exceeds Cloudflare limit (1MB): $WORKER_SIZE_FORMATTED"
   echo "  → Current size: $WORKER_SIZE_FORMATTED"
   echo "  → Max allowed: 1MB"
@@ -133,7 +133,7 @@ if [ $WORKER_SIZE -gt $MAX_WORKER_SIZE ]; then
   echo "  3. Use code splitting and lazy loading"
   echo "  4. Profile bundle with: npx webpack-bundle-analyzer"
   exit 1
-elif [ $WORKER_SIZE -gt $WARN_WORKER_SIZE ]; then
+elif [ "$WORKER_SIZE" -gt "$WARN_WORKER_SIZE" ]; then
   log_warning "Worker bundle approaching Cloudflare limit: $WORKER_SIZE_FORMATTED"
   echo "  → Current size: $WORKER_SIZE_FORMATTED (80% of 1MB limit)"
   echo "  → Recommended: Keep below 800KB for safety margin"
@@ -155,7 +155,7 @@ echo "Checking assets directory..."
 ASSETS_COUNT=$(find "$OPEN_NEXT_DIR/assets" -type f 2>/dev/null | wc -l || echo 0)
 ASSETS_SIZE=$(du -sh "$OPEN_NEXT_DIR/assets" 2>/dev/null | cut -f1 || echo "0B")
 
-if [ $ASSETS_COUNT -gt 0 ]; then
+if [ "$ASSETS_COUNT" -gt 0 ]; then
   log_pass "Assets generated: $ASSETS_COUNT files ($ASSETS_SIZE)"
 else
   log_warning "No assets generated - verify Next.js build produces static files"
