@@ -93,7 +93,7 @@ if grep -q "compatibility_date" "$WRANGLER_CONFIG"; then
     COMPAT_TIMESTAMP=$(date -d "$COMPAT_DATE" +%s 2>/dev/null || echo 0)
   fi
   CURRENT_TIMESTAMP=$(date +%s)
-  DAYS_DIFF=$(( ($CURRENT_TIMESTAMP - $COMPAT_TIMESTAMP) / 86400 ))
+  DAYS_DIFF=$(( (CURRENT_TIMESTAMP - COMPAT_TIMESTAMP) / 86400 ))
 
   if [ $DAYS_DIFF -gt 180 ]; then
     log_warning "Compatibility date is older than 6 months ($COMPAT_DATE)"
