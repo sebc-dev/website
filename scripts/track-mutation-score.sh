@@ -65,15 +65,16 @@ extract_metrics() {
     log_success "Created metrics directory: ${METRICS_DIR}"
 
     # Extract overall metrics from the report
-    local mutation_score
-    local total_mutants
-    local killed_mutants
-    local survived_mutants
-    local timeout_mutants
-    local no_coverage_mutants
-    local ignored_mutants
-    local runtime_errors
-    local compile_errors
+    # Initialize all variables to 0 to prevent empty values
+    local mutation_score=0
+    local total_mutants=0
+    local killed_mutants=0
+    local survived_mutants=0
+    local timeout_mutants=0
+    local no_coverage_mutants=0
+    local ignored_mutants=0
+    local runtime_errors=0
+    local compile_errors=0
 
     # Try to read mutation score from .summary.score first, then compute from mutants
     mutation_score=$(jq -r '
@@ -94,24 +95,30 @@ extract_metrics() {
     # Try to extract from files array
     if jq -e '.files' "${REPORT_FILE}" > /dev/null 2>&1; then
         # Count mutants by status across all files
-        total_mutants=$(jq '[.files[].mutants[]] | length' "${REPORT_FILE}")
-        killed_mutants=$(jq '[.files[].mutants[] | select(.status == "Killed")] | length' "${REPORT_FILE}")
-        survived_mutants=$(jq '[.files[].mutants[] | select(.status == "Survived")] | length' "${REPORT_FILE}")
-        timeout_mutants=$(jq '[.files[].mutants[] | select(.status == "Timeout")] | length' "${REPORT_FILE}")
-        no_coverage_mutants=$(jq '[.files[].mutants[] | select(.status == "NoCoverage")] | length' "${REPORT_FILE}")
-        ignored_mutants=$(jq '[.files[].mutants[] | select(.status == "Ignored")] | length' "${REPORT_FILE}")
-        runtime_errors=$(jq '[.files[].mutants[] | select(.status == "RuntimeError")] | length' "${REPORT_FILE}")
-        compile_errors=$(jq '[.files[].mutants[] | select(.status == "CompileError")] | length' "${REPORT_FILE}")
-    else
-        # Fallback: try to read from summary or other fields
-        total_mutants=0
-        killed_mutants=0
-        survived_mutants=0
-        timeout_mutants=0
-        no_coverage_mutants=0
-        ignored_mutants=0
-        runtime_errors=0
-        compile_errors=0
+        # Validate each jq query result and default to 0 on failure
+        total_mutants=$(jq '[.files[].mutants[]] | length' "${REPORT_FILE}" 2>/dev/null || echo "0")
+        total_mutants=${total_mutants:-0}
+
+        killed_mutants=$(jq '[.files[].mutants[] | select(.status == "Killed")] | length' "${REPORT_FILE}" 2>/dev/null || echo "0")
+        killed_mutants=${killed_mutants:-0}
+
+        survived_mutants=$(jq '[.files[].mutants[] | select(.status == "Survived")] | length' "${REPORT_FILE}" 2>/dev/null || echo "0")
+        survived_mutants=${survived_mutants:-0}
+
+        timeout_mutants=$(jq '[.files[].mutants[] | select(.status == "Timeout")] | length' "${REPORT_FILE}" 2>/dev/null || echo "0")
+        timeout_mutants=${timeout_mutants:-0}
+
+        no_coverage_mutants=$(jq '[.files[].mutants[] | select(.status == "NoCoverage")] | length' "${REPORT_FILE}" 2>/dev/null || echo "0")
+        no_coverage_mutants=${no_coverage_mutants:-0}
+
+        ignored_mutants=$(jq '[.files[].mutants[] | select(.status == "Ignored")] | length' "${REPORT_FILE}" 2>/dev/null || echo "0")
+        ignored_mutants=${ignored_mutants:-0}
+
+        runtime_errors=$(jq '[.files[].mutants[] | select(.status == "RuntimeError")] | length' "${REPORT_FILE}" 2>/dev/null || echo "0")
+        runtime_errors=${runtime_errors:-0}
+
+        compile_errors=$(jq '[.files[].mutants[] | select(.status == "CompileError")] | length' "${REPORT_FILE}" 2>/dev/null || echo "0")
+        compile_errors=${compile_errors:-0}
     fi
 
     # Create JSON metrics file
