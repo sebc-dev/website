@@ -47,14 +47,14 @@ Extend the deployment workflow to support multiple environments (staging and pro
 
 ## 📚 Available Documents
 
-| Document | Description | For Who | Duration |
-|----------|-------------|---------|----------|
-| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)** | Atomic strategy in 5 commits | Developer | 15 min |
-| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)** | Detailed checklist per commit | Developer | Reference |
-| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)** | GitHub & Cloudflare setup | DevOps/Dev | 15 min |
-| **[guides/REVIEW.md](./guides/REVIEW.md)** | Code review guide | Reviewer | 25 min |
-| **[guides/TESTING.md](./guides/TESTING.md)** | Testing guide (deployment validation) | QA/Dev | 20 min |
-| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist | Tech Lead | 30 min |
+| Document                                                                       | Description                           | For Who    | Duration  |
+| ------------------------------------------------------------------------------ | ------------------------------------- | ---------- | --------- |
+| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)**                         | Atomic strategy in 5 commits          | Developer  | 15 min    |
+| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)**                               | Detailed checklist per commit         | Developer  | Reference |
+| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)**                             | GitHub & Cloudflare setup             | DevOps/Dev | 15 min    |
+| **[guides/REVIEW.md](./guides/REVIEW.md)**                                     | Code review guide                     | Reviewer   | 25 min    |
+| **[guides/TESTING.md](./guides/TESTING.md)**                                   | Testing guide (deployment validation) | QA/Dev     | 20 min    |
+| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist            | Tech Lead  | 30 min    |
 
 ---
 
@@ -157,13 +157,13 @@ cat docs/specs/epics/epic_0/story_0_7/implementation/phase_3/validation/VALIDATI
 
 ## 📊 Metrics
 
-| Metric | Target | Actual |
-|--------|--------|--------|
-| **Total Commits** | 5 | - |
-| **Implementation Time** | 4-6h | - |
-| **Review Time** | 2-3h | - |
-| **Deployment Success** | 100% | - |
-| **Environments Configured** | 2 (staging, production) | - |
+| Metric                      | Target                  | Actual |
+| --------------------------- | ----------------------- | ------ |
+| **Total Commits**           | 5                       | -      |
+| **Implementation Time**     | 4-6h                    | -      |
+| **Review Time**             | 2-3h                    | -      |
+| **Deployment Success**      | 100%                    | -      |
+| **Environments Configured** | 2 (staging, production) | -      |
 
 ---
 

@@ -323,14 +323,14 @@ cat docs/deployment/environments-guide.md
 
 ## 📊 Commit Metrics
 
-| Commit | Files | Lines | Implementation | Review | Total |
-|--------|-------|-------|----------------|--------|-------|
-| 1. GitHub Environments | 0 (UI) | ~0 | 30-45 min | 15-20 min | 45-65 min |
-| 2. Environment Secrets | 1 | ~25 | 30-45 min | 15-20 min | 45-65 min |
-| 3. Enhance deploy.yml | 1 | ~40 | 45-60 min | 20-30 min | 65-90 min |
-| 4. Staging Workflow | 1 | ~90 | 60-75 min | 25-35 min | 85-110 min |
-| 5. Documentation | 2 | ~180 | 45-60 min | 20-25 min | 65-85 min |
-| **TOTAL** | **5** | **~335** | **3.5-4.5h** | **1.5-2h** | **5-6.5h** |
+| Commit                 | Files  | Lines    | Implementation | Review     | Total      |
+| ---------------------- | ------ | -------- | -------------- | ---------- | ---------- |
+| 1. GitHub Environments | 0 (UI) | ~0       | 30-45 min      | 15-20 min  | 45-65 min  |
+| 2. Environment Secrets | 1      | ~25      | 30-45 min      | 15-20 min  | 45-65 min  |
+| 3. Enhance deploy.yml  | 1      | ~40      | 45-60 min      | 20-30 min  | 65-90 min  |
+| 4. Staging Workflow    | 1      | ~90      | 60-75 min      | 25-35 min  | 85-110 min |
+| 5. Documentation       | 2      | ~180     | 45-60 min      | 20-25 min  | 65-85 min  |
+| **TOTAL**              | **5**  | **~335** | **3.5-4.5h**   | **1.5-2h** | **5-6.5h** |
 
 **Note**: Commit 1 involves UI configuration, documented in commit message. Total line count reflects primarily workflow YAML and documentation.
 
@@ -382,6 +382,7 @@ Recommended scope: `ci`, `deploy`, `docs`
 ### Example Commit Messages
 
 **Commit 1**:
+
 ```
 ci(deploy): configure GitHub Environments for staging and production
 
@@ -394,6 +395,7 @@ Part of Phase 3 - Commit 1/5
 ```
 
 **Commit 3**:
+
 ```
 feat(deploy): add environment support to deployment workflow
 
