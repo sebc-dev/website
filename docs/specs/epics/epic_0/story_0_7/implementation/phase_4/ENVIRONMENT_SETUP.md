@@ -25,6 +25,7 @@ Phase 4 is **pure documentation** based on completed infrastructure. All previou
   - Deployment to production verified
 
 **Verification**:
+
 ```bash
 # Check workflows exist
 ls -la .github/workflows/
@@ -56,6 +57,7 @@ No new dependencies to install for Phase 4. All tools should already be availabl
 - [ ] Text editor (VS Code, Vim, etc.) - For writing documentation
 
 **Verification**:
+
 ```bash
 # Verify git
 git --version
@@ -89,6 +91,7 @@ docs/
 ```
 
 **Preparation**:
+
 ```bash
 # Create deployment documentation directory
 mkdir -p docs/deployment
@@ -110,6 +113,7 @@ Before starting Phase 4, review the following to ensure accurate documentation:
 - [ ] `.github/workflows/migrate.yml` - Migration workflow (if separate)
 
 **Review**:
+
 ```bash
 # Read quality workflow
 cat .github/workflows/quality.yml
@@ -128,6 +132,7 @@ ls -la .github/workflows/ | grep migrate
 - [ ] `drizzle.config.ts` - Database configuration
 
 **Review**:
+
 ```bash
 # Review wrangler config
 cat wrangler.jsonc
@@ -143,6 +148,7 @@ cat package.json | grep -A 30 "scripts"
 - [ ] `phase_3/IMPLEMENTATION_PLAN.md` - Environment procedures
 
 **Review**:
+
 ```bash
 # Review previous phase documentation
 cat docs/specs/epics/epic_0/story_0_7/implementation/phase_1/IMPLEMENTATION_PLAN.md
@@ -181,6 +187,7 @@ Complete this checklist before starting Phase 4 implementation:
 - [ ] Familiar with workflow triggers (push, workflow_dispatch)
 
 **Final Check**:
+
 ```bash
 # Verify complete CI/CD pipeline works
 # Trigger a deployment (manually or via push to main)
@@ -200,6 +207,7 @@ gh run list --limit 1
 ### Issue: Previous phases not completed
 
 **Symptoms**:
+
 - Workflows don't exist
 - Deployments failing
 - Secrets not configured
@@ -212,10 +220,12 @@ Complete Phases 1-3 before starting Phase 4. Phase 4 is documentation only and r
 ### Issue: Can't access GitHub CLI
 
 **Symptoms**:
+
 - `gh` command not found
 - Authentication errors
 
 **Solution**:
+
 ```bash
 # Install GitHub CLI (if not installed)
 # See: https://cli.github.com/manual/installation
@@ -232,10 +242,12 @@ gh auth status
 ### Issue: Don't remember implementation details
 
 **Symptoms**:
+
 - Uncertain about procedures
 - Can't recall configuration steps
 
 **Solution**:
+
 ```bash
 # Review git history for Phases 1-3
 git log --oneline --grep "Phase"

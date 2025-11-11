@@ -24,6 +24,7 @@ Phase 4 is **documentation-focused**, so testing involves:
 **Purpose**: Confirm all documentation files created
 
 **Commands**:
+
 ```bash
 # Check deployment documentation directory
 ls -la docs/deployment/
@@ -38,6 +39,7 @@ wc -l docs/deployment/*.md
 ```
 
 **Expected Result**:
+
 - All 3 files exist in `docs/deployment/`
 - RUNBOOK.md: ~200 lines
 - secrets-setup.md: ~150 lines
@@ -52,6 +54,7 @@ wc -l docs/deployment/*.md
 **Purpose**: Ensure all internal links work
 
 **Commands**:
+
 ```bash
 # Extract all markdown links from documentation
 grep -r "\[.*\](\.\./" docs/deployment/
@@ -60,10 +63,11 @@ grep -r "\[.*\](\.\./" docs/deployment/
 ```
 
 **Manual Checks**:
+
 - [ ] Links from RUNBOOK.md to troubleshooting.md work
 - [ ] Links from secrets-setup.md to RUNBOOK.md work (if any)
 - [ ] Links from troubleshooting.md to RUNBOOK.md work (if any)
-- [ ] Links to workflow files (.github/workflows/*.yml) are correct
+- [ ] Links to workflow files (.github/workflows/\*.yml) are correct
 - [ ] Links to EPIC_TRACKING.md work
 - [ ] Links to README.md work
 
@@ -78,12 +82,14 @@ grep -r "\[.*\](\.\./" docs/deployment/
 **Purpose**: Ensure external links are accessible
 
 **Manual Checks**:
+
 - [ ] Cloudflare Workers docs links work
 - [ ] Cloudflare D1 docs links work
 - [ ] GitHub Actions docs links work
 - [ ] wrangler CLI docs links work
 
 **Commands** (optional - check HTTP status):
+
 ```bash
 # Example: Check if URL is accessible
 curl -I https://developers.cloudflare.com/workers/ | head -1
@@ -109,6 +115,7 @@ curl -I https://developers.cloudflare.com/workers/ | head -1
 5. Repeat for troubleshooting.md
 
 **Key Commands to Test**:
+
 ```bash
 # From RUNBOOK.md
 gh run list --limit 5
@@ -168,6 +175,7 @@ gh run watch
 ```
 
 **Expected Checks** (from quality.yml):
+
 - [ ] Linting passes (ESLint)
 - [ ] Formatting check passes (Prettier)
 - [ ] Architecture validation passes (depcruise)
@@ -193,6 +201,7 @@ gh run watch
 ```
 
 **Expected Flow**:
+
 1. Migration job runs (applies migrations if any)
 2. Deployment job runs (builds and deploys Worker)
 3. Verification step passes (health check)
@@ -211,6 +220,7 @@ gh run list --limit 1 --json conclusion --jq '.[0].conclusion'
 ```
 
 **Manual Verification**:
+
 - [ ] Visit production URL (your Cloudflare Workers URL)
 - [ ] Site is accessible
 - [ ] No errors in browser console
@@ -364,15 +374,15 @@ Use this template to document validation results:
 
 ### Test Results
 
-| Test | Status | Notes |
-|------|--------|-------|
-| Test 1: Files exist | ✅ PASS | All files created |
-| Test 2: Internal links | ✅ PASS | No broken links |
-| Test 3: External links | ✅ PASS | All accessible |
-| Test 4: Commands work | ✅ PASS | Tested all commands |
-| Test 5: E2E pipeline | ✅ PASS | Full deployment successful |
-| Test 6: Manual deploy | ✅ PASS | Workflow_dispatch works |
-| Test 7: Rollback | ✅ PASS | Rollback verified |
+| Test                   | Status  | Notes                      |
+| ---------------------- | ------- | -------------------------- |
+| Test 1: Files exist    | ✅ PASS | All files created          |
+| Test 2: Internal links | ✅ PASS | No broken links            |
+| Test 3: External links | ✅ PASS | All accessible             |
+| Test 4: Commands work  | ✅ PASS | Tested all commands        |
+| Test 5: E2E pipeline   | ✅ PASS | Full deployment successful |
+| Test 6: Manual deploy  | ✅ PASS | Workflow_dispatch works    |
+| Test 7: Rollback       | ✅ PASS | Rollback verified          |
 
 ### Issues Found
 
