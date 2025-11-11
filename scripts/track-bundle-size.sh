@@ -181,18 +181,18 @@ else
 
   # Alert on growth
   GROWTH_WARNING=0
-  if [ "${STATIC_CHANGE#-}" -gt $MAX_GROWTH_PERCENT ]; then
+  if [ "${STATIC_CHANGE#-}" -gt "${MAX_GROWTH_PERCENT}" ]; then
     log_warning "Static assets grew ${STATIC_CHANGE}% (limit: ${MAX_GROWTH_PERCENT}%)"
     GROWTH_WARNING=1
   fi
 
-  if [ "${WORKER_CHANGE#-}" -gt $MAX_GROWTH_PERCENT ]; then
+  if [ "${WORKER_CHANGE#-}" -gt "${MAX_GROWTH_PERCENT}" ]; then
     log_warning "Worker bundle grew ${WORKER_CHANGE}% (limit: ${MAX_GROWTH_PERCENT}%)"
     GROWTH_WARNING=1
   fi
 
   # Alert on approaching Worker size limit
-  if [ $WORKER_SIZE -gt $ALERT_SIZE ]; then
+  if [ "${WORKER_SIZE}" -gt "${ALERT_SIZE}" ]; then
     log_warning "Worker approaching size limit: $WORKER_SIZE_FORMATTED (limit: 1MB)"
     GROWTH_WARNING=1
   fi
@@ -218,7 +218,7 @@ echo "  Worker Bundle: $WORKER_SIZE_FORMATTED ($(( WORKER_SIZE * 100 / (1024 * 1
 echo "  Total Build: $TOTAL_SIZE_FORMATTED"
 echo ""
 
-if [ $WORKER_SIZE -gt $ALERT_SIZE ]; then
+if [ "${WORKER_SIZE}" -gt "${ALERT_SIZE}" ]; then
   echo -e "${YELLOW}⚠ Worker bundle approaching limit:${NC}"
   echo "  Current: $WORKER_SIZE_FORMATTED"
   echo "  Recommended: < 800KB"
