@@ -78,6 +78,17 @@ echo "==========================================================================
 echo ""
 
 # =========================================================================
+# Prerequisite: Check for jq
+# =========================================================================
+if ! command -v jq &> /dev/null; then
+  log_error "jq is not installed. Please install jq to parse JSON metrics."
+  echo "  → On Ubuntu/Debian: sudo apt-get install jq"
+  echo "  → On macOS: brew install jq"
+  echo "  → On Windows: winget install jqlang.jq"
+  exit 1
+fi
+
+# =========================================================================
 # Step 1: Collect current bundle metrics
 # =========================================================================
 echo "Collecting bundle metrics..."
@@ -164,10 +175,15 @@ PREV_METRICS=$(tail -2 "$METRICS_FILE" | head -1)
 if [ -z "$PREV_METRICS" ]; then
   log_info "First build tracked - no previous build to compare"
 else
-  # Extract previous sizes using jq or grep
-  PREV_STATIC=$(echo "$PREV_METRICS" | grep -o '"static_bytes":[0-9]*' | cut -d: -f2)
-  PREV_WORKER=$(echo "$PREV_METRICS" | grep -o '"worker_bytes":[0-9]*' | cut -d: -f2)
-  PREV_TOTAL=$(echo "$PREV_METRICS" | grep -o '"total_bytes":[0-9]*' | cut -d: -f2)
+  # Extract previous sizes using jq with fallback defaults
+  PREV_STATIC=$(echo "$PREV_METRICS" | jq -r '.static_bytes // 0' 2>/dev/null || echo "0")
+  PREV_WORKER=$(echo "$PREV_METRICS" | jq -r '.worker_bytes // 0' 2>/dev/null || echo "0")
+  PREV_TOTAL=$(echo "$PREV_METRICS" | jq -r '.total_bytes // 0' 2>/dev/null || echo "0")
+
+  # Ensure values are valid integers (fallback to 0 if not)
+  PREV_STATIC=${PREV_STATIC:-0}
+  PREV_WORKER=${PREV_WORKER:-0}
+  PREV_TOTAL=${PREV_TOTAL:-0}
 
   # Calculate changes
   STATIC_CHANGE=$(calculate_percent_change "$PREV_STATIC" "$STATIC_SIZE")
