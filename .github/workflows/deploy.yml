@@ -199,14 +199,15 @@ jobs:
       # Action: cloudflare/wrangler-action@v3 (official Cloudflare action)
       # API Token: Required secret (CLOUDFLARE_API_TOKEN) with Workers Deploy permission
       # Account ID: Required secret (CLOUDFLARE_ACCOUNT_ID)
-      # Command: wrangler deploy (deploys the worker from .open-next/)
+      # Worker Name: Required secret (CLOUDFLARE_WORKER_NAME) for environment-specific deployment
+      # Command: wrangler deploy --name (deploys the worker from .open-next/)
       #
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: deploy
+          command: deploy --name ${{ secrets.CLOUDFLARE_WORKER_NAME }}
 
   # ============================================================================
   # Health Check Job (Commit 4: Post-Deployment Verification)
@@ -248,30 +249,33 @@ jobs:
 
     steps:
       # ========================================================================
-      # Step 1: Get Worker URL
+      # Step 1: Construct Worker URL
       # ========================================================================
-      # Uses WORKER_URL secret for reliable URL configuration
-      # The Workers.dev subdomain is not derivable from account_id
-      # Must be configured as a repository secret
+      # Constructs the Worker URL from CLOUDFLARE_WORKER_NAME and subdomain
+      # Format: https://<worker-name>.chauveau-sebastien.workers.dev
+      # The subdomain (chauveau-sebastien) is specific to the Cloudflare account
       #
-      - name: Configure Worker URL
+      - name: Construct Worker URL
         id: worker-url
         run: |
-          # Use explicitly configured Worker URL from secrets
-          WORKER_URL="${{ secrets.WORKER_URL }}"
+          # Get worker name from secrets
+          WORKER_NAME="${{ secrets.CLOUDFLARE_WORKER_NAME }}"
 
-          # Validate that WORKER_URL is configured
-          if [[ -z "$WORKER_URL" ]]; then
-            echo "❌ ERROR: WORKER_URL not configured"
-            echo "Please add WORKER_URL as a repository secret:"
-            echo "  1. Go to Settings > Secrets and variables > Actions"
-            echo "  2. Add new secret: WORKER_URL"
-            echo "  3. Value: https://your-worker.your-subdomain.workers.dev"
+          # Validate that CLOUDFLARE_WORKER_NAME is configured
+          if [[ -z "$WORKER_NAME" ]]; then
+            echo "❌ ERROR: CLOUDFLARE_WORKER_NAME not configured"
+            echo "Please add CLOUDFLARE_WORKER_NAME as an environment secret:"
+            echo "  1. Go to Settings > Environments > production"
+            echo "  2. Add new secret: CLOUDFLARE_WORKER_NAME"
+            echo "  3. Value: your-worker-name (e.g., sebc-dev-prod)"
             exit 1
           fi
 
+          # Construct Worker URL using account-specific subdomain
+          WORKER_URL="https://${WORKER_NAME}.chauveau-sebastien.workers.dev"
+
           echo "worker-url=${WORKER_URL}" >> $GITHUB_OUTPUT
-          echo "✅ Worker URL configured: ${WORKER_URL}"
+          echo "✅ Worker URL constructed: ${WORKER_URL}"
 
       # ========================================================================
       # Step 2: Health Check with Retry Logic
@@ -430,15 +434,17 @@ jobs:
           ACTOR="${{ github.actor }}"
 
           # Determine Worker URL based on deployment status
-          # If verify-deployment succeeded, use its output; otherwise, fallback to secret
+          # If verify-deployment succeeded, use its output; otherwise, construct from worker name
           VERIFY_JOB_RESULT="${{ needs.verify-deployment.result }}"
           if [[ "$VERIFY_JOB_RESULT" == "success" ]]; then
             WORKER_URL="${{ needs.verify-deployment.outputs.worker-url }}"
           else
-            # Fallback: Use WORKER_URL secret for skipped verification scenarios
-            WORKER_URL="${{ secrets.WORKER_URL }}"
-            if [[ -z "$WORKER_URL" ]]; then
-              echo "⚠️ WARNING: Worker URL not available from verification or secrets"
+            # Fallback: Construct Worker URL from CLOUDFLARE_WORKER_NAME for skipped verification
+            WORKER_NAME="${{ secrets.CLOUDFLARE_WORKER_NAME }}"
+            if [[ -n "$WORKER_NAME" ]]; then
+              WORKER_URL="https://${WORKER_NAME}.chauveau-sebastien.workers.dev"
+            else
+              echo "⚠️ WARNING: Worker URL not available - CLOUDFLARE_WORKER_NAME not configured"
               WORKER_URL="[Worker URL not available]"
             fi
           fi
@@ -592,7 +598,7 @@ jobs:
       # Step 5: Create GitHub Deployment Environment
       # ========================================================================
       # Track deployment in GitHub environments for visibility and auditing
-      # Links the deployment to a specific environment (workers-production)
+      # Links the deployment to the 'production' environment
       #
       - name: Create GitHub Deployment
         if: needs.deploy.result == 'success'

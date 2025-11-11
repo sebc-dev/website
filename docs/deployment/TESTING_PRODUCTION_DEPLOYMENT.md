@@ -235,11 +235,12 @@ cat .github/workflows/deploy.yml | grep "environment:"
 # Check Cloudflare Workers Dashboard
 # https://dash.cloudflare.com/ → Workers → [Worker Name] → Logs
 
-# Verify WORKER_URL secret is correct
-# Settings → Secrets and variables → Actions → WORKER_URL
+# Verify CLOUDFLARE_WORKER_NAME is correctly configured
+# Settings → Environments → production → CLOUDFLARE_WORKER_NAME
 
 # If propagation delay, re-run health check manually:
-curl -I https://your-worker.your-subdomain.workers.dev
+# (URL is constructed from worker name: https://<worker-name>.chauveau-sebastien.workers.dev)
+curl -I https://your-worker-name.chauveau-sebastien.workers.dev
 ```
 
 ---
