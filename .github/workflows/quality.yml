@@ -263,32 +263,7 @@ jobs:
         run: npx @opennextjs/cloudflare build
 
       - name: Validate Cloudflare Output
-        run: |
-          # Run validation script and capture exit code
-          bash scripts/validate-cloudflare-output.sh || EXIT_CODE=$?
-
-          # Default to 0 if not set (script succeeded)
-          EXIT_CODE=${EXIT_CODE:-0}
-
-          # Exit code 0 = success, 1 = critical failure, 2 = warnings only
-          if [ $EXIT_CODE -eq 2 ]; then
-            echo ""
-            echo "⚠️ Validation completed with warnings (exit code 2)"
-            echo "This is expected if environment variables are configured in Cloudflare Dashboard"
-            exit 0
-          elif [ $EXIT_CODE -eq 1 ]; then
-            echo ""
-            echo "❌ Validation failed with critical errors (exit code $EXIT_CODE)"
-            exit 1
-          elif [ $EXIT_CODE -eq 0 ]; then
-            echo ""
-            echo "✅ Validation passed without warnings"
-            exit 0
-          else
-            echo ""
-            echo "❌ Unexpected exit code: $EXIT_CODE"
-            exit 1
-          fi
+        run: bash scripts/validate-cloudflare-output.sh
 
       - name: Analyze bundle
         run: pnpm bundle:analyze

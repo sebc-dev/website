@@ -84,16 +84,9 @@ if grep -q "compatibility_date" "$WRANGLER_CONFIG"; then
   log_pass "Compatibility date configured: $COMPAT_DATE"
 
   # Check if date is recent (within last 6 months)
-  # Use OS-specific date command (GNU date -d vs BSD date -j)
-  if [[ "$OSTYPE" == "darwin"* ]] || [[ "$OSTYPE" == "bsd"* ]]; then
-    # macOS/BSD: use date -j -f
-    COMPAT_TIMESTAMP=$(date -j -f "%Y-%m-%d" "$COMPAT_DATE" +%s 2>/dev/null || echo 0)
-  else
-    # Linux: use GNU date -d
-    COMPAT_TIMESTAMP=$(date -d "$COMPAT_DATE" +%s 2>/dev/null || echo 0)
-  fi
+  COMPAT_TIMESTAMP=$(date -d "$COMPAT_DATE" +%s 2>/dev/null || echo 0)
   CURRENT_TIMESTAMP=$(date +%s)
-  DAYS_DIFF=$(( (CURRENT_TIMESTAMP - COMPAT_TIMESTAMP) / 86400 ))
+  DAYS_DIFF=$(( ($CURRENT_TIMESTAMP - $COMPAT_TIMESTAMP) / 86400 ))
 
   if [ $DAYS_DIFF -gt 180 ]; then
     log_warning "Compatibility date is older than 6 months ($COMPAT_DATE)"

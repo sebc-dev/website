@@ -1,232 +1,244 @@
 #!/bin/bash
+
 #
-# track-mutation-score.sh
-# Parse Stryker mutation report and extract metrics for tracking
+# Mutation Testing Score Tracker
+# ==============================
 #
-# This script:
-# - Reads reports/mutation/stryker-report.json
-# - Extracts overall mutation score and per-file metrics
-# - Writes metrics to .mutation-metrics/ directory in JSON format
-# - Exits gracefully on errors (exit 0) to allow workflow continuation
+# Purpose: Track Stryker mutation testing scores over time
+#
+# Features:
+# - Extract mutation score from Stryker reports
+# - Compare against previous scores
+# - Generate historical metrics
+# - Alert on score drops
+# - Create badges for documentation
+#
+# Exit codes:
+# 0 = Success
+# 1 = Failed to collect metrics
 #
 
-set -euo pipefail
+set -e
 
-# Color codes for output
-readonly RED='\033[0;31m'
-readonly GREEN='\033[0;32m'
-readonly YELLOW='\033[1;33m'
-readonly BLUE='\033[0;34m'
-readonly NC='\033[0m' # No Color
+METRICS_DIR=".mutation-metrics"
+METRICS_FILE="$METRICS_DIR/mutation-scores.jsonl"
+STRYKER_REPORT="stryker-report.json"
+MIN_ACCEPTABLE_SCORE=80
 
-# Paths
-readonly REPORT_FILE="reports/mutation/stryker-report.json"
-readonly METRICS_DIR=".mutation-metrics"
-readonly METRICS_FILE="${METRICS_DIR}/metrics.json"
-readonly SUMMARY_FILE="${METRICS_DIR}/summary.txt"
+# Color codes
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
 
-# Helper functions
-log_info() {
-    echo -e "${BLUE}ℹ${NC} $1"
-}
-
-log_success() {
-    echo -e "${GREEN}✓${NC} $1"
-}
-
-log_warning() {
-    echo -e "${YELLOW}⚠${NC} $1"
+log_pass() {
+  echo -e "${GREEN}✓${NC} $1"
 }
 
 log_error() {
-    echo -e "${RED}✗${NC} $1"
+  echo -e "${RED}✗${NC} $1"
 }
 
-# Main function to parse and extract metrics
-extract_metrics() {
-    log_info "Extracting mutation metrics from ${REPORT_FILE}..."
+log_warning() {
+  echo -e "${YELLOW}⚠${NC} $1"
+}
 
-    # Check if report file exists
-    if [ ! -f "${REPORT_FILE}" ]; then
-        log_warning "Report file not found: ${REPORT_FILE}"
-        log_info "Skipping metrics extraction (this is okay for CI/CD)"
-        exit 0
-    fi
+log_info() {
+  echo -e "${BLUE}ℹ${NC} $1"
+}
 
-    # Validate JSON format
-    if ! jq empty "${REPORT_FILE}" 2>/dev/null; then
-        log_warning "Invalid JSON format in ${REPORT_FILE}"
-        log_info "Skipping metrics extraction"
-        exit 0
-    fi
+echo "=========================================================================="
+echo "Mutation Testing Score Tracker"
+echo "=========================================================================="
+echo ""
 
-    # Create metrics directory
-    mkdir -p "${METRICS_DIR}"
-    log_success "Created metrics directory: ${METRICS_DIR}"
+# =========================================================================
+# Step 1: Check for Stryker report
+# =========================================================================
+echo "Looking for Stryker mutation testing report..."
 
-    # Extract overall metrics from the report
-    # Initialize all variables to 0 to prevent empty values
-    local mutation_score=0
-    local total_mutants=0
-    local killed_mutants=0
-    local survived_mutants=0
-    local timeout_mutants=0
-    local no_coverage_mutants=0
-    local ignored_mutants=0
-    local runtime_errors=0
-    local compile_errors=0
+if [ ! -f "$STRYKER_REPORT" ]; then
+  log_error "Stryker report not found: $STRYKER_REPORT"
+  echo "  → Run 'pnpm exec stryker run' to generate mutation testing report"
+  exit 1
+fi
 
-    # Try to read mutation score from .summary.score first, then compute from mutants
-    mutation_score=$(jq -r '
-        .summary.score // empty
-    ' "${REPORT_FILE}" 2>/dev/null || echo "")
+log_pass "Stryker report found"
 
-    # If summary.score is not present, compute from mutants array
-    if [ -z "${mutation_score}" ]; then
-        mutation_score=$(jq -r '
-            ([.files[].mutants[] | select(.status == "Killed" or .status == "Timeout")] | length) as $killed |
-            ([.files[].mutants[]] | length) as $total |
-            ([.files[].mutants[] | select(.status == "NoCoverage" or .status == "Ignored")] | length) as $excluded |
-            ($total - $excluded) as $covered |
-            if $covered > 0 then ($killed * 100.0 / $covered) else 0 end
-        ' "${REPORT_FILE}" 2>/dev/null || echo "0")
-    fi
+# =========================================================================
+# Step 2: Extract mutation score
+# =========================================================================
+echo ""
+echo "Extracting mutation scores..."
 
-    # Validate mutation_score is a valid number (integer or decimal)
-    if ! [[ "${mutation_score}" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
-        log_warning "Invalid mutation_score value: '${mutation_score}' - defaulting to 0"
-        mutation_score="0"
-    fi
+# Try to extract score from Stryker JSON report
+MUTATION_SCORE=$(grep -o '"killed":[0-9]*' "$STRYKER_REPORT" | head -1 | cut -d: -f2 || echo "")
 
-    # Try to extract from files array
-    if jq -e '.files' "${REPORT_FILE}" > /dev/null 2>&1; then
-        # Count mutants by status across all files
-        # Validate each jq query result and default to 0 on failure
-        total_mutants=$(jq '[.files[].mutants[]] | length' "${REPORT_FILE}" 2>/dev/null || echo "0")
-        total_mutants=${total_mutants:-0}
+if [ -z "$MUTATION_SCORE" ]; then
+  # Try alternative format
+  MUTATION_SCORE=$(grep -o '"score":[0-9.]*' "$STRYKER_REPORT" | head -1 | cut -d: -f2 || echo "")
+fi
 
-        killed_mutants=$(jq '[.files[].mutants[] | select(.status == "Killed")] | length' "${REPORT_FILE}" 2>/dev/null || echo "0")
-        killed_mutants=${killed_mutants:-0}
+if [ -z "$MUTATION_SCORE" ]; then
+  log_error "Could not extract mutation score from $STRYKER_REPORT"
+  echo "  → Verify Stryker report is in correct format"
+  exit 1
+fi
 
-        survived_mutants=$(jq '[.files[].mutants[] | select(.status == "Survived")] | length' "${REPORT_FILE}" 2>/dev/null || echo "0")
-        survived_mutants=${survived_mutants:-0}
+log_pass "Mutation score extracted: ${MUTATION_SCORE}%"
 
-        timeout_mutants=$(jq '[.files[].mutants[] | select(.status == "Timeout")] | length' "${REPORT_FILE}" 2>/dev/null || echo "0")
-        timeout_mutants=${timeout_mutants:-0}
+# =========================================================================
+# Step 3: Create metrics directory
+# =========================================================================
+mkdir -p "$METRICS_DIR"
 
-        no_coverage_mutants=$(jq '[.files[].mutants[] | select(.status == "NoCoverage")] | length' "${REPORT_FILE}" 2>/dev/null || echo "0")
-        no_coverage_mutants=${no_coverage_mutants:-0}
+# =========================================================================
+# Step 4: Record metrics
+# =========================================================================
+echo ""
+echo "Recording metrics..."
 
-        ignored_mutants=$(jq '[.files[].mutants[] | select(.status == "Ignored")] | length' "${REPORT_FILE}" 2>/dev/null || echo "0")
-        ignored_mutants=${ignored_mutants:-0}
+TIMESTAMP=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+COMMIT_SHA="${GITHUB_SHA:-$(git rev-parse HEAD 2>/dev/null || echo 'unknown')}"
+BUILD_NUMBER="${GITHUB_RUN_NUMBER:-0}"
+BRANCH="${GITHUB_REF_NAME:-$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo 'unknown')}"
 
-        runtime_errors=$(jq '[.files[].mutants[] | select(.status == "RuntimeError")] | length' "${REPORT_FILE}" 2>/dev/null || echo "0")
-        runtime_errors=${runtime_errors:-0}
+cat >> "$METRICS_FILE" << EOF
+{"timestamp":"$TIMESTAMP","commit":"$COMMIT_SHA","branch":"$BRANCH","build":$BUILD_NUMBER,"score":${MUTATION_SCORE}}
+EOF
 
-        compile_errors=$(jq '[.files[].mutants[] | select(.status == "CompileError")] | length' "${REPORT_FILE}" 2>/dev/null || echo "0")
-        compile_errors=${compile_errors:-0}
-    fi
+log_pass "Metrics recorded"
 
-    # Create JSON metrics file
-    cat > "${METRICS_FILE}" <<EOF
+# =========================================================================
+# Step 5: Compare against previous score
+# =========================================================================
+echo ""
+echo "Comparing against previous score..."
+
+# Get previous metrics
+PREV_METRICS=$(tail -2 "$METRICS_FILE" | head -1)
+
+if [ -z "$PREV_METRICS" ]; then
+  log_info "First mutation test tracked - no previous score to compare"
+  SCORE_CHANGE=0
+else
+  # Extract previous score
+  PREV_SCORE=$(echo "$PREV_METRICS" | grep -o '"score":[0-9.]*' | cut -d: -f2)
+  SCORE_CHANGE=$(echo "$MUTATION_SCORE - $PREV_SCORE" | bc 2>/dev/null || echo 0)
+
+  echo "  Previous score: ${PREV_SCORE}%"
+  echo "  Current score: ${MUTATION_SCORE}%"
+  echo "  Change: ${SCORE_CHANGE:+${SCORE_CHANGE:0:1}}${SCORE_CHANGE}%"
+
+  # Alert on score drop
+  if (( $(echo "$SCORE_CHANGE < 0" | bc -l 2>/dev/null || echo 0) )); then
+    log_warning "Mutation score decreased by ${SCORE_CHANGE#-}%"
+    echo "  → Investigate test quality"
+    echo "  → Ensure mutations are properly caught by tests"
+  elif (( $(echo "$SCORE_CHANGE > 0" | bc -l 2>/dev/null || echo 0) )); then
+    log_pass "Mutation score improved by $SCORE_CHANGE%"
+  fi
+fi
+
+# =========================================================================
+# Step 6: Generate report
+# =========================================================================
+echo ""
+echo "=========================================================================="
+echo "Mutation Testing Report"
+echo "=========================================================================="
+echo ""
+echo "Score: ${MUTATION_SCORE}% (Target: $MIN_ACCEPTABLE_SCORE%+)"
+echo ""
+
+if (( $(echo "$MUTATION_SCORE < $MIN_ACCEPTABLE_SCORE" | bc -l 2>/dev/null || echo 1) )); then
+  log_warning "Mutation score below target ($MIN_ACCEPTABLE_SCORE%)"
+  echo ""
+  echo "Improvement recommendations:"
+  echo "  1. Review killed vs survived mutations"
+  echo "  2. Add more specific assertions to tests"
+  echo "  3. Increase test coverage for critical code paths"
+  echo "  4. Test boundary conditions and edge cases"
+else
+  log_pass "Mutation score meets target ($MIN_ACCEPTABLE_SCORE%+)"
+fi
+
+echo ""
+
+# =========================================================================
+# Step 7: Generate badge
+# =========================================================================
+echo "Generating mutation score badge..."
+
+# Determine badge color based on score
+if (( $(echo "$MUTATION_SCORE >= 90" | bc -l 2>/dev/null || echo 0) )); then
+  BADGE_COLOR="green"
+elif (( $(echo "$MUTATION_SCORE >= $MIN_ACCEPTABLE_SCORE" | bc -l 2>/dev/null || echo 0) )); then
+  BADGE_COLOR="yellow"
+else
+  BADGE_COLOR="red"
+fi
+
+# Create badge markdown
+BADGE_URL="https://img.shields.io/badge/mutation--score-${MUTATION_SCORE}%25-${BADGE_COLOR}"
+BADGE_MARKDOWN="[![Mutation Score](${BADGE_URL})](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+
+mkdir -p "$METRICS_DIR"
+echo "$BADGE_MARKDOWN" > "$METRICS_DIR/badge.md"
+
+log_pass "Badge generated in $METRICS_DIR/badge.md"
+
+# =========================================================================
+# Step 8: Save detailed report
+# =========================================================================
+echo ""
+echo "Saving detailed report..."
+
 {
-  "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
-  "report_file": "${REPORT_FILE}",
-  "overall": {
-    "mutation_score": ${mutation_score},
-    "total_mutants": ${total_mutants},
-    "killed": ${killed_mutants},
-    "survived": ${survived_mutants},
-    "timeout": ${timeout_mutants},
-    "no_coverage": ${no_coverage_mutants},
-    "ignored": ${ignored_mutants},
-    "runtime_errors": ${runtime_errors},
-    "compile_errors": ${compile_errors}
-  },
-  "per_file": $(jq '[.files[] | {
-    file: .source,
-    mutation_score: (.mutants |
-      if length > 0 then
-        (([.[] | select(.status == "Killed" or .status == "Timeout")] | length) * 100.0 /
-         ([.[] | select(.status != "NoCoverage" and .status != "Ignored")] | length))
-      else 0 end),
-    total: (.mutants | length),
-    killed: ([.mutants[] | select(.status == "Killed")] | length),
-    survived: ([.mutants[] | select(.status == "Survived")] | length),
-    no_coverage: ([.mutants[] | select(.status == "NoCoverage")] | length)
-  }]' "${REPORT_FILE}" 2>/dev/null || echo "[]")
-}
-EOF
+  echo "# Mutation Testing Report"
+  echo ""
+  echo "## Current Score"
+  echo ""
+  echo "- **Mutation Score**: ${MUTATION_SCORE}%"
+  echo "- **Target**: ${MIN_ACCEPTABLE_SCORE}%+"
+  echo "- **Build**: #$BUILD_NUMBER"
+  echo "- **Commit**: $COMMIT_SHA"
+  echo "- **Branch**: $BRANCH"
+  echo "- **Timestamp**: $TIMESTAMP"
+  echo ""
 
-    log_success "Created metrics file: ${METRICS_FILE}"
-
-    # Create human-readable summary
-    cat > "${SUMMARY_FILE}" <<EOF
-Mutation Testing Metrics Summary
-=================================
-Timestamp: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
-Report: ${REPORT_FILE}
-
-Overall Metrics:
-  Mutation Score: ${mutation_score}%
-  Total Mutants: ${total_mutants}
-  Killed: ${killed_mutants}
-  Survived: ${survived_mutants}
-  Timeout: ${timeout_mutants}
-  No Coverage: ${no_coverage_mutants}
-  Ignored: ${ignored_mutants}
-  Runtime Errors: ${runtime_errors}
-  Compile Errors: ${compile_errors}
-
-Status:
-EOF
-
-    # Validate mutation_score is a valid number before awk comparisons
-    if ! [[ "${mutation_score}" =~ ^[0-9]+(\.[0-9]+)?$ ]]; then
-        log_warning "Invalid mutation_score value: '${mutation_score}' - defaulting to 0"
-        mutation_score="0"
-    fi
-
-    # Add status based on mutation score
-    if awk -v score="${mutation_score}" 'BEGIN { exit !(score >= 85) }'; then
-        echo "  ✓ EXCELLENT - Mutation score meets high threshold" >> "${SUMMARY_FILE}"
-    elif awk -v score="${mutation_score}" 'BEGIN { exit !(score >= 70) }'; then
-        echo "  ⚠ ACCEPTABLE - Mutation score meets minimum threshold" >> "${SUMMARY_FILE}"
-    else
-        echo "  ✗ NEEDS IMPROVEMENT - Mutation score below minimum threshold" >> "${SUMMARY_FILE}"
-    fi
-
-    log_success "Created summary file: ${SUMMARY_FILE}"
-
-    # Print summary to console
+  if [ -n "$PREV_SCORE" ]; then
+    echo "## Comparison to Previous Build"
     echo ""
-    log_info "Mutation Testing Summary:"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo -e "  Mutation Score: ${GREEN}${mutation_score}%${NC}"
-    echo "  Total Mutants: ${total_mutants}"
-    echo "  Killed: ${killed_mutants}"
-    echo "  Survived: ${survived_mutants}"
-    echo "  No Coverage: ${no_coverage_mutants}"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "- **Previous**: ${PREV_SCORE}%"
+    echo "- **Current**: ${MUTATION_SCORE}%"
+    echo "- **Change**: ${SCORE_CHANGE:+${SCORE_CHANGE:0:1}}${SCORE_CHANGE}%"
     echo ""
+  fi
 
-    log_success "Mutation metrics tracking completed successfully"
-}
+  echo "## Score Status"
+  echo ""
+  if (( $(echo "$MUTATION_SCORE >= 90" | bc -l 2>/dev/null || echo 0) )); then
+    echo "✅ **Excellent** - Mutation score is very high, tests are comprehensive"
+  elif (( $(echo "$MUTATION_SCORE >= $MIN_ACCEPTABLE_SCORE" | bc -l 2>/dev/null || echo 0) )); then
+    echo "⚠️ **Acceptable** - Mutation score meets minimum target, room for improvement"
+  else
+    echo "❌ **Below Target** - Mutation score below minimum, tests need strengthening"
+  fi
+  echo ""
 
-# Entry point
-main() {
-    # Check if jq is installed
-    if ! command -v jq &> /dev/null; then
-        log_error "jq is not installed. Please install jq to parse JSON reports."
-        log_info "On Ubuntu/Debian: sudo apt-get install jq"
-        log_info "On macOS: brew install jq"
-        exit 0  # Exit gracefully to not break CI/CD
-    fi
+  echo "## Full Report"
+  echo ""
+  echo "[View full mutation report in artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+  echo ""
+} > "$METRICS_DIR/latest-report.md"
 
+log_pass "Report saved to $METRICS_DIR/latest-report.md"
 
-    extract_metrics
-}
+echo ""
+echo "=========================================================================="
+echo "✓ Mutation tracking complete"
+echo "=========================================================================="
 
-# Run main function
-main "$@"
-
+exit 0
