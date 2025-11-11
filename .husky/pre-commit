@@ -1,6 +1,3 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
 # Set environment variables for the quality check script
 export CLAUDE_PROJECT_DIR="$(pwd)"
 export CLAUDE_FILE_PATHS="$(git diff --cached --name-only | tr '\n' ' ')"

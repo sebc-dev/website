@@ -262,6 +262,7 @@ jobs:
         id: worker-url
         env:
           CLOUDFLARE_WORKER_NAME: ${{ secrets.CLOUDFLARE_WORKER_NAME }}
+          CLOUDFLARE_ACCOUNT_SUBDOMAIN: ${{ secrets.CLOUDFLARE_ACCOUNT_SUBDOMAIN || 'chauveau-sebastien' }}
         run: |
           bash scripts/build-worker-url.sh
 
