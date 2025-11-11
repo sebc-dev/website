@@ -9,3 +9,4 @@ export SKIP_TYPESCRIPT=true  # TypeScript validation runs in validation.yml CI j
 
 # Run the comprehensive quality check script
 bash .claude/quality-system/hooks/quality-check.sh
+
