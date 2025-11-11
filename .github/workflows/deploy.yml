@@ -231,9 +231,7 @@ jobs:
 
           echo ""
           echo "📝 Applying D1 migrations..."
-          wrangler d1 migrations apply DB --remote --skip-migrations-already-applied
-
-          if [ $? -ne 0 ]; then
+          if ! wrangler d1 migrations apply DB --remote --skip-migrations-already-applied; then
             echo "❌ ERROR: D1 migrations failed"
             echo "This indicates a schema version incompatibility."
             echo "The deployment has been aborted to prevent data corruption."
