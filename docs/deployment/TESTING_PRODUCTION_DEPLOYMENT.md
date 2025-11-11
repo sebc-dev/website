@@ -5,7 +5,6 @@ This guide explains how to test the production deployment workflow with GitHub E
 ## Overview
 
 The production deployment workflow now includes:
-
 - **Manual approval required** before deployment proceeds
 - **Environment-specific secrets** (CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_WORKER_NAME)
 - **GitHub Environment tracking** for audit trail
@@ -32,7 +31,6 @@ This test verifies that manual deployments require approval.
 #### Steps:
 
 1. **Navigate to GitHub Actions**
-
    ```
    https://github.com/sebc-dev/website/actions/workflows/deploy.yml
    ```
@@ -92,7 +90,6 @@ This test verifies automatic deployment when quality checks pass.
 #### Steps:
 
 1. **Push code to main or develop branch**
-
    ```bash
    git checkout main
    git merge dev
@@ -113,7 +110,6 @@ This test verifies automatic deployment when quality checks pass.
    - Verify deployment completes
 
 #### Expected Result:
-
 - ✅ Quality checks pass
 - ✅ Deploy workflow triggers automatically
 - ✅ Approval required (not bypassed)
@@ -169,17 +165,14 @@ If you have team members, test multi-reviewer approval.
 ### Issue: Workflow doesn't pause for approval
 
 **Symptoms:**
-
 - Deployment proceeds immediately without approval prompt
 
 **Possible Causes:**
-
 1. Environment name mismatch (`environment: production` in workflow doesn't match GitHub Environment name)
 2. No required reviewers configured in environment
 3. Workflow triggered by a bot or automated process (GitHub Actions bots may bypass environment protection)
 
 **Solution:**
-
 ```bash
 # Verify environment name in workflow
 cat .github/workflows/deploy.yml | grep "environment:"
@@ -194,18 +187,15 @@ cat .github/workflows/deploy.yml | grep "environment:"
 ### Issue: Secrets not available during deployment
 
 **Symptoms:**
-
 - Deployment fails with "CLOUDFLARE_API_TOKEN is not set"
 - Error: "Missing required secret"
 
 **Possible Causes:**
-
 1. Secrets configured in repository instead of environment
 2. Environment name mismatch
 3. Secrets not added to production environment
 
 **Solution:**
-
 ```bash
 # Verify secrets location
 # Settings → Environments → production → Environment secrets
@@ -219,18 +209,15 @@ cat .github/workflows/deploy.yml | grep "environment:"
 ### Issue: Health check fails after deployment
 
 **Symptoms:**
-
 - Deployment succeeds but verify-deployment job fails
 - HTTP 404 or 500 error from worker URL
 
 **Possible Causes:**
-
 1. Worker build failed (syntax error, missing dependencies)
 2. Worker URL not configured or incorrect
 3. Cloudflare propagation delay
 
 **Solution:**
-
 ```bash
 # Check Cloudflare Workers Dashboard
 # https://dash.cloudflare.com/ → Workers → [Worker Name] → Logs
