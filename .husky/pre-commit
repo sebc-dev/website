@@ -5,6 +5,7 @@ export CLAUDE_FILE_PATHS="$(git diff --cached --name-only | tr '\n' ' ')"
 # Disable slow checks in pre-commit (run in CI/pre-push instead)
 export SKIP_TESTS=true
 export SKIP_PACKAGE_VALIDATION=true
+export SKIP_TYPESCRIPT=true  # TypeScript validation runs in validation.yml CI job
 
 # Run the comprehensive quality check script
 bash .claude/quality-system/hooks/quality-check.sh
