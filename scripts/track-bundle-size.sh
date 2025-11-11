@@ -68,7 +68,7 @@ calculate_percent_change() {
   if [ "$old" -eq 0 ]; then
     echo 0
   else
-    echo "$((($new - $old) * 100 / $old))"
+    echo $(((new - old) * 100 / old))
   fi
 }
 
