@@ -75,7 +75,7 @@ echo "Checking OpenNext output directory..."
 
 if [ ! -d "$OPEN_NEXT_DIR" ]; then
   log_error "OpenNext build directory not found: $OPEN_NEXT_DIR"
-  echo "  → Run 'npx @opennextjs/cloudflare build' to generate OpenNext output"
+  log_info "Run 'npx @opennextjs/cloudflare build' to generate OpenNext output"
   exit 1
 fi
 
@@ -102,7 +102,7 @@ echo "Checking Worker bundle..."
 WORKER_FILE="$OPEN_NEXT_DIR/worker.js"
 if [ ! -f "$WORKER_FILE" ]; then
   log_error "Worker entry point not found: $WORKER_FILE"
-  echo "  → OpenNext adapter must generate worker.js"
+  log_info "OpenNext adapter must generate worker.js"
   exit 1
 fi
 
@@ -117,28 +117,28 @@ echo "Checking Worker bundle size (Cloudflare limit: 1MB)..."
 WORKER_SIZE=$(stat -f%z "$WORKER_FILE" 2>/dev/null || stat -c%s "$WORKER_FILE" 2>/dev/null || echo 0)
 WORKER_SIZE_FORMATTED=$(format_size "$WORKER_SIZE")
 
-echo "  Worker size: $WORKER_SIZE_FORMATTED"
+log_info "Worker size: $WORKER_SIZE_FORMATTED"
 
 if [ "$WORKER_SIZE" -gt "$MAX_WORKER_SIZE" ]; then
   log_error "Worker bundle exceeds Cloudflare limit (1MB): $WORKER_SIZE_FORMATTED"
-  echo "  → Current size: $WORKER_SIZE_FORMATTED"
-  echo "  → Max allowed: 1MB"
+  log_info "Current size: $WORKER_SIZE_FORMATTED"
+  log_info "Max allowed: 1MB"
   echo ""
-  echo "  Solutions:"
-  echo "  1. Enable tree-shaking in Next.js configuration"
-  echo "  2. Reduce dynamic imports and large dependencies"
-  echo "  3. Use code splitting and lazy loading"
-  echo "  4. Profile bundle with: npx webpack-bundle-analyzer"
+  log_info "Solutions:"
+  log_info "1. Enable tree-shaking in Next.js configuration"
+  log_info "2. Reduce dynamic imports and large dependencies"
+  log_info "3. Use code splitting and lazy loading"
+  log_info "4. Profile bundle with: npx webpack-bundle-analyzer"
   exit 1
 elif [ "$WORKER_SIZE" -gt "$WARN_WORKER_SIZE" ]; then
   log_warning "Worker bundle approaching Cloudflare limit: $WORKER_SIZE_FORMATTED"
-  echo "  → Current size: $WORKER_SIZE_FORMATTED (80% of 1MB limit)"
-  echo "  → Recommended: Keep below 800KB for safety margin"
+  log_info "Current size: $WORKER_SIZE_FORMATTED (80% of 1MB limit)"
+  log_info "Recommended: Keep below 800KB for safety margin"
   echo ""
-  echo "  Monitor bundle growth and consider optimization:"
-  echo "  1. Check for unused dependencies"
-  echo "  2. Profile with bundle analyzer"
-  echo "  3. Use dynamic imports for heavy features"
+  log_info "Monitor bundle growth and consider optimization:"
+  log_info "1. Check for unused dependencies"
+  log_info "2. Profile with bundle analyzer"
+  log_info "3. Use dynamic imports for heavy features"
 else
   log_pass "Worker bundle size OK: $WORKER_SIZE_FORMATTED"
 fi
@@ -153,7 +153,8 @@ ASSETS_COUNT=$(find "$OPEN_NEXT_DIR/assets" -type f 2>/dev/null | wc -l || echo 
 ASSETS_SIZE=$(du -sh "$OPEN_NEXT_DIR/assets" 2>/dev/null | cut -f1 || echo "0B")
 
 if [ "$ASSETS_COUNT" -gt 0 ]; then
-  log_pass "Assets generated: $ASSETS_COUNT files ($ASSETS_SIZE)"
+  log_pass "Assets generated: $ASSETS_COUNT files"
+  log_info "Total assets size: $ASSETS_SIZE"
 else
   log_warning "No assets generated - verify Next.js build produces static files"
 fi
@@ -168,7 +169,7 @@ if [ -f "wrangler.jsonc" ] || [ -f "wrangler.toml" ]; then
   log_pass "Wrangler configuration found"
 else
   log_error "Wrangler configuration file not found (wrangler.jsonc or wrangler.toml)"
-  echo "  → Required for deployment to Cloudflare Workers"
+  log_info "Required for deployment to Cloudflare Workers"
   exit 1
 fi
 
