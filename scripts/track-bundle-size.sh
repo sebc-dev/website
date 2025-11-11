@@ -93,15 +93,34 @@ if [ -z "$MAIN_BUNDLE" ] && [ -z "$APP_BUNDLE" ]; then
   exit 1
 fi
 
-# Get total static size
-STATIC_SIZE=$(du -sb "$NEXT_DIR/static" 2>/dev/null | cut -f1 || echo 0)
+# Check if .next directory exists before measuring
+if [ ! -d "$NEXT_DIR" ]; then
+  log_error "Next.js build directory not found: $NEXT_DIR"
+  echo "  → Ensure 'pnpm build' completed successfully"
+  exit 1
+fi
+
+# Get total static size (with existence check)
+if [ -d "$NEXT_DIR/static" ]; then
+  STATIC_SIZE=$(du -sb "$NEXT_DIR/static" 2>/dev/null | cut -f1 || echo 0)
+else
+  log_warning "Static directory not found: $NEXT_DIR/static"
+  STATIC_SIZE=0
+fi
 STATIC_SIZE_FORMATTED=$(format_size "$STATIC_SIZE")
 
-# Get Worker bundle size
+# Check if Worker file exists before measuring
+if [ ! -f "$OPEN_NEXT_DIR/worker/index.js" ]; then
+  log_error "OpenNext worker bundle not found: $OPEN_NEXT_DIR/worker/index.js"
+  echo "  → Ensure 'npx @opennextjs/cloudflare build' completed successfully"
+  exit 1
+fi
+
+# Get Worker bundle size (after existence check)
 WORKER_SIZE=$(stat -f%z "$OPEN_NEXT_DIR/worker/index.js" 2>/dev/null || stat -c%s "$OPEN_NEXT_DIR/worker/index.js" 2>/dev/null || echo 0)
 WORKER_SIZE_FORMATTED=$(format_size "$WORKER_SIZE")
 
-# Get total build size
+# Get total build size (after existence check for .next)
 TOTAL_SIZE=$(du -sb "$NEXT_DIR" 2>/dev/null | cut -f1 || echo 0)
 TOTAL_SIZE_FORMATTED=$(format_size "$TOTAL_SIZE")
 
