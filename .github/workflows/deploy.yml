@@ -122,7 +122,13 @@ jobs:
   # 4. Build the application (OpenNext adapter for Cloudflare Workers)
   # 5. Deploy to Cloudflare Workers using wrangler-action
   #
-  # Security: Uses GitHub secrets for API token and account ID
+  # Environment Protection:
+  # - Uses GitHub Environment "production" with required reviewers
+  # - Manual approval required before deployment proceeds
+  # - Environment-specific secrets (CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID)
+  # - Secrets are isolated per environment for security
+  #
+  # Security: Uses environment secrets with approval gate
   # Timeout: 10 minutes to prevent hanging deployments
   #
   deploy:
@@ -133,6 +139,7 @@ jobs:
       contents: read
     needs: check-trigger
     if: needs.check-trigger.outputs.should-deploy == 'true'
+    environment: production
 
     steps:
       # ========================================================================
@@ -596,8 +603,8 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: context.sha,
-              environment: 'workers-production',
-              description: 'Cloudflare Workers Deployment',
+              environment: 'production',
+              description: 'Cloudflare Workers Production Deployment',
               required_contexts: [],
               auto_merge: false
             });
