@@ -241,4 +241,11 @@ echo "==========================================================================
 
 log_pass "Report saved to $METRICS_DIR/latest-report.md"
 
-exit 0
+# =========================================================================
+# Step 6: Exit with appropriate status code
+# =========================================================================
+if [ "${GROWTH_WARNING:-0}" -eq 1 ]; then
+  exit 2
+else
+  exit 0
+fi
