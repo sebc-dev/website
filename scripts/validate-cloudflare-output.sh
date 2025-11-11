@@ -235,7 +235,7 @@ if [ $VALIDATION_FAILED -eq 0 ] && [ $VALIDATION_WARNING -eq 0 ]; then
 elif [ $VALIDATION_FAILED -eq 0 ]; then
   echo -e "${YELLOW}⚠ Cloudflare output validations passed with warnings${NC}"
   echo "=========================================================================="
-  exit 0
+  exit 2
 else
   echo -e "${RED}✗ Cloudflare output validation failed${NC}"
   echo "=========================================================================="
