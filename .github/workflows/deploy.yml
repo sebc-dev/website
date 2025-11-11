@@ -191,6 +191,15 @@ jobs:
         run: npx @opennextjs/cloudflare build
 
       # ========================================================================
+      # Step 5b1: Ensure Wrangler CLI is Available
+      # ========================================================================
+      # Install Wrangler CLI from node_modules to ensure it's available for migrations
+      # Wrangler is installed via pnpm install but needs to be on PATH for direct CLI calls
+      #
+      - name: Install Wrangler CLI
+        run: pnpm install -g wrangler@4.45.4
+
+      # ========================================================================
       # Step 5c: Apply D1 Database Migrations
       # ========================================================================
       # Apply pending database migrations to Cloudflare D1 before deployment
