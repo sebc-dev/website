@@ -26,9 +26,12 @@
     "low": 70,
     "break": 70
   },
-  "reporters": ["html", "clear-text", "progress"],
+  "reporters": ["html", "clear-text", "progress", "json"],
   "htmlReporter": {
     "fileName": "reports/mutation/html/index.html"
+  },
+  "jsonReporter": {
+    "fileName": "reports/mutation/stryker-report.json"
   },
   "concurrency": 4,
   "timeoutMS": 60000,
