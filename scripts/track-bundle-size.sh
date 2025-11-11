@@ -110,14 +110,14 @@ fi
 STATIC_SIZE_FORMATTED=$(format_size "$STATIC_SIZE")
 
 # Check if Worker file exists before measuring
-if [ ! -f "$OPEN_NEXT_DIR/worker/index.js" ]; then
-  log_error "OpenNext worker bundle not found: $OPEN_NEXT_DIR/worker/index.js"
+if [ ! -f "$OPEN_NEXT_DIR/worker.js" ]; then
+  log_error "OpenNext worker bundle not found: $OPEN_NEXT_DIR/worker.js"
   echo "  → Ensure 'npx @opennextjs/cloudflare build' completed successfully"
   exit 1
 fi
 
 # Get Worker bundle size (after existence check)
-WORKER_SIZE=$(stat -f%z "$OPEN_NEXT_DIR/worker/index.js" 2>/dev/null || stat -c%s "$OPEN_NEXT_DIR/worker/index.js" 2>/dev/null || echo 0)
+WORKER_SIZE=$(stat -f%z "$OPEN_NEXT_DIR/worker.js" 2>/dev/null || stat -c%s "$OPEN_NEXT_DIR/worker.js" 2>/dev/null || echo 0)
 WORKER_SIZE_FORMATTED=$(format_size "$WORKER_SIZE")
 
 # Get total build size (after existence check for .next)
