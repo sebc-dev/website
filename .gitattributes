@@ -1,2 +1,3 @@
-# Ensure Husky hook scripts use Unix line endings
+# Ensure all shell scripts use Unix line endings
 .husky/** eol=lf
+scripts/** eol=lf
