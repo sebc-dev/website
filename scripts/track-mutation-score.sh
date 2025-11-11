@@ -75,7 +75,21 @@ extract_metrics() {
     local runtime_errors
     local compile_errors
 
-    mutation_score=$(jq -r '.thresholds.high // 0' "${REPORT_FILE}")
+    # Try to read mutation score from .summary.score first, then compute from mutants
+    mutation_score=$(jq -r '
+        .summary.score // empty
+    ' "${REPORT_FILE}" 2>/dev/null || echo "")
+
+    # If summary.score is not present, compute from mutants array
+    if [ -z "${mutation_score}" ]; then
+        mutation_score=$(jq -r '
+            ([.files[].mutants[] | select(.status == "Killed" or .status == "Timeout")] | length) as $killed |
+            ([.files[].mutants[]] | length) as $total |
+            ([.files[].mutants[] | select(.status == "NoCoverage" or .status == "Ignored")] | length) as $excluded |
+            ($total - $excluded) as $covered |
+            if $covered > 0 then ($killed * 100.0 / $covered) else 0 end
+        ' "${REPORT_FILE}" 2>/dev/null || echo "0")
+    fi
 
     # Try to extract from files array
     if jq -e '.files' "${REPORT_FILE}" > /dev/null 2>&1; then
@@ -88,15 +102,6 @@ extract_metrics() {
         ignored_mutants=$(jq '[.files[].mutants[] | select(.status == "Ignored")] | length' "${REPORT_FILE}")
         runtime_errors=$(jq '[.files[].mutants[] | select(.status == "RuntimeError")] | length' "${REPORT_FILE}")
         compile_errors=$(jq '[.files[].mutants[] | select(.status == "CompileError")] | length' "${REPORT_FILE}")
-
-        # Calculate mutation score if not present
-        if [ "${total_mutants}" -gt 0 ]; then
-            local detected=$((killed_mutants + timeout_mutants))
-            local covered=$((total_mutants - no_coverage_mutants - ignored_mutants))
-            if [ "${covered}" -gt 0 ]; then
-                mutation_score=$(awk "BEGIN {printf \"%.2f\", (${detected} * 100.0 / ${covered})}")
-            fi
-        fi
     else
         # Fallback: try to read from summary or other fields
         total_mutants=0
