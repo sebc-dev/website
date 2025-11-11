@@ -13,6 +13,7 @@ Complete validation checklist before marking Phase 4 and Story 0.7 as complete.
 - [ ] All documentation files exist in correct locations
 
 **Validation**:
+
 ```bash
 # Check git history for Phase 4
 git log --oneline --grep "Phase 4"
@@ -41,6 +42,7 @@ ls -la docs/specs/epics/epic_0/story_0_7/implementation/phase_4/
 - [ ] No placeholder text remaining
 
 **Validation**:
+
 ```bash
 # Check line counts
 wc -l docs/deployment/*.md
@@ -100,12 +102,13 @@ grep -r "TODO\|FIXME\|XXX\|placeholder" docs/deployment/
 ### Internal Links
 
 - [ ] Links between deployment docs work (RUNBOOK ↔ troubleshooting)
-- [ ] Links to workflow files are correct (.github/workflows/*.yml)
+- [ ] Links to workflow files are correct (.github/workflows/\*.yml)
 - [ ] Links to EPIC_TRACKING.md work
 - [ ] Links to README.md work
 - [ ] Links to Cloudflare dashboards are accurate
 
 **Validation**:
+
 ```bash
 # Extract all internal links
 grep -r "\[.*\](\.\./" docs/deployment/
@@ -121,6 +124,7 @@ grep -r "\[.*\](\.\./" docs/deployment/
 - [ ] wrangler CLI docs links accessible
 
 **Validation** (manual):
+
 - Click each external link in documentation
 - Verify page loads (HTTP 200)
 
@@ -137,6 +141,7 @@ grep -r "\[.*\](\.\./" docs/deployment/
 - [ ] Commands use correct syntax and flags
 
 **Validation**:
+
 ```bash
 # Test GitHub CLI commands from docs
 gh auth status
@@ -173,6 +178,7 @@ wrangler d1 list
 - [ ] Formatting matches existing entries
 
 **Validation**:
+
 ```bash
 # Check Story 0.7 status
 cat docs/specs/epics/epic_0/EPIC_TRACKING.md | grep "Story 0.7"
@@ -194,6 +200,7 @@ cat docs/specs/epics/epic_0/EPIC_TRACKING.md | grep "Story 0.7"
 - [ ] Language matches README tone
 
 **Validation**:
+
 ```bash
 # Check Deployment section exists
 cat README.md | grep -i deployment
@@ -217,6 +224,7 @@ cat README.md | grep "docs/deployment"
 - [ ] No errors in production logs
 
 **Validation**:
+
 ```bash
 # Trigger deployment (push to main or manual)
 gh workflow run deploy.yml
@@ -239,6 +247,7 @@ gh run list --limit 1 --json conclusion --jq '.[0].conclusion'
 - [ ] Site remains accessible after manual deployment
 
 **Validation**:
+
 ```bash
 # Trigger manual deployment
 gh workflow run deploy.yml

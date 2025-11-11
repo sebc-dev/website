@@ -54,6 +54,7 @@ Procedures           Steps                 Reference               Updates
 - Self-contained reference for all deployment scenarios
 
 **Technical Validation**:
+
 ```bash
 # Verify file created
 cat docs/deployment/RUNBOOK.md
@@ -102,6 +103,7 @@ cat docs/deployment/RUNBOOK.md
 - Critical security documentation deserves dedicated commit
 
 **Technical Validation**:
+
 ```bash
 # Verify file created
 cat docs/deployment/secrets-setup.md
@@ -166,6 +168,7 @@ gh api repos/:owner/:repo/environments/production
 - Living document that can be updated with new issues
 
 **Technical Validation**:
+
 ```bash
 # Verify file created
 cat docs/deployment/troubleshooting.md
@@ -218,6 +221,7 @@ gh run view [run-id] --log-failed
 - Clear signal that Story 0.7 is done
 
 **Technical Validation**:
+
 ```bash
 # Verify EPIC_TRACKING.md updated
 cat docs/specs/epics/epic_0/EPIC_TRACKING.md | grep "Story 0.7"
@@ -261,6 +265,7 @@ cat README.md | grep "docs/deployment"
 ### Validation at Each Step
 
 After each commit:
+
 ```bash
 # Verify documentation file exists and is well-formatted
 cat docs/deployment/[file].md
@@ -278,13 +283,13 @@ All documentation should be accurate and actionable before committing.
 
 ## 📊 Commit Metrics
 
-| Commit     | Files | Lines | Implementation | Self-Review | Total     |
-| ---------- | ----- | ----- | -------------- | ----------- | --------- |
-| 1. Runbook | 1     | ~200  | 60-75 min      | 15-20 min   | 75-95 min |
-| 2. Secrets | 1     | ~150  | 45-60 min      | 10-15 min   | 55-75 min |
-| 3. Trouble | 1     | ~150  | 45-60 min      | 10-15 min   | 55-75 min |
-| 4. Tracking| 2     | ~150  | 30-45 min      | 10-15 min   | 40-60 min |
-| **TOTAL**  | **5** | **~650** | **3-3.5h**  | **45min-1h** | **3.5-4.5h** |
+| Commit      | Files | Lines    | Implementation | Self-Review  | Total        |
+| ----------- | ----- | -------- | -------------- | ------------ | ------------ |
+| 1. Runbook  | 1     | ~200     | 60-75 min      | 15-20 min    | 75-95 min    |
+| 2. Secrets  | 1     | ~150     | 45-60 min      | 10-15 min    | 55-75 min    |
+| 3. Trouble  | 1     | ~150     | 45-60 min      | 10-15 min    | 55-75 min    |
+| 4. Tracking | 2     | ~150     | 30-45 min      | 10-15 min    | 40-60 min    |
+| **TOTAL**   | **5** | **~650** | **3-3.5h**     | **45min-1h** | **3.5-4.5h** |
 
 ---
 
@@ -311,6 +316,7 @@ All documentation should be accurate and actionable before committing.
 ### Commit Messages
 
 Format:
+
 ```
 📝 docs(deploy): [short description]
 
@@ -323,6 +329,7 @@ Story 0.7: CI/CD GitHub Actions
 ```
 
 Examples:
+
 - `📝 docs(deploy): add comprehensive deployment runbook`
 - `📝 docs(deploy): add secrets setup guide for Cloudflare and GitHub`
 - `📝 docs(deploy): add troubleshooting guide for common deployment issues`
