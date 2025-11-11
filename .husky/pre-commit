@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Set environment variables for the quality check script
+export CLAUDE_PROJECT_DIR="$(pwd)"
+export CLAUDE_FILE_PATHS="$(git diff --cached --name-only | tr '\n' ' ')"
+
+# Disable slow checks in pre-commit (run in CI/pre-push instead)
+export SKIP_TESTS=true
+export SKIP_PACKAGE_VALIDATION=true
+
+# Run the comprehensive quality check script
+bash .claude/quality-system/hooks/quality-check.sh

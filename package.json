@@ -16,7 +16,11 @@
     "test:mutation": "stryker run",
     "test:mutation:critical": "stryker run stryker.critical.config.json",
     "quality:check": "pnpm format:check && pnpm lint && pnpm arch:validate",
+    "validate:env": "node scripts/validate-env-vars.cjs",
+    "validate:packages": "node scripts/validate-package-versions.cjs",
+    "validate:all": "pnpm validate:env && pnpm validate:packages && pnpm tsc --noEmit",
     "test": "vitest",
+    "test:run": "vitest run",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "test:watch": "vitest --watch",
@@ -34,7 +38,8 @@
     "db:seed:articles": "wrangler d1 execute DB --local --file=./drizzle/seeds/sample-articles.sql",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
-    "cf-typegen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts"
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts",
+    "prepare": "husky"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.3.0",
@@ -84,7 +89,9 @@
     "eslint-plugin-tsdoc": "^0.3.0",
     "globals": "^15.9.0",
     "happy-dom": "^20.0.10",
+    "husky": "^9.1.7",
     "jsdom": "^27.1.0",
+    "lint-staged": "^16.2.6",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.6",
     "tailwindcss": "^4",
@@ -93,5 +100,17 @@
     "typescript-eslint": "^8.2.0",
     "vitest": "^4.0.7",
     "wrangler": "^4.45.4"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ],
+    "*.{css,scss}": [
+      "prettier --write"
+    ]
   }
 }

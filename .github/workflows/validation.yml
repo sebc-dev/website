@@ -1,0 +1,192 @@
+name: Configuration Validation
+
+on:
+  pull_request:
+    branches: [main, dev, develop]
+  push:
+    branches: [main, dev, develop]
+  workflow_dispatch: # Allow manual trigger
+
+# Permissions minimales
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ==========================================================================
+  # Package Version Validation
+  # ==========================================================================
+  # Validates that all package versions in package.json exist on npm registry
+  # Catches typos and non-existent versions early
+  # ==========================================================================
+  validate-packages:
+    name: Validate Package Versions
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run package validation
+        run: node scripts/validate-package-versions.cjs
+
+  # ==========================================================================
+  # Environment Variables Validation
+  # ==========================================================================
+  # Validates consistency between .env.example, GitHub workflows, and code
+  # Ensures all secrets are documented and used correctly
+  # ==========================================================================
+  validate-env-vars:
+    name: Validate Environment Variables
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run environment variables validation
+        run: node scripts/validate-env-vars.cjs
+
+  # ==========================================================================
+  # Dependency Placement Check
+  # ==========================================================================
+  # Ensures packages are in the correct section (dependencies vs devDependencies)
+  # Prevents runtime errors from missing production dependencies
+  # ==========================================================================
+  validate-dependency-placement:
+    name: Validate Dependency Placement
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Check for runtime imports in devDependencies
+        run: |
+          echo "🔍 Checking for runtime imports from devDependencies..."
+
+          # List of files to check for imports (runtime code)
+          RUNTIME_FILES=$(find app lib src -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.jsx" \) 2>/dev/null || true)
+
+          if [ -z "$RUNTIME_FILES" ]; then
+            echo "✅ No runtime files found to check"
+            exit 0
+          fi
+
+          # Extract devDependencies from package.json
+          DEV_DEPS=$(node -pe "Object.keys(require('./package.json').devDependencies || {}).join('|')" || echo "")
+
+          if [ -z "$DEV_DEPS" ]; then
+            echo "✅ No devDependencies to check"
+            exit 0
+          fi
+
+          # Check for imports of devDependencies in runtime code
+          ISSUES_FOUND=0
+
+          for file in $RUNTIME_FILES; do
+            # Check for import statements
+            MATCHES=$(grep -nE "from ['\"]($DEV_DEPS)['\"]|require\(['\"]($DEV_DEPS)['\"]\)" "$file" || true)
+
+            if [ -n "$MATCHES" ]; then
+              echo "❌ Runtime import of devDependency in $file:"
+              echo "$MATCHES"
+              ISSUES_FOUND=1
+            fi
+          done
+
+          if [ $ISSUES_FOUND -eq 1 ]; then
+            echo ""
+            echo "❌ ERROR: Runtime code imports devDependencies"
+            echo "💡 Move these packages to 'dependencies' in package.json"
+            exit 1
+          fi
+
+          echo "✅ All dependency placements are correct"
+
+  # ==========================================================================
+  # TypeScript Configuration Check
+  # ==========================================================================
+  # Validates TypeScript compiles without errors
+  # Catches type errors before they reach production
+  # ==========================================================================
+  validate-typescript:
+    name: Validate TypeScript
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run TypeScript compiler
+        run: pnpm tsc --noEmit
+
+  # ==========================================================================
+  # Summary Job
+  # ==========================================================================
+  # Aggregates all validation results
+  # Provides a single status check for branch protection
+  # ==========================================================================
+  validation-summary:
+    name: Validation Summary
+    runs-on: ubuntu-latest
+    needs:
+      - validate-packages
+      - validate-env-vars
+      - validate-dependency-placement
+      - validate-typescript
+    if: always()
+
+    steps:
+      - name: Check validation results
+        run: |
+          echo "📊 Validation Results:"
+          echo "  Package Versions: ${{ needs.validate-packages.result }}"
+          echo "  Environment Variables: ${{ needs.validate-env-vars.result }}"
+          echo "  Dependency Placement: ${{ needs.validate-dependency-placement.result }}"
+          echo "  TypeScript: ${{ needs.validate-typescript.result }}"
+
+          if [ "${{ needs.validate-packages.result }}" != "success" ] || \
+             [ "${{ needs.validate-env-vars.result }}" != "success" ] || \
+             [ "${{ needs.validate-dependency-placement.result }}" != "success" ] || \
+             [ "${{ needs.validate-typescript.result }}" != "success" ]; then
+            echo ""
+            echo "❌ Some validations failed"
+            exit 1
+          fi
+
+          echo ""
+          echo "✅ All validations passed"
