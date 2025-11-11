@@ -83,18 +83,18 @@ echo ""
 echo "Collecting bundle metrics..."
 
 # Find main bundle (webpack chunk)
-MAIN_BUNDLE=$(find "$NEXT_DIR/.next/static/chunks" -name "main-*.js" 2>/dev/null | head -1 || echo "")
-APP_BUNDLE=$(find "$NEXT_DIR/.next/static/chunks" -name "app-*.js" 2>/dev/null | head -1 || echo "")
+MAIN_BUNDLE=$(find "$NEXT_DIR/static/chunks" -name "main-*.js" 2>/dev/null | head -1 || echo "")
+APP_BUNDLE=$(find "$NEXT_DIR/static/chunks" -name "app-*.js" 2>/dev/null | head -1 || echo "")
 
 if [ -z "$MAIN_BUNDLE" ] && [ -z "$APP_BUNDLE" ]; then
   log_error "Could not find Next.js bundle files"
   echo "  → Ensure 'pnpm build' completed successfully"
-  echo "  → Check .next/static/chunks/ directory exists"
+  echo "  → Check .next/static/chunks directory exists and contains bundle files"
   exit 1
 fi
 
 # Get total static size
-STATIC_SIZE=$(du -sb "$NEXT_DIR/.next/static" 2>/dev/null | cut -f1 || echo 0)
+STATIC_SIZE=$(du -sb "$NEXT_DIR/static" 2>/dev/null | cut -f1 || echo 0)
 STATIC_SIZE_FORMATTED=$(format_size $STATIC_SIZE)
 
 # Get Worker bundle size
