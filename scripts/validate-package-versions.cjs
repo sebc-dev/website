@@ -32,7 +32,7 @@ const colors = {
  */
 function fetchPackageInfo(packageName) {
   return new Promise((resolve, reject) => {
-    const url = `https://registry.npmjs.org/${packageName.replace('/', '%2F')}`;
+    const url = `https://registry.npmjs.org/${encodeURIComponent(packageName)}`;
 
     https
       .get(url, (res) => {
