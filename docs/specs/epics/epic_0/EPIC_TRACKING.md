@@ -44,7 +44,7 @@ This epic contains **10 stories** as defined in the PRD:
 | 0.4   | Configurer Drizzle ORM + Cloudflare D1 | Schéma initial + migrations setup                             | ✅ COMPLETED   | 5      | 5/5                                      |
 | 0.5   | Configurer wrangler.toml avec bindings | Config de base OK, bindings D1/R2/KV/DO manquants             | 🚧 IN PROGRESS | -      | 20%                                      |
 | 0.6   | Configurer compatibility flags         | `nodejs_compat` + `compatibility_date: 2025-03-01`            | ✅ COMPLETED   | -      | ✅                                       |
-| 0.7   | Mettre en place CI/CD GitHub Actions   | Pipeline de tests, build OpenNext, migrations D1, déploiement | 🚧 IN PROGRESS | 4      | 3/4 (Phase 1 ✅, Phase 2 ✅, Phase 3 ✅) |
+| 0.7   | Mettre en place CI/CD GitHub Actions   | Pipeline de tests, build OpenNext, migrations D1, déploiement | 🚧 IN PROGRESS | 4      | 4/4 📋 (Phase 4 docs generated)          |
 | 0.8   | Configurer Cloudflare Access           | Protection routes `/admin/*` avec Zero Trust                  | 📋 NOT STARTED | -      | 0%                                       |
 | 0.9   | Configurer Cloudflare WAF              | Sécurité de base contre menaces web                           | 📋 NOT STARTED | -      | 0%                                       |
 | 0.10  | Base tests & linting                   | ESLint + Vitest (avec tests) + Playwright configurés          | ✅ COMPLETED   | -      | ✅                                       |
