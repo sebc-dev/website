@@ -198,7 +198,7 @@ jobs:
       #
       # Process:
       # 1. List pending migrations to show what will be applied
-      # 2. Apply migrations with --skip-migrations-already-applied to avoid duplicates
+      # 2. Apply migrations (Wrangler automatically skips already-applied migrations)
       # 3. Fail deployment if migrations fail (critical for data consistency)
       #
       # IMPORTANT: Migrations must complete BEFORE deployment to prevent:
@@ -222,7 +222,7 @@ jobs:
 
           echo ""
           echo "📝 Applying D1 migrations..."
-          if ! pnpm exec wrangler d1 migrations apply DB --remote --skip-migrations-already-applied; then
+          if ! pnpm exec wrangler d1 migrations apply DB --remote; then
             echo "❌ ERROR: D1 migrations failed"
             echo "This indicates a schema version incompatibility."
             echo "The deployment has been aborted to prevent data corruption."
