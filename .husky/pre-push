@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🧪 Running pre-push tests..."
+
+# Set environment variables for the quality check script
+export CLAUDE_PROJECT_DIR="$(pwd)"
+export CLAUDE_FILE_PATHS=""  # Empty for pre-push, will run all tests
+
+# Run unit tests (fast)
+echo "🔬 Running unit tests..."
+pnpm test:run || {
+  echo "❌ Unit tests failed"
+  echo "💡 Fix failing tests or use 'git push --no-verify' to skip (not recommended)"
+  exit 1
+}
+
+echo "✅ Pre-push checks passed!"

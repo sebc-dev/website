@@ -151,6 +151,42 @@ fi
 cd "$PROJECT_DIR"
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🔧 CONFIGURATION VALIDATION
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+log_section "🔧 Configuration Validation"
+
+# Vérification 0.1: Environment Variables Consistency
+run_check "Environment Variables" "node scripts/validate-env-vars.cjs" true false
+
+# Vérification 0.2: Package Versions Validity (skip in pre-commit - too slow)
+# This validation makes HTTP calls to npm registry which can take 30-60 seconds
+# It runs in CI instead (see .github/workflows/validation.yml)
+if [ "${SKIP_PACKAGE_VALIDATION:-false}" = "true" ]; then
+    log_info "Package validation skipped (too slow for pre-commit) - runs in CI instead"
+    RESULTS+=("⊘ Package Versions (skipped - runs in CI)")
+    CHECKS_SKIPPED=$((CHECKS_SKIPPED + 1))
+else
+    run_check "Package Versions" "node scripts/validate-package-versions.cjs" true false
+fi
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 🎨 CODE FORMATTING & LINTING (Staged Files Only)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Détecter si on est dans un contexte Git (pre-commit hook)
+if git rev-parse --git-dir > /dev/null 2>&1 && [ -n "$(git diff --cached --name-only)" ]; then
+    log_section "🎨 Formatting & Linting (Staged Files)"
+
+    # Vérification 0.3: lint-staged (ESLint + Prettier sur fichiers stagés)
+    run_check "Lint-staged (ESLint + Prettier)" "pnpm exec lint-staged" true true
+else
+    log_info "Not in Git pre-commit context or no staged files - skipping lint-staged"
+    RESULTS+=("⊘ Lint-staged (not applicable)")
+    CHECKS_SKIPPED=$((CHECKS_SKIPPED + 1))
+fi
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # 🔍 STATIC ANALYSIS CHECKS
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -160,10 +196,10 @@ if [ "$RUN_TS_CHECKS" = true ]; then
     # Vérification 1: TypeScript Type Check
     run_check "TypeScript Type Check" "pnpm exec tsc --noEmit" true true
 
-    # Vérification 2: ESLint
-    run_check "ESLint" "pnpm lint" false true
+    # Vérification 2: ESLint (Full codebase)
+    run_check "ESLint (Full codebase)" "pnpm lint" false true
 
-    # Vérification 3: Prettier Format Check
+    # Vérification 3: Prettier Format Check (Full codebase)
     run_check "Prettier Format Check" "pnpm format:check" false false
 else
     RESULTS+=("⊘ TypeScript Type Check (skipped)")
@@ -190,7 +226,13 @@ fi
 # 🧪 TESTS
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-if [ "$RUN_TEST_CHECKS" = true ] || [ "$RUN_TS_CHECKS" = true ]; then
+# Skip tests if SKIP_TESTS environment variable is set (e.g., in pre-commit)
+if [ "${SKIP_TESTS:-false}" = "true" ]; then
+    log_info "Tests skipped (SKIP_TESTS=true) - tests will run in pre-push hook"
+    RESULTS+=("⊘ Unit Tests (skipped - will run in pre-push)")
+    RESULTS+=("⊘ Code Coverage (skipped - will run in pre-push)")
+    CHECKS_SKIPPED=$((CHECKS_SKIPPED + 2))
+elif [ "$RUN_TEST_CHECKS" = true ] || [ "$RUN_TS_CHECKS" = true ]; then
     log_section "🧪 Tests"
 
     # Vérification 5: Tests unitaires (Vitest)

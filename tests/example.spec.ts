@@ -549,12 +549,14 @@ test.describe('HomePage - Performance', () => {
         let clsScore = 0;
         const observer = new PerformanceObserver((list) => {
           for (const entry of list.getEntries()) {
-            const layoutShiftEntry = entry as unknown as {
-              hadRecentInput?: boolean;
-              value?: number;
-            };
-            if (layoutShiftEntry.hadRecentInput) continue;
-            if (layoutShiftEntry.value) {
+            // Use native LayoutShift type from Web Performance API
+            // This provides type safety without bypassing TypeScript
+            if (entry.entryType === 'layout-shift') {
+              const layoutShiftEntry = entry as PerformanceEntry & {
+                hadRecentInput?: boolean;
+                value: number;
+              };
+              if (layoutShiftEntry.hadRecentInput) continue;
               clsScore += layoutShiftEntry.value;
             }
           }
