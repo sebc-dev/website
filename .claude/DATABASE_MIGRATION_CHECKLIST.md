@@ -14,6 +14,7 @@ This checklist ensures database migrations are safe and don't cause data loss, e
   - Plan data preservation strategy
 
 - [ ] **Test on local D1 instance first**
+
   ```bash
   wrangler d1 execute DB --local --file=drizzle/migrations/XXXX_name.sql
   ```
@@ -26,6 +27,7 @@ This checklist ensures database migrations are safe and don't cause data loss, e
 ### Data Preservation
 
 - [ ] **Backup dependent tables BEFORE modifications**
+
   ```sql
   CREATE TABLE __tmp_table_name AS SELECT * FROM table_name;
   ```
@@ -42,12 +44,12 @@ This checklist ensures database migrations are safe and don't cause data loss, e
 
 ### Migration Complexity Assessment
 
-| Risk Level | Condition | Action |
-|-----------|-----------|--------|
-| 🟢 Low | Adding new columns with default values | Direct ALTER TABLE |
-| 🟡 Medium | Modifying column types or constraints | Use CREATE+INSERT+DROP pattern |
-| 🔴 High | Restructuring tables with foreign keys | Backup all dependent tables first |
-| 🔴 Critical | Dropping tables with CASCADE references | Implement full backup/restore |
+| Risk Level  | Condition                               | Action                            |
+| ----------- | --------------------------------------- | --------------------------------- |
+| 🟢 Low      | Adding new columns with default values  | Direct ALTER TABLE                |
+| 🟡 Medium   | Modifying column types or constraints   | Use CREATE+INSERT+DROP pattern    |
+| 🔴 High     | Restructuring tables with foreign keys  | Backup all dependent tables first |
+| 🔴 Critical | Dropping tables with CASCADE references | Implement full backup/restore     |
 
 ## Common Migration Patterns
 
@@ -161,12 +163,14 @@ wrangler d1 execute DB --remote "SELECT COUNT(*) FROM article_translations;"
 If a migration fails and data is lost:
 
 1. **Check available backups**
+
    ```bash
    # List all D1 backups
    wrangler d1 backup list DB
    ```
 
 2. **Restore from backup (if available)**
+
    ```bash
    wrangler d1 restore DB <BACKUP_ID>
    ```
@@ -206,6 +210,7 @@ For each migration, use this template:
 ## Cloudflare D1 Specific Notes
 
 ### Supported Features
+
 - ✅ Foreign keys with ON DELETE/UPDATE actions
 - ✅ Indexes (regular and unique)
 - ✅ Triggers
@@ -213,12 +218,14 @@ For each migration, use this template:
 - ✅ PRAGMA statements (limited)
 
 ### Unsupported/Limited Features
+
 - ❌ PRAGMA foreign_keys=OFF/ON (foreign keys always on, can't disable)
 - ❌ Some ATTACH DATABASE operations
 - ❌ Very large migrations (>4MB)
 - ⚠️ VACUUM command (not needed, space automatically managed)
 
 ### Recommendations
+
 - Test CASCADE behavior before deploying
 - Use explicit backup/restore for complex schema changes
 - Keep individual migration files under 1MB
