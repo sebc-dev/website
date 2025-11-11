@@ -192,7 +192,7 @@ Part of Phase 3 - Commit 2/5"
             - production
     push:
       branches:
-        - main # Auto-deploy to production on main
+        - main  # Auto-deploy to production on main
   ```
 - [ ] Add `environment` field to deploy job:
   ```yaml
@@ -290,7 +290,6 @@ Part of Phase 3 - Commit 3/5"
 
 - [ ] Create `.github/workflows/deploy-staging.yml`
 - [ ] Add workflow metadata and triggers:
-
   ```yaml
   name: Deploy to Staging
 
@@ -301,7 +300,6 @@ Part of Phase 3 - Commit 3/5"
         - develop
     workflow_dispatch:
   ```
-
 - [ ] Add permissions block (minimal required)
 - [ ] Add concurrency group to cancel outdated staging deploys
 - [ ] Copy migration job from Phase 1 (or reference if reusable)
