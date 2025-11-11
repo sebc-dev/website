@@ -34,29 +34,31 @@ function fetchPackageInfo(packageName) {
   return new Promise((resolve, reject) => {
     const url = `https://registry.npmjs.org/${packageName.replace('/', '%2F')}`;
 
-    https.get(url, (res) => {
-      let data = '';
+    https
+      .get(url, (res) => {
+        let data = '';
 
-      res.on('data', (chunk) => {
-        data += chunk;
-      });
+        res.on('data', (chunk) => {
+          data += chunk;
+        });
 
-      res.on('end', () => {
-        if (res.statusCode === 200) {
-          try {
-            resolve(JSON.parse(data));
-          } catch (err) {
-            reject(new Error(`Failed to parse JSON for ${packageName}`));
+        res.on('end', () => {
+          if (res.statusCode === 200) {
+            try {
+              resolve(JSON.parse(data));
+            } catch (err) {
+              reject(new Error(`Failed to parse JSON for ${packageName}`));
+            }
+          } else if (res.statusCode === 404) {
+            resolve(null); // Package doesn't exist
+          } else {
+            reject(new Error(`HTTP ${res.statusCode} for ${packageName}`));
           }
-        } else if (res.statusCode === 404) {
-          resolve(null); // Package doesn't exist
-        } else {
-          reject(new Error(`HTTP ${res.statusCode} for ${packageName}`));
-        }
+        });
+      })
+      .on('error', (err) => {
+        reject(err);
       });
-    }).on('error', (err) => {
-      reject(err);
-    });
   });
 }
 
@@ -73,7 +75,9 @@ function parseVersionRange(versionRange) {
  */
 async function validatePackageVersion(packageName, requestedVersion) {
   try {
-    console.log(`${colors.blue}Checking${colors.reset} ${packageName}@${requestedVersion}...`);
+    console.log(
+      `${colors.blue}Checking${colors.reset} ${packageName}@${requestedVersion}...`,
+    );
 
     const packageInfo = await fetchPackageInfo(packageName);
 
@@ -125,7 +129,6 @@ async function validatePackageVersion(packageName, requestedVersion) {
       latestVersion,
       status: 'valid',
     };
-
   } catch (error) {
     return {
       package: packageName,
@@ -146,7 +149,9 @@ async function main() {
   const packageJsonPath = path.join(process.cwd(), 'package.json');
 
   if (!fs.existsSync(packageJsonPath)) {
-    console.error(`${colors.red}❌ Error: package.json not found${colors.reset}`);
+    console.error(
+      `${colors.red}❌ Error: package.json not found${colors.reset}`,
+    );
     process.exit(1);
   }
 
@@ -173,26 +178,28 @@ async function main() {
     results.push(result);
 
     // Add a small delay to avoid rate limiting
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
   }
 
   // Summarize results
   console.log(`\n${'='.repeat(70)}\n`);
   console.log(`${colors.blue}📊 Summary${colors.reset}\n`);
 
-  const notFound = results.filter(r => r.status === 'not_found');
-  const invalidVersion = results.filter(r => r.status === 'invalid_version');
-  const outdatedMajor = results.filter(r => r.status === 'outdated_major');
-  const errors = results.filter(r => r.status === 'error');
-  const valid = results.filter(r => r.status === 'valid');
+  const notFound = results.filter((r) => r.status === 'not_found');
+  const invalidVersion = results.filter((r) => r.status === 'invalid_version');
+  const outdatedMajor = results.filter((r) => r.status === 'outdated_major');
+  const errors = results.filter((r) => r.status === 'error');
+  const valid = results.filter((r) => r.status === 'valid');
 
   // Report issues
   let hasErrors = false;
 
   if (notFound.length > 0) {
     hasErrors = true;
-    console.log(`${colors.red}❌ Packages not found (${notFound.length}):${colors.reset}`);
-    notFound.forEach(r => {
+    console.log(
+      `${colors.red}❌ Packages not found (${notFound.length}):${colors.reset}`,
+    );
+    notFound.forEach((r) => {
       console.log(`   - ${r.package}@${r.requestedVersion}`);
     });
     console.log();
@@ -200,31 +207,43 @@ async function main() {
 
   if (invalidVersion.length > 0) {
     hasErrors = true;
-    console.log(`${colors.red}❌ Invalid versions (${invalidVersion.length}):${colors.reset}`);
-    invalidVersion.forEach(r => {
-      console.log(`   - ${r.package}@${r.requestedVersion} → Latest: ${r.latestVersion}`);
+    console.log(
+      `${colors.red}❌ Invalid versions (${invalidVersion.length}):${colors.reset}`,
+    );
+    invalidVersion.forEach((r) => {
+      console.log(
+        `   - ${r.package}@${r.requestedVersion} → Latest: ${r.latestVersion}`,
+      );
     });
     console.log();
   }
 
   if (outdatedMajor.length > 0) {
-    console.log(`${colors.yellow}⚠️  Outdated major versions (${outdatedMajor.length}):${colors.reset}`);
-    outdatedMajor.forEach(r => {
-      console.log(`   - ${r.package}@${r.requestedVersion} → Latest: ${r.latestVersion}`);
+    console.log(
+      `${colors.yellow}⚠️  Outdated major versions (${outdatedMajor.length}):${colors.reset}`,
+    );
+    outdatedMajor.forEach((r) => {
+      console.log(
+        `   - ${r.package}@${r.requestedVersion} → Latest: ${r.latestVersion}`,
+      );
     });
     console.log();
   }
 
   if (errors.length > 0) {
-    console.log(`${colors.yellow}⚠️  Validation errors (${errors.length}):${colors.reset}`);
-    errors.forEach(r => {
+    console.log(
+      `${colors.yellow}⚠️  Validation errors (${errors.length}):${colors.reset}`,
+    );
+    errors.forEach((r) => {
       console.log(`   - ${r.package}: ${r.message}`);
     });
     console.log();
   }
 
   if (valid.length > 0) {
-    console.log(`${colors.green}✅ Valid packages: ${valid.length}${colors.reset}`);
+    console.log(
+      `${colors.green}✅ Valid packages: ${valid.length}${colors.reset}`,
+    );
   }
 
   // Exit with appropriate code
@@ -232,13 +251,15 @@ async function main() {
     console.log(`\n${colors.red}❌ Validation failed${colors.reset}`);
     process.exit(1);
   } else {
-    console.log(`\n${colors.green}✅ All packages validated successfully${colors.reset}`);
+    console.log(
+      `\n${colors.green}✅ All packages validated successfully${colors.reset}`,
+    );
     process.exit(0);
   }
 }
 
 // Run the validator
-main().catch(error => {
+main().catch((error) => {
   console.error(`${colors.red}❌ Unexpected error:${colors.reset}`, error);
   process.exit(1);
 });
