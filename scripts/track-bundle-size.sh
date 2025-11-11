@@ -95,15 +95,15 @@ fi
 
 # Get total static size
 STATIC_SIZE=$(du -sb "$NEXT_DIR/static" 2>/dev/null | cut -f1 || echo 0)
-STATIC_SIZE_FORMATTED=$(format_size $STATIC_SIZE)
+STATIC_SIZE_FORMATTED=$(format_size "$STATIC_SIZE")
 
 # Get Worker bundle size
 WORKER_SIZE=$(stat -f%z "$OPEN_NEXT_DIR/worker/index.js" 2>/dev/null || stat -c%s "$OPEN_NEXT_DIR/worker/index.js" 2>/dev/null || echo 0)
-WORKER_SIZE_FORMATTED=$(format_size $WORKER_SIZE)
+WORKER_SIZE_FORMATTED=$(format_size "$WORKER_SIZE")
 
 # Get total build size
 TOTAL_SIZE=$(du -sb "$NEXT_DIR" 2>/dev/null | cut -f1 || echo 0)
-TOTAL_SIZE_FORMATTED=$(format_size $TOTAL_SIZE)
+TOTAL_SIZE_FORMATTED=$(format_size "$TOTAL_SIZE")
 
 log_pass "Bundle metrics collected"
 echo "  → Static assets: $STATIC_SIZE_FORMATTED"
