@@ -42,6 +42,7 @@ export default [
       '.claude/**',
       'docs/**',
       'drizzle/**',
+      'scripts/**/*.cjs',
     ],
   },
   {
