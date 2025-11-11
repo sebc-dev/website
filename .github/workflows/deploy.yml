@@ -249,7 +249,14 @@ jobs:
 
     steps:
       # ========================================================================
-      # Step 1: Construct and Validate Worker URL
+      # Step 1: Checkout Code
+      # ========================================================================
+      # Clone the repository at the commit being deployed
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ========================================================================
+      # Step 2: Construct and Validate Worker URL
       # ========================================================================
       # Uses centralized script to:
       # - Validate CLOUDFLARE_WORKER_NAME is configured
@@ -262,12 +269,16 @@ jobs:
         id: worker-url
         env:
           CLOUDFLARE_WORKER_NAME: ${{ secrets.CLOUDFLARE_WORKER_NAME }}
-          CLOUDFLARE_ACCOUNT_SUBDOMAIN: ${{ secrets.CLOUDFLARE_ACCOUNT_SUBDOMAIN || 'chauveau-sebastien' }}
+          CLOUDFLARE_ACCOUNT_SUBDOMAIN: ${{ secrets.CLOUDFLARE_ACCOUNT_SUBDOMAIN }}
         run: |
+          if [ -z "$CLOUDFLARE_ACCOUNT_SUBDOMAIN" ]; then
+            echo "❌ ERROR: CLOUDFLARE_ACCOUNT_SUBDOMAIN not configured as environment secret"
+            exit 1
+          fi
           bash scripts/build-worker-url.sh
 
       # ========================================================================
-      # Step 2: Health Check with Retry Logic
+      # Step 3: Health Check with Retry Logic
       # ========================================================================
       # Test HTTP endpoint with retries to account for CDN propagation delays
       #
