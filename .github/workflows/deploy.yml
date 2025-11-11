@@ -190,14 +190,6 @@ jobs:
       - name: Generate OpenNext output
         run: npx @opennextjs/cloudflare build
 
-      # ========================================================================
-      # Step 5b1: Ensure Wrangler CLI is Available
-      # ========================================================================
-      # Install Wrangler CLI from node_modules to ensure it's available for migrations
-      # Wrangler is installed via pnpm install but needs to be on PATH for direct CLI calls
-      #
-      - name: Install Wrangler CLI
-        run: pnpm install -g wrangler@4.45.4
 
       # ========================================================================
       # Step 5c: Apply D1 Database Migrations
@@ -216,7 +208,7 @@ jobs:
       # - Data corruption from version skew
       #
       # Rollback Strategy (if needed):
-      # 1. Check migration status: wrangler d1 migrations list DB --remote
+      # 1. Check migration status: pnpm exec wrangler d1 migrations list DB --remote
       # 2. Identify problematic migration
       # 3. Create a new migration to rollback changes
       # 4. Re-deploy with corrected migration
@@ -227,11 +219,11 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           echo "📦 Checking pending D1 migrations..."
-          wrangler d1 migrations list DB --remote
+          pnpm exec wrangler d1 migrations list DB --remote
 
           echo ""
           echo "📝 Applying D1 migrations..."
-          if ! wrangler d1 migrations apply DB --remote --skip-migrations-already-applied; then
+          if ! pnpm exec wrangler d1 migrations apply DB --remote --skip-migrations-already-applied; then
             echo "❌ ERROR: D1 migrations failed"
             echo "This indicates a schema version incompatibility."
             echo "The deployment has been aborted to prevent data corruption."
