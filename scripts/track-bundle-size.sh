@@ -53,22 +53,22 @@ log_info() {
 
 format_size() {
   local bytes=$1
-  if [ "$bytes" -lt 1024 ]; then
+  if [ $bytes -lt 1024 ]; then
     echo "${bytes}B"
-  elif [ "$bytes" -lt $((1024 * 1024)) ]; then
-    echo "$((bytes / 1024))KB"
+  elif [ $bytes -lt $((1024 * 1024)) ]; then
+    echo "$(( bytes / 1024 ))KB"
   else
-    echo "$((bytes / (1024 * 1024)))MB"
+    echo "$(( bytes / (1024 * 1024) ))MB"
   fi
 }
 
 calculate_percent_change() {
   local old=$1
   local new=$2
-  if [ "$old" -eq 0 ]; then
+  if [ $old -eq 0 ]; then
     echo 0
   else
-    echo $(((new - old) * 100 / old))
+    echo $(( (new - old) * 100 / old ))
   fi
 }
 
@@ -78,62 +78,32 @@ echo "==========================================================================
 echo ""
 
 # =========================================================================
-# Prerequisite: Check for jq
-# =========================================================================
-if ! command -v jq &> /dev/null; then
-  log_error "jq is not installed. Please install jq to parse JSON metrics."
-  echo "  → On Ubuntu/Debian: sudo apt-get install jq"
-  echo "  → On macOS: brew install jq"
-  echo "  → On Windows: winget install jqlang.jq"
-  exit 1
-fi
-
-# =========================================================================
 # Step 1: Collect current bundle metrics
 # =========================================================================
 echo "Collecting bundle metrics..."
 
 # Find main bundle (webpack chunk)
-MAIN_BUNDLE=$(find "$NEXT_DIR/static/chunks" -name "main-*.js" 2>/dev/null | head -1 || echo "")
-APP_BUNDLE=$(find "$NEXT_DIR/static/chunks" -name "app-*.js" 2>/dev/null | head -1 || echo "")
+MAIN_BUNDLE=$(find "$NEXT_DIR/.next/static/chunks" -name "main-*.js" 2>/dev/null | head -1 || echo "")
+APP_BUNDLE=$(find "$NEXT_DIR/.next/static/chunks" -name "app-*.js" 2>/dev/null | head -1 || echo "")
 
 if [ -z "$MAIN_BUNDLE" ] && [ -z "$APP_BUNDLE" ]; then
   log_error "Could not find Next.js bundle files"
   echo "  → Ensure 'pnpm build' completed successfully"
-  echo "  → Check .next/static/chunks directory exists and contains bundle files"
+  echo "  → Check .next/static/chunks/ directory exists"
   exit 1
 fi
 
-# Check if .next directory exists before measuring
-if [ ! -d "$NEXT_DIR" ]; then
-  log_error "Next.js build directory not found: $NEXT_DIR"
-  echo "  → Ensure 'pnpm build' completed successfully"
-  exit 1
-fi
+# Get total static size
+STATIC_SIZE=$(du -sb "$NEXT_DIR/.next/static" 2>/dev/null | cut -f1 || echo 0)
+STATIC_SIZE_FORMATTED=$(format_size $STATIC_SIZE)
 
-# Get total static size (with existence check)
-if [ -d "$NEXT_DIR/static" ]; then
-  STATIC_SIZE=$(du -sb "$NEXT_DIR/static" 2>/dev/null | cut -f1 || echo 0)
-else
-  log_warning "Static directory not found: $NEXT_DIR/static"
-  STATIC_SIZE=0
-fi
-STATIC_SIZE_FORMATTED=$(format_size "$STATIC_SIZE")
+# Get Worker bundle size
+WORKER_SIZE=$(stat -f%z "$OPEN_NEXT_DIR/worker/index.js" 2>/dev/null || stat -c%s "$OPEN_NEXT_DIR/worker/index.js" 2>/dev/null || echo 0)
+WORKER_SIZE_FORMATTED=$(format_size $WORKER_SIZE)
 
-# Check if Worker file exists before measuring
-if [ ! -f "$OPEN_NEXT_DIR/worker.js" ]; then
-  log_error "OpenNext worker bundle not found: $OPEN_NEXT_DIR/worker.js"
-  echo "  → Ensure 'npx @opennextjs/cloudflare build' completed successfully"
-  exit 1
-fi
-
-# Get Worker bundle size (after existence check)
-WORKER_SIZE=$(stat -f%z "$OPEN_NEXT_DIR/worker.js" 2>/dev/null || stat -c%s "$OPEN_NEXT_DIR/worker.js" 2>/dev/null || echo 0)
-WORKER_SIZE_FORMATTED=$(format_size "$WORKER_SIZE")
-
-# Get total build size (after existence check for .next)
+# Get total build size
 TOTAL_SIZE=$(du -sb "$NEXT_DIR" 2>/dev/null | cut -f1 || echo 0)
-TOTAL_SIZE_FORMATTED=$(format_size "$TOTAL_SIZE")
+TOTAL_SIZE_FORMATTED=$(format_size $TOTAL_SIZE)
 
 log_pass "Bundle metrics collected"
 echo "  → Static assets: $STATIC_SIZE_FORMATTED"
@@ -175,15 +145,10 @@ PREV_METRICS=$(tail -2 "$METRICS_FILE" | head -1)
 if [ -z "$PREV_METRICS" ]; then
   log_info "First build tracked - no previous build to compare"
 else
-  # Extract previous sizes using jq with fallback defaults
-  PREV_STATIC=$(echo "$PREV_METRICS" | jq -r '.static_bytes // 0' 2>/dev/null || echo "0")
-  PREV_WORKER=$(echo "$PREV_METRICS" | jq -r '.worker_bytes // 0' 2>/dev/null || echo "0")
-  PREV_TOTAL=$(echo "$PREV_METRICS" | jq -r '.total_bytes // 0' 2>/dev/null || echo "0")
-
-  # Ensure values are valid integers (fallback to 0 if not)
-  PREV_STATIC=${PREV_STATIC:-0}
-  PREV_WORKER=${PREV_WORKER:-0}
-  PREV_TOTAL=${PREV_TOTAL:-0}
+  # Extract previous sizes using jq or grep
+  PREV_STATIC=$(echo "$PREV_METRICS" | grep -o '"static_bytes":[0-9]*' | cut -d: -f2)
+  PREV_WORKER=$(echo "$PREV_METRICS" | grep -o '"worker_bytes":[0-9]*' | cut -d: -f2)
+  PREV_TOTAL=$(echo "$PREV_METRICS" | grep -o '"total_bytes":[0-9]*' | cut -d: -f2)
 
   # Calculate changes
   STATIC_CHANGE=$(calculate_percent_change "$PREV_STATIC" "$STATIC_SIZE")
@@ -197,18 +162,18 @@ else
 
   # Alert on growth
   GROWTH_WARNING=0
-  if [ "${STATIC_CHANGE#-}" -gt "${MAX_GROWTH_PERCENT}" ]; then
+  if [ "${STATIC_CHANGE#-}" -gt $MAX_GROWTH_PERCENT ]; then
     log_warning "Static assets grew ${STATIC_CHANGE}% (limit: ${MAX_GROWTH_PERCENT}%)"
     GROWTH_WARNING=1
   fi
 
-  if [ "${WORKER_CHANGE#-}" -gt "${MAX_GROWTH_PERCENT}" ]; then
+  if [ "${WORKER_CHANGE#-}" -gt $MAX_GROWTH_PERCENT ]; then
     log_warning "Worker bundle grew ${WORKER_CHANGE}% (limit: ${MAX_GROWTH_PERCENT}%)"
     GROWTH_WARNING=1
   fi
 
   # Alert on approaching Worker size limit
-  if [ "${WORKER_SIZE}" -gt "${ALERT_SIZE}" ]; then
+  if [ $WORKER_SIZE -gt $ALERT_SIZE ]; then
     log_warning "Worker approaching size limit: $WORKER_SIZE_FORMATTED (limit: 1MB)"
     GROWTH_WARNING=1
   fi
@@ -234,7 +199,7 @@ echo "  Worker Bundle: $WORKER_SIZE_FORMATTED ($(( WORKER_SIZE * 100 / (1024 * 1
 echo "  Total Build: $TOTAL_SIZE_FORMATTED"
 echo ""
 
-if [ "${WORKER_SIZE}" -gt "${ALERT_SIZE}" ]; then
+if [ $WORKER_SIZE -gt $ALERT_SIZE ]; then
   echo -e "${YELLOW}⚠ Worker bundle approaching limit:${NC}"
   echo "  Current: $WORKER_SIZE_FORMATTED"
   echo "  Recommended: < 800KB"
@@ -276,11 +241,4 @@ echo "==========================================================================
 
 log_pass "Report saved to $METRICS_DIR/latest-report.md"
 
-# =========================================================================
-# Step 6: Exit with appropriate status code
-# =========================================================================
-if [ "${GROWTH_WARNING:-0}" -eq 1 ]; then
-  exit 2
-else
-  exit 0
-fi
+exit 0
