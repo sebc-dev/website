@@ -164,22 +164,22 @@ Navigate to Settings → Environments. You should see:
 1. Navigate to: Settings → Environments → staging
 2. Click "Add secret" for each:
 
-| Secret Name                | Value                          | Notes                       |
-| -------------------------- | ------------------------------ | --------------------------- |
-| `CLOUDFLARE_API_TOKEN`     | [Your staging token from Step] | From "Generate Staging Token" above |
-| `CLOUDFLARE_ACCOUNT_ID`    | [Your Cloudflare account ID]   | Same for staging and production |
-| `CLOUDFLARE_WORKER_NAME`   | `sebc-dev-staging`             | Your staging worker name    |
+| Secret Name              | Value                          | Notes                               |
+| ------------------------ | ------------------------------ | ----------------------------------- |
+| `CLOUDFLARE_API_TOKEN`   | [Your staging token from Step] | From "Generate Staging Token" above |
+| `CLOUDFLARE_ACCOUNT_ID`  | [Your Cloudflare account ID]   | Same for staging and production     |
+| `CLOUDFLARE_WORKER_NAME` | `sebc-dev-staging`             | Your staging worker name            |
 
 **Production Environment Secrets**:
 
 1. Navigate to: Settings → Environments → production
 2. Click "Add secret" for each:
 
-| Secret Name                | Value                             | Notes                          |
-| -------------------------- | --------------------------------- | ------------------------------ |
-| `CLOUDFLARE_API_TOKEN`     | [Your production token from Step] | From "Generate Production Token" above |
-| `CLOUDFLARE_ACCOUNT_ID`    | [Your Cloudflare account ID]      | Same as staging                |
-| `CLOUDFLARE_WORKER_NAME`   | `sebc-dev-prod`                   | Your production worker name    |
+| Secret Name              | Value                             | Notes                                  |
+| ------------------------ | --------------------------------- | -------------------------------------- |
+| `CLOUDFLARE_API_TOKEN`   | [Your production token from Step] | From "Generate Production Token" above |
+| `CLOUDFLARE_ACCOUNT_ID`  | [Your Cloudflare account ID]      | Same as staging                        |
+| `CLOUDFLARE_WORKER_NAME` | `sebc-dev-prod`                   | Your production worker name            |
 
 **Verification**:
 
