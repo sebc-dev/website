@@ -186,7 +186,7 @@ else
 fi
 
 # =========================================================================
-# Check 8: Build metadata
+# Check 8: Build metadata (optional - not generated in recent OpenNext versions)
 # =========================================================================
 echo ""
 echo "Checking build metadata..."
@@ -195,7 +195,9 @@ MANIFEST_FILE="$OPEN_NEXT_DIR/.manifest"
 if [ -f "$MANIFEST_FILE" ]; then
   log_pass "OpenNext manifest found"
 else
-  log_warning "OpenNext manifest not found - build may be incomplete"
+  # Note: Recent versions of @opennextjs/cloudflare (v1.x) do not generate a .manifest file
+  # This is expected behavior and not an indication of an incomplete build
+  log_info "OpenNext manifest not found (not generated in OpenNext v1.x)"
 fi
 
 # =========================================================================
