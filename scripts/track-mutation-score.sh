@@ -169,9 +169,9 @@ Status:
 EOF
 
     # Add status based on mutation score
-    if (( $(echo "${mutation_score} >= 85" | bc -l) )); then
+    if awk -v score="${mutation_score}" 'BEGIN { exit !(score >= 85) }'; then
         echo "  ✓ EXCELLENT - Mutation score meets high threshold" >> "${SUMMARY_FILE}"
-    elif (( $(echo "${mutation_score} >= 70" | bc -l) )); then
+    elif awk -v score="${mutation_score}" 'BEGIN { exit !(score >= 70) }'; then
         echo "  ⚠ ACCEPTABLE - Mutation score meets minimum threshold" >> "${SUMMARY_FILE}"
     else
         echo "  ✗ NEEDS IMPROVEMENT - Mutation score below minimum threshold" >> "${SUMMARY_FILE}"
@@ -204,10 +204,6 @@ main() {
         exit 0  # Exit gracefully to not break CI/CD
     fi
 
-    # Check if bc is installed (for floating point math)
-    if ! command -v bc &> /dev/null; then
-        log_warning "bc is not installed. Some calculations may be limited."
-    fi
 
     extract_metrics
 }
