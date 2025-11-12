@@ -384,7 +384,7 @@ cat docs/specs/PRD.md
 
 # Lisez aussi les specs contextuelles
 cat docs/specs/Brief.md           # Compréhension générale
-cat docs/specs/Frontend_Specification.md  # Stack technique
+cat docs/specs/Architecture_technique.md  # Stack technique
 cat docs/specs/UX_UI_Spec.md     # Exigences UX/UI
 ```
 

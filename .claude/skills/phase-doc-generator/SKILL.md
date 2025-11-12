@@ -41,7 +41,7 @@ Optional configuration: 4. **Project Tech Stack** (e.g., "SvelteKit 5 + Cloudfla
 **Context Documents** (read for implementation details):
 
 - **PHASES_PLAN.md**: Phase specification (from story planning)
-- **Frontend_Specification.md**: `docs/specs/Frontend_Specification.md` - Technical architecture and patterns
+- **Frontend_Specification.md**: `docs/specs/Architecture_technique.md` - Technical architecture and patterns
 - **UX_UI_Spec.md**: `docs/specs/UX_UI_Spec.md` - User experience and design requirements
 - **Brief.md**: `docs/specs/Brief.md` - Project goals and constraints
 

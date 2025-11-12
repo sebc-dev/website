@@ -76,7 +76,7 @@ Ensure you have these documents ready:
    - `docs/specs/epics/epic_X/EPIC_TRACKING.md`
 
 3. **Project Specifications**:
-   - `docs/specs/Frontend_Specification.md`
+   - `docs/specs/Architecture_technique.md`
    - `docs/specs/UX_UI_Spec.md`
    - `docs/specs/Brief.md`
 
@@ -272,7 +272,7 @@ A: No - use this command once per phase. Once a phase is complete, use it again 
 - **Generate Phase Docs**: `/generate-phase-doc` - Create implementation documentation
 - **Phase Implementer Agent**: `.claude/agents/phase-implementer.md` - Full agent documentation
 - **Project Standards**: `CLAUDE.md` - Coding standards and commands
-- **Frontend Spec**: `docs/specs/Frontend_Specification.md` - Technical architecture
+- **Frontend Spec**: `docs/specs/Architecture_technique.md` - Technical architecture
 - **UX/UI Spec**: `docs/specs/UX_UI_Spec.md` - Design requirements
 
 ---
