@@ -54,7 +54,39 @@
       "binding": "NEXT_INC_CACHE_R2_BUCKET",
       "bucket_name": "sebc-next-cache"
     }
-  ]
+  ],
+  /**
+   * Durable Objects
+   * For Next.js ISR cache management with persistent state and coordination
+   * https://developers.cloudflare.com/durable-objects/
+   *
+   * NEXT_CACHE_DO_QUEUE:
+   * - Purpose: Async queue for ISR revalidation tasks
+   * - Class: DOQueueHandler (provided by @opennextjs/cloudflare)
+   * - Use case: Background page regeneration without blocking requests
+   *
+   * NEXT_TAG_CACHE_DO_SHARDED:
+   * - Purpose: Tag-based cache invalidation with sharding
+   * - Class: DOTagCacheShard (provided by @opennextjs/cloudflare)
+   * - Shards: 32 (default for load distribution)
+   * - Use case: Fast cache invalidation by tags (e.g., revalidateTag('posts'))
+   *
+   * Note: These binding names are expected by OpenNext for automatic integration
+   */
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "NEXT_CACHE_DO_QUEUE",
+        "class_name": "DOQueueHandler",
+        "script_name": "website"
+      },
+      {
+        "name": "NEXT_TAG_CACHE_DO_SHARDED",
+        "class_name": "DOTagCacheShard",
+        "script_name": "website"
+      }
+    ]
+  }
   /**
    * Smart Placement
    * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
