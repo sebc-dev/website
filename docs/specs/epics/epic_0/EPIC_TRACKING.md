@@ -45,7 +45,7 @@ This epic contains **10 stories** as defined in the PRD:
 | 0.5   | Configurer wrangler.toml avec bindings | All bindings configured (D1, R2, DO Queue, DO Tags, Service)  | ✅ COMPLETED   | 3      | 3/3 (E2E tests deferred)        |
 | 0.6   | Configurer compatibility flags         | `nodejs_compat` + `compatibility_date: 2025-03-01`            | ✅ COMPLETED   | -      | ✅                              |
 | 0.7   | Mettre en place CI/CD GitHub Actions   | Pipeline de tests, build OpenNext, migrations D1, déploiement | 🚧 IN PROGRESS | 4      | 4/4 📋 (Phase 4 docs generated) |
-| 0.8   | Configurer Cloudflare Access           | Protection routes `/admin/*` avec Zero Trust                  | 📋 NOT STARTED | -      | 0%                              |
+| 0.8   | Configurer Cloudflare Access           | Protection routes `/admin/*` avec Zero Trust                  | 📋 PLANNED     | 4      | 0/4                             |
 | 0.9   | Configurer Cloudflare WAF              | Sécurité de base contre menaces web                           | 📋 NOT STARTED | -      | 0%                              |
 | 0.10  | Base tests & linting                   | ESLint + Vitest (avec tests) + Playwright configurés          | ✅ COMPLETED   | -      | ✅                              |
 
@@ -366,7 +366,7 @@ Track epic-level milestones here:
 - Story 0.5: `docs/specs/epics/epic_0/story_0_5/story_0.5.md` ✅ CREATED (via /plan-story)
 - Story 0.6: `docs/specs/epics/epic_0/story_0_6/story_0.6.md` (created via /plan-story)
 - Story 0.7: `docs/specs/epics/epic_0/story_0_7/story_0.7.md` ✅ CREATED (via /plan-story)
-- Story 0.8: `docs/specs/epics/epic_0/story_0_8/story_0.8.md` (created via /plan-story)
+- Story 0.8: `docs/specs/epics/epic_0/story_0_8/story_0.8.md` ✅ CREATED (via story-phase-planner)
 - Story 0.9: `docs/specs/epics/epic_0/story_0_9/story_0.9.md` (created via /plan-story)
 - Story 0.10: `docs/specs/epics/epic_0/story_0_10/story_0.10.md` (created via /plan-story)
 
@@ -376,6 +376,7 @@ Track epic-level milestones here:
 - Story 0.4: `docs/specs/epics/epic_0/story_0_4/implementation/PHASES_PLAN.md` ✅ PLANNED (5 phases)
 - Story 0.5: `docs/specs/epics/epic_0/story_0_5/implementation/PHASES_PLAN.md` ✅ PLANNED (3 phases)
 - Story 0.7: `docs/specs/epics/epic_0/story_0_7/implementation/PHASES_PLAN.md` ✅ PLANNED (4 phases)
+- Story 0.8: `docs/specs/epics/epic_0/story_0_8/implementation/PHASES_PLAN.md` ✅ PLANNED (4 phases)
 - Links for other stories will be added as they are planned
 
 ### Related Documentation
