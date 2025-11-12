@@ -86,7 +86,25 @@
         "script_name": "website"
       }
     ]
-  }
+  },
+  /**
+   * Durable Objects Migrations
+   * Required when creating new Durable Object classes
+   * https://developers.cloudflare.com/durable-objects/reference/durable-objects-migrations/
+   *
+   * Migration tag: v1 (initial migration for DO classes)
+   * new_sqlite_classes: Declares new DO classes with SQLite storage backend
+   *
+   * Note: This migration is required even though the DO classes are provided
+   * by @opennextjs/cloudflare. The migration tells Cloudflare Workers runtime
+   * that these classes exist and should be instantiated with SQLite storage.
+   */
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["DOQueueHandler", "DOTagCacheShard"]
+    }
+  ]
   /**
    * Smart Placement
    * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
