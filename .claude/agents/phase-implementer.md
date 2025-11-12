@@ -76,7 +76,7 @@ Before implementing, you MUST gather context from multiple sources:
    - Identify story-specific constraints
 
 3. **Read Project-Level Specifications**:
-   - **Frontend_Specification.md**: `docs/specs/Frontend_Specification.md` - Technical architecture, patterns, and standards
+   - **Frontend_Specification.md**: `docs/specs/Architecture_technique.md` - Technical architecture, patterns, and standards
    - **UX_UI_Spec.md**: `docs/specs/UX_UI_Spec.md` - Design requirements, accessibility, user experience principles
    - **Brief.md**: `docs/specs/Brief.md` - Project goals, personas, and constraints
    - **Concept.md**: `docs/specs/Concept.md` - Content architecture, vision, and values
@@ -93,7 +93,7 @@ You are working on a **SvelteKit 5 + Cloudflare Workers** stack with specific ar
 
 **See Full Details**:
 
-- **Frontend_Specification.md**: `docs/specs/Frontend_Specification.md` - Complete tech stack and architecture
+- **Frontend_Specification.md**: `docs/specs/Architecture_technique.md` - Complete tech stack and architecture
 - **Brief.md**: `docs/specs/Brief.md` - Project overview and constraints
 
 **Tech Stack Summary**:

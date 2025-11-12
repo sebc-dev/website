@@ -58,7 +58,7 @@ Step 4: Implement Each Phase
 Before planning a story, review the relevant specifications:
 
 - **PRD.md**: `docs/specs/PRD.md` - Product requirements with all epics and stories
-- **Frontend_Specification.md**: `docs/specs/Frontend_Specification.md` - Technical architecture and patterns
+- **Frontend_Specification.md**: `docs/specs/Architecture_technique.md` - Technical architecture and patterns
 - **UX_UI_Spec.md**: `docs/specs/UX_UI_Spec.md` - Design requirements and user experience principles
 - **Brief.md**: `docs/specs/Brief.md` - Project goals and target personas
 - **Concept.md**: `docs/specs/Concept.md` - Vision and content architecture
