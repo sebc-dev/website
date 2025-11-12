@@ -33,7 +33,7 @@ Optional: 4. **Project Tech Stack** (to assess technical dependencies) 5. **Team
 **Context Documents** (read for story understanding):
 
 - **PRD.md**: `docs/specs/PRD.md` - Full product requirements with acceptance criteria
-- **Frontend_Specification.md**: `docs/specs/Frontend_Specification.md` - Technical architecture details
+- **Frontend_Specification.md**: `docs/specs/Architecture_technique.md` - Technical architecture details
 - **UX_UI_Spec.md**: `docs/specs/UX_UI_Spec.md` - User experience requirements and design specifications
 - **Brief.md**: `docs/specs/Brief.md` - Project overview and target users
 - **Concept.md**: `docs/specs/Concept.md` - Content architecture and personas

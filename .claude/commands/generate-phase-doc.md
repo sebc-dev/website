@@ -63,7 +63,7 @@ This command is **Step 3** - generating detailed documentation for a single phas
 Before generating phase documentation, review the relevant specifications:
 
 - **PHASES_PLAN.md**: Phase specification (created by /plan-story)
-- **Frontend_Specification.md**: `docs/specs/Frontend_Specification.md` - Technical architecture and patterns
+- **Frontend_Specification.md**: `docs/specs/Architecture_technique.md` - Technical architecture and patterns
 - **UX_UI_Spec.md**: `docs/specs/UX_UI_Spec.md` - Design requirements and user experience
 - **Brief.md**: `docs/specs/Brief.md` - Project goals and constraints
 - **Story Spec**: `docs/specs/epics/epic_X/story_X_Y/story_X.Y.md` - Story-specific context
