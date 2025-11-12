@@ -113,10 +113,10 @@ This story establishes the database foundation for sebc.dev by configuring Drizz
 
 ### Blocks (cannot start until this completes):
 
-- **Story 1.1** (EPIC 1) - Create schéma D1 for articles
-  - _Note: Story 1.1 will extend this schema, not recreate it_
-- **Story 1.2** (EPIC 1) - Seed script for 9 categories
-  - _Note: Story 1.2 uses seed script created in Phase 3 of this story_
+- **Story 2.1** (EPIC 2) - Create schéma D1 for articles
+  - _Note: Story 2.1 will extend this schema, not recreate it_
+- **Story 2.2** (EPIC 2) - Seed script for 9 categories
+  - _Note: Story 2.2 uses seed script created in Phase 3 of this story_
 
 ### Related Stories:
 

@@ -636,45 +636,45 @@ Mettre en place un monitoring via **Cloudflare** :
 - **0.9** Configurer Cloudflare WAF et sécurité de base
 - **0.10** Base tests & linting (Vitest, ESLint, Prettier)
 
-## 🧩 EPIC 1 — Gestion & rendu des articles (MDX + multilingue)
+## 🌐 EPIC 1 — Internationalisation (i18n)
 
-- **1.1** Créer schéma D1 (articles avec status `draft|published`, article_translations avec `content_mdx`, categories, tags) avec Drizzle
-- **1.2** Créer script de seed SQL pour les 9 catégories canoniques
-- **1.3** Implémenter routes admin : `app/admin/layout.tsx` (sidebar, navigation)
-- **1.4** Implémenter panneau admin : création/édition articles (deux onglets FR/EN) avec Server Actions + react-hook-form + Zod
-- **1.5** Implémenter mode prévisualisation : `?preview=true` avec vérification authentification dans Server Component
-- **1.6** Implémenter validation publication (blocage si traductions FR+EN incomplètes)
-- **1.7** Publier un article MDX (FR/EN), URL stable `/fr/articles/[slug]` et `/en/articles/[slug]`
-- **1.8** Rendu MDX riche (code, images, citations) avec composants React personnalisés via `@next/mdx` ou `next-mdx-remote`
-- **1.9** Calcul auto du temps de lecture global & par section (côté serveur dans React Server Component)
-- **1.10** Table des matières automatique cliquable (composant React Client Component avec hooks)
-- **1.11** Indicateur de progression de lecture (composant React Client Component avec useState/useEffect, a11y, responsive)
-- **1.12** Upload images vers Cloudflare R2 via Presigned URLs (Route Handler `route.ts`)
+- **1.1** Installer et configurer next-intl : `npm install next-intl`
+- **1.2** Créer fichiers de messages : `messages/fr.json` et `messages/en.json`
+- **1.3** Créer middleware Next.js dans `src/middleware.ts` avec next-intl
+- **1.4** Structure bilingue des URLs avec route groups (`app/[lang]/`, détection navigateur + cookie)
+- **1.5** Fallback de contenu (badge de langue, bascule FR/EN si disponible)
+- **1.6** SEO `hreflang` + `canonical` via Next.js Metadata API dans Server Components
+- **1.7** Sélecteur de langue dans header (persistance cookie via next-intl)
 
-## 🧩 EPIC 2 — Taxonomie & navigation (catégories, tags, complexité)
+## 🧩 EPIC 2 — Gestion & rendu des articles (MDX + multilingue)
 
-- **2.1** Interface admin : gestion des 9 catégories (modification icône/couleur via Server Actions, non supprimables)
-- **2.2** Interface admin : gestion des tags (CRUD complet via Server Actions)
-- **2.3** Indicateur de complexité (badges débutant/intermédiaire/avancé, traductions via next-intl)
-- **2.4** Navigation par catégorie/tag (liens → liste filtrée via URL Search Params)
-- **2.5** Pages catégories et tags avec cartes d'articles (composant React `<ArticleCard>`)
+- **2.1** Créer schéma D1 (articles avec status `draft|published`, article_translations avec `content_mdx`, categories, tags) avec Drizzle
+- **2.2** Créer script de seed SQL pour les 9 catégories canoniques
+- **2.3** Implémenter routes admin : `app/admin/layout.tsx` (sidebar, navigation)
+- **2.4** Implémenter panneau admin : création/édition articles (deux onglets FR/EN) avec Server Actions + react-hook-form + Zod
+- **2.5** Implémenter mode prévisualisation : `?preview=true` avec vérification authentification dans Server Component
+- **2.6** Implémenter validation publication (blocage si traductions FR+EN incomplètes)
+- **2.7** Publier un article MDX (FR/EN), URL stable `/fr/articles/[slug]` et `/en/articles/[slug]`
+- **2.8** Rendu MDX riche (code, images, citations) avec composants React personnalisés via `@next/mdx` ou `next-mdx-remote`
+- **2.9** Calcul auto du temps de lecture global & par section (côté serveur dans React Server Component)
+- **2.10** Table des matières automatique cliquable (composant React Client Component avec hooks)
+- **2.11** Indicateur de progression de lecture (composant React Client Component avec useState/useEffect, a11y, responsive)
+- **2.12** Upload images vers Cloudflare R2 via Presigned URLs (Route Handler `route.ts`)
 
-## 🧩 EPIC 3 — Hub de recherche avancée
+## 🧩 EPIC 3 — Taxonomie & navigation (catégories, tags, complexité)
 
-- **3.1** Page de recherche (mots-clés + filtres combinés, React Server Components + URL Search Params)
-- **3.2** Filtres : catégories, tags, complexité, durée de lecture (min/max), date (from/to)
-- **3.3** Résultats paginés (24/page, empty state, tri par date desc)
-- **3.4** Facettes dynamiques (catégories/tags recalculés selon résultats)
+- **3.1** Interface admin : gestion des 9 catégories (modification icône/couleur via Server Actions, non supprimables)
+- **3.2** Interface admin : gestion des tags (CRUD complet via Server Actions)
+- **3.3** Indicateur de complexité (badges débutant/intermédiaire/avancé, traductions via next-intl)
+- **3.4** Navigation par catégorie/tag (liens → liste filtrée via URL Search Params)
+- **3.5** Pages catégories et tags avec cartes d'articles (composant React `<ArticleCard>`)
 
-## 🌐 EPIC 4 — Internationalisation (i18n)
+## 🧩 EPIC 4 — Hub de recherche avancée
 
-- **4.1** Installer et configurer next-intl : `npm install next-intl`
-- **4.2** Créer fichiers de messages : `messages/fr.json` et `messages/en.json`
-- **4.3** Créer middleware Next.js dans `src/middleware.ts` avec next-intl
-- **4.4** Structure bilingue des URLs avec route groups (`app/[lang]/`, détection navigateur + cookie)
-- **4.5** Fallback de contenu (badge de langue, bascule FR/EN si disponible)
-- **4.6** SEO `hreflang` + `canonical` via Next.js Metadata API dans Server Components
-- **4.7** Sélecteur de langue dans header (persistance cookie via next-intl)
+- **4.1** Page de recherche (mots-clés + filtres combinés, React Server Components + URL Search Params)
+- **4.2** Filtres : catégories, tags, complexité, durée de lecture (min/max), date (from/to)
+- **4.3** Résultats paginés (24/page, empty state, tri par date desc)
+- **4.4** Facettes dynamiques (catégories/tags recalculés selon résultats)
 
 ## ⚡ EPIC 5 — Cache & Performance
 

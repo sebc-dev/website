@@ -1135,25 +1135,33 @@ test('auth flow: login → protected route → logout', async ({ page }) => {
 - CI/CD GitHub Actions
 - Cloudflare Access `/admin`
 
-### Phase 2 : Articles & Taxonomie (EPIC 1, 2)
+### Phase 2 : Internationalisation (EPIC 1)
+
+- Installation et configuration next-intl
+- Middleware Next.js avec route groups `/[lang]/`
+- Fichiers de messages FR/EN
+- SEO hreflang et canonical
+- Sélecteur de langue
+
+### Phase 3 : Articles & Taxonomie (EPIC 2, 3)
 
 - Schéma D1, Server Actions, Admin panel
 - Rendu MDX, TOC, progression
 - Catégories, tags, complexité
 
-### Phase 3 : Hub Recherche (EPIC 3, 4)
+### Phase 4 : Hub Recherche (EPIC 4)
 
 - Page recherche avancée, filtres combinés
-- next-intl i18n
 - URL Search Params
+- Facettes dynamiques
 
-### Phase 4 : SEO & Performance (EPIC 5, 8)
+### Phase 5 : SEO & Performance (EPIC 5, 8)
 
 - Sitemap, robots.txt, Open Graph
 - Core Web Vitals
 - Cloudflare Images optimization
 
-### Phase 5 : Sécurité & Monitoring (EPIC 6, 7)
+### Phase 6 : Sécurité & Monitoring (EPIC 6, 7)
 
 - Validations Zod, CSP, WAF
 - Health checks, Web Analytics
