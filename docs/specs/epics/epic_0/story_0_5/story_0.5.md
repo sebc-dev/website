@@ -3,7 +3,7 @@
 **Epic**: Epic 0 - Socle technique (V1)
 **Story ID**: 0.5
 **Created**: 2025-11-12
-**Status**: 🚧 IN PROGRESS (20%)
+**Status**: 🚧 IN PROGRESS (50%) - Phase 1 implementation underway
 
 ---
 
