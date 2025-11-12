@@ -1,38 +1,65 @@
-# Cache Architecture - Next.js ISR with Cloudflare R2
+# Cache Architecture - OpenNext on Cloudflare Workers
 
-**Document Version**: 1.0
+**Document Version**: 2.0
 **Last Updated**: 2025-11-12
 **Epic**: Epic 0 - Infrastructure Setup
 **Story**: Story 0.5 - Configure wrangler.toml with bindings
-**Phase**: Phase 1 - R2 Bucket Configuration
+**Phase**: Phase 2 - Durable Objects Bindings Configuration
 
 ## Table of Contents
 
 1. [Overview](#overview)
 2. [Architecture Components](#architecture-components)
 3. [OpenNext Cache Integration](#opennext-cache-integration)
-4. [Cache Flow](#cache-flow)
-5. [Configuration Reference](#configuration-reference)
-6. [Performance Benefits](#performance-benefits)
-7. [Cost Considerations](#cost-considerations)
-8. [Future Phases](#future-phases)
+4. [Durable Objects Integration](#durable-objects-integration)
+5. [Cache Flow](#cache-flow)
+6. [Configuration Reference](#configuration-reference)
+7. [Performance Benefits](#performance-benefits)
+8. [Cost Considerations](#cost-considerations)
+9. [Future Phases](#future-phases)
 
 ## Overview
 
-This document describes how Cloudflare R2 integrates with Next.js Incremental Static Regeneration (ISR) to provide persistent, cost-effective caching for the sebc.dev website.
+This document describes the complete OpenNext cache architecture for the sebc.dev website, utilizing Cloudflare R2 for persistent storage and Durable Objects for cache coordination and management.
+
+### Complete Cache Stack
+
+```
+┌─────────────────────────────────────────────┐
+│      Next.js Application                     │
+│  (Pages with revalidate, ISR, tags)          │
+└──────────────┬──────────────────────────────┘
+               │
+       ┌───────┴───────┐
+       │               │
+       ▼               ▼
+  ┌────────┐   ┌──────────────────┐
+  │ R2     │   │ Durable Objects   │
+  │ ISR    │   │                   │
+  │ Cache  │   │ - Queue (ISR)     │
+  │        │   │ - Tags (Sharded)  │
+  └────────┘   └──────────────────┘
+       │               │
+       └───────┬───────┘
+               ▼
+        [Cloudflare Edge]
+```
 
 ### Key Benefits
 
-- **Persistent Cache**: Survives deployments and worker restarts
+- **Persistent Cache**: R2 storage survives deployments and worker restarts
+- **Async Revalidation**: Durable Objects queue enables stale-while-revalidate
+- **Tag-Based Invalidation**: Sharded DO tag cache for instant invalidation
 - **Global Distribution**: Cloudflare's global network for low latency
-- **Cost Effective**: Free tier covers most use cases (10 GB storage, 1M writes, 10M reads/month)
-- **Automatic Integration**: OpenNext handles cache operations transparently
+- **Cost Effective**: Free tier covers most use cases
+- **Automatic Integration**: OpenNext handles all cache operations transparently
 
 ### Technology Stack
 
 - **Next.js 15**: App Router with ISR support
 - **OpenNext**: Cloudflare Workers adapter
-- **Cloudflare R2**: S3-compatible object storage
+- **Cloudflare R2**: S3-compatible object storage for ISR cache
+- **Cloudflare Durable Objects**: Stateful coordination for queue and tags
 - **Workers Runtime**: Edge compute for dynamic rendering
 
 ## Architecture Components
@@ -67,6 +94,23 @@ R2 provides S3-compatible object storage for cache data:
 - **Bucket**: `sebc-next-cache`
 - **Binding**: `NEXT_INC_CACHE_R2_BUCKET` (configured in wrangler.jsonc)
 - **Access**: Automatically managed by OpenNext cache handler
+
+### 4. Cloudflare Durable Objects
+
+Durable Objects provide stateful coordination for cache operations:
+
+#### NEXT_CACHE_DO_QUEUE (ISR Queue)
+- **Binding**: `NEXT_CACHE_DO_QUEUE`
+- **Class**: `DOQueueHandler` (from @opennextjs/cloudflare)
+- **Purpose**: Async queue for background page regeneration
+- **Use case**: Implements stale-while-revalidate pattern
+
+#### NEXT_TAG_CACHE_DO_SHARDED (Tag Cache)
+- **Binding**: `NEXT_TAG_CACHE_DO_SHARDED`
+- **Class**: `DOTagCacheShard` (from @opennextjs/cloudflare)
+- **Purpose**: Tag-based cache invalidation with sharding
+- **Shards**: 32 (default for load distribution)
+- **Use case**: Fast invalidation via `revalidateTag('posts')`
 
 ### Architecture Diagram
 
@@ -162,6 +206,220 @@ The R2 binding in `wrangler.jsonc`:
 
 This binding makes the bucket accessible in the worker via `env.NEXT_INC_CACHE_R2_BUCKET`.
 
+## Durable Objects Integration
+
+Durable Objects provide stateful coordination for OpenNext cache operations, enabling async revalidation and tag-based invalidation.
+
+### NEXT_CACHE_DO_QUEUE - ISR Revalidation Queue
+
+**Purpose**: Background queue for async page regeneration (stale-while-revalidate pattern)
+
+**How it works**:
+
+1. User requests page with `revalidate: 3600` (1 hour)
+2. OpenNext checks R2 for cached version
+3. If cached and fresh (< 1 hour old): Return immediately
+4. If cached but stale (> 1 hour old):
+   - **Serve stale version immediately** (fast response to user)
+   - **Queue regeneration job** to Durable Object
+   - DO processes job in background
+   - When done, updates R2 cache
+5. Next user gets fresh cache
+
+**Flow Diagram**:
+
+```
+┌──────────────────────────────────────────────────────────┐
+│ User Request (page with revalidate: 3600)                │
+└─────────────────────┬────────────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────────┐
+│ OpenNext Worker                                          │
+│ ┌─────────────────────────────────────────────────────┐ │
+│ │ 1. Check R2 Cache                                   │ │
+│ │    - Exists? Check timestamp                        │ │
+│ │    - Fresh? Return immediately                      │ │
+│ │    - Stale? Continue to step 2                      │ │
+│ └─────────────────────────────────────────────────────┘ │
+│ ┌─────────────────────────────────────────────────────┐ │
+│ │ 2. Serve Stale + Queue Revalidation                │ │
+│ │    - Return stale cache to user (fast!)            │ │
+│ │    - Queue job: env.NEXT_CACHE_DO_QUEUE.add({      │ │
+│ │        path: '/blog/post-1',                        │ │
+│ │        revalidate: 3600                             │ │
+│ │      })                                             │ │
+│ └─────────────────────────────────────────────────────┘ │
+└─────────────────────┬───────────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────────┐
+│ Durable Object: DOQueueHandler                          │
+│ ┌─────────────────────────────────────────────────────┐ │
+│ │ 3. Process Job (Background)                         │ │
+│ │    - Receive job from queue                         │ │
+│ │    - Render page (SSR)                              │ │
+│ │    - Store in R2                                    │ │
+│ │    - Update metadata (timestamp, headers)           │ │
+│ └─────────────────────────────────────────────────────┘ │
+└─────────────────────┬───────────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────────┐
+│ R2 Bucket (Updated)                                      │
+│ - /blog/post-1.html.body (fresh content)                 │
+│ - /blog/post-1.html.meta (new timestamp)                 │
+└─────────────────────────────────────────────────────────┘
+```
+
+**Key Benefits**:
+
+- **Fast responses**: Users always get immediate response (stale or fresh)
+- **Zero blocking**: Regeneration happens in background
+- **Retry logic**: DO queue handles failures and retries
+- **Rate limiting**: Queue prevents thundering herd
+
+**Configuration**:
+
+```jsonc
+// wrangler.jsonc
+"durable_objects": {
+  "bindings": [
+    {
+      "name": "NEXT_CACHE_DO_QUEUE",
+      "class_name": "DOQueueHandler",
+      "script_name": "website"
+    }
+  ]
+}
+```
+
+### NEXT_TAG_CACHE_DO_SHARDED - Tag-Based Invalidation
+
+**Purpose**: Fast cache invalidation using tags with sharding for high performance
+
+**How it works**:
+
+1. Pages are tagged during render:
+   ```typescript
+   // app/blog/[slug]/page.tsx
+   export default async function BlogPost({ params }) {
+     const post = await getPost(params.slug);
+
+     // Tag this page with 'posts' and 'post-123'
+     unstable_cache(async () => post, {
+       tags: ['posts', `post-${params.slug}`]
+     });
+
+     return <div>{post.title}</div>;
+   }
+   ```
+
+2. Invalidate by tag:
+   ```typescript
+   // app/api/revalidate/route.ts
+   import { revalidateTag } from 'next/cache';
+
+   export async function POST(request: Request) {
+     const { tag } = await request.json();
+
+     // Invalidate all pages tagged with 'posts'
+     revalidateTag(tag);
+
+     return Response.json({ revalidated: true });
+   }
+   ```
+
+3. DO Sharded Tag Cache:
+   - 32 shards (DO instances) for parallel processing
+   - Each tag maps to a shard via hash
+   - Shard stores tag → page mappings
+   - On invalidation, shard deletes all associated pages from R2
+
+**Flow Diagram**:
+
+```
+┌──────────────────────────────────────────────────────────┐
+│ API Request: revalidateTag('posts')                      │
+└─────────────────────┬────────────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────────┐
+│ OpenNext Worker                                          │
+│ ┌─────────────────────────────────────────────────────┐ │
+│ │ 1. Hash tag to shard                                │ │
+│ │    hash('posts') % 32 = shard 7                     │ │
+│ └─────────────────────────────────────────────────────┘ │
+│ ┌─────────────────────────────────────────────────────┐ │
+│ │ 2. Call DO shard                                    │ │
+│ │    env.NEXT_TAG_CACHE_DO_SHARDED                    │
+│ │      .get('shard-7')                                │ │
+│ │      .invalidateTag('posts')                        │ │
+│ └─────────────────────────────────────────────────────┘ │
+└─────────────────────┬───────────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────────┐
+│ Durable Object Shard 7: DOTagCacheShard                 │
+│ ┌─────────────────────────────────────────────────────┐ │
+│ │ 3. Lookup tag mappings                              │ │
+│ │    tag 'posts' → pages:                             │ │
+│ │      - /blog/post-1                                 │ │
+│ │      - /blog/post-2                                 │ │
+│ │      - /blog/post-3                                 │ │
+│ └─────────────────────────────────────────────────────┘ │
+│ ┌─────────────────────────────────────────────────────┐ │
+│ │ 4. Delete from R2                                   │ │
+│ │    - R2.delete('/blog/post-1.html.body')            │ │
+│ │    - R2.delete('/blog/post-1.html.meta')            │ │
+│ │    - R2.delete('/blog/post-2.html.body')            │ │
+│ │    - ... (all tagged pages)                         │ │
+│ └─────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────┘
+```
+
+**Why Sharding?**
+
+- **Performance**: Distributes load across 32 DO instances
+- **Scalability**: Prevents single-DO bottleneck
+- **Concurrency**: Multiple tags can be invalidated in parallel
+- **Cost**: Free tier covers 32 shards easily
+
+**Configuration**:
+
+```jsonc
+// wrangler.jsonc
+"durable_objects": {
+  "bindings": [
+    {
+      "name": "NEXT_TAG_CACHE_DO_SHARDED",
+      "class_name": "DOTagCacheShard",
+      "script_name": "website"
+    }
+  ]
+}
+```
+
+### Durable Objects vs Other Options
+
+| Feature | Durable Objects | Workers KV | D1 Database |
+|---------|----------------|-----------|-------------|
+| **Use case** | Queue, coordination | Simple key-value | Relational data |
+| **Latency** | ~10-20ms | ~10-20ms | ~20-50ms |
+| **Consistency** | Strong (per DO) | Eventual | Strong |
+| **Sharding** | Built-in (32 shards) | Global | Single instance |
+| **State** | In-memory + persistent | Persistent only | Persistent only |
+| **Cost (free tier)** | 1M requests | 100K reads | 5M reads |
+| **Best for cache** | Queue, tags | ❌ Too limited | ❌ Too slow |
+
+**Why Durable Objects for OpenNext?**
+
+1. **Queue needs state**: Must track pending jobs, retries
+2. **Tags need coordination**: Must maintain tag → page mappings
+3. **Performance**: In-memory state = fast operations
+4. **Sharding**: Built-in support for 32 shards
+5. **OpenNext integration**: @opennextjs/cloudflare provides DO classes
+
 ## Cache Flow
 
 ### 1. First Request (Cache Miss)
@@ -207,7 +465,7 @@ User → Worker → (Stale Cache) → Serve Stale → Background Regenerate → 
 
 ## Configuration Reference
 
-### Current Configuration (Phase 1)
+### Current Configuration (Phase 1 + Phase 2)
 
 ```jsonc
 // wrangler.jsonc
@@ -217,7 +475,21 @@ User → Worker → (Stale Cache) → Serve Stale → Background Regenerate → 
       "binding": "NEXT_INC_CACHE_R2_BUCKET",
       "bucket_name": "sebc-next-cache"
     }
-  ]
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "NEXT_CACHE_DO_QUEUE",
+        "class_name": "DOQueueHandler",
+        "script_name": "website"
+      },
+      {
+        "name": "NEXT_TAG_CACHE_DO_SHARDED",
+        "class_name": "DOTagCacheShard",
+        "script_name": "website"
+      }
+    ]
+  }
 }
 ```
 
