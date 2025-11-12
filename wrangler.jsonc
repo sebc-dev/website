@@ -37,6 +37,25 @@
     },
   ],
   /**
+   * R2 Buckets
+   * For Next.js Incremental Static Regeneration (ISR) cache storage
+   * OpenNext uses R2 to persist generated static pages across deployments
+   * https://opennext.js.org/cloudflare/caching
+   *
+   * Bucket: sebc-next-cache (created 2025-11-12)
+   * Purpose: Store Next.js ISR cache data for improved performance
+   * Free tier: 10 GB storage, 1M writes, 10M reads/month
+   *
+   * Note: The binding name NEXT_INC_CACHE_R2_BUCKET is expected by OpenNext
+   * for automatic cache integration with Next.js revalidate functionality
+   */
+  "r2_buckets": [
+    {
+      "binding": "NEXT_INC_CACHE_R2_BUCKET",
+      "bucket_name": "sebc-next-cache",
+    },
+  ],
+  /**
    * Smart Placement
    * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
    */
