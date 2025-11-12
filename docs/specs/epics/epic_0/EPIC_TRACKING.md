@@ -42,7 +42,7 @@ This epic contains **10 stories** as defined in the PRD:
 | 0.2   | Configurer adaptateur OpenNext         | `@opennextjs/cloudflare` v1.3.0 installé et configuré         | ✅ COMPLETED   | -      | ✅                              |
 | 0.3   | Configurer TailwindCSS 4 + shadcn/ui   | TailwindCSS 4 + shadcn/ui + palette projet (teal #14B8A6)     | ✅ COMPLETED   | -      | ✅                              |
 | 0.4   | Configurer Drizzle ORM + Cloudflare D1 | Schéma initial + migrations setup                             | ✅ COMPLETED   | 5      | 5/5                             |
-| 0.5   | Configurer wrangler.toml avec bindings | Config de base OK, bindings D1/R2/KV/DO manquants             | 🚧 IN PROGRESS | -      | 20%                             |
+| 0.5   | Configurer wrangler.toml avec bindings | Config de base OK, bindings D1/R2/KV/DO manquants             | 🚧 IN PROGRESS | 3      | 0/3 📋 (Phases planned)         |
 | 0.6   | Configurer compatibility flags         | `nodejs_compat` + `compatibility_date: 2025-03-01`            | ✅ COMPLETED   | -      | ✅                              |
 | 0.7   | Mettre en place CI/CD GitHub Actions   | Pipeline de tests, build OpenNext, migrations D1, déploiement | 🚧 IN PROGRESS | 4      | 4/4 📋 (Phase 4 docs generated) |
 | 0.8   | Configurer Cloudflare Access           | Protection routes `/admin/*` avec Zero Trust                  | 📋 NOT STARTED | -      | 0%                              |
@@ -105,14 +105,14 @@ cat docs/specs/epics/epic_0/EPIC_TRACKING.md
 
 - **Stories Started**: 8 / 10
 - **Stories Completed**: 6 / 10 ✅
-- **Stories Planned**: 3 / 10 (Stories 0.1, 0.4, 0.7)
+- **Stories Planned**: 4 / 10 (Stories 0.1, 0.4, 0.5, 0.7)
 - **Stories In Progress**: 2 / 10 (Story 0.5: 20%, Story 0.7: 75%)
 - **Stories Not Started**: 2 / 10 (Stories 0.8, 0.9)
-- **Total Phases**: 12 (Story 0.1: 3 phases, Story 0.4: 5 phases, Story 0.7: 4 phases)
-- **Phases Completed**: 11 / 12 (Story 0.1: 3/3, Story 0.4: 5/5, Story 0.7: 3/4)
+- **Total Phases**: 15 (Story 0.1: 3 phases, Story 0.4: 5 phases, Story 0.5: 3 phases, Story 0.7: 4 phases)
+- **Phases Completed**: 11 / 15 (Story 0.1: 3/3, Story 0.4: 5/5, Story 0.5: 0/3, Story 0.7: 3/4)
 
 **Epic Completion**: 60% (6 stories complétées / 10 total)
-**Weighted Progress**: ~73% (incluant stories partielles: 0.5 à 20%, 0.7 à 75%)
+**Weighted Progress**: ~68% (incluant stories partielles: 0.5 à 0%, 0.7 à 75%)
 
 ### Timeline
 
@@ -169,6 +169,18 @@ Track epic-level milestones here:
 - [ ] **Milestone 6**: All tests passing and Epic 0 complete - Target: Week 2
 
 ### Recent Updates
+
+**2025-11-12 (Morning)**: Story 0.5 planned via story-phase-planner skill! 📋
+
+- ✅ Story 0.5: Configurer wrangler.toml avec bindings planifiée en 3 phases (2-3 jours estimés)
+  - Phase 1: R2 Bucket Configuration (0.5-1d) 🟡 Medium risk
+  - Phase 2: Durable Objects Bindings (1d) 🟡 Medium risk
+  - Phase 3: Service Binding & OpenNext Activation (1d) 🟢 Low risk
+- **Current state**: 20% complete (only D1 binding configured)
+- **Missing pieces**: R2 bucket, Durable Objects, Service binding, OpenNext cache activation
+- **Total Phases (Epic)**: 15 (Story 0.1: 3, Story 0.4: 5, Story 0.5: 3, Story 0.7: 4)
+- Documentation complète générée: story spec + PHASES_PLAN.md (~700 lines)
+- Prêt pour implémentation des 3 phases pour activer l'architecture cache OpenNext complète
 
 **2025-11-11 (Evening)**: Phase 3 IMPLEMENTATION COMPLETED for Story 0.7! 🎉
 
@@ -336,7 +348,7 @@ Track epic-level milestones here:
 - Story 0.2: `docs/specs/epics/epic_0/story_0_2/story_0.2.md` (created via /plan-story)
 - Story 0.3: `docs/specs/epics/epic_0/story_0_3/story_0.3.md` (created via /plan-story)
 - Story 0.4: `docs/specs/epics/epic_0/story_0_4/story_0.4.md` (created via /plan-story)
-- Story 0.5: `docs/specs/epics/epic_0/story_0_5/story_0.5.md` (created via /plan-story)
+- Story 0.5: `docs/specs/epics/epic_0/story_0_5/story_0.5.md` ✅ CREATED (via /plan-story)
 - Story 0.6: `docs/specs/epics/epic_0/story_0_6/story_0.6.md` (created via /plan-story)
 - Story 0.7: `docs/specs/epics/epic_0/story_0_7/story_0.7.md` ✅ CREATED (via /plan-story)
 - Story 0.8: `docs/specs/epics/epic_0/story_0_8/story_0.8.md` (created via /plan-story)
@@ -347,6 +359,7 @@ Track epic-level milestones here:
 
 - Story 0.1: `docs/specs/epics/epic_0/story_0_1/implementation/PHASES_PLAN.md` ✅ PLANNED (3 phases)
 - Story 0.4: `docs/specs/epics/epic_0/story_0_4/implementation/PHASES_PLAN.md` ✅ PLANNED (5 phases)
+- Story 0.5: `docs/specs/epics/epic_0/story_0_5/implementation/PHASES_PLAN.md` ✅ PLANNED (3 phases)
 - Story 0.7: `docs/specs/epics/epic_0/story_0_7/implementation/PHASES_PLAN.md` ✅ PLANNED (4 phases)
 - Links for other stories will be added as they are planned
 
