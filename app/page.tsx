@@ -275,7 +275,7 @@ export default function HomePage() {
             </span>
           </div>
           <p className='text-card-foreground mb-1 text-2xl font-bold'>
-            Fin Octobre 2025
+            Fin Novembre 2025
           </p>
           <p className='text-muted-foreground text-sm'>
             Blog technique • Articles • Guides
