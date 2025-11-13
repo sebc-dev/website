@@ -44,14 +44,14 @@ L'objectif principal est de créer une application Cloudflare Access avec des po
 
 ## 📚 Available Documents
 
-| Document                                                                       | Description                                  | For Who         | Duration  |
-| ------------------------------------------------------------------------------ | -------------------------------------------- | --------------- | --------- |
-| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)**                         | Atomic strategy in 4 commits                 | Developer       | 15 min    |
-| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)**                               | Detailed checklist per commit                | Developer       | Reference |
-| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)**                             | Cloudflare account and access setup          | DevOps/Admin    | 10 min    |
-| **[guides/REVIEW.md](./guides/REVIEW.md)**                                     | Configuration review guide                   | Reviewer        | 20 min    |
-| **[guides/TESTING.md](./guides/TESTING.md)**                                   | Manual testing guide                         | QA/Admin        | 20 min    |
-| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist                   | Tech Lead/Admin | 30 min    |
+| Document                                                                       | Description                         | For Who         | Duration  |
+| ------------------------------------------------------------------------------ | ----------------------------------- | --------------- | --------- |
+| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)**                         | Atomic strategy in 4 commits        | Developer       | 15 min    |
+| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)**                               | Detailed checklist per commit       | Developer       | Reference |
+| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)**                             | Cloudflare account and access setup | DevOps/Admin    | 10 min    |
+| **[guides/REVIEW.md](./guides/REVIEW.md)**                                     | Configuration review guide          | Reviewer        | 20 min    |
+| **[guides/TESTING.md](./guides/TESTING.md)**                                   | Manual testing guide                | QA/Admin        | 20 min    |
+| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist          | Tech Lead/Admin | 30 min    |
 
 ---
 
@@ -146,17 +146,17 @@ cat docs/specs/epics/epic_0/story_0_8/implementation/phase_1/validation/VALIDATI
 
 ## 📊 Metrics
 
-| Metric                    | Target                   | Actual |
-| ------------------------- | ------------------------ | ------ |
-| **Total Commits**         | 4                        | -      |
-| **Configuration Time**    | 1-1.5h                   | -      |
-| **Testing Time**          | 30min                    | -      |
-| **Documentation Time**    | 1h                       | -      |
-| **Total Phase Duration**  | 1-1.5 days               | -      |
-| **Access Policy Active**  | ✅                       | -      |
-| **Authentication Method** | Email OTP or SSO         | -      |
-| **Team Domain Retrieved** | ✅ (format: *.cloudflareaccess.com) | -      |
-| **Application AUD Retrieved** | ✅ (UUID format)      | -      |
+| Metric                        | Target                               | Actual |
+| ----------------------------- | ------------------------------------ | ------ |
+| **Total Commits**             | 4                                    | -      |
+| **Configuration Time**        | 1-1.5h                               | -      |
+| **Testing Time**              | 30min                                | -      |
+| **Documentation Time**        | 1h                                   | -      |
+| **Total Phase Duration**      | 1-1.5 days                           | -      |
+| **Access Policy Active**      | ✅                                   | -      |
+| **Authentication Method**     | Email OTP or SSO                     | -      |
+| **Team Domain Retrieved**     | ✅ (format: \*.cloudflareaccess.com) | -      |
+| **Application AUD Retrieved** | ✅ (UUID format)                     | -      |
 
 ---
 
@@ -171,6 +171,7 @@ This phase must retrieve and document these values for use in Phase 2 (Middlewar
 3. **Authentication Method**: Which method(s) are configured
 
 These values will be needed for:
+
 - JWT validation in `src/middleware.ts`
 - Environment variables in `.env.example`
 
@@ -186,11 +187,13 @@ These values will be needed for:
 ### Dependencies
 
 **Requires Before Starting**:
+
 - Cloudflare account with Zero Trust access
 - Site deployed on Cloudflare Workers (Story 0.5, 0.6)
 - Admin access to Cloudflare dashboard
 
 **Blocks Next Phases**:
+
 - Phase 2 needs Team Domain and Application AUD from this phase
 - Cannot proceed without successful Cloudflare Access configuration
 
@@ -221,17 +224,20 @@ A: Yes, completely. You can disable or delete the Cloudflare Access application 
 ## 🔗 Important Links
 
 ### Internal Documentation
+
 - [Story 0.8 Specification](../../story_0.8.md)
 - [Phases Plan](../PHASES_PLAN.md)
 - [Epic 0 Tracking](../../../../EPIC_TRACKING.md)
 
 ### External Resources
+
 - [Cloudflare Access Documentation](https://developers.cloudflare.com/cloudflare-one/policies/access/)
 - [Cloudflare Access Application Setup](https://developers.cloudflare.com/cloudflare-one/applications/configure-apps/)
 - [Zero Trust Dashboard](https://one.dash.cloudflare.com/)
 - [JWT Validation (for Phase 2)](https://developers.cloudflare.com/cloudflare-one/identity/authorization-cookie/validating-json/)
 
 ### Cloudflare Dashboard Access
+
 - [Zero Trust Dashboard](https://one.dash.cloudflare.com/)
 - [Access Applications](https://one.dash.cloudflare.com/access/applications)
 - [Access Policies](https://one.dash.cloudflare.com/access/policies)

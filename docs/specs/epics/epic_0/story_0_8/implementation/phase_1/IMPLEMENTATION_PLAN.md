@@ -26,6 +26,7 @@ The implementation is split into **4 independent commits** to:
 ```
 
 **Sequential Flow**:
+
 1. Commit 1 creates the configuration guide structure
 2. Commit 2 configures the Cloudflare Access application
 3. Commit 3 sets up access policies and authentication
@@ -56,6 +57,7 @@ The implementation is split into **4 independent commits** to:
 - Sets up the foundation for documenting configuration steps
 
 **Technical Validation**:
+
 ```bash
 # Verify file exists and has proper structure
 cat docs/deployment/cloudflare-access-setup.md
@@ -100,6 +102,7 @@ pnpm format:check docs/deployment/cloudflare-access-setup.md
 - All subsequent steps depend on this application
 
 **Technical Validation**:
+
 ```bash
 # Manual verification in Cloudflare dashboard
 # 1. Go to https://one.dash.cloudflare.com/
@@ -109,6 +112,7 @@ pnpm format:check docs/deployment/cloudflare-access-setup.md
 ```
 
 **Expected Result**:
+
 - Access application visible in Cloudflare dashboard
 - Application configured for correct domain and path
 - Configuration guide updated with step-by-step instructions
@@ -124,6 +128,7 @@ pnpm format:check docs/deployment/cloudflare-access-setup.md
 **Configuration Notes**:
 
 **Application Settings**:
+
 - Application Name: `sebc.dev Admin Panel`
 - Session Duration: 24 hours (recommended)
 - Application Type: Self-Hosted
@@ -161,6 +166,7 @@ pnpm format:check docs/deployment/cloudflare-access-setup.md
 - Complete security configuration
 
 **Technical Validation**:
+
 ```bash
 # Manual testing
 # 1. Open browser in incognito mode
@@ -171,6 +177,7 @@ pnpm format:check docs/deployment/cloudflare-access-setup.md
 ```
 
 **Expected Result**:
+
 - Access policy active and enforced
 - Unauthenticated users redirected to Cloudflare login
 - Authenticated users can access `/admin/*` routes
@@ -233,6 +240,7 @@ Session Duration: 24 hours
 - Finalizes Phase 1 deliverables
 
 **Technical Validation**:
+
 ```bash
 # Verify environment variables template
 cat .env.example | grep CLOUDFLARE_ACCESS
@@ -245,6 +253,7 @@ grep -E "(Team Domain|Application AUD)" docs/deployment/cloudflare-access-setup.
 ```
 
 **Expected Result**:
+
 - Team Domain documented and saved
 - Application AUD documented and saved
 - `.env.example` updated with placeholders
@@ -266,16 +275,19 @@ grep -E "(Team Domain|Application AUD)" docs/deployment/cloudflare-access-setup.
 ## Critical Values for Phase 2
 
 ### Team Domain
+
 **Value**: `<team-name>.cloudflareaccess.com`
 **Location**: Cloudflare Dashboard > Zero Trust > Settings > General > Team Domain
 **Use**: JWT validation in middleware (JWKS URL)
 
 ### Application AUD (Audience Tag)
+
 **Value**: `a1b2c3d4-e5f6-7890-abcd-ef1234567890` (example)
 **Location**: Cloudflare Dashboard > Zero Trust > Access > Applications > [sebc.dev Admin Panel] > Overview
 **Use**: JWT audience claim validation in middleware
 
 ### Environment Variables (.env.example)
+
 CLOUDFLARE_ACCESS_TEAM_DOMAIN=<team-name>.cloudflareaccess.com
 CLOUDFLARE_ACCESS_AUD=<application-aud-uuid>
 ```
@@ -298,6 +310,7 @@ CLOUDFLARE_ACCESS_AUD=<application-aud-uuid>
 ### Validation at Each Step
 
 After each commit:
+
 ```bash
 # Format check
 pnpm format:check docs/deployment/cloudflare-access-setup.md
@@ -316,13 +329,13 @@ All checks must pass before moving to next commit.
 
 ## 📊 Commit Metrics
 
-| Commit     | Files  | Lines     | Implementation | Review   | Total    |
-| ---------- | ------ | --------- | -------------- | -------- | -------- |
-| 1. Guide Structure | 1 new | ~150 | 20-30 min | 10-15 min | 30-45 min |
-| 2. Access App | 1 mod | ~200 | 40-60 min | 20-30 min | 60-90 min |
-| 3. Policies & Auth | 1 mod | ~250 | 50-70 min | 25-35 min | 75-105 min |
-| 4. Values & Testing | 2 mod | ~100 | 30-40 min | 15-20 min | 45-60 min |
-| **TOTAL**  | **2-3 files** | **~700 lines** | **2.5-3.5h** | **1-1.5h** | **3.5-5h** |
+| Commit              | Files         | Lines          | Implementation | Review     | Total      |
+| ------------------- | ------------- | -------------- | -------------- | ---------- | ---------- |
+| 1. Guide Structure  | 1 new         | ~150           | 20-30 min      | 10-15 min  | 30-45 min  |
+| 2. Access App       | 1 mod         | ~200           | 40-60 min      | 20-30 min  | 60-90 min  |
+| 3. Policies & Auth  | 1 mod         | ~250           | 50-70 min      | 25-35 min  | 75-105 min |
+| 4. Values & Testing | 2 mod         | ~100           | 30-40 min      | 15-20 min  | 45-60 min  |
+| **TOTAL**           | **2-3 files** | **~700 lines** | **2.5-3.5h**   | **1-1.5h** | **3.5-5h** |
 
 ---
 
@@ -353,6 +366,7 @@ All checks must pass before moving to next commit.
 ### Commit Messages
 
 Format:
+
 ```
 🔧 config(cloudflare): [short description] (max 50 chars)
 
@@ -364,6 +378,7 @@ Part of Story 0.8 Phase 1 - Commit X/4
 ```
 
 Examples:
+
 ```
 Commit 1:
 🔧 config(cloudflare): create Access configuration guide

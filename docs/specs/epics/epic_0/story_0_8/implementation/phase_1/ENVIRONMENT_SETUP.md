@@ -49,6 +49,7 @@ This guide covers all environment setup needed for Phase 1 - Cloudflare Access C
 ### Step 1: Verify Cloudflare Account Access
 
 1. **Login to Cloudflare**:
+
    ```
    https://dash.cloudflare.com/
    ```
@@ -101,6 +102,7 @@ Your **Team Domain** is critical for Phase 2 (JWT validation).
 4. Format: `<your-team-name>.cloudflareaccess.com`
 
 **Example**: If your organization is "Acme Corp", your Team Domain might be:
+
 ```
 acme-corp.cloudflareaccess.com
 ```
@@ -214,11 +216,11 @@ curl -I https://<your-domain>/
 
 All services are accessed via Cloudflare dashboard - no external APIs or services needed for Phase 1.
 
-| Service              | URL                              | Purpose                          | Access Required |
-| -------------------- | -------------------------------- | -------------------------------- | --------------- |
-| Cloudflare Dashboard | https://dash.cloudflare.com/     | Main dashboard, Workers access   | Admin           |
-| Zero Trust Dashboard | https://one.dash.cloudflare.com/ | Access configuration             | Admin           |
-| Workers Application  | https://<your-domain>/           | Target application to protect    | Public (before config) |
+| Service              | URL                              | Purpose                        | Access Required        |
+| -------------------- | -------------------------------- | ------------------------------ | ---------------------- |
+| Cloudflare Dashboard | https://dash.cloudflare.com/     | Main dashboard, Workers access | Admin                  |
+| Zero Trust Dashboard | https://one.dash.cloudflare.com/ | Access configuration           | Admin                  |
+| Workers Application  | https://<your-domain>/           | Target application to protect  | Public (before config) |
 
 ---
 
@@ -227,6 +229,7 @@ All services are accessed via Cloudflare dashboard - no external APIs or service
 ### Issue: Can't access Zero Trust dashboard
 
 **Symptoms**:
+
 - "Zero Trust" not visible in Cloudflare dashboard sidebar
 - Redirect to upgrade page when accessing `https://one.dash.cloudflare.com/`
 
@@ -246,6 +249,7 @@ All services are accessed via Cloudflare dashboard - no external APIs or service
    - Request Zero Trust access
 
 **Verify Fix**:
+
 ```bash
 # Manual test:
 # Open https://one.dash.cloudflare.com/
@@ -257,6 +261,7 @@ All services are accessed via Cloudflare dashboard - no external APIs or service
 ### Issue: Team Domain not visible
 
 **Symptoms**:
+
 - Can't find Team Domain in Settings > General
 - Team Domain field is empty
 
@@ -278,6 +283,7 @@ All services are accessed via Cloudflare dashboard - no external APIs or service
    - Check with account owner if not visible
 
 **Verify Fix**:
+
 ```bash
 # Manual test:
 # Go to Zero Trust > Settings > General
@@ -289,6 +295,7 @@ All services are accessed via Cloudflare dashboard - no external APIs or service
 ### Issue: Workers application not accessible
 
 **Symptoms**:
+
 - Can't access `https://<your-domain>/`
 - Error: "Application not found" or "502 Bad Gateway"
 
@@ -311,6 +318,7 @@ All services are accessed via Cloudflare dashboard - no external APIs or service
    ```
 
 **Verify Fix**:
+
 ```bash
 # Test application responds
 curl -I https://<your-domain>/
@@ -322,6 +330,7 @@ curl -I https://<your-domain>/
 ### Issue: Don't have admin permissions
 
 **Symptoms**:
+
 - Can't create Access applications
 - "Permission denied" when trying to configure policies
 - Can't access certain dashboard sections
@@ -387,16 +396,19 @@ Complete this checklist before starting Phase 1 implementation:
 ### Credentials Management
 
 **Dashboard Access**:
+
 - Use strong password for Cloudflare account
 - Enable 2FA/MFA on Cloudflare account (highly recommended)
 - Don't share account credentials
 
 **Team Domain**:
+
 - Not a secret, but document it securely
 - Will be used in JWT validation (Phase 2)
 - Format: `<team-name>.cloudflareaccess.com`
 
 **Application AUD**:
+
 - Not a secret, but must be exact match
 - UUID format: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
 - Will be used in JWT audience claim validation (Phase 2)
@@ -404,12 +416,14 @@ Complete this checklist before starting Phase 1 implementation:
 ### Configuration Security
 
 **Access Policies**:
+
 - Start with restrictive policies (specific emails/domains)
 - Test with known email addresses
 - Avoid "Everyone" policy in production
 - Review and audit policies regularly
 
 **Authentication Methods**:
+
 - Choose based on security requirements:
   - Email OTP: Simple, no external dependency
   - SSO (Google/GitHub): Better UX, requires external account
