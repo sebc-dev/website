@@ -512,10 +512,10 @@ Phase 1 MUST satisfy these before proceeding:
 
 ---
 
-**Validation completed by**: ******\_\_\_******
-**Date**: ******\_\_\_******
+**Validation completed by**: **\*\***\_\_\_**\*\***
+**Date**: **\*\***\_\_\_**\*\***
 **Phase 1 Status**: ⏳ Pending / ✅ Approved / 🔧 Changes Requested / ❌ Rejected
-**Notes**: **************************\_**************************
+**Notes**: ************\*\*************\_************\*\*************
 
 ---
 
