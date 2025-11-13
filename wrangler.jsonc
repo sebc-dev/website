@@ -104,6 +104,24 @@
       "tag": "v1",
       "new_sqlite_classes": ["DOQueueHandler", "DOTagCacheShard"]
     }
+  ],
+  /**
+   * Service Bindings
+   * Enable worker-to-worker communication for OpenNext
+   * https://developers.cloudflare.com/workers/runtime-apis/bindings/service-bindings/
+   *
+   * WORKER_SELF_REFERENCE:
+   * - Purpose: Self-reference binding for internal worker communication
+   * - Service: Points to this worker itself (name must match wrangler.jsonc 'name' field)
+   * - Use case: OpenNext uses this for cache coordination and ISR operations
+   *
+   * Note: This binding is required by OpenNext for R2 incremental cache functionality
+   */
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "website"
+    }
   ]
   /**
    * Smart Placement
