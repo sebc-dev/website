@@ -33,6 +33,7 @@ wrangler r2 bucket list
 ```
 
 **Expected Output**:
+
 ```
 ┌──────────────────┬──────────────────┬──────────────────┐
 │ Name             │ Creation Date    │ Location         │
@@ -47,6 +48,7 @@ wrangler r2 bucket list | grep sebc-next-cache
 ```
 
 **Expected Output**:
+
 ```
 sebc-next-cache  ...
 ```
@@ -57,6 +59,7 @@ wrangler r2 object list sebc-next-cache
 ```
 
 **Expected Output**:
+
 ```
 Listing objects in bucket 'sebc-next-cache'...
 (empty - no objects)
@@ -65,6 +68,7 @@ Listing objects in bucket 'sebc-next-cache'...
 #### Cloudflare Dashboard Validation
 
 **Manual Steps**:
+
 1. Navigate to: https://dash.cloudflare.com/
 2. Go to: Workers & Pages → R2
 3. Click: "Buckets" tab
@@ -101,6 +105,7 @@ cat wrangler.jsonc | jq '.r2_buckets'
 ```
 
 **Expected Output**:
+
 ```json
 [
   {
@@ -116,6 +121,7 @@ cat wrangler.jsonc | jq '.r2_buckets[0].binding'
 ```
 
 **Expected Output**:
+
 ```
 "NEXT_INC_CACHE_R2_BUCKET"
 ```
@@ -126,6 +132,7 @@ cat wrangler.jsonc | jq '.r2_buckets[0].bucket_name'
 ```
 
 **Expected Output**:
+
 ```
 "sebc-next-cache"
 ```
@@ -138,6 +145,7 @@ wrangler dev
 ```
 
 **Expected Output** (look for these lines):
+
 ```
 ⛅️ wrangler 3.x.x
 -------------------
@@ -183,6 +191,7 @@ ls -l docs/deployment/CLOUDFLARE_RESOURCES.md
 ```
 
 **Expected Output**:
+
 ```
 -rw-r--r-- 1 user group 7500 Jan 12 10:45 docs/architecture/CACHE_ARCHITECTURE.md
 -rw-r--r-- 1 user group 7200 Jan 12 10:45 docs/deployment/CLOUDFLARE_RESOURCES.md
@@ -200,6 +209,7 @@ wc -l docs/deployment/CLOUDFLARE_RESOURCES.md
 #### Content Validation (Manual)
 
 **CACHE_ARCHITECTURE.md**:
+
 - [ ] Open file in editor
 - [ ] Read "Overview" section - explains OpenNext cache?
 - [ ] Read "R2 Incremental Cache" section - explains ISR?
@@ -209,6 +219,7 @@ wc -l docs/deployment/CLOUDFLARE_RESOURCES.md
 - [ ] Verify no `[TODO]` or `[PLACEHOLDER]` text
 
 **CLOUDFLARE_RESOURCES.md**:
+
 - [ ] Open file in editor
 - [ ] Read "R2 Buckets" section - explains creation?
 - [ ] Check pricing section - free tier limits correct?
@@ -220,6 +231,7 @@ wc -l docs/deployment/CLOUDFLARE_RESOURCES.md
 #### Link Validation (Manual)
 
 **Test all links**:
+
 - [ ] Open CACHE_ARCHITECTURE.md in browser/editor with link preview
 - [ ] Click each link:
   - [ ] OpenNext caching docs: https://opennext.js.org/cloudflare/caching
@@ -231,6 +243,7 @@ wc -l docs/deployment/CLOUDFLARE_RESOURCES.md
 #### Markdown Syntax Validation (Optional)
 
 If `markdownlint` is installed:
+
 ```bash
 # Validate markdown syntax
 markdownlint docs/architecture/CACHE_ARCHITECTURE.md
@@ -244,6 +257,7 @@ markdownlint docs/deployment/CLOUDFLARE_RESOURCES.md
 **Extract and test code examples**:
 
 From CACHE_ARCHITECTURE.md, find Next.js code examples:
+
 ```typescript
 // Example: Page with revalidate
 export const revalidate = 3600; // 1 hour
@@ -356,11 +370,13 @@ git log -3 --format="%H %s"
 Mark each as complete after validation:
 
 **Infrastructure** (Commit 1):
+
 - [ ] R2 bucket `sebc-next-cache` exists
 - [ ] Bucket visible in Cloudflare Dashboard
 - [ ] Bucket is empty
 
 **Configuration** (Commit 2):
+
 - [ ] wrangler.jsonc has r2_buckets array
 - [ ] Binding name is `NEXT_INC_CACHE_R2_BUCKET`
 - [ ] Bucket name is `sebc-next-cache`
@@ -369,6 +385,7 @@ Mark each as complete after validation:
 - [ ] No R2 errors in logs
 
 **Documentation** (Commit 3):
+
 - [ ] CACHE_ARCHITECTURE.md exists and complete
 - [ ] CLOUDFLARE_RESOURCES.md exists and complete
 - [ ] All links work
@@ -376,19 +393,20 @@ Mark each as complete after validation:
 - [ ] Pricing accurate
 
 **Overall**:
+
 - [ ] All 3 commits complete
 - [ ] `pnpm build` succeeds
 - [ ] Git history clean
 - [ ] Ready for Phase 2
 
-| Metric | Target | Actual | Status |
-|--------|--------|--------|--------|
-| R2 Bucket Created | ✅ | - | ⏳ |
-| Binding Configured | ✅ | - | ⏳ |
-| `wrangler dev` Works | ✅ | - | ⏳ |
-| Documentation Complete | ✅ | - | ⏳ |
-| JSON Valid | ✅ | - | ⏳ |
-| Build Succeeds | ✅ | - | ⏳ |
+| Metric                 | Target | Actual | Status |
+| ---------------------- | ------ | ------ | ------ |
+| R2 Bucket Created      | ✅     | -      | ⏳     |
+| Binding Configured     | ✅     | -      | ⏳     |
+| `wrangler dev` Works   | ✅     | -      | ⏳     |
+| Documentation Complete | ✅     | -      | ⏳     |
+| JSON Valid             | ✅     | -      | ⏳     |
+| Build Succeeds         | ✅     | -      | ⏳     |
 
 ---
 
@@ -397,16 +415,19 @@ Mark each as complete after validation:
 ### Issue: "wrangler r2 bucket list" shows no bucket
 
 **Symptoms**:
+
 - Bucket not visible in list
 - Bucket creation may have failed
 
 **Diagnosis**:
+
 ```bash
 # Check recent Wrangler logs
 wrangler r2 bucket list --verbose
 ```
 
 **Solutions**:
+
 1. **Recreate bucket**:
    ```bash
    wrangler r2 bucket create sebc-next-cache
@@ -423,10 +444,12 @@ wrangler r2 bucket list --verbose
 ### Issue: "wrangler dev" fails with R2 error
 
 **Symptoms**:
+
 - Error: "R2 bucket 'sebc-next-cache' not found"
 - Or: "R2 binding error"
 
 **Diagnosis**:
+
 ```bash
 # Check bucket exists
 wrangler r2 bucket list | grep sebc-next-cache
@@ -436,7 +459,9 @@ cat wrangler.jsonc | jq '.r2_buckets'
 ```
 
 **Solutions**:
+
 1. **Bucket doesn't exist**: Create it (Commit 1)
+
    ```bash
    wrangler r2 bucket create sebc-next-cache
    ```
@@ -453,14 +478,17 @@ cat wrangler.jsonc | jq '.r2_buckets'
 ### Issue: Documentation links are broken
 
 **Symptoms**:
+
 - Clicking links returns 404
 - Links don't open in browser
 
 **Diagnosis**:
+
 - Open docs in browser or editor with link preview
 - Click each link manually
 
 **Solutions**:
+
 1. **Update broken links** to current URLs
 2. **Verify against official docs**:
    - OpenNext: https://opennext.js.org/
@@ -472,10 +500,12 @@ cat wrangler.jsonc | jq '.r2_buckets'
 ### Issue: JSON syntax error in wrangler.jsonc
 
 **Symptoms**:
+
 - `cat wrangler.jsonc | jq empty` shows error
 - Syntax error message
 
 **Diagnosis**:
+
 ```bash
 # Check JSON validity
 cat wrangler.jsonc | jq empty
@@ -483,6 +513,7 @@ cat wrangler.jsonc | jq empty
 ```
 
 **Solutions**:
+
 1. **Find and fix syntax error**:
    - Check for trailing commas
    - Check brackets/braces match
@@ -546,6 +577,7 @@ After completing all validation, document results:
 **✅ VALIDATED** - Phase 1 complete and ready for Phase 2
 
 **Next Steps**:
+
 - Update EPIC_TRACKING.md (Story 0.5: 1/3 phases complete)
 - Proceed to Phase 2 documentation generation
 ```
@@ -574,6 +606,7 @@ A: Stop and fix the issue before proceeding. Phase 1 must be 100% validated befo
 ## 🏁 Validation Complete
 
 **Phase 1 validation is complete when**:
+
 - [ ] All validation commands pass
 - [ ] All checkboxes in Success Metrics checked
 - [ ] Validation report completed

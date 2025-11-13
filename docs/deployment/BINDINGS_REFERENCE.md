@@ -24,13 +24,13 @@ Bindings allow your Cloudflare Worker to interact with resources on the Cloudfla
 
 ### Configured Bindings (Phase 1 + Phase 2 + Phase 3)
 
-| Binding Name | Type | Purpose | Phase |
-|-------------|------|---------|-------|
-| `DB` | D1 Database | Drizzle ORM database access | Pre-existing |
-| `NEXT_INC_CACHE_R2_BUCKET` | R2 Bucket | Next.js ISR cache storage | Phase 1 |
-| `NEXT_CACHE_DO_QUEUE` | Durable Object | ISR revalidation queue | Phase 2 |
-| `NEXT_TAG_CACHE_DO_SHARDED` | Durable Object | Tag-based cache invalidation | Phase 2 |
-| `WORKER_SELF_REFERENCE` | Service Binding | Worker-to-worker communication | Phase 3 |
+| Binding Name                | Type            | Purpose                        | Phase        |
+| --------------------------- | --------------- | ------------------------------ | ------------ |
+| `DB`                        | D1 Database     | Drizzle ORM database access    | Pre-existing |
+| `NEXT_INC_CACHE_R2_BUCKET`  | R2 Bucket       | Next.js ISR cache storage      | Phase 1      |
+| `NEXT_CACHE_DO_QUEUE`       | Durable Object  | ISR revalidation queue         | Phase 2      |
+| `NEXT_TAG_CACHE_DO_SHARDED` | Durable Object  | Tag-based cache invalidation   | Phase 2      |
+| `WORKER_SELF_REFERENCE`     | Service Binding | Worker-to-worker communication | Phase 3      |
 
 ## Complete Bindings Configuration
 
@@ -46,11 +46,11 @@ Bindings allow your Cloudflare Worker to interact with resources on the Cloudfla
 
   "assets": {
     "binding": "ASSETS",
-    "directory": ".open-next/assets"
+    "directory": ".open-next/assets",
   },
 
   "observability": {
-    "enabled": true
+    "enabled": true,
   },
 
   /**
@@ -61,8 +61,8 @@ Bindings allow your Cloudflare Worker to interact with resources on the Cloudfla
       "binding": "DB",
       "database_name": "sebc-dev-db",
       "database_id": "6615b6d8-2522-46dc-9051-bc0813b42240",
-      "migrations_dir": "drizzle/migrations"
-    }
+      "migrations_dir": "drizzle/migrations",
+    },
   ],
 
   /**
@@ -71,8 +71,8 @@ Bindings allow your Cloudflare Worker to interact with resources on the Cloudfla
   "r2_buckets": [
     {
       "binding": "NEXT_INC_CACHE_R2_BUCKET",
-      "bucket_name": "sebc-next-cache"
-    }
+      "bucket_name": "sebc-next-cache",
+    },
   ],
 
   /**
@@ -83,14 +83,14 @@ Bindings allow your Cloudflare Worker to interact with resources on the Cloudfla
       {
         "name": "NEXT_CACHE_DO_QUEUE",
         "class_name": "DOQueueHandler",
-        "script_name": "website"
+        "script_name": "website",
       },
       {
         "name": "NEXT_TAG_CACHE_DO_SHARDED",
         "class_name": "DOTagCacheShard",
-        "script_name": "website"
-      }
-    ]
+        "script_name": "website",
+      },
+    ],
   },
 
   /**
@@ -99,8 +99,8 @@ Bindings allow your Cloudflare Worker to interact with resources on the Cloudfla
   "services": [
     {
       "binding": "WORKER_SELF_REFERENCE",
-      "service": "website"
-    }
+      "service": "website",
+    },
   ],
 
   /**
@@ -109,9 +109,9 @@ Bindings allow your Cloudflare Worker to interact with resources on the Cloudfla
   "migrations": [
     {
       "tag": "v1",
-      "new_sqlite_classes": ["DOQueueHandler", "DOTagCacheShard"]
-    }
-  ]
+      "new_sqlite_classes": ["DOQueueHandler", "DOTagCacheShard"],
+    },
+  ],
 }
 ```
 
@@ -290,6 +290,7 @@ export async function POST(request: Request) {
 ```
 
 **Key Features**:
+
 - Async background processing
 - Retry logic for failed jobs
 - Rate limiting (prevents thundering herd)
@@ -339,7 +340,10 @@ export async function POST(request: Request) {
   const { tag } = await request.json();
 
   // Hash tag to shard (0-31)
-  const hash = Array.from(tag).reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const hash = Array.from(tag).reduce(
+    (acc, char) => acc + char.charCodeAt(0),
+    0,
+  );
   const shardId = hash % 32;
 
   // Get DO shard instance
@@ -354,6 +358,7 @@ export async function POST(request: Request) {
 ```
 
 **Key Features**:
+
 - 32 shards for load distribution
 - In-memory state (fast lookups)
 - Parallel tag invalidation
@@ -424,7 +429,7 @@ export async function POST(request: Request) {
     new Request('https://internal/background-job', {
       method: 'POST',
       body: JSON.stringify({ task: 'regenerate-page', path: '/blog/post-1' }),
-    })
+    }),
   );
 
   return Response.json({ queued: true });
@@ -477,6 +482,7 @@ export async function POST(request: Request) {
 **Cause**: Service binding not configured in wrangler.jsonc
 
 **Solution**:
+
 1. Add `services` section to wrangler.jsonc
 2. Ensure `service` name matches `name` field
 3. Regenerate types: `pnpm cf-typegen`
@@ -489,16 +495,17 @@ export async function POST(request: Request) {
 **Cause**: Service name doesn't match worker name
 
 **Solution**:
+
 ```jsonc
 // wrangler.jsonc
 {
-  "name": "website",  // Worker name
+  "name": "website", // Worker name
   "services": [
     {
       "binding": "WORKER_SELF_REFERENCE",
-      "service": "website"  // Must match worker name
-    }
-  ]
+      "service": "website", // Must match worker name
+    },
+  ],
 }
 ```
 
@@ -528,11 +535,11 @@ export async function GET() {
   const { env } = await getCloudflareContext();
 
   // Access bindings
-  const db = env.DB;                                  // D1
-  const r2 = env.NEXT_INC_CACHE_R2_BUCKET;           // R2
-  const queue = env.NEXT_CACHE_DO_QUEUE;             // DO Queue
-  const tagCache = env.NEXT_TAG_CACHE_DO_SHARDED;    // DO Tag Cache
-  const workerSelf = env.WORKER_SELF_REFERENCE;      // Service Binding
+  const db = env.DB; // D1
+  const r2 = env.NEXT_INC_CACHE_R2_BUCKET; // R2
+  const queue = env.NEXT_CACHE_DO_QUEUE; // DO Queue
+  const tagCache = env.NEXT_TAG_CACHE_DO_SHARDED; // DO Tag Cache
+  const workerSelf = env.WORKER_SELF_REFERENCE; // Service Binding
 
   return Response.json({ available: true });
 }
@@ -605,6 +612,7 @@ wrangler.jsonc
 ```
 
 **Deploy with specific config**:
+
 ```bash
 # Development
 wrangler deploy --config wrangler.dev.jsonc
@@ -615,12 +623,12 @@ wrangler deploy --config wrangler.jsonc
 
 ### Environment Variables vs Bindings
 
-| Feature | Bindings | Environment Variables |
-|---------|---------|----------------------|
-| **Use case** | Cloudflare resources | Configuration values |
-| **Example** | D1, R2, DO | API keys, feature flags |
-| **Access** | `env.BINDING_NAME` | `env.VAR_NAME` |
-| **Security** | Built-in (scoped) | Use secrets for sensitive |
+| Feature      | Bindings             | Environment Variables     |
+| ------------ | -------------------- | ------------------------- |
+| **Use case** | Cloudflare resources | Configuration values      |
+| **Example**  | D1, R2, DO           | API keys, feature flags   |
+| **Access**   | `env.BINDING_NAME`   | `env.VAR_NAME`            |
+| **Security** | Built-in (scoped)    | Use secrets for sensitive |
 
 **Bindings**: `env.DB`, `env.NEXT_INC_CACHE_R2_BUCKET`
 **Variables**: `env.API_KEY`, `env.FEATURE_FLAG`
@@ -644,12 +652,13 @@ Enable observability in `wrangler.jsonc`:
 ```jsonc
 {
   "observability": {
-    "enabled": true
-  }
+    "enabled": true,
+  },
 }
 ```
 
 **View logs**:
+
 ```bash
 # Real-time logs
 wrangler tail
@@ -668,6 +677,7 @@ wrangler tail --search "R2"
 **Cause**: Binding not configured in wrangler.jsonc
 
 **Solution**:
+
 1. Check `wrangler.jsonc` has the binding
 2. Redeploy: `pnpm deploy`
 3. Restart dev server: `pnpm dev`
@@ -679,6 +689,7 @@ wrangler tail --search "R2"
 **Cause**: `database_id` in wrangler.jsonc doesn't match actual database
 
 **Solution**:
+
 ```bash
 # List databases
 wrangler d1 list
@@ -696,6 +707,7 @@ wrangler d1 info sebc-dev-db
 **Cause**: Bucket name in wrangler.jsonc doesn't match actual bucket
 
 **Solution**:
+
 ```bash
 # List buckets
 wrangler r2 bucket list
@@ -742,10 +754,7 @@ export async function GET() {
     return Response.json(posts);
   } catch (error) {
     console.error('Database error:', error);
-    return Response.json(
-      { error: 'Failed to fetch posts' },
-      { status: 500 }
-    );
+    return Response.json({ error: 'Failed to fetch posts' }, { status: 500 });
   }
 }
 ```
@@ -753,11 +762,13 @@ export async function GET() {
 ### 3. Avoid Hardcoding Resource IDs
 
 **❌ Bad**:
+
 ```typescript
 const bucket = env.R2.get('sebc-next-cache');
 ```
 
 **✅ Good**:
+
 ```typescript
 const bucket = env.NEXT_INC_CACHE_R2_BUCKET;
 ```
@@ -765,6 +776,7 @@ const bucket = env.NEXT_INC_CACHE_R2_BUCKET;
 ### 4. Monitor Free Tier Usage
 
 Set up alerts for:
+
 - D1: 80% of 5M reads/month = 4M reads
 - R2: 80% of 1M writes/month = 800K writes
 - DO: 80% of 1M requests/month = 800K requests

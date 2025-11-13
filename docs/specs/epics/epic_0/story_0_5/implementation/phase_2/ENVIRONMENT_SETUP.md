@@ -66,6 +66,7 @@ node --version
 Phase 2 only requires **configuration changes**. No new npm packages needed.
 
 **Why?**
+
 - Durable Objects classes provided by `@opennextjs/cloudflare` (already installed)
 - Configuration is pure JSON/JSONC in `wrangler.jsonc`
 - Documentation uses Markdown (no special tools needed)
@@ -117,10 +118,12 @@ cat wrangler.jsonc | jq '.r2_buckets, .durable_objects'
 ### Phase 1 Status (already completed)
 
 **R2 Bucket**: `sebc-next-cache`
+
 - ✅ Created and accessible
 - ✅ Binding configured in wrangler.jsonc
 
 Verify:
+
 ```bash
 # List R2 buckets
 wrangler r2 bucket list
@@ -131,6 +134,7 @@ wrangler r2 bucket list
 ### Phase 2 Status (what we're configuring)
 
 **Durable Objects**: Not yet created (will be auto-created when first deployed)
+
 - Status: ❌ Not created (will be after Phase 2 committed)
 - DO Classes:
   - `DOQueueHandler` (ISR queue) - provided by OpenNext
@@ -225,10 +229,12 @@ Complete this checklist before starting Phase 2 implementation:
 ### Issue: Wrangler CLI version too old
 
 **Symptoms**:
+
 - `wrangler --version` shows v3.0 or older
 - Commands not recognized
 
 **Solutions**:
+
 1. Update Wrangler:
    ```bash
    npm install -g wrangler@latest
@@ -239,6 +245,7 @@ Complete this checklist before starting Phase 2 implementation:
    ```
 
 **Verify Fix**:
+
 ```bash
 wrangler --version
 # Should show v3.5.0+
@@ -249,10 +256,12 @@ wrangler --version
 ### Issue: Cloudflare account access not working
 
 **Symptoms**:
+
 - `wrangler whoami` shows "Not authenticated"
 - Login commands fail
 
 **Solutions**:
+
 1. Re-authenticate:
    ```bash
    wrangler login
@@ -264,6 +273,7 @@ wrangler --version
    ```
 
 **Verify Fix**:
+
 ```bash
 wrangler whoami
 # Should show your Cloudflare account email
@@ -274,10 +284,12 @@ wrangler whoami
 ### Issue: Durable Objects not available on account
 
 **Symptoms**:
+
 - Cloudflare Dashboard shows "Durable Objects (Coming Soon)"
 - Error when trying to configure DO
 
 **Solutions**:
+
 1. Check account plan:
    - Durable Objects available on: Workers Pro, Cloudflare Pro, Business, Enterprise
    - Not available on: Free plan (Workers Bundled)
@@ -291,10 +303,12 @@ wrangler whoami
 ### Issue: JSONC syntax error in wrangler.jsonc
 
 **Symptoms**:
+
 - `jq .` command fails on wrangler.jsonc
 - Wrangler errors during deploy
 
 **Solutions**:
+
 1. Validate JSONC syntax:
    ```bash
    cat wrangler.jsonc | jq .
@@ -312,6 +326,7 @@ wrangler whoami
    ```
 
 **Verify Fix**:
+
 ```bash
 cat wrangler.jsonc | jq . > /dev/null && echo "✓ Valid"
 ```
@@ -321,10 +336,12 @@ cat wrangler.jsonc | jq . > /dev/null && echo "✓ Valid"
 ### Issue: R2 Bucket not found
 
 **Symptoms**:
+
 - `wrangler r2 bucket list` doesn't show `sebc-next-cache`
 - Wrangler errors about missing R2 bucket
 
 **Solutions**:
+
 1. Check bucket exists:
    ```bash
    wrangler r2 bucket list
@@ -339,6 +356,7 @@ cat wrangler.jsonc | jq . > /dev/null && echo "✓ Valid"
    ```
 
 **Verify Fix**:
+
 ```bash
 wrangler r2 bucket list | grep sebc-next-cache
 # Should show the bucket
@@ -349,11 +367,13 @@ wrangler r2 bucket list | grep sebc-next-cache
 ### Issue: pnpm dev fails to start
 
 **Symptoms**:
+
 - `pnpm dev` shows errors
 - Server doesn't start
 - Binding errors in console
 
 **Solutions**:
+
 1. Check Node.js version:
    ```bash
    node --version
@@ -371,6 +391,7 @@ wrangler r2 bucket list | grep sebc-next-cache
    ```
 
 **Verify Fix**:
+
 ```bash
 pnpm dev
 # Should start without errors

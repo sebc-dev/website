@@ -14,6 +14,7 @@ Complete validation checklist before marking Phase 1 as complete.
 - [ ] Git history is clean
 
 **Verification**:
+
 ```bash
 # Check commit count and messages
 git log --oneline -3
@@ -36,6 +37,7 @@ git log --oneline -3
 - [ ] Bucket location is "Auto" (global distribution)
 
 **Validation**:
+
 ```bash
 # List R2 buckets
 wrangler r2 bucket list
@@ -69,6 +71,7 @@ wrangler r2 object list sebc-next-cache
 - [ ] Comment is concise and clear
 
 **Validation**:
+
 ```bash
 # Validate JSON syntax
 cat wrangler.jsonc | jq empty
@@ -99,6 +102,7 @@ cat wrangler.jsonc | jq '.r2_buckets[0].bucket_name'
 - [ ] Worker responds on http://localhost:8787
 
 **Validation**:
+
 ```bash
 # Start wrangler dev
 wrangler dev
@@ -121,6 +125,7 @@ wrangler dev
 - [ ] `.open-next/` directory generated successfully
 
 **Validation**:
+
 ```bash
 # Run Next.js build
 pnpm build
@@ -176,6 +181,7 @@ pnpm build
 - [ ] Links are current (not outdated versions)
 
 **Validation**:
+
 ```bash
 # Verify file exists
 ls -l docs/architecture/CACHE_ARCHITECTURE.md
@@ -238,6 +244,7 @@ head -30 docs/architecture/CACHE_ARCHITECTURE.md
 - [ ] Cloudflare Dashboard paths are correct
 
 **Validation**:
+
 ```bash
 # Verify file exists
 ls -l docs/deployment/CLOUDFLARE_RESOURCES.md
@@ -265,6 +272,7 @@ head -30 docs/deployment/CLOUDFLARE_RESOURCES.md
 - [ ] Comments and style consistent with existing config
 
 **Validation**:
+
 ```bash
 # Verify D1 binding still present
 cat wrangler.jsonc | jq '.d1_databases'
@@ -298,6 +306,7 @@ wrangler dev
 - [ ] Prepares for Phase 2 (Durable Objects)
 
 **Validation**:
+
 ```bash
 # Review PRD requirements
 cat docs/specs/PRD.md | grep -A 10 "ENF3"
@@ -319,6 +328,7 @@ cat docs/specs/epics/epic_0/story_0_5/story_0.5.md
 - [ ] Git diff shows only relevant changes (no unrelated modifications)
 
 **Validation**:
+
 ```bash
 # Check git diff for unrelated changes
 git diff HEAD~3..HEAD
@@ -348,6 +358,7 @@ git diff HEAD~3..HEAD
 - [ ] No commits mix infrastructure + code + docs
 
 **Validation**:
+
 ```bash
 # Review commit messages
 git log -3 --format="%h %s"
@@ -411,16 +422,16 @@ git show HEAD~2 HEAD~1 HEAD
 
 ## 📊 Success Metrics
 
-| Metric | Target | Actual | Status |
-|--------|--------|--------|--------|
-| R2 Bucket Created | ✅ | - | ⏳ |
-| Binding Configured | ✅ | - | ⏳ |
-| `wrangler dev` Success | ✅ | - | ⏳ |
-| Build Success | ✅ | - | ⏳ |
-| Documentation Lines | ~295 | - | ⏳ |
-| JSON Valid | ✅ | - | ⏳ |
-| All Links Work | ✅ | - | ⏳ |
-| Commits Clean | 3 | - | ⏳ |
+| Metric                 | Target | Actual | Status |
+| ---------------------- | ------ | ------ | ------ |
+| R2 Bucket Created      | ✅     | -      | ⏳     |
+| Binding Configured     | ✅     | -      | ⏳     |
+| `wrangler dev` Success | ✅     | -      | ⏳     |
+| Build Success          | ✅     | -      | ⏳     |
+| Documentation Lines    | ~295   | -      | ⏳     |
+| JSON Valid             | ✅     | -      | ⏳     |
+| All Links Work         | ✅     | -      | ⏳     |
+| Commits Clean          | 3      | -      | ⏳     |
 
 ---
 
@@ -450,6 +461,7 @@ Select one:
    - Add completion note in "Recent Updates"
 
 3. [ ] Create git tag (optional):
+
    ```bash
    git tag epic-0-story-0.5-phase-1-complete
    git push --tags

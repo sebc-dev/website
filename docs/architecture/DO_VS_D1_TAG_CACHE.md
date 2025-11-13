@@ -23,6 +23,7 @@
 **Decision**: Use **Durable Objects** for Next.js tag cache and ISR queue
 
 **Rationale**:
+
 1. ✅ **Performance**: ~10-20ms latency (vs ~20-50ms for D1)
 2. ✅ **Scalability**: Built-in sharding (32 instances) for load distribution
 3. ✅ **State management**: In-memory state for fast operations
@@ -30,6 +31,7 @@
 5. ✅ **Cost**: Free tier covers expected usage (1M requests/month)
 
 **Trade-offs accepted**:
+
 - ❌ Slightly more complex than D1 (but OpenNext provides classes)
 - ❌ Per-DO state (not global) - mitigated by sharding
 
@@ -104,6 +106,7 @@
 #### 1. Performance (10-20ms latency)
 
 **In-memory state**: Tag mappings stored in RAM
+
 ```typescript
 class DOTagCacheShard {
   private state: Map<string, string[]> = new Map();
@@ -121,22 +124,26 @@ class DOTagCacheShard {
 #### 2. Scalability (32 shards)
 
 **Load distribution**:
+
 - 32 DO instances (one per shard)
 - Each handles ~3% of traffic
 - Parallel processing: multiple tags invalidated simultaneously
 
 **Example**: 10,000 `revalidateTag()` calls/day
+
 - Per shard: 312 calls/day (easily handled)
 - Total DO requests: 10,000 (well within 1M free tier)
 
 #### 3. State Management
 
 **In-memory + persistent**:
+
 - Tag mappings in RAM (fast reads)
 - Periodically synced to DO storage (durability)
 - Best of both worlds
 
 **Queue state**:
+
 - Pending jobs in memory
 - Retry counters, timestamps
 - Failed jobs tracked for debugging
@@ -144,6 +151,7 @@ class DOTagCacheShard {
 #### 4. OpenNext Integration
 
 **Native support**:
+
 ```jsonc
 // wrangler.jsonc
 "durable_objects": {
@@ -210,6 +218,7 @@ class DOTagCacheShard {
 
 **Network overhead**: Every query requires round-trip to D1
 **Benchmark**:
+
 - D1 query: ~20-50ms
 - DO in-memory: ~5-10ms
 - **2-5x slower**
@@ -218,6 +227,7 @@ class DOTagCacheShard {
 
 **Single instance**: All queries hit one D1 database
 **Scalability issues**:
+
 - High traffic → bottleneck
 - No load distribution
 - Eventual consistency challenges
@@ -225,11 +235,13 @@ class DOTagCacheShard {
 #### 3. Overkill for Tag Cache
 
 **D1 designed for relational data**:
+
 - Complex queries (JOINs, aggregations)
 - ACID transactions
 - Schema migrations
 
 **Tag cache is simple key-value**:
+
 - No complex queries needed
 - Simple lookup: `tag → pages`
 - D1's power is wasted
@@ -238,6 +250,7 @@ class DOTagCacheShard {
 
 **Free tier**: 5M reads/month
 **Estimated usage** (100k views/month):
+
 - Optimistic: 10k tag reads = **FREE**
 - Realistic: 50k tag reads = **FREE**
 - High traffic (1M views): 500k reads = **FREE** (but close to limit)
@@ -247,6 +260,7 @@ class DOTagCacheShard {
 ### When D1 Makes Sense
 
 D1 is a great choice when:
+
 1. ✅ You need relational data (users, posts, comments)
 2. ✅ Complex queries with JOINs
 3. ✅ ACID transactions required
@@ -256,20 +270,20 @@ D1 is a great choice when:
 
 ## Detailed Comparison
 
-| Feature | Durable Objects | D1 Database |
-|---------|----------------|-------------|
-| **Latency** | ~10-20ms | ~20-50ms |
-| **In-memory state** | ✅ Yes (fast) | ❌ No (disk-based) |
-| **Sharding** | ✅ Built-in (32 shards) | ❌ Single instance |
-| **Concurrency** | ✅ Per-shard isolation | ⚠️ Global locking |
-| **Consistency** | ✅ Strong (per DO) | ✅ Strong |
-| **Setup complexity** | ⚠️ Moderate | ✅ Simple |
-| **OpenNext support** | ✅ Native | ❌ Custom impl needed |
-| **Free tier** | 1M requests/month | 5M reads/month |
-| **Best use case** | Queue, cache, state | Relational data |
-| **Cost (10k req/day)** | **FREE** (300k/month) | **FREE** (300k/month) |
-| **Cost (100k req/day)** | **FREE** (3M/month) | ⚠️ Near limit (3M/month) |
-| **Scalability** | ✅ Excellent | ⚠️ Limited |
+| Feature                 | Durable Objects         | D1 Database              |
+| ----------------------- | ----------------------- | ------------------------ |
+| **Latency**             | ~10-20ms                | ~20-50ms                 |
+| **In-memory state**     | ✅ Yes (fast)           | ❌ No (disk-based)       |
+| **Sharding**            | ✅ Built-in (32 shards) | ❌ Single instance       |
+| **Concurrency**         | ✅ Per-shard isolation  | ⚠️ Global locking        |
+| **Consistency**         | ✅ Strong (per DO)      | ✅ Strong                |
+| **Setup complexity**    | ⚠️ Moderate             | ✅ Simple                |
+| **OpenNext support**    | ✅ Native               | ❌ Custom impl needed    |
+| **Free tier**           | 1M requests/month       | 5M reads/month           |
+| **Best use case**       | Queue, cache, state     | Relational data          |
+| **Cost (10k req/day)**  | **FREE** (300k/month)   | **FREE** (300k/month)    |
+| **Cost (100k req/day)** | **FREE** (3M/month)     | ⚠️ Near limit (3M/month) |
+| **Scalability**         | ✅ Excellent            | ⚠️ Limited               |
 
 ## Performance Analysis
 
@@ -338,15 +352,16 @@ TOTAL:                      ~970ms (10 × 97ms)
 
 ### Free Tier Limits
 
-| Resource | Durable Objects | D1 Database |
-|----------|----------------|-------------|
-| Requests | 1,000,000/month | 5,000,000 reads/month |
-| Storage | 1 GB | 10 GB |
-| Writes | Unlimited (within requests) | 100,000/day |
+| Resource | Durable Objects             | D1 Database           |
+| -------- | --------------------------- | --------------------- |
+| Requests | 1,000,000/month             | 5,000,000 reads/month |
+| Storage  | 1 GB                        | 10 GB                 |
+| Writes   | Unlimited (within requests) | 100,000/day           |
 
 ### Projected Usage (sebc.dev)
 
 **Assumptions**:
+
 - 100,000 page views/month
 - 10% cache hit rate on tags
 - 5,000 `revalidateTag()` calls/month
@@ -422,14 +437,14 @@ Use this framework to decide between DO and D1 for your use case:
 
 ### For Tag Cache (Our Use Case):
 
-| Requirement | DO | D1 | Winner |
-|-------------|----|----|--------|
-| Latency < 20ms | ✅ | ❌ | **DO** |
-| Scalability | ✅ | ⚠️ | **DO** |
-| Concurrency | ✅ | ⚠️ | **DO** |
-| OpenNext support | ✅ | ❌ | **DO** |
-| Simple key-value | ✅ | ⚠️ Overkill | **DO** |
-| Cost | ✅ | ✅ | **Tie** |
+| Requirement      | DO  | D1          | Winner  |
+| ---------------- | --- | ----------- | ------- |
+| Latency < 20ms   | ✅  | ❌          | **DO**  |
+| Scalability      | ✅  | ⚠️          | **DO**  |
+| Concurrency      | ✅  | ⚠️          | **DO**  |
+| OpenNext support | ✅  | ❌          | **DO**  |
+| Simple key-value | ✅  | ⚠️ Overkill | **DO**  |
+| Cost             | ✅  | ✅          | **Tie** |
 
 **Decision**: Durable Objects wins **4/5** (latency, scalability, concurrency, integration)
 
@@ -445,15 +460,15 @@ Use this framework to decide between DO and D1 for your use case:
       {
         "name": "NEXT_CACHE_DO_QUEUE",
         "class_name": "DOQueueHandler",
-        "script_name": "website"
+        "script_name": "website",
       },
       {
         "name": "NEXT_TAG_CACHE_DO_SHARDED",
         "class_name": "DOTagCacheShard",
-        "script_name": "website"
-      }
-    ]
-  }
+        "script_name": "website",
+      },
+    ],
+  },
 }
 ```
 
@@ -490,12 +505,14 @@ export async function POST(request: Request) {
 ### Monitoring
 
 **Durable Objects metrics** (Cloudflare Dashboard):
+
 - Requests per shard
 - CPU time per request
 - State size per DO
 - Error rate
 
 **D1 metrics** (Cloudflare Dashboard):
+
 - Read/write operations
 - Query latency
 - Storage used
