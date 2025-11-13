@@ -63,6 +63,7 @@ Config      JWT Valid.   Security   Runbook
 ```
 
 **Sequential Flow**:
+
 1. Phase 1 établit la protection au niveau Edge
 2. Phase 2 valide les requêtes au niveau application
 3. Phase 3 vérifie l'intégration bout-en-bout
@@ -403,23 +404,23 @@ Phase 4 (Documentation)
 
 ### Overall Estimates
 
-| Metric                   | Estimate      | Notes                                  |
-| ------------------------ | ------------- | -------------------------------------- |
-| **Total Phases**         | 4             | Sequential, security-focused phases    |
-| **Total Duration**       | 6-7.5 days    | Based on sequential implementation     |
-| **Parallel Duration**    | N/A           | Phases must be sequential              |
-| **Total Commits**        | ~17           | Across all phases                      |
-| **Total Files**          | ~8 new        | Middleware, tests, docs                |
-| **Test Coverage Target** | >85%          | Critical security code                 |
+| Metric                   | Estimate   | Notes                               |
+| ------------------------ | ---------- | ----------------------------------- |
+| **Total Phases**         | 4          | Sequential, security-focused phases |
+| **Total Duration**       | 6-7.5 days | Based on sequential implementation  |
+| **Parallel Duration**    | N/A        | Phases must be sequential           |
+| **Total Commits**        | ~17        | Across all phases                   |
+| **Total Files**          | ~8 new     | Middleware, tests, docs             |
+| **Test Coverage Target** | >85%       | Critical security code              |
 
 ### Per-Phase Timeline
 
-| Phase | Duration | Commits | Start After | Blocks     |
-| ----- | -------- | ------- | ----------- | ---------- |
-| 1. Cloudflare Config | 1-1.5d | 4 | - | Phase 2, 3, 4 |
-| 2. Middleware JWT | 2-2.5d | 6 | Phase 1 | Phase 3, 4 |
-| 3. E2E Tests | 1.5-2d | 4 | Phase 2 | Phase 4 |
-| 4. Documentation | 1d | 3 | Phase 3 | - |
+| Phase                | Duration | Commits | Start After | Blocks        |
+| -------------------- | -------- | ------- | ----------- | ------------- |
+| 1. Cloudflare Config | 1-1.5d   | 4       | -           | Phase 2, 3, 4 |
+| 2. Middleware JWT    | 2-2.5d   | 6       | Phase 1     | Phase 3, 4    |
+| 3. E2E Tests         | 1.5-2d   | 4       | Phase 2     | Phase 4       |
+| 4. Documentation     | 1d       | 3       | Phase 3     | -             |
 
 ### Resource Requirements
 
@@ -457,13 +458,13 @@ Phase 4 (Documentation)
 
 ### Overall Story Risks
 
-| Risk                          | Likelihood | Impact | Mitigation                              |
-| ----------------------------- | ---------- | ------ | --------------------------------------- |
-| JWT validation bug            | Low        | High   | Tests exhaustifs, code review, `jose`   |
-| Cloudflare config error       | Medium     | Medium | Documentation détaillée, tests manuels  |
-| Middleware perf impact        | Low        | Low    | JWT validation est très rapide (<10ms)  |
-| Incompatibilité Workers       | Low        | High   | `jose` compatible Edge, tests en local  |
-| Loss of admin access          | Low        | High   | Procédure de récupération documentée    |
+| Risk                    | Likelihood | Impact | Mitigation                             |
+| ----------------------- | ---------- | ------ | -------------------------------------- |
+| JWT validation bug      | Low        | High   | Tests exhaustifs, code review, `jose`  |
+| Cloudflare config error | Medium     | Medium | Documentation détaillée, tests manuels |
+| Middleware perf impact  | Low        | Low    | JWT validation est très rapide (<10ms) |
+| Incompatibilité Workers | Low        | High   | `jose` compatible Edge, tests en local |
+| Loss of admin access    | Low        | High   | Procédure de récupération documentée   |
 
 ---
 
@@ -471,12 +472,12 @@ Phase 4 (Documentation)
 
 ### Test Coverage by Phase
 
-| Phase       | Unit Tests | Integration Tests | E2E Tests  |
-| ----------- | ---------- | ----------------- | ---------- |
-| 1. Config   | -          | -                 | Manual (dashboard) |
-| 2. Middleware | 8+ tests | 5+ tests          | -          |
-| 3. E2E Tests | -         | -                 | 10+ tests  |
-| 4. Docs     | -          | -                 | -          |
+| Phase         | Unit Tests | Integration Tests | E2E Tests          |
+| ------------- | ---------- | ----------------- | ------------------ |
+| 1. Config     | -          | -                 | Manual (dashboard) |
+| 2. Middleware | 8+ tests   | 5+ tests          | -                  |
+| 3. E2E Tests  | -          | -                 | 10+ tests          |
+| 4. Docs       | -          | -                 | -                  |
 
 ### Test Milestones
 
@@ -541,6 +542,7 @@ For each phase, use the `phase-doc-generator` skill to create:
    - Identifier les risques manquants
 
 2. **Set up Cloudflare account**
+
    ```bash
    # Ensure Cloudflare account has Zero Trust access
    # Navigate to https://one.dash.cloudflare.com/
@@ -605,14 +607,14 @@ This story is considered complete when:
 
 ### Quality Metrics
 
-| Metric               | Target | Actual |
-| -------------------- | ------ | ------ |
-| Test Coverage (Middleware) | >85% | - |
-| E2E Test Coverage    | >80%   | -      |
-| Type Safety          | 100%   | -      |
-| Code Review Approval | 100%   | -      |
-| JWT Validation Time  | <10ms  | -      |
-| Security Audit       | Pass   | -      |
+| Metric                     | Target | Actual |
+| -------------------------- | ------ | ------ |
+| Test Coverage (Middleware) | >85%   | -      |
+| E2E Test Coverage          | >80%   | -      |
+| Type Safety                | 100%   | -      |
+| Code Review Approval       | 100%   | -      |
+| JWT Validation Time        | <10ms  | -      |
+| Security Audit             | Pass   | -      |
 
 ---
 

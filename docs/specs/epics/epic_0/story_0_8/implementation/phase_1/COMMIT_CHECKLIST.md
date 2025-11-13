@@ -144,6 +144,7 @@ pnpm format:check docs/deployment/cloudflare-access-setup.md
 ```
 
 **Expected Result**:
+
 - Application visible in Cloudflare dashboard
 - Application configured with correct settings
 - Documentation updated with detailed steps
@@ -281,6 +282,7 @@ pnpm format:check docs/deployment/cloudflare-access-setup.md
 ```
 
 **Expected Result**:
+
 - Policy active and enforcing access control
 - Unauthenticated requests redirected to Cloudflare login
 - Authentication method(s) working correctly
@@ -348,6 +350,7 @@ Part of Story 0.8 Phase 1 - Commit 3/4"
 ## 📋 Commit 4: Document Critical Values and Complete Testing
 
 **Files**:
+
 - `docs/deployment/cloudflare-access-setup.md` (modified)
 - `.env.example` (modified)
 
@@ -398,6 +401,7 @@ Part of Story 0.8 Phase 1 - Commit 3/4"
 
 - [ ] Open `.env.example` file
 - [ ] Add Cloudflare Access variables:
+
   ```env
   # Cloudflare Access Configuration (for JWT validation in middleware)
   # Retrieved from: Zero Trust > Settings > General
@@ -406,6 +410,7 @@ Part of Story 0.8 Phase 1 - Commit 3/4"
   # Retrieved from: Zero Trust > Access > Applications > sebc.dev Admin Panel > Overview
   CLOUDFLARE_ACCESS_AUD=<application-aud-uuid>
   ```
+
 - [ ] Add comments explaining where to find each value
 - [ ] Add note about Phase 2 usage
 - [ ] Verify formatting and syntax
@@ -443,6 +448,7 @@ pnpm format:check .env.example
 ```
 
 **Expected Result**:
+
 - Team Domain retrieved and documented (correct format)
 - Application AUD retrieved and documented (valid UUID)
 - `.env.example` updated with placeholders

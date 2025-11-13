@@ -38,11 +38,13 @@ Le panneau d'administration permet de créer, éditer et publier des articles. I
 ### From PRD (ENF23 - Sécurité infrastructure)
 
 **CA1: Cloudflare Access**
+
 - ✅ Route `/admin` protégée par Cloudflare Access (Zero Trust)
 - ✅ Politique d'accès configurée dans le dashboard Cloudflare
 - ✅ Authentification obligatoire pour accéder aux routes administratives
 
 **CA2: Validation JWT**
+
 - ✅ Validation du token `Cf-Access-Jwt-Assertion` dans middleware Next.js (`middleware.ts`)
 - ✅ Utilisation de la bibliothèque `jose` pour validation JWT
 - ✅ Redirection vers page de connexion Cloudflare si token invalide ou absent
@@ -50,17 +52,20 @@ Le panneau d'administration permet de créer, éditer et publier des articles. I
 ### Additional Acceptance Criteria
 
 **Security**
+
 - ✅ Toutes les routes sous `/admin/*` sont protégées (wildcards)
 - ✅ Tentatives d'accès non autorisées sont bloquées et loggées
 - ✅ JWT expiré ou invalide déclenche une redirection vers l'authentification
 - ✅ Headers de sécurité appropriés configurés
 
 **Testing**
+
 - ✅ Tests E2E validant la protection des routes `/admin/*`
 - ✅ Tests de validation JWT (token valide, invalide, expiré, absent)
 - ✅ Tests de redirection vers Cloudflare Access
 
 **Documentation**
+
 - ✅ Guide de configuration Cloudflare Access
 - ✅ Documentation du middleware de validation JWT
 - ✅ Runbook opérationnel pour troubleshooting
@@ -72,24 +77,29 @@ Le panneau d'administration permet de créer, éditer et publier des articles. I
 ### Depends On (Must Complete First)
 
 **Story 0.5** (wrangler.toml avec bindings)
+
 - Need: `wrangler.jsonc` configured with basic structure
 - Reason: Cloudflare Access configuration requires a deployed Worker
 
 **Story 0.1** (Next.js initialized)
+
 - Need: Next.js project structure in place
 - Reason: Middleware file must be created in project root
 
 ### Blocks (Cannot Start Until This Completes)
 
 **Story 2.3** (Interface admin - routes)
+
 - Reason: Admin routes need authentication to be in place first
 
 **Story 2.4** (Panneau admin - création/édition)
+
 - Reason: Admin panel requires secure access
 
 ### Related Stories
 
 **Story 0.9** (Cloudflare WAF)
+
 - Both contribute to overall security posture
 - Can be developed in parallel
 
@@ -119,12 +129,14 @@ wrangler.jsonc                       # (No changes needed, used for deployment)
 ### Configuration Required
 
 **Cloudflare Dashboard (Zero Trust)**
+
 - Create Access Application for sebc.dev
 - Configure Access Policy for `/admin/*` routes
 - Set up authentication provider (email, Google, GitHub, etc.)
 - Configure session duration and policies
 
 **Environment Variables**
+
 - None required (JWT validation uses public Cloudflare keys)
 
 ---
@@ -164,7 +176,7 @@ const jwt = request.headers.get('Cf-Access-Jwt-Assertion');
 
 // 2. Verify JWT signature using Cloudflare's public keys
 const JWKS = createRemoteJWKSet(
-  new URL('https://<team-name>.cloudflareaccess.com/cdn-cgi/access/certs')
+  new URL('https://<team-name>.cloudflareaccess.com/cdn-cgi/access/certs'),
 );
 
 const { payload } = await jwtVerify(jwt, JWKS, {
@@ -187,7 +199,7 @@ return NextResponse.next();
 // src/middleware.ts
 export const config = {
   matcher: [
-    '/admin/:path*',           // Protect all admin routes
+    '/admin/:path*', // Protect all admin routes
   ],
 };
 ```
@@ -221,6 +233,7 @@ export const config = {
 **Overall Complexity**: 🟡 Medium
 
 **Reasoning**:
+
 - ✅ Cloudflare Access is mature and well-documented
 - ✅ JWT validation with `jose` is straightforward
 - ⚠️ Requires external dashboard configuration (outside codebase)
@@ -228,6 +241,7 @@ export const config = {
 - ⚠️ Requires understanding of JWT, public key cryptography
 
 **Risk Level**: 🟡 Medium
+
 - Configuration errors could block legitimate access
 - JWT validation bugs could create security vulnerabilities
 - Dependency on Cloudflare infrastructure
@@ -237,17 +251,20 @@ export const config = {
 ## 🚀 User Value
 
 ### For Developers
+
 - ✅ Secure admin panel without managing auth logic
 - ✅ Zero Trust security model (no session cookies)
 - ✅ Leverage Cloudflare's authentication infrastructure
 - ✅ Single Sign-On (SSO) capabilities if needed
 
 ### For End Users
+
 - ✅ Confidence that admin panel is secure
 - ✅ No risk of unauthorized content manipulation
 - ✅ Transparent security (no user-facing impact)
 
 ### For Operations
+
 - ✅ Centralized access control in Cloudflare dashboard
 - ✅ Audit logs of admin access
 - ✅ Easy to revoke access or change policies
@@ -286,15 +303,18 @@ export const config = {
 ## 📚 Reference Documentation
 
 ### Cloudflare Docs
+
 - [Cloudflare Access](https://developers.cloudflare.com/cloudflare-one/policies/access/)
 - [Access JWT Validation](https://developers.cloudflare.com/cloudflare-one/identity/authorization-cookie/validating-json/)
 - [Access Application Setup](https://developers.cloudflare.com/cloudflare-one/applications/configure-apps/)
 
 ### Next.js Docs
+
 - [Middleware](https://nextjs.org/docs/app/building-your-application/routing/middleware)
 - [Middleware Configuration](https://nextjs.org/docs/app/api-reference/file-conventions/middleware)
 
 ### Libraries
+
 - [jose - JWT library](https://github.com/panva/jose)
 - [jose Documentation](https://jose.readthedocs.io/)
 

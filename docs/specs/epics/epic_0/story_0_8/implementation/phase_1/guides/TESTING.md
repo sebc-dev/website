@@ -26,6 +26,7 @@ Phase 1 is **dashboard configuration**, so testing is entirely **manual** and in
 **Purpose**: Verify Cloudflare Access is configured correctly in the dashboard
 
 **Prerequisites**:
+
 - Access to Cloudflare Zero Trust dashboard
 - Admin permissions on the account
 
@@ -40,6 +41,7 @@ Phase 1 is **dashboard configuration**, so testing is entirely **manual** and in
 **Expected Result**: ✅ Application visible in list
 
 **If Failed**:
+
 - Verify you're in the correct Cloudflare account
 - Check if application was created successfully in Commit 2
 - Verify admin permissions
@@ -53,6 +55,7 @@ Phase 1 is **dashboard configuration**, so testing is entirely **manual** and in
 3. Verify settings:
 
 **Expected Result**:
+
 - ✅ Application name: "sebc.dev Admin Panel"
 - ✅ Application domain: Matches your Cloudflare Workers domain
 - ✅ Path: `/admin/*` (wildcard)
@@ -60,6 +63,7 @@ Phase 1 is **dashboard configuration**, so testing is entirely **manual** and in
 - ✅ Status: Active
 
 **If Failed**:
+
 - Edit application settings in dashboard
 - Correct any mismatched values
 - Save and retest
@@ -73,6 +77,7 @@ Phase 1 is **dashboard configuration**, so testing is entirely **manual** and in
 3. Click on policy to view details
 
 **Expected Result**:
+
 - ✅ Policy name: "Admin Access Policy"
 - ✅ Action: Allow
 - ✅ Decision: Include
@@ -80,6 +85,7 @@ Phase 1 is **dashboard configuration**, so testing is entirely **manual** and in
 - ✅ Policy enabled
 
 **If Failed**:
+
 - Edit policy in dashboard
 - Verify "Allow" action (not Block)
 - Verify Include rule is configured
@@ -93,12 +99,14 @@ Phase 1 is **dashboard configuration**, so testing is entirely **manual** and in
 2. Verify at least one method enabled
 
 **Expected Result**:
+
 - ✅ One-time PIN (email) enabled, OR
 - ✅ Google SSO enabled, OR
 - ✅ GitHub SSO enabled, OR
 - ✅ Other SSO provider enabled
 
 **If Failed**:
+
 - Enable at least one authentication method
 - Configure OAuth credentials if using SSO
 - Test authentication method before proceeding
@@ -110,6 +118,7 @@ Phase 1 is **dashboard configuration**, so testing is entirely **manual** and in
 **Purpose**: Verify unauthenticated users cannot access `/admin/*` routes
 
 **Prerequisites**:
+
 - Cloudflare Access configured (Tests 1.1-1.4 passed)
 - Application deployed and accessible
 - Private/incognito browser window
@@ -122,11 +131,13 @@ Phase 1 is **dashboard configuration**, so testing is entirely **manual** and in
 2. Navigate to: `https://<your-domain>/admin`
 
 **Expected Result**:
+
 - ✅ Browser redirects to Cloudflare Access login page
 - ✅ URL changes to: `https://<team-name>.cloudflareaccess.com/cdn-cgi/access/login/<app-id>`
 - ✅ Login form displayed
 
 **If Failed**:
+
 - Verify application path is `/admin/*` (not `/admin` without wildcard)
 - Verify policy is enabled
 - Verify application is "Active" status
@@ -142,11 +153,13 @@ Phase 1 is **dashboard configuration**, so testing is entirely **manual** and in
 4. Then try: `https://<your-domain>/admin/settings/profile`
 
 **Expected Result**:
+
 - ✅ ALL routes redirect to Cloudflare Access login
 - ✅ Wildcard protection works for nested routes
 - ✅ No direct access without authentication
 
 **If Failed**:
+
 - Verify path in application config includes wildcard: `/admin/*`
 - If missing wildcard, update application path
 - Retest after correction
@@ -158,6 +171,7 @@ Phase 1 is **dashboard configuration**, so testing is entirely **manual** and in
 **Purpose**: Verify authentication methods work end-to-end
 
 **Prerequisites**:
+
 - Tests 2.1 and 2.2 passed (unauthenticated redirect works)
 - Know which authentication method is configured
 - Have valid credentials/email
@@ -176,6 +190,7 @@ Phase 1 is **dashboard configuration**, so testing is entirely **manual** and in
 8. Submit
 
 **Expected Result**:
+
 - ✅ Email received with OTP code (within 1-2 minutes)
 - ✅ OTP code acceptance
 - ✅ Redirect back to: `https://<your-domain>/admin`
@@ -183,6 +198,7 @@ Phase 1 is **dashboard configuration**, so testing is entirely **manual** and in
 - ✅ Browser has `CF-Authorization` cookie
 
 **If Failed**:
+
 - Check email spam folder for OTP
 - Verify email is in allowed list (policy Include rule)
 - Request new OTP if expired
@@ -200,6 +216,7 @@ Phase 1 is **dashboard configuration**, so testing is entirely **manual** and in
 6. Grant permissions if requested
 
 **Expected Result**:
+
 - ✅ Redirect to Google/GitHub login
 - ✅ OAuth flow completes successfully
 - ✅ Redirect back to: `https://<your-domain>/admin`
@@ -207,6 +224,7 @@ Phase 1 is **dashboard configuration**, so testing is entirely **manual** and in
 - ✅ Browser has `CF-Authorization` cookie
 
 **If Failed**:
+
 - Verify OAuth credentials configured in Cloudflare
 - Check if email/org is in allowed list (policy)
 - Verify SSO provider account is valid
@@ -224,12 +242,14 @@ After successful authentication (Test 3.1 or 3.2):
 4. Refresh page (`https://<your-domain>/admin`)
 
 **Expected Result**:
+
 - ✅ All `/admin/*` routes accessible without re-authentication
 - ✅ Session persists across page navigation
 - ✅ Refresh doesn't require re-authentication
 - ✅ `CF-Authorization` cookie present
 
 **If Failed**:
+
 - Check session duration in application config
 - Verify cookie is not being blocked by browser
 - Check if cookie has correct domain and path
@@ -242,6 +262,7 @@ After successful authentication (Test 3.1 or 3.2):
 **Purpose**: Verify session duration and logout behavior
 
 **Prerequisites**:
+
 - Test 3 completed successfully (authenticated session active)
 
 **Test Procedure**:
@@ -255,11 +276,13 @@ After successful authentication (Test 3.1 or 3.2):
 5. Navigate to any `/admin/*` route again
 
 **Expected Result**:
+
 - ✅ After 5 min: Access still granted (session active)
 - ✅ After 15 min: Access still granted (session active)
 - ✅ No re-authentication required within session duration
 
 **If Failed**:
+
 - Check session duration setting (should be 24h)
 - Verify cookie is not expiring prematurely
 - Check browser cookie settings
@@ -275,6 +298,7 @@ After successful authentication (Test 3.1 or 3.2):
 5. Locate `CF-Authorization` cookie
 
 **Expected Result**:
+
 - ✅ Cookie name: `CF-Authorization`
 - ✅ Cookie present and not expired
 - ✅ Cookie domain matches your domain
@@ -282,6 +306,7 @@ After successful authentication (Test 3.1 or 3.2):
 - ✅ Cookie is HttpOnly and Secure
 
 **If Failed**:
+
 - If cookie missing: Authentication may have failed silently
 - If expired: Session duration may be too short
 - If wrong domain: Application domain config may be incorrect
@@ -296,11 +321,13 @@ After successful authentication (Test 3.1 or 3.2):
 4. Navigate to: `https://<your-domain>/admin`
 
 **Expected Result**:
+
 - ✅ Redirect to Cloudflare Access login page
 - ✅ Re-authentication required
 - ✅ Cookie deletion terminates session
 
 **If Failed**:
+
 - Session may be cached elsewhere (unlikely)
 - Verify cookie was actually deleted
 - Try full browser cache clear
@@ -312,6 +339,7 @@ After successful authentication (Test 3.1 or 3.2):
 **Purpose**: Verify Team Domain and Application AUD are correct
 
 **Prerequisites**:
+
 - Access to Cloudflare Zero Trust dashboard
 - Commit 4 completed (values documented)
 
@@ -325,12 +353,14 @@ After successful authentication (Test 3.1 or 3.2):
 4. Compare with documented value
 
 **Expected Result**:
+
 - ✅ Team Domain displayed in dashboard
 - ✅ Format: `<team-name>.cloudflareaccess.com`
 - ✅ Matches value in `docs/deployment/cloudflare-access-setup.md`
 - ✅ Matches value in `.env.example` (placeholder)
 
 **If Failed**:
+
 - Update documented value if incorrect
 - Verify you're in correct Cloudflare account
 - Confirm format is exact (no typos)
@@ -347,12 +377,14 @@ After successful authentication (Test 3.1 or 3.2):
 6. Compare with documented value
 
 **Expected Result**:
+
 - ✅ Application AUD displayed (UUID format)
 - ✅ Format: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`
 - ✅ Matches value in `docs/deployment/cloudflare-access-setup.md`
 - ✅ Matches value in `.env.example` (placeholder)
 
 **If Failed**:
+
 - Update documented value if incorrect
 - Verify UUID format is correct
 - Confirm you're viewing correct application
@@ -366,10 +398,12 @@ After successful authentication (Test 3.1 or 3.2):
 #### Issue: Can't access Cloudflare dashboard
 
 **Symptoms**:
+
 - Login fails or dashboard not loading
 - "Access denied" errors
 
 **Solutions**:
+
 1. Verify Cloudflare account credentials
 2. Check if 2FA/MFA is required
 3. Ensure admin permissions granted
@@ -380,9 +414,11 @@ After successful authentication (Test 3.1 or 3.2):
 #### Issue: Application not found in dashboard
 
 **Symptoms**:
+
 - "sebc.dev Admin Panel" not visible in Applications list
 
 **Solutions**:
+
 1. Verify you're in correct Cloudflare account
 2. Check if application was actually created (Commit 2)
 3. Try refreshing dashboard
@@ -393,10 +429,12 @@ After successful authentication (Test 3.1 or 3.2):
 #### Issue: No redirect to login page
 
 **Symptoms**:
+
 - Accessing `/admin` doesn't redirect
 - Page loads normally without authentication
 
 **Solutions**:
+
 1. Verify application path is `/admin/*` (with wildcard)
 2. Check if policy is enabled
 3. Verify application status is "Active"
@@ -409,18 +447,21 @@ After successful authentication (Test 3.1 or 3.2):
 #### Issue: Authentication fails
 
 **Symptoms**:
+
 - OTP code not received or rejected
 - SSO login fails or loops
 
 **Solutions**:
 
 **For One-time PIN**:
+
 1. Check email spam folder
 2. Verify email is in policy Include rule
 3. Request new OTP (may have expired)
 4. Try different email if possible
 
 **For SSO**:
+
 1. Verify OAuth credentials configured correctly
 2. Check if email/organization is allowed
 3. Test SSO provider account directly
@@ -431,10 +472,12 @@ After successful authentication (Test 3.1 or 3.2):
 #### Issue: Session doesn't persist
 
 **Symptoms**:
+
 - Re-authentication required on every page
 - Cookie not persisting
 
 **Solutions**:
+
 1. Check session duration in application config
 2. Verify browser allows cookies
 3. Check if browser privacy settings block cookies
@@ -497,34 +540,41 @@ Use this template to document test results:
 **Environment**: [Cloudflare Account / Domain]
 
 ### Test Suite 1: Configuration Verification
+
 - Test 1.1: ✅ PASS / ❌ FAIL - [Notes]
 - Test 1.2: ✅ PASS / ❌ FAIL - [Notes]
 - Test 1.3: ✅ PASS / ❌ FAIL - [Notes]
 - Test 1.4: ✅ PASS / ❌ FAIL - [Notes]
 
 ### Test Suite 2: Unauthenticated Access
+
 - Test 2.1: ✅ PASS / ❌ FAIL - [Notes]
 - Test 2.2: ✅ PASS / ❌ FAIL - [Notes]
 
 ### Test Suite 3: Authentication Flow
+
 - Test 3.1 (OTP): ✅ PASS / ❌ FAIL / ⏭️ SKIP - [Notes]
 - Test 3.2 (SSO): ✅ PASS / ❌ FAIL / ⏭️ SKIP - [Notes]
 - Test 3.3: ✅ PASS / ❌ FAIL - [Notes]
 
 ### Test Suite 4: Session Management
+
 - Test 4.1: ✅ PASS / ❌ FAIL - [Notes]
 - Test 4.2: ✅ PASS / ❌ FAIL - [Notes]
 - Test 4.3: ✅ PASS / ❌ FAIL - [Notes]
 
 ### Test Suite 5: Critical Values
+
 - Test 5.1: ✅ PASS / ❌ FAIL - [Notes]
 - Test 5.2: ✅ PASS / ❌ FAIL - [Notes]
 
 ### Overall Result
+
 - ✅ **ALL TESTS PASSED** - Ready for Phase 2
 - ❌ **TESTS FAILED** - Issues to fix: [List]
 
 ### Notes
+
 [Any additional observations, issues, or recommendations]
 ```
 
@@ -552,12 +602,14 @@ A: Test in staging/development first if available. For production, test carefull
 ## 🔗 Reference Documentation
 
 ### Internal Documentation
+
 - [Story 0.8 Specification](../../story_0.8.md)
 - [Phase 1 Index](../INDEX.md)
 - [Implementation Plan](../IMPLEMENTATION_PLAN.md)
 - [Commit Checklist](../COMMIT_CHECKLIST.md)
 
 ### Cloudflare Documentation
+
 - [Cloudflare Access Testing](https://developers.cloudflare.com/cloudflare-one/policies/access/test-access-policies/)
 - [Troubleshooting Access](https://developers.cloudflare.com/cloudflare-one/faq/access/)
 

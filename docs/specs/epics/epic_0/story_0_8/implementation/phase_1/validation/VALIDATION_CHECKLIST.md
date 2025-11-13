@@ -14,6 +14,7 @@ Complete validation checklist before marking Phase 1 as complete.
 - [ ] Git history is clean and reviewable
 
 **Verification**:
+
 ```bash
 # View commit history
 git log --oneline | head -4
@@ -35,6 +36,7 @@ git log --oneline | head -4
 - [ ] Application type is "Self-hosted"
 
 **Verification** (manual):
+
 1. Go to https://one.dash.cloudflare.com/
 2. Navigate to Access > Applications
 3. Click on "sebc.dev Admin Panel"
@@ -55,6 +57,7 @@ git log --oneline | head -4
 - [ ] Policy applies to correct application
 
 **Verification** (manual):
+
 1. In application details, go to "Policies" tab
 2. Verify policy exists and is configured correctly
 
@@ -72,6 +75,7 @@ git log --oneline | head -4
 - [ ] Email/organization restrictions configured (if needed)
 
 **Verification** (manual):
+
 1. Navigate to Settings > Authentication
 2. Verify at least one method enabled
 3. Test authentication flow (see Testing Guide)
@@ -89,6 +93,7 @@ git log --oneline | head -4
 - [ ] No direct access possible without authentication
 
 **Verification**:
+
 ```bash
 # Manual test in incognito browser:
 # 1. Open incognito window
@@ -109,6 +114,7 @@ git log --oneline | head -4
 - [ ] `CF-Authorization` cookie present in browser
 
 **Verification**:
+
 ```bash
 # Manual test after authentication:
 # 1. Complete authentication successfully
@@ -128,6 +134,7 @@ git log --oneline | head -4
 - [ ] Re-authentication flow works after logout
 
 **Verification**:
+
 ```bash
 # Manual test:
 # 1. Authenticate successfully
@@ -150,6 +157,7 @@ git log --oneline | head -4
 - [ ] Purpose explained (JWT validation in Phase 2)
 
 **Verification**:
+
 ```bash
 # Check documentation
 grep "Team Domain" docs/deployment/cloudflare-access-setup.md
@@ -169,6 +177,7 @@ grep "Team Domain" docs/deployment/cloudflare-access-setup.md
 - [ ] Purpose explained (JWT audience claim in Phase 2)
 
 **Verification**:
+
 ```bash
 # Check documentation
 grep "Application AUD" docs/deployment/cloudflare-access-setup.md
@@ -192,6 +201,7 @@ grep "Application AUD" docs/deployment/cloudflare-access-setup.md
 - [ ] No actual secrets or production values committed
 
 **Verification**:
+
 ```bash
 # Check .env.example
 cat .env.example | grep -A 3 "CLOUDFLARE_ACCESS"
@@ -222,6 +232,7 @@ cat .env.example | grep -A 3 "CLOUDFLARE_ACCESS"
 - [ ] Next steps (Phase 2) mentioned
 
 **Verification**:
+
 ```bash
 # Check for placeholders
 grep -i "TODO\|PLACEHOLDER\|TBD\|\[FILL\]" docs/deployment/cloudflare-access-setup.md
@@ -246,6 +257,7 @@ wc -l docs/deployment/cloudflare-access-setup.md
 - [ ] Headers hierarchy is correct (##, ###, ####)
 
 **Verification**:
+
 ```bash
 # Check formatting
 pnpm format:check docs/deployment/cloudflare-access-setup.md
@@ -293,6 +305,7 @@ pnpm format:check docs/deployment/cloudflare-access-setup.md
 - [ ] Non-admin routes still accessible without authentication
 
 **Verification**:
+
 ```bash
 # Test non-protected route
 curl -I https://<your-domain>/
@@ -353,13 +366,13 @@ grep -E "(Team Domain|Application AUD)" docs/deployment/cloudflare-access-setup.
 
 ## 📊 Manual Testing Summary
 
-| Test Suite                     | Status     | Notes |
-| ------------------------------ | ---------- | ----- |
-| 1. Configuration Verification  | ⏳ Pending | -     |
-| 2. Unauthenticated Access      | ⏳ Pending | -     |
-| 3. Authentication Flow         | ⏳ Pending | -     |
-| 4. Session Management          | ⏳ Pending | -     |
-| 5. Critical Values             | ⏳ Pending | -     |
+| Test Suite                    | Status     | Notes |
+| ----------------------------- | ---------- | ----- |
+| 1. Configuration Verification | ⏳ Pending | -     |
+| 2. Unauthenticated Access     | ⏳ Pending | -     |
+| 3. Authentication Flow        | ⏳ Pending | -     |
+| 4. Session Management         | ⏳ Pending | -     |
+| 5. Critical Values            | ⏳ Pending | -     |
 
 **Update table with results** (✅ Pass / ❌ Fail):
 
@@ -400,6 +413,7 @@ Select one:
 3. [ ] Update Epic 0 EPIC_TRACKING.md:
    - Story 0.8: 0/4 → 1/4
 4. [ ] Commit all changes with final message:
+
    ```bash
    git add .
    git commit -m "✅ complete: Phase 1 Cloudflare Access configuration
@@ -412,6 +426,7 @@ Select one:
 
    Phase 1 of Story 0.8 - Complete"
    ```
+
 5. [ ] Push changes:
    ```bash
    git push -u origin <branch-name>
@@ -479,6 +494,7 @@ Phase 1 MUST satisfy these before proceeding:
 ## 📚 Reference Documentation
 
 ### Internal Documentation
+
 - [Story 0.8 Specification](../../story_0.8.md)
 - [Phases Plan](../PHASES_PLAN.md)
 - [Phase 1 Index](../INDEX.md)
@@ -489,16 +505,17 @@ Phase 1 MUST satisfy these before proceeding:
 - [Testing Guide](../guides/TESTING.md)
 
 ### Cloudflare Documentation
+
 - [Cloudflare Access Overview](https://developers.cloudflare.com/cloudflare-one/policies/access/)
 - [Configure Access Applications](https://developers.cloudflare.com/cloudflare-one/applications/configure-apps/)
 - [JWT Validation (Phase 2 reference)](https://developers.cloudflare.com/cloudflare-one/identity/authorization-cookie/validating-json/)
 
 ---
 
-**Validation completed by**: _______________
-**Date**: _______________
+**Validation completed by**: ******\_\_\_******
+**Date**: ******\_\_\_******
 **Phase 1 Status**: ⏳ Pending / ✅ Approved / 🔧 Changes Requested / ❌ Rejected
-**Notes**: _____________________________________________________
+**Notes**: **************************\_**************************
 
 ---
 
