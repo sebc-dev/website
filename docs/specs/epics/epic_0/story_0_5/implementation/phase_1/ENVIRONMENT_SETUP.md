@@ -17,18 +17,21 @@ This guide covers all environment setup needed for Phase 1: R2 Bucket Configurat
 ### Tools Required
 
 - [x] **Node.js** (v18.17.0 or higher)
+
   ```bash
   node --version
   # Expected: v18.17.0+
   ```
 
 - [x] **pnpm** (v8.0.0 or higher)
+
   ```bash
   pnpm --version
   # Expected: v8.0.0+
   ```
 
 - [x] **Wrangler CLI** (v3.0.0 or higher)
+
   ```bash
   wrangler --version
   # Expected: v3.0.0+
@@ -58,6 +61,7 @@ wrangler whoami
 ```
 
 **Expected Output**:
+
 ```
  ⛅️ wrangler 3.x.x
 -------------------
@@ -71,6 +75,7 @@ Getting User settings...
 ```
 
 If not logged in:
+
 ```bash
 # Login to Cloudflare
 wrangler login
@@ -85,6 +90,7 @@ wrangler r2 bucket list
 ```
 
 **Expected Output** (if R2 is enabled):
+
 ```
 Listing buckets...
 ┌──────────────┬──────────────┬─────────────────┐
@@ -95,12 +101,14 @@ Listing buckets...
 ```
 
 **If R2 is NOT enabled**:
+
 ```
 Error: R2 is not enabled on this account.
 Please enable R2 at https://dash.cloudflare.com/r2
 ```
 
 **Action**: Enable R2 in Cloudflare Dashboard
+
 1. Navigate to: https://dash.cloudflare.com/
 2. Go to: Workers & Pages → R2
 3. Click "Enable R2" if not already enabled
@@ -116,6 +124,7 @@ wrangler r2 bucket list | grep sebc-next-cache
 **Expected Output**: (empty - no output means no conflict)
 
 If bucket exists:
+
 - **Option A**: Delete existing bucket (if safe to do so)
   ```bash
   wrangler r2 bucket delete sebc-next-cache
@@ -129,6 +138,7 @@ If bucket exists:
 **No new packages required for Phase 1**. This phase only configures infrastructure (R2 bucket) and updates wrangler.jsonc.
 
 Verify existing dependencies:
+
 ```bash
 # Verify OpenNext adapter is installed
 pnpm list @opennextjs/cloudflare
@@ -164,9 +174,11 @@ cat wrangler.jsonc | jq '.d1_databases'
 ## 🗄️ Cloudflare R2 Service
 
 ### Purpose
+
 R2 provides object storage for Next.js Incremental Static Regeneration (ISR) cache. It stores generated static pages persistently across deployments, enabling fast cache hits from Cloudflare's global network.
 
 ### R2 Capabilities
+
 - **Object Storage**: Stores HTML, JSON, and other static assets
 - **Global Distribution**: Served from Cloudflare's edge network (300+ locations)
 - **S3-Compatible API**: Works with S3-compatible tools (if needed)
@@ -176,17 +188,20 @@ R2 provides object storage for Next.js Incremental Static Regeneration (ISR) cac
 ### R2 Pricing (as of 2025)
 
 **Free Tier** (per month):
+
 - 10 GB storage
 - 1 million Class A operations (writes, lists)
 - 10 million Class B operations (reads)
 
 **Paid Tier** (per month):
+
 - Storage: $0.015 per GB
 - Class A operations: $4.50 per million (writes)
 - Class B operations: $0.36 per million (reads)
 - No egress fees (unlike S3)
 
 **Example Cost** (typical blog with ISR):
+
 - Storage: 1 GB cached pages = $0.015/month
 - Writes: 50,000 page generations = $0.225/month
 - Reads: 500,000 cache hits = $0.018/month
@@ -197,11 +212,13 @@ R2 provides object storage for Next.js Incremental Static Regeneration (ISR) cac
 **Step 1: Enable R2** (if not already done in previous section)
 
 **Step 2: Verify R2 Dashboard Access**
+
 1. Navigate to: https://dash.cloudflare.com/
 2. Click: Workers & Pages → R2
 3. Verify you see "Buckets" tab (not "Get Started")
 
 **Step 3: Understand R2 Limits**
+
 - Bucket name: 3-63 characters, lowercase, alphanumeric, hyphens
 - Max object size: 5 TB
 - Max upload part size: 5 GB
@@ -262,11 +279,14 @@ pnpm build
 ### Issue: "wrangler: command not found"
 
 **Symptoms**:
+
 - `wrangler` command not recognized
 - Error when running `wrangler whoami`
 
 **Solutions**:
+
 1. **Install Wrangler globally**:
+
    ```bash
    npm install -g wrangler
    # or
@@ -274,6 +294,7 @@ pnpm build
    ```
 
 2. **Verify installation**:
+
    ```bash
    wrangler --version
    ```
@@ -286,6 +307,7 @@ pnpm build
    ```
 
 **Verify Fix**:
+
 ```bash
 wrangler whoami
 # Should show your Cloudflare account
@@ -296,10 +318,12 @@ wrangler whoami
 ### Issue: "R2 is not enabled on this account"
 
 **Symptoms**:
+
 - `wrangler r2 bucket list` returns error
 - Message: "R2 is not enabled"
 
 **Solutions**:
+
 1. **Enable R2 in Cloudflare Dashboard**:
    - Go to: https://dash.cloudflare.com/
    - Navigate to: Workers & Pages → R2
@@ -314,6 +338,7 @@ wrangler whoami
    ```
 
 **Verify Fix**:
+
 ```bash
 wrangler r2 bucket list
 # Should return list (even if empty) without errors
@@ -324,18 +349,23 @@ wrangler r2 bucket list
 ### Issue: "You are not authenticated"
 
 **Symptoms**:
+
 - `wrangler whoami` shows "Not logged in"
 - R2 commands fail with authentication error
 
 **Solutions**:
+
 1. **Login to Cloudflare**:
+
    ```bash
    wrangler login
    ```
+
    - Opens browser for OAuth
    - Authorize Wrangler to access your account
 
 2. **Alternative: API Token** (for CI/CD):
+
    ```bash
    # Set API token environment variable
    export CLOUDFLARE_API_TOKEN=<your-token>
@@ -351,6 +381,7 @@ wrangler r2 bucket list
    ```
 
 **Verify Fix**:
+
 ```bash
 wrangler whoami
 # Should display account name and ID
@@ -361,12 +392,14 @@ wrangler whoami
 ### Issue: Bucket name "sebc-next-cache" already exists
 
 **Symptoms**:
+
 - `wrangler r2 bucket create sebc-next-cache` fails
 - Error: "Bucket already exists"
 
 **Solutions**:
 
 **Option A: Delete existing bucket** (if safe):
+
 ```bash
 # List bucket contents (make sure it's safe to delete)
 wrangler r2 object list sebc-next-cache
@@ -376,18 +409,21 @@ wrangler r2 bucket delete sebc-next-cache
 ```
 
 **Option B: Use different bucket name**:
+
 1. Choose new name (e.g., `sebc-next-cache-v2`)
 2. Update Commit 1 command
 3. Update Commit 2 binding configuration
 4. Document change in commit messages
 
 **Option C: Reuse existing bucket**:
+
 1. Verify bucket is appropriate for this project
 2. Skip Commit 1 (bucket already exists)
 3. Proceed to Commit 2 (binding configuration)
 4. Document in Commit 2 message that bucket pre-existed
 
 **Verify Fix**:
+
 ```bash
 wrangler r2 bucket list | grep sebc-next-cache
 # Should show the bucket (new or existing)
@@ -398,6 +434,7 @@ wrangler r2 bucket list | grep sebc-next-cache
 ### Issue: "jq: command not found"
 
 **Symptoms**:
+
 - `cat wrangler.jsonc | jq empty` fails
 - Error: "jq: command not found"
 
@@ -406,25 +443,30 @@ wrangler r2 bucket list | grep sebc-next-cache
 **Option A: Install jq**:
 
 On macOS:
+
 ```bash
 brew install jq
 ```
 
 On Ubuntu/Debian:
+
 ```bash
 sudo apt-get install jq
 ```
 
 On Windows (WSL):
+
 ```bash
 sudo apt-get install jq
 ```
 
 **Option B: Skip jq validation** (not recommended):
+
 - Manually validate JSON syntax in editor
 - Use online JSON validator
 
 **Verify Fix**:
+
 ```bash
 jq --version
 # Should show jq version
@@ -437,18 +479,21 @@ jq --version
 Complete this checklist before starting implementation:
 
 ### Prerequisites
+
 - [ ] Node.js v18.17.0+ installed
 - [ ] pnpm v8.0.0+ installed
 - [ ] Wrangler CLI v3.0.0+ installed
 - [ ] jq installed (optional but recommended)
 
 ### Cloudflare Account
+
 - [ ] Cloudflare account created
 - [ ] Logged in to Wrangler (`wrangler whoami` works)
 - [ ] R2 enabled on account
 - [ ] `wrangler r2 bucket list` works (no authentication errors)
 
 ### Project State
+
 - [ ] Story 0.1 completed (Next.js initialized)
 - [ ] Story 0.2 completed (OpenNext configured)
 - [ ] Story 0.6 completed (compatibility flags set)
@@ -456,11 +501,13 @@ Complete this checklist before starting implementation:
 - [ ] `pnpm build` succeeds
 
 ### Bucket Name
+
 - [ ] Verified no existing bucket named `sebc-next-cache`
 - [ ] Or: Decided on alternative name if conflict exists
 - [ ] Or: Confirmed reusing existing bucket is appropriate
 
 ### Ready to Implement
+
 - [ ] All validation commands passed
 - [ ] No blocking issues in troubleshooting section
 - [ ] Documentation reviewed and understood
@@ -472,16 +519,19 @@ Complete this checklist before starting implementation:
 ## 📚 Additional Resources
 
 ### Cloudflare Documentation
+
 - R2 Overview: https://developers.cloudflare.com/r2/
 - R2 Get Started: https://developers.cloudflare.com/r2/get-started/
 - R2 Pricing: https://developers.cloudflare.com/r2/platform/pricing/
 - Wrangler R2 Commands: https://developers.cloudflare.com/workers/wrangler/commands/#r2
 
 ### OpenNext Documentation
+
 - Cloudflare Caching: https://opennext.js.org/cloudflare/caching
 - R2 Incremental Cache: https://opennext.js.org/cloudflare/caching#r2-incremental-cache
 
 ### Next.js Documentation
+
 - ISR (Incremental Static Regeneration): https://nextjs.org/docs/app/building-your-application/data-fetching/incremental-static-regeneration
 - Revalidation: https://nextjs.org/docs/app/building-your-application/data-fetching/revalidating
 
@@ -492,12 +542,14 @@ Complete this checklist before starting implementation:
 After completing this environment setup:
 
 1. **Proceed to Commit 1**: Create R2 bucket
+
    ```bash
    # Follow COMMIT_CHECKLIST.md Section: Commit 1
    wrangler r2 bucket create sebc-next-cache
    ```
 
 2. **Then Commit 2**: Add binding to wrangler.jsonc
+
    ```bash
    # Follow COMMIT_CHECKLIST.md Section: Commit 2
    # Edit wrangler.jsonc

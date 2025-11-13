@@ -22,9 +22,9 @@ This document provides operational guidance for managing Cloudflare R2 resources
 
 ### Current Resources
 
-| Resource Type | Name | Purpose | Created |
-|--------------|------|---------|---------|
-| R2 Bucket | `sebc-next-cache` | Next.js ISR cache storage | 2025-11-12 |
+| Resource Type | Name              | Purpose                   | Created    |
+| ------------- | ----------------- | ------------------------- | ---------- |
+| R2 Bucket     | `sebc-next-cache` | Next.js ISR cache storage | 2025-11-12 |
 
 ## R2 Bucket Setup
 
@@ -77,9 +77,9 @@ Add to `wrangler.jsonc`:
   "r2_buckets": [
     {
       "binding": "NEXT_INC_CACHE_R2_BUCKET",
-      "bucket_name": "sebc-next-cache"
-    }
-  ]
+      "bucket_name": "sebc-next-cache",
+    },
+  ],
 }
 ```
 
@@ -108,22 +108,24 @@ pnpm deploy
 
 Cloudflare R2 includes generous free tier limits:
 
-| Resource | Free Tier | Cost After Free Tier |
-|----------|-----------|---------------------|
-| Storage | 10 GB | $0.015 per GB-month |
-| Class A Operations (writes, lists) | 1,000,000 | $4.50 per million |
-| Class B Operations (reads) | 10,000,000 | $0.36 per million |
-| Egress (to Internet) | Unlimited | $0.00 (always free) |
+| Resource                           | Free Tier  | Cost After Free Tier |
+| ---------------------------------- | ---------- | -------------------- |
+| Storage                            | 10 GB      | $0.015 per GB-month  |
+| Class A Operations (writes, lists) | 1,000,000  | $4.50 per million    |
+| Class B Operations (reads)         | 10,000,000 | $0.36 per million    |
+| Egress (to Internet)               | Unlimited  | $0.00 (always free)  |
 
 ### Operation Classes
 
 **Class A Operations** (more expensive):
+
 - PUT (write objects)
 - POST (multipart uploads)
 - LIST (list bucket contents)
 - COPY (copy objects)
 
 **Class B Operations** (less expensive):
+
 - GET (read objects)
 - HEAD (get metadata)
 
@@ -132,6 +134,7 @@ Cloudflare R2 includes generous free tier limits:
 #### Example 1: Small Website (sebc.dev)
 
 Assumptions:
+
 - 10,000 page views/month
 - 100 cached pages
 - Average page size: 50 KB
@@ -139,6 +142,7 @@ Assumptions:
 - Hourly revalidation
 
 **Monthly costs**:
+
 - Storage: 5 MB (100 pages × 50 KB) = **FREE** (within 10 GB)
 - Class A (writes): 240 operations = **FREE** (within 1M)
 - Class B (reads): 9,000 operations = **FREE** (within 10M)
@@ -147,6 +151,7 @@ Assumptions:
 #### Example 2: Medium Website
 
 Assumptions:
+
 - 100,000 page views/month
 - 500 cached pages
 - Average page size: 100 KB
@@ -154,6 +159,7 @@ Assumptions:
 - 30-minute revalidation
 
 **Monthly costs**:
+
 - Storage: 50 MB (500 pages × 100 KB) = **FREE** (within 10 GB)
 - Class A (writes): 24,000 operations = **FREE** (within 1M)
 - Class B (reads): 85,000 operations = **FREE** (within 10M)
@@ -162,6 +168,7 @@ Assumptions:
 #### Example 3: Large Website (Exceeding Free Tier)
 
 Assumptions:
+
 - 1,000,000 page views/month
 - 5,000 cached pages
 - Average page size: 200 KB
@@ -169,6 +176,7 @@ Assumptions:
 - 5-minute revalidation
 
 **Monthly costs**:
+
 - Storage: 1 GB (5,000 pages × 200 KB) = **FREE** (within 10 GB)
 - Class A (writes): 1,440,000 operations (440K over limit)
   - Cost: 0.44M × $4.50/M = **$1.98**
@@ -177,14 +185,14 @@ Assumptions:
 
 ### Cost Comparison: R2 vs. Workers KV
 
-| Feature | R2 | Workers KV |
-|---------|----|-----------|
-| Storage (free) | 10 GB | 1 GB |
-| Writes (free) | 1M/month | 1,000/day (30K/month) |
-| Reads (free) | 10M/month | 10M/month |
-| Large file support | ✅ Yes (unlimited size) | ❌ No (25 MB limit) |
-| Latency | ~20-30ms | ~10-20ms |
-| Best for | Large objects, ISR cache | Small key-value pairs |
+| Feature            | R2                       | Workers KV            |
+| ------------------ | ------------------------ | --------------------- |
+| Storage (free)     | 10 GB                    | 1 GB                  |
+| Writes (free)      | 1M/month                 | 1,000/day (30K/month) |
+| Reads (free)       | 10M/month                | 10M/month             |
+| Large file support | ✅ Yes (unlimited size)  | ❌ No (25 MB limit)   |
+| Latency            | ~20-30ms                 | ~10-20ms              |
+| Best for           | Large objects, ISR cache | Small key-value pairs |
 
 **For ISR cache**: R2 is more cost-effective due to higher write limits.
 
@@ -246,7 +254,7 @@ const data = await fetch('https://api.example.com/data', { cache: 'no-store' });
 
 // ✅ Cached fetch with revalidation
 const data = await fetch('https://api.example.com/data', {
-  next: { revalidate: 3600 } // Cache for 1 hour
+  next: { revalidate: 3600 }, // Cache for 1 hour
 });
 ```
 
@@ -257,10 +265,12 @@ const data = await fetch('https://api.example.com/data', {
 **Action**: Regularly check R2 usage to identify optimization opportunities
 
 **Tools**:
+
 - Cloudflare Dashboard (R2 Analytics)
 - Wrangler CLI (`wrangler r2 bucket info sebc-next-cache`)
 
 **Metrics to watch**:
+
 - Storage growth rate
 - Class A operation spikes
 - Class B operation patterns
@@ -293,6 +303,7 @@ wrangler r2 object get sebc-next-cache/<object-key> --metadata-only
 ### Setting Up Alerts
 
 **Coming in Future Phase**: Cloudflare email alerts for:
+
 - Storage approaching 80% of free tier (8 GB)
 - Class A operations approaching 80% of free tier (800K)
 - Unexpected cost spikes
@@ -302,6 +313,7 @@ wrangler r2 object get sebc-next-cache/<object-key> --metadata-only
 ### Issue 1: Bucket Already Exists Error
 
 **Error**:
+
 ```
 The bucket you tried to create already exists, and you own it. [code: 10004]
 ```
@@ -309,6 +321,7 @@ The bucket you tried to create already exists, and you own it. [code: 10004]
 **Solution**: Bucket already exists, no action needed
 
 **Verify**:
+
 ```bash
 wrangler r2 bucket list
 ```
@@ -316,11 +329,13 @@ wrangler r2 bucket list
 ### Issue 2: Wrangler Not Authenticated
 
 **Error**:
+
 ```
 Error: Not logged in
 ```
 
 **Solution**:
+
 ```bash
 # Login with OAuth
 wrangler login
@@ -332,44 +347,52 @@ wrangler login --api-token <YOUR_API_TOKEN>
 ### Issue 3: R2 Permission Denied
 
 **Error**:
+
 ```
 Error: A request to the Cloudflare API failed. [code: 10000]
 ```
 
 **Possible causes**:
+
 1. Account doesn't have R2 enabled
 2. API token lacks R2 permissions
 
 **Solution**:
+
 1. Enable R2 in Cloudflare Dashboard
 2. Regenerate API token with R2 permissions
 
 ### Issue 4: Cache Not Working
 
 **Symptoms**:
+
 - Pages render slowly every time
 - No cache hits in logs
 
 **Debugging steps**:
 
 1. **Check binding configuration**:
+
 ```bash
 # Verify wrangler.jsonc has correct binding
 cat wrangler.jsonc | grep -A 5 "r2_buckets"
 ```
 
 2. **Check bucket exists**:
+
 ```bash
 wrangler r2 bucket list
 ```
 
 3. **Check OpenNext configuration** (Phase 2):
+
 ```bash
 # Verify open-next.config.ts has cache enabled
 cat open-next.config.ts
 ```
 
 4. **Check R2 objects**:
+
 ```bash
 # List cached objects
 wrangler r2 object list sebc-next-cache
@@ -396,6 +419,7 @@ wrangler r2 object list sebc-next-cache
 **Default**: Bucket is private, only accessible via Worker binding
 
 **Worker binding** (`NEXT_INC_CACHE_R2_BUCKET`):
+
 - Automatically configured via wrangler.jsonc
 - No manual credentials needed
 - Secure: Workers have scoped access only to bound bucket
@@ -403,6 +427,7 @@ wrangler r2 object list sebc-next-cache
 ### API Tokens
 
 **Best practices**:
+
 1. Use scoped tokens (R2 read/write only)
 2. Rotate tokens regularly
 3. Never commit tokens to git
@@ -412,6 +437,7 @@ wrangler r2 object list sebc-next-cache
 **Current**: No public access configured (cache is internal)
 
 **Future**: If needed, configure public buckets for:
+
 - User-uploaded assets (with access controls)
 - Public downloads (with signed URLs)
 

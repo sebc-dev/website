@@ -22,12 +22,14 @@ Validate that the implementation:
 Phase 1 is split into **3 atomic commits**. You can:
 
 **Option A: Commit-by-commit review** (recommended)
+
 - Easier to digest (10-30 min per commit)
 - Progressive validation
 - Targeted feedback
 - **Total**: ~1 hour
 
 **Option B: Global review at once**
+
 - Faster overall (~45 min)
 - Immediate big picture
 - Requires more focus
@@ -51,6 +53,7 @@ Phase 1 is split into **3 atomic commits**. You can:
 ##### Infrastructure Verification
 
 - [ ] Bucket `sebc-next-cache` exists in Wrangler CLI
+
   ```bash
   wrangler r2 bucket list | grep sebc-next-cache
   # Should show the bucket
@@ -77,6 +80,7 @@ Phase 1 is split into **3 atomic commits**. You can:
 - [ ] Commit message explains purpose (ISR cache)
 - [ ] Commit message includes validation steps
 - [ ] Commit message follows format:
+
   ```
   chore(infra): create R2 bucket for Next.js ISR cache
 
@@ -108,16 +112,19 @@ wrangler r2 object list sebc-next-cache
 #### Approval Criteria
 
 **APPROVE** if:
+
 - ✅ Bucket created successfully
 - ✅ Bucket name is appropriate
 - ✅ Commit message is clear and complete
 
 **REQUEST CHANGES** if:
+
 - ❌ Bucket name doesn't follow conventions
 - ❌ Bucket already contains objects (should be empty)
 - ❌ Commit message lacks validation steps
 
 **REJECT** if:
+
 - ❌ Bucket not created
 - ❌ Wrong bucket name that will break future phases
 
@@ -208,12 +215,14 @@ wrangler dev
 #### Approval Criteria
 
 **APPROVE** if:
+
 - ✅ Binding configured correctly
 - ✅ JSON syntax valid
 - ✅ `wrangler dev` works
 - ✅ Comments clear and helpful
 
 **REQUEST CHANGES** if:
+
 - ❌ Binding name typo (`NEXT_INC_CACHE_R2_BUCKET` is misspelled)
 - ❌ Bucket name mismatch (doesn't match Commit 1)
 - ❌ Invalid JSON syntax
@@ -221,6 +230,7 @@ wrangler dev
 - ❌ `wrangler dev` fails with R2 errors
 
 **REJECT** if:
+
 - ❌ Fundamentally incorrect configuration
 - ❌ Breaking changes to existing bindings
 - ❌ Unrelated changes mixed in
@@ -230,6 +240,7 @@ wrangler dev
 ### Commit 3: Document R2 Cache Architecture
 
 **Files**:
+
 - `docs/architecture/CACHE_ARCHITECTURE.md` (new)
 - `docs/deployment/CLOUDFLARE_RESOURCES.md` (new)
 
@@ -240,11 +251,13 @@ wrangler dev
 ##### CACHE_ARCHITECTURE.md Content
 
 **Overview Section**:
+
 - [ ] Explains OpenNext cache architecture clearly
 - [ ] Describes multi-layer approach (R2, DO, Service bindings)
 - [ ] Positions Phase 1 in overall architecture
 
 **R2 Incremental Cache Section**:
+
 - [ ] Explains purpose: persistent storage for ISR pages
 - [ ] Describes how ISR works with R2
 - [ ] Provides Next.js code example with `revalidate`
@@ -252,22 +265,26 @@ wrangler dev
 - [ ] Discusses performance benefits (global distribution, low latency)
 
 **Cache Flow Diagram**:
+
 - [ ] Diagram exists (ASCII, Mermaid, or image)
 - [ ] Diagram shows: User → Worker → R2 check → Cache hit/miss
 - [ ] Diagram is accurate and helpful
 
 **Configuration Reference**:
+
 - [ ] Lists binding name: `NEXT_INC_CACHE_R2_BUCKET`
 - [ ] Lists bucket name: `sebc-next-cache`
 - [ ] Shows wrangler.jsonc snippet
 - [ ] Mentions open-next.config.ts (to be activated in Phase 3)
 
 **Future Phases Preview**:
+
 - [ ] Mentions Phase 2: Durable Objects
 - [ ] Mentions Phase 3: Service bindings and full activation
 - [ ] Sets expectations for complete architecture
 
 **References**:
+
 - [ ] Links to OpenNext caching docs
 - [ ] Links to Cloudflare R2 docs
 - [ ] Links to Next.js ISR docs
@@ -276,16 +293,19 @@ wrangler dev
 ##### CLOUDFLARE_RESOURCES.md Content
 
 **Overview Section**:
+
 - [ ] Lists all Cloudflare resources (R2, future: DO, KV)
 - [ ] Clarifies Phase 1 scope (R2 only)
 
 **R2 Buckets Section**:
+
 - [ ] Step-by-step bucket creation guide
 - [ ] `wrangler r2 bucket create` command shown
 - [ ] Verification steps included
 - [ ] Bucket naming conventions explained
 
 **R2 Pricing Section**:
+
 - [ ] Free tier limits accurate (10 GB, 1M writes, 10M reads/month)
 - [ ] Paid tier costs accurate ($0.015/GB, $0.36/M writes, $4.50/M reads)
 - [ ] Cost comparison vs S3 or competitors (optional but helpful)
@@ -293,6 +313,7 @@ wrangler dev
 - [ ] Pricing verified against Cloudflare docs (as of date)
 
 **Monitoring & Cost Optimization**:
+
 - [ ] How to monitor R2 usage (Cloudflare Dashboard path)
 - [ ] Setting up cost alerts (if available)
 - [ ] Optimization tips actionable:
@@ -302,6 +323,7 @@ wrangler dev
 - [ ] Analytics: cache hit rate, storage trends
 
 **Troubleshooting Section**:
+
 - [ ] Common Issue 1: "R2 bucket not found"
   - Symptoms described
   - Causes identified
@@ -316,24 +338,28 @@ wrangler dev
 ##### Documentation Quality
 
 **Technical Accuracy**:
+
 - [ ] All technical information is correct
 - [ ] Code examples work (syntax is valid)
 - [ ] Configuration snippets are accurate
 - [ ] Links point to current documentation
 
 **Clarity**:
+
 - [ ] Writing is clear and concise
 - [ ] No jargon without explanation
 - [ ] Examples help understanding
 - [ ] Diagrams/flowcharts add value
 
 **Completeness**:
+
 - [ ] All required topics covered
 - [ ] No major gaps in information
 - [ ] References to future phases included
 - [ ] Troubleshooting covers common scenarios
 
 **Formatting**:
+
 - [ ] Markdown syntax correct
 - [ ] Headings hierarchy logical (H1 → H2 → H3)
 - [ ] Code blocks have language specified
@@ -358,6 +384,7 @@ wc -l docs/deployment/CLOUDFLARE_RESOURCES.md
 ```
 
 **Manual Review**:
+
 - Read both documents end-to-end
 - Verify all links work (click each one)
 - Check code examples for syntax errors
@@ -375,6 +402,7 @@ wc -l docs/deployment/CLOUDFLARE_RESOURCES.md
 #### Approval Criteria
 
 **APPROVE** if:
+
 - ✅ Both documents comprehensive and clear
 - ✅ Technical accuracy verified
 - ✅ All links work
@@ -383,6 +411,7 @@ wc -l docs/deployment/CLOUDFLARE_RESOURCES.md
 - ✅ Troubleshooting actionable
 
 **REQUEST CHANGES** if:
+
 - ❌ Missing required sections
 - ❌ Technical inaccuracies (e.g., wrong binding name)
 - ❌ Broken links (404 errors)
@@ -391,6 +420,7 @@ wc -l docs/deployment/CLOUDFLARE_RESOURCES.md
 - ❌ Unclear or confusing writing
 
 **REJECT** if:
+
 - ❌ Fundamentally incorrect information
 - ❌ Documentation is incomplete or unhelpful
 - ❌ Copy-pasted from elsewhere without adaptation
@@ -487,6 +517,7 @@ Use this template for feedback:
 
 [What should happen next]
 Example:
+
 - If approved: Merge commits, update EPIC_TRACKING.md (Phase 1 complete)
 - If changes requested: Address feedback, re-run validation, request re-review
 ```

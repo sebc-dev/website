@@ -151,21 +151,25 @@ pnpm dev
 #### Common Issues
 
 ❌ **Binding name is `DO_QUEUE` instead of `NEXT_CACHE_DO_QUEUE`**
+
 - Issue: OpenNext specifically looks for `NEXT_CACHE_DO_QUEUE`
 - Fix: Update binding name to exact specification
 - Impact: High - OpenNext won't find the binding
 
 ❌ **Class name is `DurableObjectsQueue` instead of `DOQueueHandler`**
+
 - Issue: OpenNext provides specific class names
 - Fix: Use exact class names from OpenNext
 - Impact: High - Worker will fail to start
 
 ❌ **script_name is `api` instead of `website`**
+
 - Issue: Binding references wrong worker
 - Fix: Must match the main worker name (`website`)
 - Impact: High - DO instances won't be accessible
 
 ❌ **JSON syntax invalid (trailing comma, missing quotes)**
+
 - Issue: wrangler.jsonc won't parse
 - Fix: Validate with `jq .`
 - Impact: High - Deployment fails
@@ -279,21 +283,25 @@ grep -E "TODO|FIXME|XXX|\[PLACEHOLDER\]" docs/architecture/CACHE_ARCHITECTURE.md
 #### Common Issues
 
 ❌ **Diagram is corrupted or unreadable**
+
 - Issue: ASCII art rendering incorrectly
 - Fix: Check file encoding, verify ASCII characters
 - Impact: Medium - Documentation unclear
 
 ❌ **Binding names don't match wrangler.jsonc**
+
 - Issue: Documentation inconsistent with configuration
 - Fix: Update documentation to match exact names
 - Impact: High - Causes confusion, typos
 
 ❌ **Sharding explanation is missing or unclear**
+
 - Issue: Reader doesn't understand why 32 shards
 - Fix: Add explanation of hash-based distribution
 - Impact: Medium - Harder to troubleshoot
 
 ❌ **Troubleshooting section is empty or generic**
+
 - Issue: No practical help for common problems
 - Fix: Add specific DO-related issues and solutions
 - Impact: Medium - Harder to debug issues
@@ -316,7 +324,7 @@ grep -E "TODO|FIXME|XXX|\[PLACEHOLDER\]" docs/architecture/CACHE_ARCHITECTURE.md
   - [ ] Cost: DO $0.15/M requests, D1 per-query ✓
   - [ ] Free tier: DO 1M requests/month, D1 included ✓
 - [ ] Decision flowchart is practical:
-  - [ ] >10k req/day → DO
+  - [ ] > 10k req/day → DO
   - [ ] <10k req/day → D1
 - [ ] DO implementation section matches wrangler.jsonc config
 - [ ] D1 alternative is complete and accurate
@@ -401,21 +409,25 @@ grep -E "TODO|FIXME|\[XXX\]" docs/architecture/DO_VS_D1_TAG_CACHE.md
 #### Common Issues
 
 ❌ **Recommendation is unclear or contradictory**
+
 - Issue: Reader doesn't know which to choose
 - Fix: Make clear, single recommendation with decision logic
 - Impact: High - Defeats purpose of comparison
 
 ❌ **Cost analysis is wrong**
+
 - Issue: Misleads about pricing
 - Fix: Verify with current Cloudflare pricing documentation
 - Impact: High - Wrong decision due to incorrect costs
 
 ❌ **D1 alternative section is incomplete**
+
 - Issue: Readers can't implement D1 option
 - Fix: Provide complete wrangler.jsonc config and setup steps
 - Impact: Medium - Limits flexibility
 
 ❌ **Migration path is vague**
+
 - Issue: "Just switch the binding" isn't enough detail
 - Fix: Provide step-by-step instructions
 - Impact: Medium - Harder to execute
@@ -518,21 +530,25 @@ grep -o "\[.*\](\.\..*\.md)" docs/deployment/BINDINGS_REFERENCE.md | head -5
 #### Common Issues
 
 ❌ **Binding names don't match wrangler.jsonc**
+
 - Issue: Documentation inconsistent with configuration
 - Fix: Verify names match exactly in both places
 - Impact: High - Confusion and typos
 
 ❌ **Quick reference table is incomplete**
+
 - Issue: Missing some bindings
 - Fix: Add all bindings from wrangler.jsonc
 - Impact: Medium - Incomplete reference
 
 ❌ **Troubleshooting is generic**
+
 - Issue: No DO-specific help
 - Fix: Add concrete DO issues and solutions
 - Impact: Medium - Harder to debug
 
 ❌ **Referenced docs don't exist or have wrong paths**
+
 - Issue: Broken links frustrate readers
 - Fix: Verify all links point to existing files
 - Impact: Low-Medium - Navigation broken
@@ -668,6 +684,7 @@ A: Yes, mark as APPROVED and note that comments are optional improvements. Don't
 
 **Q: How much do I need to know about Durable Objects?**
 A: Enough to verify:
+
 - Binding names are correct
 - Purpose and usage make sense
 - Architecture is logical

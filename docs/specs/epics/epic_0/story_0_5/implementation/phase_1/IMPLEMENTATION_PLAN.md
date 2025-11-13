@@ -36,18 +36,21 @@ The implementation is split into **3 independent commits** to:
 **Duration**: 15-20 min (implementation) + 10 min (review)
 
 **Content**:
+
 - Execute `wrangler r2 bucket create sebc-next-cache`
 - Verify bucket creation in Cloudflare Dashboard
 - Document bucket name and purpose in commit message
 - Capture bucket creation output for validation
 
 **Why it's atomic**:
+
 - Single infrastructure operation
 - No code changes required
 - Can be validated independently via `wrangler r2 bucket list`
 - Safe to rollback (delete bucket if needed)
 
 **Technical Validation**:
+
 ```bash
 # Verify bucket was created
 wrangler r2 bucket list
@@ -58,6 +61,7 @@ wrangler r2 bucket list
 **Expected Result**: R2 bucket `sebc-next-cache` visible in Cloudflare Dashboard and Wrangler CLI
 
 **Review Criteria**:
+
 - [ ] Bucket created with correct name (`sebc-next-cache`)
 - [ ] Bucket visible in `wrangler r2 bucket list`
 - [ ] Bucket visible in Cloudflare Dashboard (R2 section)
@@ -72,18 +76,21 @@ wrangler r2 bucket list
 **Duration**: 30-40 min (implementation) + 20 min (review)
 
 **Content**:
+
 - Add `r2_buckets` array to `wrangler.jsonc`
 - Configure `NEXT_INC_CACHE_R2_BUCKET` binding pointing to `sebc-next-cache`
 - Add inline comments explaining binding purpose
 - Follow existing wrangler.jsonc formatting and structure
 
 **Why it's atomic**:
+
 - Single configuration change
 - Directly depends on Commit 1 (bucket must exist)
 - Can be validated independently via `wrangler dev`
 - No application code changes
 
 **Configuration Added**:
+
 ```jsonc
 {
   // ... existing configuration ...
@@ -97,13 +104,14 @@ wrangler r2 bucket list
   "r2_buckets": [
     {
       "binding": "NEXT_INC_CACHE_R2_BUCKET",
-      "bucket_name": "sebc-next-cache"
-    }
-  ]
+      "bucket_name": "sebc-next-cache",
+    },
+  ],
 }
 ```
 
 **Technical Validation**:
+
 ```bash
 # Verify wrangler.jsonc is valid JSON
 cat wrangler.jsonc | jq empty
@@ -117,6 +125,7 @@ wrangler dev
 **Expected Result**: `wrangler dev` starts successfully with R2 binding available
 
 **Review Criteria**:
+
 - [ ] `r2_buckets` array added with correct structure
 - [ ] Binding name is `NEXT_INC_CACHE_R2_BUCKET` (matches OpenNext convention)
 - [ ] Bucket name is `sebc-next-cache` (matches Commit 1)
@@ -129,6 +138,7 @@ wrangler dev
 ### Commit 3: Document R2 Cache Architecture
 
 **Files**:
+
 - `docs/architecture/CACHE_ARCHITECTURE.md` (new)
 - `docs/deployment/CLOUDFLARE_RESOURCES.md` (new)
 
@@ -136,6 +146,7 @@ wrangler dev
 **Duration**: 60-90 min (implementation) + 30 min (review)
 
 **Content**:
+
 - Create `docs/architecture/CACHE_ARCHITECTURE.md` with:
   - Overview of OpenNext cache architecture
   - R2's role in ISR (Incremental Static Regeneration)
@@ -149,6 +160,7 @@ wrangler dev
   - Troubleshooting common R2 issues
 
 **Why it's atomic**:
+
 - Pure documentation (no code/config changes)
 - Can be reviewed independently
 - Provides essential context for future phases
@@ -157,6 +169,7 @@ wrangler dev
 **Documentation Structure**:
 
 **CACHE_ARCHITECTURE.md** (~150 lines):
+
 ```markdown
 # OpenNext Cache Architecture for Cloudflare Workers
 
@@ -167,17 +180,20 @@ wrangler dev
 ## R2 Incremental Cache (Phase 1)
 
 ### Purpose
+
 - Persistent storage for ISR-generated pages
 - Global distribution via Cloudflare Edge network
 - Cost-effective for large static assets
 
 ### How It Works
+
 1. Next.js page with `revalidate` requests generate
 2. Page HTML is stored in R2 bucket
 3. Subsequent requests serve from R2 (cache hit)
 4. After revalidation period, page regenerates
 
 ### Configuration
+
 - Binding: `NEXT_INC_CACHE_R2_BUCKET`
 - Bucket: `sebc-next-cache`
 - Location: `wrangler.jsonc` r2_buckets section
@@ -186,25 +202,31 @@ wrangler dev
 ```
 
 **CLOUDFLARE_RESOURCES.md** (~100 lines):
+
 ```markdown
 # Cloudflare Resources Setup Guide
 
 ## R2 Buckets
 
 ### Creating R2 Bucket
+
 [Step-by-step guide]
 
 ### Pricing & Cost Optimization
+
 [Pricing breakdown, optimization tips]
 
 ### Monitoring
+
 [How to monitor R2 usage]
 
 ### Troubleshooting
+
 [Common issues and solutions]
 ```
 
 **Technical Validation**:
+
 ```bash
 # Verify documentation files exist
 ls docs/architecture/CACHE_ARCHITECTURE.md
@@ -217,6 +239,7 @@ ls docs/deployment/CLOUDFLARE_RESOURCES.md
 **Expected Result**: Comprehensive documentation of R2 cache layer
 
 **Review Criteria**:
+
 - [ ] CACHE_ARCHITECTURE.md covers OpenNext cache overview
 - [ ] R2's specific role in ISR is clearly explained
 - [ ] Diagrams/flowcharts help visualize cache flow
@@ -254,6 +277,7 @@ ls docs/deployment/CLOUDFLARE_RESOURCES.md
 ### Validation at Each Step
 
 **After Commit 1**:
+
 ```bash
 # Verify bucket created
 wrangler r2 bucket list | grep sebc-next-cache
@@ -263,6 +287,7 @@ wrangler r2 bucket list | grep sebc-next-cache
 ```
 
 **After Commit 2**:
+
 ```bash
 # Validate JSON syntax
 cat wrangler.jsonc | jq empty
@@ -273,6 +298,7 @@ wrangler dev
 ```
 
 **After Commit 3**:
+
 ```bash
 # Verify files created
 ls docs/architecture/CACHE_ARCHITECTURE.md
@@ -285,28 +311,31 @@ ls docs/deployment/CLOUDFLARE_RESOURCES.md
 
 ## 📊 Commit Metrics
 
-| Commit | Files | Lines | Implementation | Review | Total |
-|--------|-------|-------|----------------|--------|-------|
-| 1. Create R2 Bucket | 0 | N/A | 15 min | 10 min | 25 min |
-| 2. Add R2 Binding | 1 | ~10 | 30 min | 20 min | 50 min |
-| 3. Document Architecture | 2 | ~250 | 75 min | 30 min | 105 min |
-| **TOTAL** | **3** | **~260** | **2h** | **1h** | **3h** |
+| Commit                   | Files | Lines    | Implementation | Review | Total   |
+| ------------------------ | ----- | -------- | -------------- | ------ | ------- |
+| 1. Create R2 Bucket      | 0     | N/A      | 15 min         | 10 min | 25 min  |
+| 2. Add R2 Binding        | 1     | ~10      | 30 min         | 20 min | 50 min  |
+| 3. Document Architecture | 2     | ~250     | 75 min         | 30 min | 105 min |
+| **TOTAL**                | **3** | **~260** | **2h**         | **1h** | **3h**  |
 
 ---
 
 ## ✅ Atomic Approach Benefits
 
 ### For Developers
+
 - 🎯 **Clear focus**: Infrastructure, then config, then docs
 - 🧪 **Testable**: Each step validated independently
 - 📝 **Documented**: Clear commit progression
 
 ### For Reviewers
+
 - ⚡ **Fast review**: 10-30 min per commit
 - 🔍 **Focused**: Single concern to check per commit
 - ✅ **Quality**: Easy to verify each layer
 
 ### For the Project
+
 - 🔄 **Rollback-safe**: Can revert documentation without touching bucket
 - 📚 **Historical**: Clear story in git: bucket → config → docs
 - 🏗️ **Maintainable**: Each commit is self-contained and understandable
@@ -318,6 +347,7 @@ ls docs/deployment/CLOUDFLARE_RESOURCES.md
 ### Commit Messages
 
 **Commit 1 Format**:
+
 ```
 chore(infra): create R2 bucket for Next.js ISR cache
 
@@ -330,6 +360,7 @@ Part of Epic 0 Story 0.5 Phase 1 - Commit 1/3
 ```
 
 **Commit 2 Format**:
+
 ```
 chore(config): add R2 bucket binding to wrangler.jsonc
 
@@ -342,6 +373,7 @@ Part of Epic 0 Story 0.5 Phase 1 - Commit 2/3
 ```
 
 **Commit 3 Format**:
+
 ```
 docs(architecture): document R2 cache and Cloudflare resources
 
@@ -361,6 +393,7 @@ Part of Epic 0 Story 0.5 Phase 1 - Commit 3/3
 ### Review Checklist
 
 Before committing:
+
 - [ ] Command/change tested locally
 - [ ] Validation commands run successfully
 - [ ] Commit message is descriptive
@@ -371,6 +404,7 @@ Before committing:
 ## ⚠️ Important Points
 
 ### Do's
+
 - ✅ Follow the commit order (bucket must exist before binding)
 - ✅ Validate after each commit
 - ✅ Use exact bucket name: `sebc-next-cache`
@@ -378,6 +412,7 @@ Before committing:
 - ✅ Document pricing and costs in Commit 3
 
 ### Don'ts
+
 - ❌ Skip Commit 1 (binding will fail without bucket)
 - ❌ Change bucket name without updating binding
 - ❌ Commit without validating `wrangler dev` works
@@ -395,6 +430,7 @@ A: Yes, but update both the `wrangler r2 bucket create` command AND the `bucket_
 
 **Q: What if `wrangler dev` fails after Commit 2?**
 A: Check that:
+
 1. Bucket was created successfully (Commit 1)
 2. Bucket name matches in wrangler.jsonc
 3. Wrangler CLI is authenticated (`wrangler whoami`)
@@ -411,6 +447,7 @@ A: Development usage is typically well within free tier (10 GB, 1M writes, 10M r
 ## 🎯 Phase 1 Success Criteria
 
 Phase 1 is complete when:
+
 - [ ] R2 bucket `sebc-next-cache` exists in Cloudflare
 - [ ] `wrangler.jsonc` has `NEXT_INC_CACHE_R2_BUCKET` binding configured
 - [ ] `wrangler dev` starts without R2 errors

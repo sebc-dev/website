@@ -34,6 +34,7 @@ Add DO Configs  Document Arch.    DO vs D1 Guide    Validate & Ref.
 ### Commit 1: Add Durable Objects Bindings to wrangler.jsonc
 
 **Files**:
+
 - `wrangler.jsonc` (modified - add durable_objects section)
 
 **Size**: ~15 lines
@@ -59,6 +60,7 @@ Add DO Configs  Document Arch.    DO vs D1 Guide    Validate & Ref.
 - Reviewable: Easy to compare against spec
 
 **Technical Validation**:
+
 ```bash
 # Syntax check
 cat wrangler.jsonc | jq .  # or jsonc validator
@@ -70,6 +72,7 @@ pnpm dev
 ```
 
 **Expected Result**:
+
 - wrangler.jsonc valid and formatted
 - `wrangler dev` starts without DO binding errors
 - Logs contain: "Durable Objects bindings loaded"
@@ -85,6 +88,7 @@ pnpm dev
 - [ ] Comments added to explain each binding's purpose
 
 **Commit Message**:
+
 ```
 feat(bindings): Add Durable Objects bindings for ISR queue and tag cache
 
@@ -105,6 +109,7 @@ Part of Phase 2 - Commit 1/4
 ### Commit 2: Document Durable Objects Architecture
 
 **Files**:
+
 - `docs/architecture/CACHE_ARCHITECTURE.md` (new - DO sections)
 - `docs/architecture/CACHE_ARCHITECTURE.md` (if exists, update with DO details)
 
@@ -141,6 +146,7 @@ Part of Phase 2 - Commit 1/4
 - Reviewable: Diagrams and explanations clear for technical review
 
 **Technical Validation**:
+
 ```bash
 # Verify file created and readable
 cat docs/architecture/CACHE_ARCHITECTURE.md
@@ -153,6 +159,7 @@ wc -l docs/architecture/CACHE_ARCHITECTURE.md
 ```
 
 **Expected Result**:
+
 - Complete CACHE_ARCHITECTURE.md created (~600 lines)
 - Architecture diagrams clear and accurate
 - All binding names match wrangler.jsonc
@@ -171,6 +178,7 @@ wc -l docs/architecture/CACHE_ARCHITECTURE.md
 - [ ] No incomplete sections or TODOs left
 
 **Commit Message**:
+
 ```
 docs: Document Durable Objects architecture for ISR and tag cache
 
@@ -202,6 +210,7 @@ Part of Phase 2 - Commit 2/4
 ### Commit 3: Create DO vs D1 Comparison Guide
 
 **Files**:
+
 - `docs/architecture/DO_VS_D1_TAG_CACHE.md` (new - comparison and decision guide)
 
 **Size**: ~400 lines
@@ -221,6 +230,7 @@ Part of Phase 2 - Commit 2/4
   - Performance benchmarks (DO vs D1 latency)
 
 **Table of Contents**:
+
 1. Executive Summary
 2. Comparison: Durable Objects vs D1
 3. Decision Matrix
@@ -239,6 +249,7 @@ Part of Phase 2 - Commit 2/4
 - Reviewable: Clear comparison helps team understand trade-offs
 
 **Technical Validation**:
+
 ```bash
 # Verify file created
 cat docs/architecture/DO_VS_D1_TAG_CACHE.md
@@ -251,6 +262,7 @@ wc -l docs/architecture/DO_VS_D1_TAG_CACHE.md
 ```
 
 **Expected Result**:
+
 - Complete DO_VS_D1_TAG_CACHE.md created (~400 lines)
 - Comparison is objective and well-researched
 - Decision logic is clear for future team members
@@ -271,6 +283,7 @@ wc -l docs/architecture/DO_VS_D1_TAG_CACHE.md
 - [ ] No incomplete sections
 
 **Commit Message**:
+
 ```
 docs: Add DO vs D1 comparison guide for tag cache decision
 
@@ -309,6 +322,7 @@ Part of Phase 2 - Commit 3/4
 ### Commit 4: Add Binding Reference Documentation
 
 **Files**:
+
 - `docs/deployment/BINDINGS_REFERENCE.md` (modified or new - add DO bindings section)
 
 **Size**: ~300 lines (adding ~150 lines for DO bindings)
@@ -328,6 +342,7 @@ Part of Phase 2 - Commit 3/4
 **Detailed DO Sections**:
 
 For `NEXT_CACHE_DO_QUEUE`:
+
 - Binding name and type
 - Purpose (ISR queue)
 - Class name (DOQueueHandler from @opennextjs/cloudflare)
@@ -336,6 +351,7 @@ For `NEXT_CACHE_DO_QUEUE`:
 - Cloudflare Dashboard location
 
 For `NEXT_TAG_CACHE_DO_SHARDED`:
+
 - Binding name and type
 - Purpose (tag cache)
 - Class name (DOTagCacheShard from @opennextjs/cloudflare)
@@ -352,6 +368,7 @@ For `NEXT_TAG_CACHE_DO_SHARDED`:
 - Reviewable: Quick reference easy to verify against wrangler.jsonc
 
 **Technical Validation**:
+
 ```bash
 # Verify file created/updated
 cat docs/deployment/BINDINGS_REFERENCE.md
@@ -365,6 +382,7 @@ grep "NEXT_CACHE_DO_QUEUE\|NEXT_TAG_CACHE_DO_SHARDED" docs/deployment/BINDINGS_R
 ```
 
 **Expected Result**:
+
 - Complete BINDINGS_REFERENCE.md updated or created (~300 lines)
 - All binding names match wrangler.jsonc exactly
 - Code examples are accurate and tested
@@ -384,6 +402,7 @@ grep "NEXT_CACHE_DO_QUEUE\|NEXT_TAG_CACHE_DO_SHARDED" docs/deployment/BINDINGS_R
 - [ ] No broken links or references
 
 **Commit Message**:
+
 ```
 docs: Add Durable Objects bindings to central reference guide
 
@@ -442,6 +461,7 @@ Part of Phase 2 - Commit 4/4
 ### Validation at Each Step
 
 After each commit:
+
 ```bash
 # Type/syntax check (if applicable)
 # For JSON: cat wrangler.jsonc | jq .
@@ -464,13 +484,13 @@ All must validate before moving to next commit.
 
 ## 📊 Commit Metrics
 
-| Commit | Type | Files | Lines | Impl. | Review | Total |
-|--------|------|-------|-------|-------|--------|-------|
-| 1. DO Bindings Config | Config | 1 | ~15 | 10-15m | 10-15m | 20-30m |
-| 2. DO Architecture Doc | Docs | 1 | ~600 | 20-30m | 15-20m | 35-50m |
-| 3. DO vs D1 Guide | Docs | 1 | ~400 | 20-25m | 15-20m | 35-45m |
-| 4. Bindings Reference | Docs | 1 | ~300 | 15-20m | 10-15m | 25-35m |
-| **TOTAL** | - | **4** | **~1,315** | **1-1.5h** | **0.75-1h** | **2-2.5h** |
+| Commit                 | Type   | Files | Lines      | Impl.      | Review      | Total      |
+| ---------------------- | ------ | ----- | ---------- | ---------- | ----------- | ---------- |
+| 1. DO Bindings Config  | Config | 1     | ~15        | 10-15m     | 10-15m      | 20-30m     |
+| 2. DO Architecture Doc | Docs   | 1     | ~600       | 20-30m     | 15-20m      | 35-50m     |
+| 3. DO vs D1 Guide      | Docs   | 1     | ~400       | 20-25m     | 15-20m      | 35-45m     |
+| 4. Bindings Reference  | Docs   | 1     | ~300       | 15-20m     | 10-15m      | 25-35m     |
+| **TOTAL**              | -      | **4** | **~1,315** | **1-1.5h** | **0.75-1h** | **2-2.5h** |
 
 ---
 
@@ -504,6 +524,7 @@ All must validate before moving to next commit.
 ### Commit Messages
 
 Format:
+
 ```
 type(scope): short description (max 50 chars)
 

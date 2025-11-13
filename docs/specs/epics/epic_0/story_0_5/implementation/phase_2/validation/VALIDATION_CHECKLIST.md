@@ -19,6 +19,7 @@ Complete validation checklist before marking Phase 2 as complete and proceeding 
 - [ ] Git history is clean and linear
 
 **Validation Command**:
+
 ```bash
 # Verify commits
 git log --oneline | head -5
@@ -38,6 +39,7 @@ git log --oneline | head -5
 - [ ] Proper nesting of brackets
 
 **Validation Commands**:
+
 ```bash
 # Check syntax
 cat wrangler.jsonc | jq . > /dev/null && echo "✓ Valid" || echo "✗ Invalid"
@@ -69,6 +71,7 @@ cat wrangler.jsonc | jq '.durable_objects.bindings[] | .name' -r
 - [ ] Consistent across both bindings
 
 **Validation Command**:
+
 ```bash
 # Verify script names match worker name
 worker_name=$(cat wrangler.jsonc | jq '.name' -r)
@@ -99,6 +102,7 @@ script_names=$(cat wrangler.jsonc | jq '.durable_objects.bindings[] | .script_na
 - [ ] `docs/deployment/BINDINGS_REFERENCE.md` created/updated
 
 **Validation Command**:
+
 ```bash
 # Check all required files exist
 find docs/specs/epics/epic_0/story_0_5/implementation/phase_2 -type f -name "*.md" | wc -l
@@ -117,6 +121,7 @@ find docs/specs/epics/epic_0/story_0_5/implementation/phase_2 -type f -name "*.m
 - [ ] Lists are properly indented
 
 **Validation Commands**:
+
 ```bash
 # Check Markdown syntax
 npx remark docs/architecture/CACHE_ARCHITECTURE.md --quiet && echo "✓ Valid" || echo "✗ Invalid"
@@ -158,6 +163,7 @@ npx remark docs/deployment/BINDINGS_REFERENCE.md --quiet && echo "✓ Valid" || 
 - [ ] Names match wrangler.jsonc exactly
 
 **Validation Command**:
+
 ```bash
 # Check consistency of binding names
 echo "CACHE_ARCHITECTURE.md:"
@@ -191,6 +197,7 @@ grep -c "NEXT_CACHE_DO_QUEUE\|NEXT_TAG_CACHE_DO_SHARDED" docs/deployment/BINDING
 - [ ] Build output is generated correctly
 
 **Validation Command**:
+
 ```bash
 # Build the project
 pnpm build
@@ -204,6 +211,7 @@ pnpm build
 - [ ] No TypeScript warnings
 
 **Validation Command**:
+
 ```bash
 # Type check
 pnpm tsc --noEmit
@@ -221,6 +229,7 @@ pnpm tsc --noEmit
 - [ ] No code style issues
 
 **Validation Command**:
+
 ```bash
 # Run linter
 pnpm lint
@@ -234,6 +243,7 @@ pnpm lint
 - [ ] No formatting issues
 
 **Validation Command**:
+
 ```bash
 # Check JSON formatting
 cat wrangler.jsonc | jq . --indent 2 | diff - wrangler.jsonc
@@ -252,6 +262,7 @@ cat wrangler.jsonc | jq . --indent 2 | diff - wrangler.jsonc
 - [ ] Server accessible at http://localhost:3000
 
 **Validation Command**:
+
 ```bash
 # Start dev server and let it run 10 seconds
 timeout 10 pnpm dev || true
@@ -278,6 +289,7 @@ timeout 10 pnpm dev || true
 - [ ] `pnpm dev` shows no R2 errors
 
 **Validation Command**:
+
 ```bash
 # Verify R2 still configured
 cat wrangler.jsonc | jq '.r2_buckets[0] | .binding'
@@ -303,6 +315,7 @@ cat wrangler.jsonc | jq '.r2_buckets[0] | .binding'
 - [ ] No broken links
 
 **Validation Command**:
+
 ```bash
 # Find all links in docs
 grep -r "\[.*\](.*\.md)" docs/specs/epics/epic_0/story_0_5/
@@ -365,16 +378,16 @@ grep -r "\[.*\](.*\.md)" docs/specs/epics/epic_0/story_0_5/
 
 ## 📊 Success Metrics
 
-| Metric | Target | Actual | Status |
-|--------|--------|--------|--------|
-| **Commits** | 4 | - | ⏳ |
-| **Files Modified** | 4+ | - | ⏳ |
-| **Lines of Docs** | 1,200+ | - | ⏳ |
-| **Build Success** | ✅ | - | ⏳ |
-| **Lint Success** | ✅ | - | ⏳ |
-| **Type Safety** | ✅ | - | ⏳ |
-| **Binding Names Correct** | 100% | - | ⏳ |
-| **Documentation Complete** | 100% | - | ⏳ |
+| Metric                     | Target | Actual | Status |
+| -------------------------- | ------ | ------ | ------ |
+| **Commits**                | 4      | -      | ⏳     |
+| **Files Modified**         | 4+     | -      | ⏳     |
+| **Lines of Docs**          | 1,200+ | -      | ⏳     |
+| **Build Success**          | ✅     | -      | ⏳     |
+| **Lint Success**           | ✅     | -      | ⏳     |
+| **Type Safety**            | ✅     | -      | ⏳     |
+| **Binding Names Correct**  | 100%   | -      | ⏳     |
+| **Documentation Complete** | 100%   | -      | ⏳     |
 
 ---
 

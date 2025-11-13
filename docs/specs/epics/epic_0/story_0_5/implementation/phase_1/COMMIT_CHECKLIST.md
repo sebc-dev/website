@@ -18,17 +18,20 @@ This document provides a detailed checklist for each atomic commit of Phase 1.
 ### Implementation Tasks
 
 - [ ] Verify no existing bucket with name `sebc-next-cache`
+
   ```bash
   wrangler r2 bucket list | grep sebc-next-cache
   # Should return empty
   ```
 
 - [ ] Create R2 bucket
+
   ```bash
   wrangler r2 bucket create sebc-next-cache
   ```
 
 - [ ] Verify bucket creation succeeded
+
   ```bash
   wrangler r2 bucket list
   # Should show "sebc-next-cache" in output
@@ -59,6 +62,7 @@ wrangler r2 bucket list | grep sebc-next-cache
 ### Review Checklist
 
 #### Infrastructure
+
 - [ ] Bucket created with exact name: `sebc-next-cache`
 - [ ] Bucket visible in Wrangler CLI (`wrangler r2 bucket list`)
 - [ ] Bucket visible in Cloudflare Dashboard
@@ -66,6 +70,7 @@ wrangler r2 bucket list | grep sebc-next-cache
 - [ ] Bucket is empty (no objects uploaded yet)
 
 #### Documentation
+
 - [ ] Commit message documents bucket name
 - [ ] Commit message documents bucket purpose
 - [ ] Commit message includes "Part of Epic 0 Story 0.5 Phase 1 - Commit 1/3"
@@ -113,6 +118,7 @@ Part of Epic 0 Story 0.5 Phase 1 - Commit 1/3"
   - Follow existing structure and indentation
 
 - [ ] Add `r2_buckets` configuration
+
   ```jsonc
   /**
    * R2 Buckets
@@ -129,6 +135,7 @@ Part of Epic 0 Story 0.5 Phase 1 - Commit 1/3"
   ```
 
 - [ ] Verify JSON syntax is valid
+
   ```bash
   cat wrangler.jsonc | jq empty
   # Should output nothing (success) or show syntax errors
@@ -166,6 +173,7 @@ wrangler dev
 ### Review Checklist
 
 #### Configuration
+
 - [ ] `r2_buckets` array added to wrangler.jsonc
 - [ ] Binding name is `NEXT_INC_CACHE_R2_BUCKET` (exact)
 - [ ] Bucket name is `sebc-next-cache` (matches Commit 1)
@@ -174,16 +182,19 @@ wrangler dev
 - [ ] Indentation matches existing file (2 spaces)
 
 #### Comments
+
 - [ ] Inline comment explains purpose ("ISR cache storage")
 - [ ] Comment links to OpenNext caching docs
 - [ ] Comment is clear and concise
 
 #### Testing
+
 - [ ] `wrangler dev` starts without errors
 - [ ] No "R2 bucket not found" errors in logs
 - [ ] Binding appears in startup logs
 
 #### Code Quality
+
 - [ ] Follows existing wrangler.jsonc style
 - [ ] No unrelated changes
 - [ ] Git diff shows only r2_buckets addition
@@ -217,6 +228,7 @@ Part of Epic 0 Story 0.5 Phase 1 - Commit 2/3"
 ## 📋 Commit 3: Document R2 Cache Architecture
 
 **Files**:
+
 - `docs/architecture/CACHE_ARCHITECTURE.md` (new)
 - `docs/deployment/CLOUDFLARE_RESOURCES.md` (new)
 
@@ -234,6 +246,7 @@ Part of Epic 0 Story 0.5 Phase 1 - Commit 2/3"
 #### Create docs/architecture/CACHE_ARCHITECTURE.md
 
 - [ ] Create `docs/architecture/` directory if needed
+
   ```bash
   mkdir -p docs/architecture
   ```
@@ -277,6 +290,7 @@ Part of Epic 0 Story 0.5 Phase 1 - Commit 2/3"
 #### Create docs/deployment/CLOUDFLARE_RESOURCES.md
 
 - [ ] Create `docs/deployment/` directory if needed
+
   ```bash
   mkdir -p docs/deployment
   ```
@@ -342,6 +356,7 @@ wc -l docs/deployment/CLOUDFLARE_RESOURCES.md
 ### Review Checklist
 
 #### CACHE_ARCHITECTURE.md
+
 - [ ] Overview explains OpenNext cache architecture
 - [ ] R2's role in ISR is clearly described
 - [ ] Cache flow diagram is accurate and helpful
@@ -352,6 +367,7 @@ wc -l docs/deployment/CLOUDFLARE_RESOURCES.md
 - [ ] Markdown formatting is consistent
 
 #### CLOUDFLARE_RESOURCES.md
+
 - [ ] R2 bucket creation guide is step-by-step
 - [ ] Pricing information is accurate (verified against Cloudflare docs)
 - [ ] Free tier limits are correct
@@ -362,6 +378,7 @@ wc -l docs/deployment/CLOUDFLARE_RESOURCES.md
 - [ ] Solutions are clear and testable
 
 #### Code Quality
+
 - [ ] No spelling/grammar errors
 - [ ] Technical accuracy verified
 - [ ] Examples tested (if applicable)
@@ -443,12 +460,14 @@ ls docs/architecture/CACHE_ARCHITECTURE.md docs/deployment/CLOUDFLARE_RESOURCES.
 ## 📝 Notes
 
 **Time Tracking**:
+
 - Commit 1: ~25 minutes (15 implementation + 10 review)
 - Commit 2: ~50 minutes (30 implementation + 20 review)
 - Commit 3: ~105 minutes (75 implementation + 30 review)
 - **Total**: ~3 hours (2h implementation + 1h review)
 
 **Common Mistakes to Avoid**:
+
 - ❌ Skipping bucket creation (Commit 1) and going straight to binding
 - ❌ Typo in bucket name (must match exactly between Commit 1 and 2)
 - ❌ Typo in binding name (must be `NEXT_INC_CACHE_R2_BUCKET`)
@@ -456,6 +475,7 @@ ls docs/architecture/CACHE_ARCHITECTURE.md docs/deployment/CLOUDFLARE_RESOURCES.
 - ❌ Insufficient documentation (Phase 1 establishes patterns for Phase 2-3)
 
 **Tips for Success**:
+
 - ✅ Validate after each commit (don't wait until the end)
 - ✅ Use exact names from spec (avoid variations)
 - ✅ Test `wrangler dev` after Commit 2 (catches issues early)

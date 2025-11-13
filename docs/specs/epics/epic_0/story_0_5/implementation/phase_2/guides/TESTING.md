@@ -32,6 +32,7 @@ cat wrangler.jsonc | jq . > /dev/null && echo "✓ JSONC syntax valid" || echo "
 **Expected Result**: ✓ JSONC syntax valid
 
 **What it checks**:
+
 - No trailing commas
 - All quotes properly paired
 - Proper nesting of brackets
@@ -56,6 +57,7 @@ cat wrangler.jsonc | jq '.durable_objects.bindings[] | .name' -r
 ```
 
 **Verification Checklist**:
+
 - [ ] First binding is exactly `NEXT_CACHE_DO_QUEUE`
 - [ ] Second binding is exactly `NEXT_TAG_CACHE_DO_SHARDED`
 - [ ] No typos or variations
@@ -80,6 +82,7 @@ cat wrangler.jsonc | jq '.durable_objects.bindings[] | .class_name' -r
 ```
 
 **Verification Checklist**:
+
 - [ ] First class is exactly `DOQueueHandler`
 - [ ] Second class is exactly `DOTagCacheShard`
 - [ ] Case-sensitive match
@@ -106,6 +109,7 @@ cat wrangler.jsonc | jq '.durable_objects.bindings[] | .script_name' -r
 ```
 
 **Verification Checklist**:
+
 - [ ] Worker `name` is `website`
 - [ ] Both DO bindings have `script_name: "website"`
 - [ ] They match exactly (case-sensitive)
@@ -140,6 +144,7 @@ cat wrangler.jsonc | jq '.durable_objects'
 ```
 
 **Verification Checklist**:
+
 - [ ] `durable_objects` is an object
 - [ ] Contains `bindings` array
 - [ ] Two items in bindings array
@@ -175,6 +180,7 @@ pnpm dev
 ```
 
 **Verification Checklist**:
+
 - [ ] Server starts without errors
 - [ ] No binding-related error messages
 - [ ] No class name errors
@@ -200,6 +206,7 @@ pnpm build
 ```
 
 **Verification Checklist**:
+
 - [ ] Build completes without errors
 - [ ] No warnings about bindings
 - [ ] Output files created (.open-next directory)
@@ -221,6 +228,7 @@ pnpm lint
 ```
 
 **Verification Checklist**:
+
 - [ ] ESLint passes
 - [ ] No JSON syntax errors
 - [ ] Formatting is consistent
@@ -272,6 +280,7 @@ grep -o "NEXT_CACHE_DO_QUEUE\|NEXT_TAG_CACHE_DO_SHARDED" docs/deployment/BINDING
 ```
 
 **Verification Checklist**:
+
 - [ ] All binding names match across all files
 - [ ] No typos or variations
 - [ ] All four files have correct binding names
@@ -294,6 +303,7 @@ test -f docs/deployment/BINDINGS_REFERENCE.md && echo "✓ BINDINGS_REFERENCE.md
 ```
 
 **Verification Checklist**:
+
 - [ ] CACHE_ARCHITECTURE.md exists
 - [ ] DO_VS_D1_TAG_CACHE.md exists
 - [ ] BINDINGS_REFERENCE.md exists
@@ -318,6 +328,7 @@ echo "=== Verify files exist ==="
 ```
 
 **Verification Checklist**:
+
 - [ ] All referenced files exist
 - [ ] Relative paths are correct
 - [ ] No broken links
@@ -346,6 +357,7 @@ cat wrangler.jsonc | jq '.r2_buckets'
 ```
 
 **Verification Checklist**:
+
 - [ ] R2 binding still exists
 - [ ] Binding name unchanged
 - [ ] Bucket name unchanged
@@ -367,6 +379,7 @@ cat wrangler.jsonc | jq '.d1_databases'
 ```
 
 **Verification Checklist**:
+
 - [ ] D1 binding still exists (if configured)
 - [ ] Binding name unchanged
 - [ ] `pnpm dev` shows no D1 errors
@@ -442,6 +455,7 @@ echo "=== Phase 2 Validation Complete ==="
 ```
 
 Run with:
+
 ```bash
 bash tests/phase2-validation.sh
 ```
@@ -495,12 +509,14 @@ bash tests/phase2-validation.sh
 ### Configuration Testing
 
 ✅ **Do**:
+
 - Validate JSON syntax with `jq`
 - Compare binding names character-by-character
 - Test with actual `wrangler dev` command
 - Verify R2 and D1 bindings still work
 
 ❌ **Don't**:
+
 - Assume binding names are correct (verify against spec)
 - Skip syntax validation
 - Test only in production (test locally first)
@@ -508,12 +524,14 @@ bash tests/phase2-validation.sh
 ### Documentation Testing
 
 ✅ **Do**:
+
 - Verify all Markdown files are syntactically valid
 - Check binding names are consistent across all docs
 - Verify links between documents work
 - Read documentation critically (does it make sense?)
 
 ❌ **Don't**:
+
 - Skip Markdown validation
 - Assume documentation is correct (review carefully)
 - Leave broken links

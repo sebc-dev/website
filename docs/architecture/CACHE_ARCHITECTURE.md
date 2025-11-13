@@ -55,6 +55,7 @@ This document describes the complete OpenNext cache architecture for the sebc.de
 ```
 
 **Binding Roles**:
+
 1. **WORKER_SELF_REFERENCE** (Service): Internal coordination
 2. **NEXT_INC_CACHE_R2_BUCKET** (R2): Persistent ISR storage
 3. **NEXT_CACHE_DO_QUEUE** (DO): Async revalidation queue
@@ -115,12 +116,14 @@ R2 provides S3-compatible object storage for cache data:
 Durable Objects provide stateful coordination for cache operations:
 
 #### NEXT_CACHE_DO_QUEUE (ISR Queue)
+
 - **Binding**: `NEXT_CACHE_DO_QUEUE`
 - **Class**: `DOQueueHandler` (from @opennextjs/cloudflare)
 - **Purpose**: Async queue for background page regeneration
 - **Use case**: Implements stale-while-revalidate pattern
 
 #### NEXT_TAG_CACHE_DO_SHARDED (Tag Cache)
+
 - **Binding**: `NEXT_TAG_CACHE_DO_SHARDED`
 - **Class**: `DOTagCacheShard` (from @opennextjs/cloudflare)
 - **Purpose**: Tag-based cache invalidation with sharding
@@ -132,6 +135,7 @@ Durable Objects provide stateful coordination for cache operations:
 Service bindings enable worker-to-worker communication, allowing OpenNext to coordinate cache operations internally:
 
 #### WORKER_SELF_REFERENCE
+
 - **Binding**: `WORKER_SELF_REFERENCE`
 - **Service**: Points to this worker itself (`website`)
 - **Purpose**: Internal worker-to-worker communication for OpenNext cache coordination
@@ -368,6 +372,7 @@ Durable Objects provide stateful coordination for OpenNext cache operations, ena
 **How it works**:
 
 1. Pages are tagged during render:
+
    ```typescript
    // app/blog/[slug]/page.tsx
    export default async function BlogPost({ params }) {
@@ -383,6 +388,7 @@ Durable Objects provide stateful coordination for OpenNext cache operations, ena
    ```
 
 2. Invalidate by tag:
+
    ```typescript
    // app/api/revalidate/route.ts
    import { revalidateTag } from 'next/cache';
@@ -469,15 +475,15 @@ Durable Objects provide stateful coordination for OpenNext cache operations, ena
 
 ### Durable Objects vs Other Options
 
-| Feature | Durable Objects | Workers KV | D1 Database |
-|---------|----------------|-----------|-------------|
-| **Use case** | Queue, coordination | Simple key-value | Relational data |
-| **Latency** | ~10-20ms | ~10-20ms | ~20-50ms |
-| **Consistency** | Strong (per DO) | Eventual | Strong |
-| **Sharding** | Built-in (32 shards) | Global | Single instance |
-| **State** | In-memory + persistent | Persistent only | Persistent only |
-| **Cost (free tier)** | 1M requests | 100K reads | 5M reads |
-| **Best for cache** | Queue, tags | ❌ Too limited | ❌ Too slow |
+| Feature              | Durable Objects        | Workers KV       | D1 Database     |
+| -------------------- | ---------------------- | ---------------- | --------------- |
+| **Use case**         | Queue, coordination    | Simple key-value | Relational data |
+| **Latency**          | ~10-20ms               | ~10-20ms         | ~20-50ms        |
+| **Consistency**      | Strong (per DO)        | Eventual         | Strong          |
+| **Sharding**         | Built-in (32 shards)   | Global           | Single instance |
+| **State**            | In-memory + persistent | Persistent only  | Persistent only |
+| **Cost (free tier)** | 1M requests            | 100K reads       | 5M reads        |
+| **Best for cache**   | Queue, tags            | ❌ Too limited   | ❌ Too slow     |
 
 **Why Durable Objects for OpenNext?**
 
@@ -496,6 +502,7 @@ User → Worker → (Cache Miss) → Render Page → Store in R2 → Response
 ```
 
 **Timeline**:
+
 - Request arrives: 0ms
 - Cache check (R2): ~10-20ms
 - Page render (SSR): ~100-500ms
@@ -509,6 +516,7 @@ User → Worker → (Cache Hit) → Read from R2 → Response
 ```
 
 **Timeline**:
+
 - Request arrives: 0ms
 - Cache check (R2): ~10-20ms
 - Cache read (R2): ~20-30ms
@@ -523,6 +531,7 @@ User → Worker → (Stale Cache) → Serve Stale → Background Regenerate → 
 ```
 
 **Timeline**:
+
 - Request arrives: 0ms
 - Serve stale cache: ~30-50ms (user gets response)
 - Background regeneration: ~100-500ms (async)
@@ -540,35 +549,35 @@ User → Worker → (Stale Cache) → Serve Stale → Background Regenerate → 
   "r2_buckets": [
     {
       "binding": "NEXT_INC_CACHE_R2_BUCKET",
-      "bucket_name": "sebc-next-cache"
-    }
+      "bucket_name": "sebc-next-cache",
+    },
   ],
   "durable_objects": {
     "bindings": [
       {
         "name": "NEXT_CACHE_DO_QUEUE",
         "class_name": "DOQueueHandler",
-        "script_name": "website"
+        "script_name": "website",
       },
       {
         "name": "NEXT_TAG_CACHE_DO_SHARDED",
         "class_name": "DOTagCacheShard",
-        "script_name": "website"
-      }
-    ]
+        "script_name": "website",
+      },
+    ],
   },
   "services": [
     {
       "binding": "WORKER_SELF_REFERENCE",
-      "service": "website"
-    }
+      "service": "website",
+    },
   ],
   "migrations": [
     {
       "tag": "v1",
-      "new_sqlite_classes": ["DOQueueHandler", "DOTagCacheShard"]
-    }
-  ]
+      "new_sqlite_classes": ["DOQueueHandler", "DOTagCacheShard"],
+    },
+  ],
 }
 ```
 
@@ -630,11 +639,11 @@ Expected cache hit rates:
 
 ### Latency Reduction
 
-| Scenario | Without Cache | With R2 Cache | Improvement |
-|----------|--------------|---------------|-------------|
-| Homepage | 300ms | 40ms | 7.5x faster |
-| Blog post | 500ms | 50ms | 10x faster |
-| API route | 200ms | 30ms | 6.7x faster |
+| Scenario  | Without Cache | With R2 Cache | Improvement |
+| --------- | ------------- | ------------- | ----------- |
+| Homepage  | 300ms         | 40ms          | 7.5x faster |
+| Blog post | 500ms         | 50ms          | 10x faster  |
+| API route | 200ms         | 30ms          | 6.7x faster |
 
 ### Cost Savings
 
@@ -645,6 +654,7 @@ Rendering costs vs. cache costs:
 - **R2 storage**: $0.015 per GB-month
 
 With 90% cache hit rate on 1M requests:
+
 - Rendering cost: 100K × $0.02 = $2.00
 - R2 cost: 900K × $0.00036 = $0.32
 - **Savings**: ~84% reduction in compute costs
@@ -662,16 +672,19 @@ Cloudflare R2 free tier (per month):
 ### Estimated Usage (sebc.dev)
 
 Assumptions:
+
 - 10,000 page views/month
 - Average page size: 50 KB
 - Cache hit rate: 90%
 - Revalidation interval: 1 hour
 
 **Storage**:
+
 - 100 cached pages × 50 KB = 5 MB
 - **Well within 10 GB limit**
 
 **Operations**:
+
 - Writes: ~240/month (100 pages × 24 revalidations/day ÷ 30 days)
 - Reads: ~9,000/month (10K views × 90% hit rate)
 - **Well within free tier**
@@ -692,6 +705,7 @@ Assumptions:
 - Validate cache persistence across deployments
 
 **Expected benefits**:
+
 - Automatic ISR support
 - Transparent cache management
 - No code changes required
@@ -704,6 +718,7 @@ Assumptions:
 - Cost monitoring setup
 
 **Deliverables**:
+
 - E2E tests for ISR functionality
 - Performance baseline metrics
 - Cost tracking dashboard

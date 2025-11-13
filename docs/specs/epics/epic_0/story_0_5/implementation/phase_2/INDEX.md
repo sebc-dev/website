@@ -25,6 +25,7 @@ phase_2/
 ```
 
 **Related Documentation**:
+
 - [Story 0.5 Specification](../../story_0.5.md)
 - [PHASES_PLAN.md](../PHASES_PLAN.md) - Strategic overview
 - [Phase 1: R2 Bucket Configuration](../phase_1/INDEX.md) - Previous phase
@@ -36,6 +37,7 @@ phase_2/
 Configure Durable Objects (DO) bindings for Incremental Static Regeneration (ISR) queue and tag cache. This phase establishes the infrastructure for managing ISR revalidation tasks and enabling granular cache invalidation via `revalidateTag()` and `revalidatePath()`.
 
 After Phase 2, the application will have a complete ISR queue system and tag cache backend, enabling Next.js features like:
+
 - Background revalidation of static pages
 - Tag-based cache invalidation
 - Distributed cache management across Cloudflare Edge network
@@ -52,14 +54,14 @@ After Phase 2, the application will have a complete ISR queue system and tag cac
 
 ## 📚 Available Documents
 
-| Document | Description | For Who | Duration |
-|----------|-------------|---------|----------|
-| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)** | Atomic strategy in 4 commits | Developer | 15 min |
-| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)** | Detailed checklist per commit | Developer | Reference |
-| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)** | Environment variables & setup | DevOps/Dev | 10 min |
-| **[guides/REVIEW.md](./guides/REVIEW.md)** | Code review guide | Reviewer | 20 min |
-| **[guides/TESTING.md](./guides/TESTING.md)** | Manual validation strategy | QA/Dev | 20 min |
-| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist | Tech Lead | 30 min |
+| Document                                                                       | Description                   | For Who    | Duration  |
+| ------------------------------------------------------------------------------ | ----------------------------- | ---------- | --------- |
+| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)**                         | Atomic strategy in 4 commits  | Developer  | 15 min    |
+| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)**                               | Detailed checklist per commit | Developer  | Reference |
+| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)**                             | Environment variables & setup | DevOps/Dev | 10 min    |
+| **[guides/REVIEW.md](./guides/REVIEW.md)**                                     | Code review guide             | Reviewer   | 20 min    |
+| **[guides/TESTING.md](./guides/TESTING.md)**                                   | Manual validation strategy    | QA/Dev     | 20 min    |
+| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist    | Tech Lead  | 30 min    |
 
 ---
 
@@ -83,6 +85,7 @@ cat docs/specs/epics/epic_0/story_0_5/implementation/phase_2/COMMIT_CHECKLIST.md
 ```
 
 **Commits in order**:
+
 1. Commit 1: Add DO bindings to wrangler.jsonc
 2. Commit 2: Document DO architecture and sharding strategy
 3. Commit 3: Create DO vs D1 comparison guide
@@ -146,15 +149,15 @@ Complete the VALIDATION_CHECKLIST.md and request final approval before moving to
 
 ## 📊 Metrics
 
-| Metric | Target | Actual |
-|--------|--------|--------|
-| **Total Commits** | 4 | - |
-| **Files Modified** | 2-3 (wrangler.jsonc, docs) | - |
-| **Documentation Created** | 3 doc files (~1500 lines) | - |
-| **Implementation Time** | 2-3h | - |
-| **Review Time** | 1-1.5h | - |
-| **Type Safety** | 100% (JSON validation) | - |
-| **Validation Success** | ✅ `wrangler dev` runs without DO errors | - |
+| Metric                    | Target                                   | Actual |
+| ------------------------- | ---------------------------------------- | ------ |
+| **Total Commits**         | 4                                        | -      |
+| **Files Modified**        | 2-3 (wrangler.jsonc, docs)               | -      |
+| **Documentation Created** | 3 doc files (~1500 lines)                | -      |
+| **Implementation Time**   | 2-3h                                     | -      |
+| **Review Time**           | 1-1.5h                                   | -      |
+| **Type Safety**           | 100% (JSON validation)                   | -      |
+| **Validation Success**    | ✅ `wrangler dev` runs without DO errors | -      |
 
 ---
 
@@ -185,6 +188,7 @@ Durable Objects are a Cloudflare compute primitive that provide:
 - **Coordinated execution** (only one instance runs at a time)
 
 **Perfect for**:
+
 - Counters and accumulators
 - Queues (ISR revalidation)
 - Caches (tag-based invalidation)
@@ -226,6 +230,7 @@ Durable Objects are a Cloudflare compute primitive that provide:
   - Handles queue persistence and retry logic
 
 **ISR Flow**:
+
 ```
 1. User requests page with revalidate: 3600
 2. Page served from R2 cache (if exists)
@@ -244,6 +249,7 @@ Durable Objects are a Cloudflare compute primitive that provide:
   - Used by `revalidateTag()` to bust cache
 
 **Sharding Strategy**:
+
 ```
 When revalidateTag('articles') is called:
 1. Hash 'articles' to determine shard number
@@ -259,15 +265,15 @@ When revalidateTag('articles') is called:
 
 ### DO vs D1 for Tag Cache
 
-| Aspect | Durable Objects | D1 (SQLite) |
-|--------|-----------------|------------|
-| **Consistency** | Strong (immediate) | Strong (immediate) |
-| **Performance** | Very fast (<1ms) | Fast (1-10ms) |
-| **Scalability** | Sharded (excellent) | Limited (single DB) |
-| **Cost** | $0.15/million requests + compute | Pay per query |
-| **Free Tier** | 1M requests/month | Included in plan |
-| **Best For** | High traffic (10k+ req/day) | Low traffic (<10k req/day) |
-| **Recommended** | ✅ Production | ✅ Development/testing |
+| Aspect          | Durable Objects                  | D1 (SQLite)                |
+| --------------- | -------------------------------- | -------------------------- |
+| **Consistency** | Strong (immediate)               | Strong (immediate)         |
+| **Performance** | Very fast (<1ms)                 | Fast (1-10ms)              |
+| **Scalability** | Sharded (excellent)              | Limited (single DB)        |
+| **Cost**        | $0.15/million requests + compute | Pay per query              |
+| **Free Tier**   | 1M requests/month                | Included in plan           |
+| **Best For**    | High traffic (10k+ req/day)      | Low traffic (<10k req/day) |
+| **Recommended** | ✅ Production                    | ✅ Development/testing     |
 
 **This phase uses Durable Objects (production-recommended)**. D1 alternative documented in Phase 2 guide.
 
@@ -276,8 +282,8 @@ When revalidateTag('articles') is called:
 Both classes are **provided by OpenNext** (`@opennextjs/cloudflare`), not custom implementations:
 
 ```ts
-import { DOQueueHandler } from '@opennextjs/cloudflare/durable-objects'
-import { DOTagCacheShard } from '@opennextjs/cloudflare/durable-objects'
+import { DOQueueHandler } from '@opennextjs/cloudflare/durable-objects';
+import { DOTagCacheShard } from '@opennextjs/cloudflare/durable-objects';
 ```
 
 The wrangler.jsonc simply declares which classes to use.
@@ -288,12 +294,12 @@ The wrangler.jsonc simply declares which classes to use.
 
 ### Phase Risks
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|------------|
-| DO class names incorrect | Low | High | Use exact names from OpenNext docs, validate in wrangler dev |
-| DO binding typos in config | Medium | High | Follow commit checklist carefully, compare with docs |
-| Missing DO migrations/setup | Low | Medium | Verify with wrangler dev (errors will appear in logs) |
-| DO costs spike | Low | Medium | Document pricing, set budget alerts in Cloudflare Dashboard |
+| Risk                        | Likelihood | Impact | Mitigation                                                   |
+| --------------------------- | ---------- | ------ | ------------------------------------------------------------ |
+| DO class names incorrect    | Low        | High   | Use exact names from OpenNext docs, validate in wrangler dev |
+| DO binding typos in config  | Medium     | High   | Follow commit checklist carefully, compare with docs         |
+| Missing DO migrations/setup | Low        | Medium | Verify with wrangler dev (errors will appear in logs)        |
+| DO costs spike              | Low        | Medium | Document pricing, set budget alerts in Cloudflare Dashboard  |
 
 ### Mitigation Strategies
 

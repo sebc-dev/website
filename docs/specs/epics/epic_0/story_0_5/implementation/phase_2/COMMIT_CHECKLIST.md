@@ -45,12 +45,14 @@ This document provides a detailed checklist for each atomic commit of Phase 2.
 ### Important Configuration Notes
 
 #### NEXT_CACHE_DO_QUEUE (ISR Queue)
+
 - **name**: Must be exactly `NEXT_CACHE_DO_QUEUE` (OpenNext expects this)
 - **class_name**: Must be `DOQueueHandler` (provided by @opennextjs/cloudflare)
 - **script_name**: Must match `name` field in wrangler.jsonc (should be `website`)
 - **environment**: Set to `production` for clarity
 
 #### NEXT_TAG_CACHE_DO_SHARDED (Tag Cache - Sharded)
+
 - **name**: Must be exactly `NEXT_TAG_CACHE_DO_SHARDED`
 - **class_name**: Must be `DOTagCacheShard`
 - **script_name**: Must match `name` field in wrangler.jsonc (should be `website`)
@@ -77,6 +79,7 @@ pnpm dev
 ```
 
 **Expected Result**:
+
 - wrangler.jsonc is valid JSON/JSONC
 - `jq` command successfully parses the file
 - Both binding names are present: `NEXT_CACHE_DO_QUEUE`, `NEXT_TAG_CACHE_DO_SHARDED`
@@ -157,6 +160,7 @@ Create `docs/architecture/CACHE_ARCHITECTURE.md` with complete cache architectur
 - [ ] Add comprehensive sections:
 
 #### Section 1: Overview (50 lines)
+
 - [ ] Title: "Cache Architecture - OpenNext on Cloudflare Workers"
 - [ ] Brief description of full cache stack
 - [ ] ASCII diagram showing:
@@ -183,6 +187,7 @@ Create `docs/architecture/CACHE_ARCHITECTURE.md` with complete cache architectur
 - [ ] Table of contents for the document
 
 #### Section 2: R2 Incremental Cache (100 lines)
+
 - [ ] Binding name: `NEXT_INC_CACHE_R2_BUCKET` (from Phase 1)
 - [ ] Purpose: Store ISR-generated pages persistently
 - [ ] Storage pattern (bucket structure)
@@ -192,6 +197,7 @@ Create `docs/architecture/CACHE_ARCHITECTURE.md` with complete cache architectur
 - [ ] Diagram: ISR page storage in R2
 
 #### Section 3: Durable Objects Queue (150 lines)
+
 - [ ] Binding name: `NEXT_CACHE_DO_QUEUE`
 - [ ] Class: `DOQueueHandler` (from @opennextjs/cloudflare)
 - [ ] Purpose: Async queue for ISR page revalidation
@@ -210,6 +216,7 @@ Create `docs/architecture/CACHE_ARCHITECTURE.md` with complete cache architectur
 - [ ] Monitoring in Cloudflare Dashboard
 
 #### Section 4: Durable Objects Tag Cache (150 lines)
+
 - [ ] Binding name: `NEXT_TAG_CACHE_DO_SHARDED`
 - [ ] Class: `DOTagCacheShard` (from @opennextjs/cloudflare)
 - [ ] Purpose: Map tags to cached pages for instant invalidation
@@ -229,6 +236,7 @@ Create `docs/architecture/CACHE_ARCHITECTURE.md` with complete cache architectur
 - [ ] Performance characteristics
 
 #### Section 5: How They Work Together (100 lines)
+
 - [ ] Complete ISR flow diagram:
   ```
   User Request
@@ -255,6 +263,7 @@ Create `docs/architecture/CACHE_ARCHITECTURE.md` with complete cache architectur
 - [ ] Cost implications (R2 + DO usage)
 
 #### Section 6: Troubleshooting (50 lines)
+
 - [ ] DO binding configuration errors
 - [ ] How to verify bindings are available
 - [ ] Common issues and solutions:
@@ -285,6 +294,7 @@ grep -c "NEXT_CACHE_DO_QUEUE\|NEXT_TAG_CACHE_DO_SHARDED\|NEXT_INC_CACHE_R2_BUCKE
 ```
 
 **Expected Result**:
+
 - docs/architecture/CACHE_ARCHITECTURE.md exists
 - Markdown syntax is valid
 - File is 500-700 lines
@@ -367,6 +377,7 @@ Create `docs/architecture/DO_VS_D1_TAG_CACHE.md` comparing Durable Objects and D
 - [ ] Add comprehensive sections:
 
 #### Section 1: Executive Summary (50 lines)
+
 - [ ] Clear answer: "Use Durable Objects for production, D1 for low-traffic sites"
 - [ ] Decision flowchart:
   ```
@@ -378,20 +389,22 @@ Create `docs/architecture/DO_VS_D1_TAG_CACHE.md` comparing Durable Objects and D
 - [ ] Quick comparison table (next section)
 
 #### Section 2: Comparison Table (100 lines)
+
 - [ ] Create detailed comparison across dimensions:
-  | Aspect | Durable Objects | D1 (SQLite) |
-  |--------|-----------------|------------|
-  | Consistency | Strong, immediate | Strong, immediate |
-  | Performance | <1ms | 1-10ms |
-  | Scalability | Sharded (excellent) | Limited |
-  | Cost | $0.15/M requests + compute | Per-query |
-  | Free Tier | 1M requests/month | Included |
-  | Query Latency | <1ms typical | 5-10ms typical |
-  | Concurrent Queries | 10,000+ shards | Single DB |
-  | Setup Complexity | Medium | Low |
-  | Recommended For | High traffic | Low traffic |
+      | Aspect | Durable Objects | D1 (SQLite) |
+      |--------|-----------------|------------|
+      | Consistency | Strong, immediate | Strong, immediate |
+      | Performance | <1ms | 1-10ms |
+      | Scalability | Sharded (excellent) | Limited |
+      | Cost | $0.15/M requests + compute | Per-query |
+      | Free Tier | 1M requests/month | Included |
+      | Query Latency | <1ms typical | 5-10ms typical |
+      | Concurrent Queries | 10,000+ shards | Single DB |
+      | Setup Complexity | Medium | Low |
+      | Recommended For | High traffic | Low traffic |
 
 #### Section 3: When to Use Each (100 lines)
+
 - [ ] Durable Objects (recommended for this project):
   - High traffic (>10k requests/day)
   - Production deployments
@@ -406,6 +419,7 @@ Create `docs/architecture/DO_VS_D1_TAG_CACHE.md` comparing Durable Objects and D
   - Learning/experimentation
 
 #### Section 4: Implementation - Durable Objects (100 lines)
+
 - [ ] Configuration section (what Phase 2 implements):
   ```jsonc
   "durable_objects": {
@@ -431,6 +445,7 @@ Create `docs/architecture/DO_VS_D1_TAG_CACHE.md` comparing Durable Objects and D
   - Low compute cost for tag cache queries
 
 #### Section 5: Alternative - D1 Tag Cache (100 lines)
+
 - [ ] Configuration (if choosing D1 instead):
   ```jsonc
   "d1_databases": [
@@ -459,6 +474,7 @@ Create `docs/architecture/DO_VS_D1_TAG_CACHE.md` comparing Durable Objects and D
   - Not recommended for production
 
 #### Section 6: Migration Path (75 lines)
+
 - [ ] "Grow from D1 to DO" strategy:
   - Start with D1 (low setup cost)
   - Monitor traffic growth
@@ -476,6 +492,7 @@ Create `docs/architecture/DO_VS_D1_TAG_CACHE.md` comparing Durable Objects and D
   - No data loss
 
 #### Section 7: Cost Analysis (75 lines)
+
 - [ ] Cost calculator examples:
   - Low traffic (1k req/day): D1 ~$0.50/month ✓
   - Medium traffic (10k req/day): D1 ~$5/month vs DO ~$1.50/month
@@ -484,6 +501,7 @@ Create `docs/architecture/DO_VS_D1_TAG_CACHE.md` comparing Durable Objects and D
   - DO: 1M free requests/month
   - D1: Included in plan, pay per query
 - [ ] Charts or examples:
+
   ```
   Monthly Cost vs Traffic:
 
@@ -498,6 +516,7 @@ Create `docs/architecture/DO_VS_D1_TAG_CACHE.md` comparing Durable Objects and D
   ```
 
 #### Section 8: Performance Benchmarks (50 lines)
+
 - [ ] Real-world latency:
   - DO Query: 0.5-2ms (usually <1ms)
   - D1 Query: 5-15ms (varies with query complexity)
@@ -512,18 +531,19 @@ Create `docs/architecture/DO_VS_D1_TAG_CACHE.md` comparing Durable Objects and D
   - This project: Both are fine for low traffic
 
 #### Section 9: FAQ (75 lines)
+
 - [ ] Q: Can we switch between DO and D1 later?
-  A: Yes! Migration path documented. Easy to start with D1, move to DO.
+      A: Yes! Migration path documented. Easy to start with D1, move to DO.
 - [ ] Q: Will DO costs explode?
-  A: Free tier is 1M requests/month. Costs very low for reasonable traffic.
+      A: Free tier is 1M requests/month. Costs very low for reasonable traffic.
 - [ ] Q: Why not use KV instead?
-  A: KV is eventually consistent. DO/D1 have strong consistency needed for cache.
+      A: KV is eventually consistent. DO/D1 have strong consistency needed for cache.
 - [ ] Q: Can multiple pages share tags?
-  A: Yes! That's the whole point. One tag can invalidate many pages.
+      A: Yes! That's the whole point. One tag can invalidate many pages.
 - [ ] Q: What if we don't use revalidateTag()?
-  A: Then tag cache isn't used. Still need D1 alternative for revalidatePath().
+      A: Then tag cache isn't used. Still need D1 alternative for revalidatePath().
 - [ ] Q: How many shards for DO?
-  A: Default 32 is good for most sites. Can increase if massive traffic.
+      A: Default 32 is good for most sites. Can increase if massive traffic.
 
 ### Validation
 
@@ -543,6 +563,7 @@ grep -E "^## " docs/architecture/DO_VS_D1_TAG_CACHE.md | wc -l
 ```
 
 **Expected Result**:
+
 - docs/architecture/DO_VS_D1_TAG_CACHE.md exists
 - Markdown syntax is valid
 - File is 350-450 lines
@@ -632,16 +653,18 @@ Create or update `docs/deployment/BINDINGS_REFERENCE.md` with complete binding r
 - [ ] Add comprehensive sections:
 
 #### Section 1: Quick Reference Table (50 lines)
+
 - [ ] Table of all project bindings:
-  | Binding Name | Type | Purpose | Env Variable |
-  |--------------|------|---------|--------------|
-  | `ASSETS` | R2 (static) | OpenNext static assets | Internal |
-  | `DB` | D1 Database | Application database | Internal |
-  | `NEXT_INC_CACHE_R2_BUCKET` | R2 Bucket | ISR page cache | Internal (OpenNext) |
-  | `NEXT_CACHE_DO_QUEUE` | Durable Objects | ISR queue | Internal (OpenNext) |
-  | `NEXT_TAG_CACHE_DO_SHARDED` | Durable Objects | Tag cache | Internal (OpenNext) |
+      | Binding Name | Type | Purpose | Env Variable |
+      |--------------|------|---------|--------------|
+      | `ASSETS` | R2 (static) | OpenNext static assets | Internal |
+      | `DB` | D1 Database | Application database | Internal |
+      | `NEXT_INC_CACHE_R2_BUCKET` | R2 Bucket | ISR page cache | Internal (OpenNext) |
+      | `NEXT_CACHE_DO_QUEUE` | Durable Objects | ISR queue | Internal (OpenNext) |
+      | `NEXT_TAG_CACHE_DO_SHARDED` | Durable Objects | Tag cache | Internal (OpenNext) |
 
 #### Section 2: R2 Bindings (50 lines)
+
 - [ ] ASSETS binding (static assets)
 - [ ] NEXT_INC_CACHE_R2_BUCKET binding (ISR cache)
   - Purpose (from Phase 1)
@@ -651,6 +674,7 @@ Create or update `docs/deployment/BINDINGS_REFERENCE.md` with complete binding r
 #### Section 3: Durable Objects Bindings (NEW - 150 lines)
 
 ##### NEXT_CACHE_DO_QUEUE (100 lines)
+
 - [ ] Binding name: `NEXT_CACHE_DO_QUEUE`
 - [ ] Type: Durable Objects
 - [ ] Class: `DOQueueHandler` (from @opennextjs/cloudflare)
@@ -679,6 +703,7 @@ Create or update `docs/deployment/BINDINGS_REFERENCE.md` with complete binding r
   - Watch for timeout errors in logs
 
 ##### NEXT_TAG_CACHE_DO_SHARDED (NEW - 50 lines)
+
 - [ ] Binding name: `NEXT_TAG_CACHE_DO_SHARDED`
 - [ ] Type: Durable Objects (sharded)
 - [ ] Class: `DOTagCacheShard` (from @opennextjs/cloudflare)
@@ -710,21 +735,25 @@ Create or update `docs/deployment/BINDINGS_REFERENCE.md` with complete binding r
   - revalidateTag() should be instant if working
 
 #### Section 4: D1 Database Binding (50 lines)
+
 - [ ] DB binding (application database)
 - [ ] Purpose and usage
 - [ ] From previous stories (0.4)
 
 #### Section 5: How to Use Each Binding (75 lines)
+
 - [ ] In code examples (for developers):
+
   ```typescript
   // Most bindings are used internally by OpenNext
   // ASSETS, NEXT_INC_CACHE_R2_BUCKET, NEXT_CACHE_DO_QUEUE, NEXT_TAG_CACHE_DO_SHARDED
   // are automatically used by OpenNext configuration
 
   // DB is the one you might access directly
-  import { getDatabase } from '@/lib/db'
-  const db = getDatabase()
+  import { getDatabase } from '@/lib/db';
+  const db = getDatabase();
   ```
+
 - [ ] Binding availability:
   - Available in `Omit<CloudflareEnv, 'KV'>`
   - All configured in wrangler.jsonc
@@ -733,6 +762,7 @@ Create or update `docs/deployment/BINDINGS_REFERENCE.md` with complete binding r
   - Bindings are typed based on wrangler.jsonc
 
 #### Section 6: Monitoring and Troubleshooting (75 lines)
+
 - [ ] Cloudflare Dashboard:
   - Workers & Pages → Your Worker (website)
   - Analytics: Requests, errors, CPU time
@@ -752,6 +782,7 @@ Create or update `docs/deployment/BINDINGS_REFERENCE.md` with complete binding r
   - Monitor CPU time (sign of performance issues)
 
 #### Section 7: References (30 lines)
+
 - [ ] Related documentation:
   - [CACHE_ARCHITECTURE.md](../architecture/CACHE_ARCHITECTURE.md)
   - [DO_VS_D1_TAG_CACHE.md](../architecture/DO_VS_D1_TAG_CACHE.md)
@@ -779,6 +810,7 @@ wc -l docs/deployment/BINDINGS_REFERENCE.md
 ```
 
 **Expected Result**:
+
 - docs/deployment/BINDINGS_REFERENCE.md created/updated
 - Markdown syntax is valid
 - File is 250-350 lines
