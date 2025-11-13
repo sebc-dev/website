@@ -1,10 +1,10 @@
 # Cache Architecture - OpenNext on Cloudflare Workers
 
-**Document Version**: 2.0
-**Last Updated**: 2025-11-12
+**Document Version**: 3.0
+**Last Updated**: 2025-11-13
 **Epic**: Epic 0 - Infrastructure Setup
 **Story**: Story 0.5 - Configure wrangler.toml with bindings
-**Phase**: Phase 2 - Durable Objects Bindings Configuration
+**Phase**: Phase 3 - Service Binding & OpenNext Activation (Complete)
 
 ## Table of Contents
 
@@ -22,28 +22,43 @@
 
 This document describes the complete OpenNext cache architecture for the sebc.dev website, utilizing Cloudflare R2 for persistent storage and Durable Objects for cache coordination and management.
 
-### Complete Cache Stack
+### Complete Cache Stack (All 4 Bindings)
 
 ```
-┌─────────────────────────────────────────────┐
-│      Next.js Application                     │
-│  (Pages with revalidate, ISR, tags)          │
-└──────────────┬──────────────────────────────┘
-               │
-       ┌───────┴───────┐
-       │               │
-       ▼               ▼
-  ┌────────┐   ┌──────────────────┐
-  │ R2     │   │ Durable Objects   │
-  │ ISR    │   │                   │
-  │ Cache  │   │ - Queue (ISR)     │
-  │        │   │ - Tags (Sharded)  │
-  └────────┘   └──────────────────┘
-       │               │
-       └───────┬───────┘
-               ▼
-        [Cloudflare Edge]
+┌─────────────────────────────────────────────────────────┐
+│              Next.js Application                         │
+│       (Pages with revalidate, ISR, tags)                 │
+└──────────────────────┬──────────────────────────────────┘
+                       │
+                       ▼
+┌─────────────────────────────────────────────────────────┐
+│          OpenNext Worker (Cloudflare Edge)               │
+│  ┌───────────────────────────────────────────────────┐ │
+│  │  Service Binding: WORKER_SELF_REFERENCE           │ │
+│  │  (Worker-to-worker communication)                 │ │
+│  └───────────────────────────────────────────────────┘ │
+│                       │                                  │
+│       ┌───────────────┼───────────────┐                │
+│       │               │               │                │
+│       ▼               ▼               ▼                │
+│  ┌────────┐   ┌──────────┐   ┌──────────┐            │
+│  │ R2     │   │ DO Queue │   │ DO Tags  │            │
+│  │ ISR    │   │ Handler  │   │ Sharded  │            │
+│  │ Cache  │   │ (Async)  │   │ (32x)    │            │
+│  └────────┘   └──────────┘   └──────────┘            │
+│       │               │               │                │
+└───────┼───────────────┼───────────────┼────────────────┘
+        │               │               │
+        └───────────────┴───────────────┘
+                       ▼
+              [Cloudflare Global Network]
 ```
+
+**Binding Roles**:
+1. **WORKER_SELF_REFERENCE** (Service): Internal coordination
+2. **NEXT_INC_CACHE_R2_BUCKET** (R2): Persistent ISR storage
+3. **NEXT_CACHE_DO_QUEUE** (DO): Async revalidation queue
+4. **NEXT_TAG_CACHE_DO_SHARDED** (DO): Tag-based invalidation (32 shards)
 
 ### Key Benefits
 
@@ -111,6 +126,58 @@ Durable Objects provide stateful coordination for cache operations:
 - **Purpose**: Tag-based cache invalidation with sharding
 - **Shards**: 32 (default for load distribution)
 - **Use case**: Fast invalidation via `revalidateTag('posts')`
+
+### 5. Service Binding (Worker Self-Reference)
+
+Service bindings enable worker-to-worker communication, allowing OpenNext to coordinate cache operations internally:
+
+#### WORKER_SELF_REFERENCE
+- **Binding**: `WORKER_SELF_REFERENCE`
+- **Service**: Points to this worker itself (`website`)
+- **Purpose**: Internal worker-to-worker communication for OpenNext cache coordination
+- **Use case**:
+  - Cache operations between OpenNext components
+  - ISR revalidation coordination
+  - Internal cache invalidation triggers
+  - Background job orchestration
+
+**How It Works**:
+
+```
+┌─────────────────────────────────────────────────────┐
+│              OpenNext Worker (Main)                  │
+│  ┌───────────────────────────────────────────────┐ │
+│  │  1. User Request → ISR Page                   │ │
+│  │     - Check cache in R2                       │ │
+│  │     - If stale, trigger revalidation          │ │
+│  └───────────────────────────────────────────────┘ │
+│  ┌───────────────────────────────────────────────┐ │
+│  │  2. Internal Communication via Service Binding│ │
+│  │     env.WORKER_SELF_REFERENCE.fetch(...)      │ │
+│  │     - Coordinates with DO queue               │ │
+│  │     - Triggers background regeneration        │ │
+│  └───────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────┘
+```
+
+**Configuration**:
+
+```jsonc
+// wrangler.jsonc
+"services": [
+  {
+    "binding": "WORKER_SELF_REFERENCE",
+    "service": "website"  // Must match worker name
+  }
+]
+```
+
+**Why It's Needed**:
+
+1. **Cache Coordination**: OpenNext needs to communicate between its internal components (server function, cache handler, queue processor)
+2. **Background Jobs**: Service binding allows the worker to make requests to itself for async processing
+3. **ISR Operations**: Enables the stale-while-revalidate pattern by triggering background page regeneration
+4. **Isolation**: Keeps cache operations isolated from user-facing requests
 
 ### Architecture Diagram
 
@@ -465,7 +532,7 @@ User → Worker → (Stale Cache) → Serve Stale → Background Regenerate → 
 
 ## Configuration Reference
 
-### Current Configuration (Phase 1 + Phase 2)
+### Current Configuration (Phase 1 + Phase 2 + Phase 3)
 
 ```jsonc
 // wrangler.jsonc
@@ -489,8 +556,39 @@ User → Worker → (Stale Cache) → Serve Stale → Background Regenerate → 
         "script_name": "website"
       }
     ]
-  }
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "website"
+    }
+  ],
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["DOQueueHandler", "DOTagCacheShard"]
+    }
+  ]
 }
+```
+
+### OpenNext Configuration
+
+```typescript
+// open-next.config.ts
+import { defineCloudflareConfig } from '@opennextjs/cloudflare';
+import r2IncrementalCache from '@opennextjs/cloudflare/overrides/incremental-cache/r2-incremental-cache';
+import doQueue from '@opennextjs/cloudflare/overrides/queue/do-queue';
+import doShardedTagCache from '@opennextjs/cloudflare/overrides/tag-cache/do-sharded-tag-cache';
+
+export default defineCloudflareConfig({
+  // R2 cache - uses NEXT_INC_CACHE_R2_BUCKET binding
+  incrementalCache: r2IncrementalCache,
+  // DO queue - uses NEXT_CACHE_DO_QUEUE binding
+  queue: doQueue,
+  // Sharded tag cache - uses NEXT_TAG_CACHE_DO_SHARDED binding
+  tagCache: doShardedTagCache({ baseShardSize: 12 }),
+});
 ```
 
 ### Next.js Page Configuration
@@ -620,5 +718,5 @@ Assumptions:
 ---
 
 **Document Status**: ✅ Complete
-**Phase Status**: Phase 1 of 3 (R2 Configuration)
-**Next Steps**: Proceed to Phase 2 - Enable OpenNext incremental cache
+**Phase Status**: Phase 3 of 3 (All Bindings Configured + OpenNext Activated)
+**Architecture Complete**: All 4 bindings (R2, DO Queue, DO Tags, Service) + OpenNext R2 cache enabled
