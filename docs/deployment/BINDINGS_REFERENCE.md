@@ -1,10 +1,10 @@
 # Cloudflare Bindings Reference - Complete Guide
 
-**Document Version**: 1.0
-**Last Updated**: 2025-11-12
+**Document Version**: 2.0
+**Last Updated**: 2025-11-13
 **Epic**: Epic 0 - Infrastructure Setup
 **Story**: Story 0.5 - Configure wrangler.toml with bindings
-**Phase**: Phase 2 - Durable Objects Bindings Configuration
+**Phase**: Phase 3 - Service Binding & OpenNext Activation (Complete)
 
 ## Table of Contents
 
@@ -22,7 +22,7 @@
 
 Bindings allow your Cloudflare Worker to interact with resources on the Cloudflare platform. This document provides a complete reference for all bindings configured for the sebc.dev website.
 
-### Configured Bindings (Phase 1 + Phase 2)
+### Configured Bindings (Phase 1 + Phase 2 + Phase 3)
 
 | Binding Name | Type | Purpose | Phase |
 |-------------|------|---------|-------|
@@ -30,6 +30,7 @@ Bindings allow your Cloudflare Worker to interact with resources on the Cloudfla
 | `NEXT_INC_CACHE_R2_BUCKET` | R2 Bucket | Next.js ISR cache storage | Phase 1 |
 | `NEXT_CACHE_DO_QUEUE` | Durable Object | ISR revalidation queue | Phase 2 |
 | `NEXT_TAG_CACHE_DO_SHARDED` | Durable Object | Tag-based cache invalidation | Phase 2 |
+| `WORKER_SELF_REFERENCE` | Service Binding | Worker-to-worker communication | Phase 3 |
 
 ## Complete Bindings Configuration
 
@@ -90,7 +91,27 @@ Bindings allow your Cloudflare Worker to interact with resources on the Cloudfla
         "script_name": "website"
       }
     ]
-  }
+  },
+
+  /**
+   * Service Bindings
+   */
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "website"
+    }
+  ],
+
+  /**
+   * Durable Objects Migrations
+   */
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["DOQueueHandler", "DOTagCacheShard"]
+    }
+  ]
 }
 ```
 
@@ -350,6 +371,150 @@ export async function POST(request: Request) {
 - **Duration**: 400,000 GB-s per month
 - **Storage**: 1 GB
 
+## Service Binding
+
+### Configuration
+
+```jsonc
+"services": [
+  {
+    "binding": "WORKER_SELF_REFERENCE",
+    "service": "website"
+  }
+]
+```
+
+### Fields Explained
+
+- **binding**: Name used in code (`env.WORKER_SELF_REFERENCE`)
+- **service**: Worker name to bind to (must match `name` in wrangler.jsonc)
+
+### Purpose
+
+Service bindings enable worker-to-worker communication. The `WORKER_SELF_REFERENCE` binding allows the worker to make requests to itself for internal coordination, which is required by OpenNext for:
+
+- **Cache coordination**: Internal communication between OpenNext components
+- **Background jobs**: Async revalidation without blocking user requests
+- **ISR operations**: Stale-while-revalidate pattern implementation
+- **Queue processing**: Triggering background page regeneration
+
+### Usage (via OpenNext)
+
+**Automatic**: OpenNext uses this binding automatically for cache operations
+
+```typescript
+// No manual code needed - OpenNext handles it
+// When a page is stale, OpenNext uses WORKER_SELF_REFERENCE
+// to trigger background regeneration
+export const revalidate = 3600;
+```
+
+### Manual Access (Advanced)
+
+If you need to make internal worker requests manually:
+
+```typescript
+import { getCloudflareContext } from '@opennext/cloudflare';
+
+export async function POST(request: Request) {
+  const { env } = await getCloudflareContext();
+
+  // Make request to self
+  const response = await env.WORKER_SELF_REFERENCE.fetch(
+    new Request('https://internal/background-job', {
+      method: 'POST',
+      body: JSON.stringify({ task: 'regenerate-page', path: '/blog/post-1' }),
+    })
+  );
+
+  return Response.json({ queued: true });
+}
+```
+
+### How It Works
+
+```
+┌─────────────────────────────────────────────────┐
+│          User Request → Worker (Main)            │
+└──────────────────┬──────────────────────────────┘
+                   │
+                   │ (Detects stale cache)
+                   │
+                   ▼
+┌─────────────────────────────────────────────────┐
+│   env.WORKER_SELF_REFERENCE.fetch(...)          │
+│   Internal request to self for regeneration     │
+└──────────────────┬──────────────────────────────┘
+                   │
+                   ▼
+┌─────────────────────────────────────────────────┐
+│    Worker (Background Handler)                   │
+│    - Regenerates page                            │
+│    - Stores in R2                                │
+│    - Updates cache metadata                      │
+└─────────────────────────────────────────────────┘
+```
+
+### Key Features
+
+- **Zero latency**: Internal communication (same worker runtime)
+- **Isolation**: Background work doesn't block user requests
+- **Reliability**: Built-in retry logic for failed jobs
+- **OpenNext integration**: Required for R2 incremental cache
+
+### Monitoring
+
+- **Cloudflare Dashboard**: Workers & Pages > Your Worker
+- **Metrics**: Internal request count, CPU time for background jobs
+- **Logs**: Filter with `wrangler tail --search "WORKER_SELF_REFERENCE"`
+
+### Troubleshooting
+
+#### Issue: Service Binding Not Found
+
+**Error**: `TypeError: env.WORKER_SELF_REFERENCE is not defined`
+
+**Cause**: Service binding not configured in wrangler.jsonc
+
+**Solution**:
+1. Add `services` section to wrangler.jsonc
+2. Ensure `service` name matches `name` field
+3. Regenerate types: `pnpm cf-typegen`
+4. Restart dev server: `pnpm dev`
+
+#### Issue: Service Name Mismatch
+
+**Error**: `Service 'website' not found`
+
+**Cause**: Service name doesn't match worker name
+
+**Solution**:
+```jsonc
+// wrangler.jsonc
+{
+  "name": "website",  // Worker name
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "website"  // Must match worker name
+    }
+  ]
+}
+```
+
+### Local Development
+
+In local development (`wrangler dev`), the service binding connects to the same local worker instance:
+
+```bash
+wrangler dev
+
+# Output shows:
+# env.WORKER_SELF_REFERENCE (website) Worker local [connected]
+```
+
+This allows you to test cache operations locally without deploying to production.
+
 ## Accessing Bindings in Code
 
 ### In Next.js API Routes
@@ -363,10 +528,11 @@ export async function GET() {
   const { env } = await getCloudflareContext();
 
   // Access bindings
-  const db = env.DB;                          // D1
-  const r2 = env.NEXT_INC_CACHE_R2_BUCKET;     // R2
-  const queue = env.NEXT_CACHE_DO_QUEUE;       // DO Queue
-  const tagCache = env.NEXT_TAG_CACHE_DO_SHARDED; // DO Tag Cache
+  const db = env.DB;                                  // D1
+  const r2 = env.NEXT_INC_CACHE_R2_BUCKET;           // R2
+  const queue = env.NEXT_CACHE_DO_QUEUE;             // DO Queue
+  const tagCache = env.NEXT_TAG_CACHE_DO_SHARDED;    // DO Tag Cache
+  const workerSelf = env.WORKER_SELF_REFERENCE;      // Service Binding
 
   return Response.json({ available: true });
 }
@@ -625,5 +791,5 @@ curl http://localhost:3000/api/test
 ---
 
 **Document Status**: ✅ Complete
-**Phase Status**: Phase 2 of 3 (Durable Objects Configuration)
-**Next Steps**: Proceed to Phase 3 - Enable OpenNext incremental cache
+**Phase Status**: Phase 3 of 3 (All Bindings Configured)
+**Bindings Complete**: All 5 bindings (D1, R2, DO Queue, DO Tags, Service) documented and configured
