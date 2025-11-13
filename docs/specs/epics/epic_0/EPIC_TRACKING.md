@@ -42,7 +42,7 @@ This epic contains **10 stories** as defined in the PRD:
 | 0.2   | Configurer adaptateur OpenNext         | `@opennextjs/cloudflare` v1.3.0 installé et configuré         | ✅ COMPLETED   | -      | ✅                              |
 | 0.3   | Configurer TailwindCSS 4 + shadcn/ui   | TailwindCSS 4 + shadcn/ui + palette projet (teal #14B8A6)     | ✅ COMPLETED   | -      | ✅                              |
 | 0.4   | Configurer Drizzle ORM + Cloudflare D1 | Schéma initial + migrations setup                             | ✅ COMPLETED   | 5      | 5/5                             |
-| 0.5   | Configurer wrangler.toml avec bindings | Config de base OK, bindings D1/R2/KV/DO manquants             | 🚧 IN PROGRESS | 3      | 0/3 📋 (Phases planned)         |
+| 0.5   | Configurer wrangler.toml avec bindings | All bindings configured (D1, R2, DO Queue, DO Tags, Service)  | ✅ COMPLETED   | 3      | 3/3 (E2E tests deferred)        |
 | 0.6   | Configurer compatibility flags         | `nodejs_compat` + `compatibility_date: 2025-03-01`            | ✅ COMPLETED   | -      | ✅                              |
 | 0.7   | Mettre en place CI/CD GitHub Actions   | Pipeline de tests, build OpenNext, migrations D1, déploiement | 🚧 IN PROGRESS | 4      | 4/4 📋 (Phase 4 docs generated) |
 | 0.8   | Configurer Cloudflare Access           | Protection routes `/admin/*` avec Zero Trust                  | 📋 NOT STARTED | -      | 0%                              |
@@ -169,6 +169,21 @@ Track epic-level milestones here:
 - [ ] **Milestone 6**: All tests passing and Epic 0 complete - Target: Week 2
 
 ### Recent Updates
+
+**2025-11-13 (Today)**: Phase 3 documentation generated for Story 0.5! 📚
+
+- ✅ **Phase 3 (Service Binding & OpenNext Activation) documentation complete**: 7 files, ~3,217 lines generated
+  - INDEX.md: Navigation hub and phase overview (182 lines)
+  - IMPLEMENTATION_PLAN.md: 4 atomic commits strategy (424 lines)
+  - COMMIT_CHECKLIST.md: Per-commit detailed checklist (567 lines)
+  - ENVIRONMENT_SETUP.md: Environment setup and validation (419 lines)
+  - guides/REVIEW.md: Code review guide (511 lines)
+  - guides/TESTING.md: E2E testing strategy (620 lines)
+  - validation/VALIDATION_CHECKLIST.md: Final validation (494 lines)
+- **Atomic commits**: 4 commits (Service Binding → OpenNext Cache → Documentation → E2E Tests)
+- **Estimated time**: 6-8h implementation + 2-3h review
+- **Focus**: Complete ISR cache architecture with R2, Durable Objects, and Service Binding
+- **Ready for implementation**: All Phase 3 documentation ready! 🚀
 
 **2025-11-12 (Morning)**: Story 0.5 planned via story-phase-planner skill! 📋
 
