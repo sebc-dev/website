@@ -46,7 +46,7 @@ This epic contains **10 stories** as defined in the PRD:
 | 0.6   | Configurer compatibility flags         | `nodejs_compat` + `compatibility_date: 2025-03-01`            | ✅ COMPLETED   | -      | ✅                              |
 | 0.7   | Mettre en place CI/CD GitHub Actions   | Pipeline de tests, build OpenNext, migrations D1, déploiement | 🚧 IN PROGRESS | 4      | 4/4 📋 (Phase 4 docs generated) |
 | 0.8   | Configurer Cloudflare Access           | Protection routes `/admin/*` avec Zero Trust                  | 📋 PLANNED     | 4      | 0/4                             |
-| 0.9   | Configurer Cloudflare WAF              | Sécurité de base contre menaces web                           | 📋 NOT STARTED | -      | 0%                              |
+| 0.9   | Configurer Cloudflare WAF              | Sécurité de base contre menaces web                           | 📋 PLANNED     | 3      | 0/3                             |
 | 0.10  | Base tests & linting                   | ESLint + Vitest (avec tests) + Playwright configurés          | ✅ COMPLETED   | -      | ✅                              |
 
 **Columns Explained**:
@@ -105,11 +105,11 @@ cat docs/specs/epics/epic_0/EPIC_TRACKING.md
 
 - **Stories Started**: 8 / 10
 - **Stories Completed**: 6 / 10 ✅
-- **Stories Planned**: 4 / 10 (Stories 0.1, 0.4, 0.5, 0.7)
-- **Stories In Progress**: 2 / 10 (Story 0.5: 20%, Story 0.7: 75%)
-- **Stories Not Started**: 2 / 10 (Stories 0.8, 0.9)
-- **Total Phases**: 15 (Story 0.1: 3 phases, Story 0.4: 5 phases, Story 0.5: 3 phases, Story 0.7: 4 phases)
-- **Phases Completed**: 11 / 15 (Story 0.1: 3/3, Story 0.4: 5/5, Story 0.5: 0/3, Story 0.7: 3/4)
+- **Stories Planned**: 5 / 10 (Stories 0.1, 0.4, 0.5, 0.7, 0.8, 0.9)
+- **Stories In Progress**: 2 / 10 (Story 0.5: 100%, Story 0.7: 75%)
+- **Stories Not Started**: 0 / 10 (All stories now planned!)
+- **Total Phases**: 22 (Story 0.1: 3, Story 0.4: 5, Story 0.5: 3, Story 0.7: 4, Story 0.8: 4, Story 0.9: 3)
+- **Phases Completed**: 11 / 22 (Story 0.1: 3/3, Story 0.4: 5/5, Story 0.5: 3/3, Story 0.7: 3/4, Story 0.8: 0/4, Story 0.9: 0/3)
 
 **Epic Completion**: 60% (6 stories complétées / 10 total)
 **Weighted Progress**: ~68% (incluant stories partielles: 0.5 à 0%, 0.7 à 75%)
@@ -170,7 +170,28 @@ Track epic-level milestones here:
 
 ### Recent Updates
 
-**2025-11-13 (Today)**: Phase 3 documentation generated for Story 0.5! 📚
+**2025-11-13 (Evening)**: Story 0.9 planned via story-phase-planner skill! 🔒
+
+- ✅ **Story 0.9: Configurer Cloudflare WAF planifiée en 3 phases** (3-4 jours estimés)
+  - Phase 1: WAF Core Configuration (1-1.5d) 🟢 Low risk
+  - Phase 2: Custom Rules & Tuning (1-1.5d) 🟡 Medium risk
+  - Phase 3: Testing & Validation (1d) 🟢 Low risk
+- **Security objective**: Cloudflare WAF protection against OWASP Top 10 (XSS, SQLi, etc.)
+- **Approach**: Configuration-only story via Cloudflare Dashboard (no code changes)
+- **Key features**:
+  - OWASP Core Rule Set activation
+  - Cloudflare Managed Ruleset (threat intelligence)
+  - Rate limiting (100 req/min global, 20 req/min API, 10 req/min admin)
+  - Custom rules and exceptions for application-specific threats
+  - Comprehensive testing (positive + negative) and monitoring setup
+- **Dependencies**: Story 0.7 (CI/CD deployment) should be complete for testing
+- **Complements**: Story 0.8 (Cloudflare Access) for defense-in-depth security
+- **Total Phases (Epic)**: 22 (Story 0.1: 3, Story 0.4: 5, Story 0.5: 3, Story 0.7: 4, Story 0.8: 4, Story 0.9: 3)
+- **All stories now planned!** Epic 0 fully mapped (10/10 stories planned)
+- Documentation complète générée: story spec (~400 lines) + PHASES_PLAN.md (~900 lines)
+- Prêt pour implémentation des 3 phases pour activer protection WAF complète! 🛡️
+
+**2025-11-13 (Afternoon)**: Phase 3 documentation generated for Story 0.5! 📚
 
 - ✅ **Phase 3 (Service Binding & OpenNext Activation) documentation complete**: 7 files, ~3,217 lines generated
   - INDEX.md: Navigation hub and phase overview (182 lines)
@@ -367,7 +388,7 @@ Track epic-level milestones here:
 - Story 0.6: `docs/specs/epics/epic_0/story_0_6/story_0.6.md` (created via /plan-story)
 - Story 0.7: `docs/specs/epics/epic_0/story_0_7/story_0.7.md` ✅ CREATED (via /plan-story)
 - Story 0.8: `docs/specs/epics/epic_0/story_0_8/story_0.8.md` ✅ CREATED (via story-phase-planner)
-- Story 0.9: `docs/specs/epics/epic_0/story_0_9/story_0.9.md` (created via /plan-story)
+- Story 0.9: `docs/specs/epics/epic_0/story_0_9/story_0.9.md` ✅ CREATED (via story-phase-planner)
 - Story 0.10: `docs/specs/epics/epic_0/story_0_10/story_0.10.md` (created via /plan-story)
 
 ### Phase Plans
@@ -377,6 +398,7 @@ Track epic-level milestones here:
 - Story 0.5: `docs/specs/epics/epic_0/story_0_5/implementation/PHASES_PLAN.md` ✅ PLANNED (3 phases)
 - Story 0.7: `docs/specs/epics/epic_0/story_0_7/implementation/PHASES_PLAN.md` ✅ PLANNED (4 phases)
 - Story 0.8: `docs/specs/epics/epic_0/story_0_8/implementation/PHASES_PLAN.md` ✅ PLANNED (4 phases)
+- Story 0.9: `docs/specs/epics/epic_0/story_0_9/implementation/PHASES_PLAN.md` ✅ PLANNED (3 phases)
 - Links for other stories will be added as they are planned
 
 ### Related Documentation
