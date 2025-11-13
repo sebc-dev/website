@@ -160,7 +160,7 @@ test.describe('HomePage - Visual Elements', () => {
 
   /**
    * Test: Info card with launch date renders
-   * Expected: Card contains launch date "Fin Octobre 2025"
+   * Expected: Card contains launch date "Fin Novembre 2025"
    */
   test('launch date card is visible', async ({ page }) => {
     await page.goto('/');
@@ -171,7 +171,7 @@ test.describe('HomePage - Visual Elements', () => {
 
     // Verify content
     await expect(card).toContainText('Lancement prévu');
-    await expect(card).toContainText('Fin Octobre 2025');
+    await expect(card).toContainText('Fin Novembre 2025');
     await expect(card).toContainText('Blog technique');
   });
 
