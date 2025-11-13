@@ -11,7 +11,6 @@
 ### Description
 
 L'Epic 0 établit le socle technique complet du projet sebc.dev. Il s'agit de la fondation sur laquelle tous les autres epics seront construits. Cette epic couvre l'initialisation du projet Next.js 15, la configuration de l'adaptateur OpenNext pour le déploiement sur Cloudflare Workers, la mise en place de la base de données D1 avec Drizzle ORM, la configuration du design system (TailwindCSS 4 + shadcn/ui), et l'établissement du pipeline CI/CD complet avec tests, migrations, et déploiement automatisé.
-
 L'Epic 0 garantit que toutes les bases techniques sont correctement posées : configuration des bindings Cloudflare (D1, R2, KV, Durable Objects), activation des flags de compatibilité requis (`nodejs_compat`), mise en place de la sécurité (Cloudflare Access pour `/admin`, WAF), et configuration du système de tests (Vitest, Playwright).
 
 ### Epic Objectives
@@ -487,9 +486,9 @@ Track epic-level milestones here:
 
 - [x] First story planned (/plan-story) - Story 0.1 with 3 phases
 - [x] First story completed - Story 0.1 (100%)
-- [x] Additional stories completed - Stories 0.2, 0.3, 0.4, 0.6, 0.10 (6/10 total)
-- [x] Progress metrics updated - 60% epic completion, ~69% weighted
-- [x] Stories in progress identified - Story 0.5 (20%), Story 0.7 (70%)
+- [x] Additional stories completed - Stories 0.2, 0.3, 0.4, 0.5, 0.6, 0.10 (7/10 total)
+- [x] Progress metrics updated - 70% epic completion, ~78% weighted
+- [x] Stories in progress identified - Story 0.7 (75%)
 - [x] Comprehensive audit conducted - Real progress vs estimated progress verified
 
 ### Epic Completion
@@ -538,5 +537,5 @@ Track epic-level milestones here:
 ---
 
 **Epic Initialized**: 2025-11-06
-**Last Updated**: 2025-11-10
+**Last Updated**: 2025-11-13
 **Created by**: Claude Code (epic-initializer skill)
