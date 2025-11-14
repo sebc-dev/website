@@ -58,6 +58,7 @@ Les trois Durable Objects configurés pour le cache Next.js :
 ```
 
 **Notes importantes** :
+
 - Ne pas spécifier `script_name` pour les Durable Objects internes (définis dans le même worker)
 - Les migrations sont **immuables** : toujours créer une nouvelle migration (v2, v3...) au lieu de modifier une existante
 - `BucketCachePurge` a été ajouté dans la migration v2 pour respecter cette contrainte d'immutabilité
