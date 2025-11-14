@@ -73,7 +73,13 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'pnpm dev',
+    /**
+     * Use filtered dev command to suppress Durable Objects warnings
+     * These warnings are expected in local development as Durable Objects
+     * are not supported by wrangler dev (they work in production)
+     * See: https://opennext.js.org/cloudflare/known-issues
+     */
+    command: 'bash scripts/dev-quiet.sh',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
   },

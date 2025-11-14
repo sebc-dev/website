@@ -67,9 +67,14 @@
    *
    * NEXT_TAG_CACHE_DO_SHARDED:
    * - Purpose: Tag-based cache invalidation with sharding
-   * - Class: DOTagCacheShard (provided by @opennextjs/cloudflare)
+   * - Class: DOShardedTagCache (provided by @opennextjs/cloudflare)
    * - Shards: 32 (default for load distribution)
    * - Use case: Fast cache invalidation by tags (e.g., revalidateTag('posts'))
+   *
+   * NEXT_CACHE_DO_PURGE:
+   * - Purpose: Cache purge coordination for R2 bucket cache
+   * - Class: BucketCachePurge (provided by @opennextjs/cloudflare)
+   * - Use case: Coordinated cache invalidation for R2-based incremental cache
    *
    * Note: These binding names are expected by OpenNext for automatic integration
    */
@@ -78,12 +83,14 @@
       {
         "name": "NEXT_CACHE_DO_QUEUE",
         "class_name": "DOQueueHandler",
-        "script_name": "website",
       },
       {
         "name": "NEXT_TAG_CACHE_DO_SHARDED",
-        "class_name": "DOTagCacheShard",
-        "script_name": "website",
+        "class_name": "DOShardedTagCache",
+      },
+      {
+        "name": "NEXT_CACHE_DO_PURGE",
+        "class_name": "BucketCachePurge",
       },
     ],
   },
@@ -102,7 +109,11 @@
   "migrations": [
     {
       "tag": "v1",
-      "new_sqlite_classes": ["DOQueueHandler", "DOTagCacheShard"],
+      "new_sqlite_classes": [
+        "DOQueueHandler",
+        "DOShardedTagCache",
+        "BucketCachePurge",
+      ],
     },
   ],
   /**
