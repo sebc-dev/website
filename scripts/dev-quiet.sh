@@ -4,6 +4,10 @@
 # Ces warnings sont attendus en local (les DO fonctionnent en production)
 # Voir: https://opennext.js.org/cloudflare/known-issues
 
+# Enable pipefail to propagate errors through the pipe
+# Without this, if 'pnpm dev' fails, the script would still exit with code 0
+set -o pipefail
+
 pnpm dev 2>&1 | grep -v \
   -e "You have defined bindings to the following internal Durable Objects:" \
   -e "These will not work in local development" \
@@ -15,5 +19,4 @@ pnpm dev 2>&1 | grep -v \
   -e "NEXT_CACHE_DO_PURGE" \
   -e "DOQueueHandler" \
   -e "DOShardedTagCache" \
-  -e "BucketCachePurge" \
-  || true
+  -e "BucketCachePurge"

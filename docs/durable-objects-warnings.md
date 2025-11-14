@@ -44,10 +44,23 @@ Les trois Durable Objects configurés pour le cache Next.js :
       "class_name": "BucketCachePurge"
     }
   ]
-}
+},
+"migrations": [
+  {
+    "tag": "v1",
+    "new_sqlite_classes": ["DOQueueHandler", "DOShardedTagCache"]
+  },
+  {
+    "tag": "v2",
+    "new_sqlite_classes": ["BucketCachePurge"]
+  }
+]
 ```
 
-**Note importante** : Ne pas spécifier `script_name` pour les Durable Objects internes (définis dans le même worker).
+**Notes importantes** :
+- Ne pas spécifier `script_name` pour les Durable Objects internes (définis dans le même worker)
+- Les migrations sont **immuables** : toujours créer une nouvelle migration (v2, v3...) au lieu de modifier une existante
+- `BucketCachePurge` a été ajouté dans la migration v2 pour respecter cette contrainte d'immutabilité
 
 ### open-next.config.ts
 
@@ -70,11 +83,17 @@ Pour éviter le bruit dans les logs pendant les tests E2E, nous utilisons un scr
 Ce script lance le serveur de dev en filtrant les warnings Durable Objects :
 
 ```bash
+#!/bin/bash
+# Enable pipefail to propagate errors through the pipe
+set -o pipefail
+
 pnpm dev 2>&1 | grep -v \
   -e "You have defined bindings to the following internal Durable Objects:" \
   -e "workerd/server/server.c++:1952: warning: A DurableObjectNamespace" \
   # ... autres patterns
 ```
+
+**Important** : Le script utilise `set -o pipefail` pour que les erreurs du serveur de dev se propagent correctement. Sans cette option, Playwright pourrait attendre indéfiniment si le serveur échoue au démarrage.
 
 ### Configuration Playwright
 
