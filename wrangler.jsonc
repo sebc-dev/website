@@ -99,21 +99,28 @@
    * Required when creating new Durable Object classes
    * https://developers.cloudflare.com/durable-objects/reference/durable-objects-migrations/
    *
-   * Migration tag: v1 (initial migration for DO classes)
-   * new_sqlite_classes: Declares new DO classes with SQLite storage backend
+   * IMPORTANT: Migrations are IMMUTABLE. Never modify existing migrations.
+   * Always create a new migration with an incremented tag (v1, v2, v3...).
    *
-   * Note: This migration is required even though the DO classes are provided
-   * by @opennextjs/cloudflare. The migration tells Cloudflare Workers runtime
-   * that these classes exist and should be instantiated with SQLite storage.
+   * Migration v1: Initial DO classes for Next.js ISR cache
+   * - DOQueueHandler: Queue for async revalidation tasks
+   * - DOShardedTagCache: Sharded tag-based cache invalidation (renamed from DOTagCacheShard)
+   *
+   * Migration v2: Added cache purge coordination (2025-11-14)
+   * - BucketCachePurge: Coordinated cache purge for R2 incremental cache
+   *
+   * Note: These migrations are required even though DO classes are provided
+   * by @opennextjs/cloudflare. They tell Cloudflare Workers runtime that
+   * these classes exist and should be instantiated with SQLite storage.
    */
   "migrations": [
     {
       "tag": "v1",
-      "new_sqlite_classes": [
-        "DOQueueHandler",
-        "DOShardedTagCache",
-        "BucketCachePurge",
-      ],
+      "new_sqlite_classes": ["DOQueueHandler", "DOShardedTagCache"],
+    },
+    {
+      "tag": "v2",
+      "new_sqlite_classes": ["BucketCachePurge"],
     },
   ],
   /**

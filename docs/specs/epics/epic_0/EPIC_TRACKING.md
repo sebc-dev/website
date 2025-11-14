@@ -106,7 +106,7 @@ cat docs/specs/epics/epic_0/EPIC_TRACKING.md
 - **Stories Started**: 8 / 10
 - **Stories Completed**: 6 / 10 ✅
 - **Stories Planned**: 5 / 10 (Stories 0.1, 0.4, 0.5, 0.7, 0.8, 0.9)
-- **Stories In Progress**: 2 / 10 (Story 0.5: 100%, Story 0.7: 75%)
+- **Stories In Progress**: 1 / 10 (Story 0.7: 75%)
 - **Stories Not Started**: 0 / 10 (All stories now planned!)
 - **Total Phases**: 22 (Story 0.1: 3, Story 0.4: 5, Story 0.5: 3, Story 0.7: 4, Story 0.8: 4, Story 0.9: 3)
 - **Phases Completed**: 11 / 22 (Story 0.1: 3/3, Story 0.4: 5/5, Story 0.5: 3/3, Story 0.7: 3/4, Story 0.8: 0/4, Story 0.9: 0/3)
