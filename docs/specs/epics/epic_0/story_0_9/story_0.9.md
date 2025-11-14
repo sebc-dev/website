@@ -87,6 +87,7 @@ This story establishes baseline security protections that complement application
 ### Cloudflare Configuration
 
 **WAF Setup** (via Cloudflare Dashboard):
+
 - Zone: `sebc.dev` (production zone)
 - WAF Mode: Block (production), Log (development/testing)
 - Managed Rulesets:
@@ -95,17 +96,20 @@ This story establishes baseline security protections that complement application
   - **Cloudflare Specials**: Known CVE protection
 
 **Rule Configuration**:
+
 - Sensitivity Level: Medium (balance between security and false positives)
 - Action: Block (for high-confidence threats)
 - Challenge: For suspicious but not definitively malicious traffic
 - Log: For monitoring and tuning phase
 
 **Rate Limiting** (Basic):
+
 - Global rate limit: 100 req/min per IP
 - API endpoints: 20 req/min per IP (if applicable)
 - Admin routes: 10 req/min per IP (already protected by Access)
 
 **Whitelisting/Exceptions**:
+
 - CI/CD health check endpoints (if needed)
 - Monitoring service IPs (if applicable)
 - Known good IPs (development team, if needed for testing)
@@ -113,6 +117,7 @@ This story establishes baseline security protections that complement application
 ### Testing Requirements
 
 **Positive Tests** (legitimate traffic):
+
 - ✅ Homepage loads successfully
 - ✅ Static assets served correctly
 - ✅ API endpoints respond normally
@@ -120,6 +125,7 @@ This story establishes baseline security protections that complement application
 - ✅ Playwright E2E tests pass
 
 **Negative Tests** (attack simulation):
+
 - ❌ XSS payloads blocked (`<script>alert('xss')</script>`)
 - ❌ SQL injection attempts blocked (`' OR 1=1 --`)
 - ❌ Path traversal attempts blocked (`../../../etc/passwd`)
@@ -127,6 +133,7 @@ This story establishes baseline security protections that complement application
 - ❌ Known attack patterns blocked (common CVE payloads)
 
 **Performance Tests**:
+
 - WAF adds minimal latency (<10ms p95)
 - No impact on page load metrics (LCP, INP, CLS)
 - Rate limiting doesn't affect normal usage
@@ -203,10 +210,12 @@ This story establishes baseline security protections that complement application
 ### Integration Tests
 
 **Positive Tests** (Playwright E2E):
+
 - All existing E2E tests should pass with WAF enabled
 - No false positives for legitimate application usage
 
 **Negative Tests** (Manual/Scripted):
+
 - Use tools like `curl` or `Postman` to send attack payloads
 - Verify WAF blocks malicious requests
 - Verify appropriate HTTP status codes (403 Forbidden or Cloudflare Challenge page)
@@ -275,6 +284,7 @@ curl "https://sebc.dev"
 **Impact**: Users unable to access site or submit forms
 
 **Mitigation**:
+
 - Start with "Log" mode to monitor without blocking
 - Analyze logs for false positives before switching to "Block" mode
 - Gradually increase sensitivity level (Low → Medium → High)
@@ -290,6 +300,7 @@ curl "https://sebc.dev"
 **Impact**: Suboptimal configuration or security gaps
 
 **Mitigation**:
+
 - Use Cloudflare Managed Rulesets as baseline (pre-configured by experts)
 - Start with recommended defaults (OWASP Core Rule Set, Medium sensitivity)
 - Review Cloudflare documentation and best practices
@@ -304,6 +315,7 @@ curl "https://sebc.dev"
 **Impact**: Unknown vulnerabilities may not be covered
 
 **Mitigation**:
+
 - Use industry-standard testing tools (OWASP ZAP, Burp Suite)
 - Reference OWASP Top 10 and common CVE databases
 - Enable monitoring and alerting for continuous validation
@@ -318,6 +330,7 @@ curl "https://sebc.dev"
 **Impact**: Slower page load times, degraded user experience
 
 **Mitigation**:
+
 - Cloudflare WAF runs at Edge with minimal latency overhead
 - Benchmark before/after to measure actual impact
 - Monitor performance metrics post-deployment
@@ -359,12 +372,14 @@ See `implementation/PHASES_PLAN.md` for detailed phase breakdown.
 ### Configuration Management
 
 **WAF is configured via Cloudflare Dashboard** (not Infrastructure as Code):
+
 - Configuration is zone-specific (tied to `sebc.dev` domain)
 - Changes made via dashboard: https://dash.cloudflare.com
 - No `wrangler.toml` or code changes required
 - Configuration should be documented in `docs/security/` for reproducibility
 
 **Backup Strategy**:
+
 - Take screenshots of WAF configuration
 - Export rule lists to JSON (if possible via API)
 - Document all configuration steps for disaster recovery
@@ -372,11 +387,13 @@ See `implementation/PHASES_PLAN.md` for detailed phase breakdown.
 ### Development vs Production
 
 **Development/Staging**:
+
 - Use "Log" mode initially to monitor without blocking
 - Whitelist development IPs if needed
 - Disable rate limiting for testing
 
 **Production**:
+
 - Use "Block" mode for high-confidence threats
 - Use "Challenge" mode for suspicious traffic
 - Enable rate limiting

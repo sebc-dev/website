@@ -63,6 +63,7 @@ Each phase follows these principles:
 ```
 
 **Configuration-First Approach**:
+
 - This is a configuration-only story (no code changes to the application)
 - All changes made via Cloudflare Dashboard
 - Documentation commits capture configuration state
@@ -384,24 +385,24 @@ Phase 3 (Testing & Validation)
 
 ### Overall Estimates
 
-| Metric                   | Estimate              | Notes                                                           |
-| ------------------------ | --------------------- | --------------------------------------------------------------- |
-| **Total Phases**         | 3                     | Atomic, sequential phases                                       |
-| **Total Duration**       | 3-4 days              | Plus 24-48h waiting for logs between Phase 1 and 2              |
-| **Calendar Duration**    | 4-5 days              | Including log accumulation time                                 |
-| **Total Commits**        | ~12-15                | Primarily documentation commits                                 |
-| **Total Files**          | ~15-20 new, ~3 mod    | All documentation and test scripts                              |
-| **Code Changes**         | 0 lines               | Configuration-only story (no application code changes)          |
-| **Documentation**        | ~8 new docs           | Configuration, testing, monitoring, incident response guides    |
-| **Test Coverage Target** | N/A (config)          | Validation via E2E tests and security scanning                  |
+| Metric                   | Estimate           | Notes                                                        |
+| ------------------------ | ------------------ | ------------------------------------------------------------ |
+| **Total Phases**         | 3                  | Atomic, sequential phases                                    |
+| **Total Duration**       | 3-4 days           | Plus 24-48h waiting for logs between Phase 1 and 2           |
+| **Calendar Duration**    | 4-5 days           | Including log accumulation time                              |
+| **Total Commits**        | ~12-15             | Primarily documentation commits                              |
+| **Total Files**          | ~15-20 new, ~3 mod | All documentation and test scripts                           |
+| **Code Changes**         | 0 lines            | Configuration-only story (no application code changes)       |
+| **Documentation**        | ~8 new docs        | Configuration, testing, monitoring, incident response guides |
+| **Test Coverage Target** | N/A (config)       | Validation via E2E tests and security scanning               |
 
 ### Per-Phase Timeline
 
-| Phase | Duration | Commits | Start After       | Blocks  | Key Milestone             |
-| ----- | -------- | ------- | ----------------- | ------- | ------------------------- |
-| 1     | 1-1.5d   | 4-5     | Story 0.7 deploy  | Phase 2 | WAF enabled (Log mode)    |
-| 2     | 1-1.5d   | 4-5     | Phase 1 + 24-48h  | Phase 3 | WAF active (Block mode)   |
-| 3     | 1d       | 4-5     | Phase 2           | -       | Testing complete, Story ✅ |
+| Phase | Duration | Commits | Start After      | Blocks  | Key Milestone              |
+| ----- | -------- | ------- | ---------------- | ------- | -------------------------- |
+| 1     | 1-1.5d   | 4-5     | Story 0.7 deploy | Phase 2 | WAF enabled (Log mode)     |
+| 2     | 1-1.5d   | 4-5     | Phase 1 + 24-48h | Phase 3 | WAF active (Block mode)    |
+| 3     | 1d       | 4-5     | Phase 2          | -       | Testing complete, Story ✅ |
 
 ### Resource Requirements
 
@@ -464,13 +465,13 @@ Phase 3 (Testing & Validation)
 
 ### Overall Story Risks
 
-| Risk                         | Likelihood | Impact | Mitigation                                                                |
-| ---------------------------- | ---------- | ------ | ------------------------------------------------------------------------- |
-| False positives block users  | Medium     | High   | Gradual rollout (Log → Challenge → Block), thorough log analysis         |
-| Insufficient traffic for tuning | Medium     | Medium | Deploy to staging/production early, monitor for 48h before tuning         |
-| Performance degradation      | Low        | Medium | Benchmark before/after, Cloudflare Edge processing is very fast          |
-| Configuration complexity     | Low        | Low    | Use managed rulesets (pre-configured), consult Cloudflare docs/support   |
-| Team unfamiliarity with WAF  | Medium     | Low    | Training session, comprehensive documentation, Cloudflare support access |
+| Risk                            | Likelihood | Impact | Mitigation                                                               |
+| ------------------------------- | ---------- | ------ | ------------------------------------------------------------------------ |
+| False positives block users     | Medium     | High   | Gradual rollout (Log → Challenge → Block), thorough log analysis         |
+| Insufficient traffic for tuning | Medium     | Medium | Deploy to staging/production early, monitor for 48h before tuning        |
+| Performance degradation         | Low        | Medium | Benchmark before/after, Cloudflare Edge processing is very fast          |
+| Configuration complexity        | Low        | Low    | Use managed rulesets (pre-configured), consult Cloudflare docs/support   |
+| Team unfamiliarity with WAF     | Medium     | Low    | Training session, comprehensive documentation, Cloudflare support access |
 
 ---
 
@@ -478,11 +479,11 @@ Phase 3 (Testing & Validation)
 
 ### Test Coverage by Phase
 
-| Phase             | Positive Tests      | Negative Tests      | E2E Tests           | Security Scan |
-| ----------------- | ------------------- | ------------------- | ------------------- | ------------- |
-| 1. Core Config    | Basic smoke (manual) | N/A (Log mode)     | Playwright (should pass) | N/A           |
-| 2. Custom Rules   | Smoke + E2E         | Manual (curl)       | Playwright (must pass)   | N/A           |
-| 3. Testing        | Comprehensive       | Comprehensive       | Full suite          | OWASP ZAP     |
+| Phase           | Positive Tests       | Negative Tests | E2E Tests                | Security Scan |
+| --------------- | -------------------- | -------------- | ------------------------ | ------------- |
+| 1. Core Config  | Basic smoke (manual) | N/A (Log mode) | Playwright (should pass) | N/A           |
+| 2. Custom Rules | Smoke + E2E          | Manual (curl)  | Playwright (must pass)   | N/A           |
+| 3. Testing      | Comprehensive        | Comprehensive  | Full suite               | OWASP ZAP     |
 
 ### Test Milestones
 
@@ -502,6 +503,7 @@ Each phase must pass:
 - [ ] Rollback procedure documented and tested (can disable WAF quickly)
 
 **Phase 3 specific**:
+
 - [ ] All E2E Playwright tests passing
 - [ ] Negative tests confirming blocks (attack payloads rejected)
 - [ ] Performance validated (<10ms impact)
@@ -515,17 +517,20 @@ Each phase must pass:
 ### Documentation to Generate per Phase
 
 **Phase 1**:
+
 - `docs/security/waf-configuration.md` - Core WAF configuration
 - `docs/security/README.md` - Security documentation index
 - `docs/deployment/cloudflare-dashboard-access.md` - Dashboard access guide
 
 **Phase 2**:
+
 - `docs/security/waf-configuration.md` (updated) - Add custom rules
 - `docs/security/waf-tuning.md` - Tuning decisions and log analysis
 - `docs/security/waf-exceptions.md` - Exceptions and whitelisting
 - `docs/security/rate-limiting-rules.md` - Rate limiting configuration
 
 **Phase 3**:
+
 - `docs/security/waf-testing.md` - Test procedures and results
 - `docs/security/waf-monitoring.md` - Monitoring and dashboard guide
 - `docs/security/waf-incident-response.md` - Alert response procedures
@@ -619,6 +624,7 @@ Update this document as phases complete:
 - [ ] Phase 3: Testing & Validation - **Status**: 📋 Planned, **Actual duration**: TBD, **Notes**: TBD
 
 **Update EPIC_TRACKING.md** after each phase:
+
 - Set story status to 🚧 IN PROGRESS when starting Phase 1
 - Update progress column: "1/3", "2/3", "3/3" as phases complete
 - Set story status to ✅ COMPLETED when Phase 3 done
@@ -653,37 +659,37 @@ This story is considered complete when:
 
 ### Quality Metrics
 
-| Metric                   | Target       | Actual | Notes |
-| ------------------------ | ------------ | ------ | ----- |
-| WAF Rules Enabled        | OWASP + CF   | -      | Core + Managed Rulesets |
-| False Positive Rate      | <0.1%        | -      | % of legitimate requests blocked |
-| Attack Block Rate        | >95%         | -      | % of attack payloads blocked |
-| Latency Impact (p95)     | <10ms        | -      | Measured via Cloudflare Analytics |
-| E2E Tests Passing        | 100%         | -      | All Playwright tests green |
-| Documentation Complete   | 8+ docs      | -      | Configuration, testing, monitoring, etc. |
-| Monitoring Functional    | Alerts active | -      | Receiving notifications |
-| Team Training Complete   | 100%         | -      | All team members trained |
+| Metric                 | Target        | Actual | Notes                                    |
+| ---------------------- | ------------- | ------ | ---------------------------------------- |
+| WAF Rules Enabled      | OWASP + CF    | -      | Core + Managed Rulesets                  |
+| False Positive Rate    | <0.1%         | -      | % of legitimate requests blocked         |
+| Attack Block Rate      | >95%          | -      | % of attack payloads blocked             |
+| Latency Impact (p95)   | <10ms         | -      | Measured via Cloudflare Analytics        |
+| E2E Tests Passing      | 100%          | -      | All Playwright tests green               |
+| Documentation Complete | 8+ docs       | -      | Configuration, testing, monitoring, etc. |
+| Monitoring Functional  | Alerts active | -      | Receiving notifications                  |
+| Team Training Complete | 100%          | -      | All team members trained                 |
 
 ### Performance Metrics
 
-| Metric            | Before WAF | After WAF | Delta    | Target  |
-| ----------------- | ---------- | --------- | -------- | ------- |
-| p50 Latency       | -          | -         | -        | <5ms    |
-| p95 Latency       | -          | -         | -        | <10ms   |
-| p99 Latency       | -          | -         | -        | <20ms   |
-| LCP (homepage)    | -          | -         | -        | <2.5s   |
-| False Positives   | N/A        | -         | -        | <0.1%   |
+| Metric          | Before WAF | After WAF | Delta | Target |
+| --------------- | ---------- | --------- | ----- | ------ |
+| p50 Latency     | -          | -         | -     | <5ms   |
+| p95 Latency     | -          | -         | -     | <10ms  |
+| p99 Latency     | -          | -         | -     | <20ms  |
+| LCP (homepage)  | -          | -         | -     | <2.5s  |
+| False Positives | N/A        | -         | -     | <0.1%  |
 
 ### Security Metrics
 
-| Metric                   | Target       | Actual | Notes |
-| ------------------------ | ------------ | ------ | ----- |
-| OWASP Top 10 Coverage    | 100%         | -      | All vulnerabilities addressed |
-| Known CVE Protection     | Enabled      | -      | Cloudflare Specials ruleset |
-| Threat Intel Updates     | Real-time    | -      | Automatic via Cloudflare |
-| XSS Protection           | Enabled      | -      | OWASP CRS + Cloudflare |
-| SQLi Protection          | Enabled      | -      | OWASP CRS + Cloudflare |
-| Rate Limiting            | Configured   | -      | Global + endpoint-specific |
+| Metric                | Target     | Actual | Notes                         |
+| --------------------- | ---------- | ------ | ----------------------------- |
+| OWASP Top 10 Coverage | 100%       | -      | All vulnerabilities addressed |
+| Known CVE Protection  | Enabled    | -      | Cloudflare Specials ruleset   |
+| Threat Intel Updates  | Real-time  | -      | Automatic via Cloudflare      |
+| XSS Protection        | Enabled    | -      | OWASP CRS + Cloudflare        |
+| SQLi Protection       | Enabled    | -      | OWASP CRS + Cloudflare        |
+| Rate Limiting         | Configured | -      | Global + endpoint-specific    |
 
 ---
 
@@ -724,16 +730,19 @@ Links will be populated as phases are completed:
 ### For Team Onboarding
 
 **Cloudflare WAF Basics** (recommended reading before Phase 1):
+
 - [WAF Overview](https://developers.cloudflare.com/waf/)
 - [How WAF Works](https://developers.cloudflare.com/waf/about/)
 - [Managed Rulesets](https://developers.cloudflare.com/waf/managed-rules/)
 
 **OWASP Security Fundamentals** (recommended for security context):
+
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
 - [XSS Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html)
 - [SQL Injection Prevention](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html)
 
 **WAF Configuration Best Practices**:
+
 - [Cloudflare WAF Best Practices](https://developers.cloudflare.com/waf/managed-rules/best-practices/)
 - [Tuning WAF Rules](https://developers.cloudflare.com/waf/managed-rules/deploy-zone-dashboard/#tune-a-rule-in-a-managed-ruleset)
 - [Rate Limiting Configuration](https://developers.cloudflare.com/waf/rate-limiting-rules/create-dashboard/)
@@ -741,11 +750,13 @@ Links will be populated as phases are completed:
 ### Hands-On Training
 
 **Phase 1 Practice** (before implementing):
+
 - Create test Cloudflare zone (if available)
 - Practice enabling WAF in test environment
 - Review Cloudflare Dashboard navigation
 
 **Testing Tools** (for Phase 3):
+
 - [OWASP ZAP Getting Started](https://www.zaproxy.org/getting-started/)
 - [Burp Suite Community Edition](https://portswigger.net/burp/communitydownload)
 - [curl Command Guide](https://curl.se/docs/manual.html)
