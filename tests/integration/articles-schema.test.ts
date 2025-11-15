@@ -23,13 +23,13 @@ import {
   ComplexityEnum,
   LanguageEnum,
   StatusEnum,
-} from '@/src/lib/server/db/schema';
+} from '@/lib/server/db/schema';
 import {
   insertArticleSchema,
   insertArticleTranslationSchema,
   updateArticleSchema,
   updateArticleTranslationSchema,
-} from '@/src/lib/server/db/validation';
+} from '@/lib/server/db/validation';
 
 describe('Articles Schema Validation Tests', () => {
   /**

@@ -21,7 +21,7 @@ import {
   type Category,
   type Tag,
   tags,
-} from '@/src/lib/server/db/schema';
+} from '@/lib/server/db/schema';
 
 /**
  * Test Suite 1: Categories Table Schema

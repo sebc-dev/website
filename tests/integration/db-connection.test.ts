@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { getDb } from '@/src/lib/server/db';
+import { getDb } from '@/lib/server/db';
 
 describe('D1 Database Connection', () => {
   it('should create database instance without errors', () => {
