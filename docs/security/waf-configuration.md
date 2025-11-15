@@ -139,6 +139,37 @@ The Free Managed Ruleset is automatically deployed and active. No configuration 
 
 ---
 
+## Quick Reference
+
+### Current WAF Status at a Glance
+
+| Component | Status | Action | Details |
+| --- | --- | --- | --- |
+| **Free Managed Ruleset** | ✅ Active | Monitor | Auto-deployed baseline protection |
+| **Rate Limiting** | ✅ Enabled | Block | 100 req/min per IP, 1 min timeout |
+| **Custom WAF Rules** | ⏳ Planned | - | Deferred to Phase 1 Commit 3 (post-launch) |
+
+### Quick Action Links
+
+- **View WAF Status**: https://dash.cloudflare.com (Security > WAF > Overview)
+- **View Security Events**: https://dash.cloudflare.com (Security > Analytics)
+- **Check Rate Limits**: https://dash.cloudflare.com (Security > WAF > Rate Limiting Rules)
+- **Full Dashboard Guide**: [`docs/deployment/cloudflare-dashboard-access.md`](../deployment/cloudflare-dashboard-access.md)
+
+### Phase 1 Status Summary
+
+**Completed**:
+- ✅ Commit 1: Free Managed Ruleset verified and documented
+- ✅ Commit 2: Rate Limiting configured (100 req/min per IP)
+- ⏭️ Commit 3: Custom WAF Rules (skipped - deferred to post-launch)
+- 🚧 Commit 4: Documentation & Final Polish (current)
+
+**Current Baseline Protection**: Free Managed Ruleset + Rate Limiting (suitable for "en construction" site)
+
+**Next Steps**: Phase 2 & 3 enhancement planned post-launch
+
+---
+
 ## Dashboard Navigation
 
 ### Accessing WAF Overview
@@ -202,8 +233,15 @@ This section documents WAF configuration changes as the project evolves:
 | ---------- | -------- | --------------------------------------------------------- |
 | 2025-11-15 | Commit 1 | Verify & Document Free Managed Ruleset (auto-deployed)    |
 | 2025-11-15 | Commit 2 | Configure Basic Rate Limiting (100 req/min per IP)        |
-| TBD        | Commit 3 | Create Custom WAF Rules (XSS, SQLi, Path Traversal)       |
-| TBD        | Commit 4 | Comprehensive Documentation & Screenshots                 |
+| SKIPPED    | Commit 3 | Custom WAF Rules (deferred to Phase 2 post-launch)        |
+| 2025-11-15 | Commit 4 | Comprehensive Documentation, Rollback, Troubleshooting    |
+
+**Phase 1 Minimale Status**: ✅ BASELINE COMPLETE
+- Free Managed Ruleset: ✅ Active (auto-deployed)
+- Rate Limiting: ✅ Configured (100 req/min per IP)
+- Custom Rules: ⏳ Deferred to post-launch (Phase 2)
+
+**Rationale**: Phase 1 provides baseline protection suitable for "en construction" site. Custom WAF rules (Commit 3) deferred to Phase 2 post-launch to prioritize core functionality before launch.
 
 ---
 
@@ -314,55 +352,338 @@ Consider upgrading if you need:
 
 ## Rollback Procedures
 
-### Emergency: Disable WAF Components
+### Emergency WAF Disable
 
-If WAF is causing issues:
+If WAF is causing critical issues and needs immediate rollback:
 
-1. **Navigate to**: Dashboard > Security > WAF > Overview
-2. **Locate**: WAF component causing issues
-3. **Disable**: Toggle the component off
-4. **Verify**: WAF status should reflect change
-5. **Recovery Time**: Immediate (no cache refresh needed)
+#### Option 1: Disable Rate Limiting Only (Recommended First Step)
 
-**Note**: Free Managed Ruleset cannot be disabled individually (auto-deployed). Rollback would require Cloudflare support assistance for this baseline protection.
+If rate limiting is blocking legitimate traffic:
+
+1. **Navigate to**: https://dash.cloudflare.com → Security > WAF > Rate Limiting Rules
+2. **Find Rule**: "Global Rate Limit - Protection"
+3. **Disable**: Click the toggle or action menu > Disable
+4. **Confirm**: Status should change to "Disabled"
+5. **Recovery Time**: Immediate (takes seconds)
+
+**Why first**: Rate limiting is the easiest to disable/re-enable and impacts fewer users.
+
+#### Option 2: Disable All Custom WAF Rules (If Deployed)
+
+If Phase 1 Commit 3 custom rules are blocking legitimate traffic:
+
+1. **Navigate to**: https://dash.cloudflare.com → Security > WAF > Custom rules
+2. **Disable Rules**: For each rule:
+   - Click the toggle to disable
+   - Or click action menu > Disable
+3. **Confirm**: All custom rules should show as "Disabled"
+4. **Recovery Time**: Immediate (takes seconds)
+
+**Note**: Each rule has an individual toggle - disable only the problematic rule if possible.
+
+#### Option 3: Disable Entire WAF (Nuclear Option - Last Resort)
+
+If entire WAF must be disabled (very rare):
+
+1. **Navigate to**: https://dash.cloudflare.com → Security > WAF > Overview
+2. **Find Master Control**: Look for global WAF toggle (if available)
+3. **Disable**: Turn off entire WAF module
+4. **OR Disable Each Component**:
+   - Disable Rate Limiting Rules (Option 1)
+   - Disable Custom Rules (Option 2)
+   - Free Managed Ruleset: **Cannot be disabled** without support
+
+**Important**: Free Managed Ruleset is auto-deployed and always active. It cannot be disabled via dashboard. To fully disable, contact Cloudflare support.
+
+**Recovery Time**: Immediate to a few seconds depending on caching.
+
+### Rollback Decision Tree
+
+```
+Is WAF blocking legitimate traffic?
+├─ Yes, only rate limiting
+│  └─ Disable rate limiting (Option 1)
+├─ Yes, only custom rules
+│  └─ Disable problematic custom rule (Option 2)
+├─ Yes, entire WAF
+│  └─ Disable all rate limiting + custom rules (Options 1+2)
+│     └─ If still blocked, contact Cloudflare support
+└─ No, other issue
+   └─ Check application or contact support
+```
+
+### Recovery After Rollback
+
+After disabling WAF components:
+
+1. **Monitor**: Check that legitimate traffic flows normally
+2. **Investigate**: Review Security Events logs to understand what triggered disable
+3. **Document**: Note the issue and timestamp in incident log
+4. **Fix**: Address root cause (usually false positive in rules)
+5. **Test**: Create test plan for re-enabling
+6. **Re-enable**: Once fixed, carefully re-enable and monitor closely
+
+### Phase 1 Minimale - Limited Rollback Scenario
+
+Since Phase 1 uses **only Free Managed Ruleset + Rate Limiting**:
+
+- **Free Managed Ruleset**: Cannot be rolled back (auto-deployed baseline)
+- **Rate Limiting**: Can be disabled (Option 1) for immediate relief
+- **Custom Rules**: Not yet deployed (Commit 3 deferred)
+
+**For Phase 1**: Primary rollback is disabling rate limiting if it causes issues. Free Managed Ruleset provides baseline protection that cannot be disabled.
 
 ---
 
 ## Troubleshooting
 
+### Troubleshooting Decision Tree
+
+```
+Problem: Website Issue or Security Event?
+├─ Users report "429 Too Many Requests"
+│  └─ Rate limiting is blocking legitimate traffic (see "Rate Limit False Positives")
+├─ Users report "403 Forbidden" or Cloudflare block page
+│  └─ Custom rule or Free Managed Ruleset blocking (see "Requests Being Blocked")
+├─ Website completely down / not loading
+│  └─ Application issue, not WAF (see "Homepage Not Loading")
+├─ Unusual spike in security events
+│  └─ Attack detected or bot traffic (see "High Volume of Security Events")
+└─ Don't know what's wrong
+   └─ Check all logs and metrics (see "General Troubleshooting Process")
+```
+
+### Rate Limit False Positives
+
+**Symptom**: Users report "HTTP 429 Too Many Requests" error
+
+**Diagnosis**:
+1. **View Rate Limit Events**:
+   - Navigate to: Dashboard > Security > Analytics
+   - Filter for: Action = "Block" (rate limit)
+   - Check: Which IPs/URLs are being blocked?
+
+2. **Identify Legitimate Sources**:
+   - Check timestamps of blocks
+   - Ask users: "What were you doing when you got 429?"
+   - Look for patterns (office IP, specific user, specific feature)
+
+**Solutions**:
+- **Option 1**: Increase rate limit (e.g., 100 → 200 req/min)
+  - Edit rule: Security > WAF > Rate Limiting Rules
+  - Click "Global Rate Limit - Protection" to edit
+  - Change rate value and save
+
+- **Option 2**: Whitelist legitimate IP (see `rate-limiting-rules.md`)
+  - Create custom rule to skip rate limiting for specific IP
+  - Only if IP is trusted and you control it
+
+- **Option 3**: Disable rate limiting temporarily
+  - If urgent: Disable rate limiting rule while investigating
+  - See "Rollback Procedures" section above
+  - Plan fix and re-enable
+
+**Prevention**:
+- Monitor rate limit events daily during first week
+- Document legitimate traffic patterns
+- Adjust limits before launch based on testing
+
+### Requests Being Blocked (403 Forbidden)
+
+**Symptom**: Legitimate requests return "403 Forbidden" or Cloudflare block page
+
+**Diagnosis**:
+1. **Check which requests are blocked**:
+   - Navigate to: Dashboard > Security > Analytics
+   - Filter by: Action = "Block"
+   - Review blocked requests for patterns
+
+2. **Determine which component is blocking**:
+   - **Free Managed Ruleset**: Check event for rule name
+   - **Custom Rules**: Check Custom rules list (Security > WAF > Custom rules)
+   - **Rate Limiting**: Check if it's HTTP 429 (see above section)
+
+3. **Is it legitimate traffic?**
+   - Check the URL/path being blocked
+   - Check request parameters for suspicious content
+   - Check IP address (office, home, partner, etc.)
+
+**Solutions**:
+- **Option 1**: Modify or disable problematic custom rule
+  - Security > WAF > Custom rules
+  - Find rule causing false positives
+  - Adjust rule expression or disable temporarily
+
+- **Option 2**: Create exception rule
+  - Create custom rule to bypass blocking for specific request pattern
+  - Example: "If IP is X.X.X.X, then Allow"
+
+- **Option 3**: Switch rule to "Log" mode
+  - Some rules can be changed from "Block" to "Log" (monitors without blocking)
+  - Allows monitoring while investigating
+
+- **Option 4**: Disable Free Managed Ruleset (if needed)
+  - Contact Cloudflare support (cannot disable via dashboard)
+  - Rare - only if Free Managed Ruleset is clearly wrong
+
+**Prevention**:
+- Phase 1 uses Free Managed Ruleset in Monitor mode (usually no blocking)
+- Test custom rules thoroughly before deploying
+- Use "Log" mode during ramp-up period
+
 ### Homepage Not Loading?
 
-If https://sebc.dev returns errors:
+If https://sebc.dev returns errors or times out:
 
-1. **Check WAF Status**:
+**Step 1: Is it a WAF issue or application issue?**
+
+1. **Test from Cloudflare Dashboard**:
+   - Check page rule status
+   - Verify origin server is configured correctly
+   - Check that zone is active
+
+2. **Check WAF status**:
    - Dashboard > Security > WAF > Overview
-   - Verify WAF configuration is correct
+   - Are WAF rules enabled? (Usually yes)
+   - Check recent Security Events (Analytics tab)
+   - Are there spike in blocks?
 
-2. **Check Application**:
-   - Free Managed Ruleset should not block legitimate traffic
-   - If homepage is down, check application servers first
-   - Verify Cloudflare origin settings are correct
+3. **If WAF is causing blocks**:
+   - Follow troubleshooting above (Requests Being Blocked)
+   - Disable problematic rule or entire WAF if urgent
+   - See Rollback Procedures section
 
-3. **Contact Support**:
-   - If issue persists, contact Cloudflare support
-   - Include: WAF configuration screenshot, error details
+**Step 2: If WAF seems fine, it's likely application issue**
+
+1. **Check application servers**:
+   - Are web servers running?
+   - Check application logs for errors
+   - Verify database connections
+   - Test application directly (if accessible)
+
+2. **Check Cloudflare settings**:
+   - Verify origin IP/CNAME is correct
+   - Check SSL/TLS mode is appropriate
+   - Verify DNS records are correct
+
+3. **Contact support**:
+   - If you cannot identify the issue
+   - Have ready: Cloudflare WAF screenshot, error details, timestamps
 
 ### High Volume of Security Events?
 
-If you see many events in Security > Events:
+If you see unusually many events in Security > Analytics:
 
-- **This may be normal** - many requests trigger detection
-- Review events to identify legitimate vs. malicious patterns
-- Use Phase 2 to refine rules if needed
-- Document patterns for rate limiting configuration
+**Is this normal or an attack?**
+
+1. **Check event types**:
+   - Many "Free Managed Ruleset" blocks = attack detected
+   - Many "Rate Limit" blocks (429) = legitimate traffic spike
+   - Many "Custom rule" blocks = false positives or attack
+
+2. **Identify the pattern**:
+   - Same IP attacking repeatedly? = Targeted attack
+   - Many different IPs? = Distributed attack (DDoS)
+   - Mix of legitimate and malicious? = Normal traffic with some bots
+
+3. **Check timestamps**:
+   - Was there an announcement/marketing that drove traffic? = Normal spike
+   - Random attacks at 3 AM? = Automated bot activity
+
+**Is this an attack?**
+
+Signs of active attack:
+- Spike in blocked requests (10x+ normal)
+- Same attack pattern repeated
+- Specific URL being targeted
+- Requests from many different countries/IPs
+
+**What to do**:
+
+- **If false positive (legitimate traffic blocked)**:
+  - Adjust rules to allow legitimate traffic
+  - See "Rate Limit False Positives" or "Requests Being Blocked" above
+
+- **If actual attack**:
+  - Monitor closely and document patterns
+  - Consider upgrading to Pro plan for OWASP Core Ruleset
+  - Consider stricter rate limiting or geoblocking
+  - Document for post-launch security review
+
+- **If unsure**:
+  - Monitor for 24-48 hours to establish baseline
+  - Review events daily
+  - Ask team if they notice site performance issues
+  - Contact Cloudflare support with event screenshots if concerned
 
 ### Understanding Security Events
 
-For any WAF event:
+For any WAF event in Analytics dashboard:
 
-1. **Review the Event Details**: Check what pattern triggered the event
-2. **Determine Legitimacy**: Was this a legitimate request or actual attack?
-3. **Document for Phase 2**: Note patterns that need handling in future phases
+1. **Review the Event Details**:
+   - **IP Address**: Where the request came from
+   - **Timestamp**: When the request was made
+   - **URL/Path**: Which page/API was targeted
+   - **Rule Name**: Which WAF rule triggered
+   - **Action**: What happened (Block, Challenge, Log)
+   - **User Agent**: Browser or tool making the request
+
+2. **Determine Legitimacy**:
+   - Was this a legitimate request or actual attack?
+   - Is the IP expected (office, partner, monitoring tool)?
+   - Is the URL something users would normally access?
+   - Does the user agent match browser (or bot)?
+
+3. **Document for Phase 2**:
+   - Note patterns that need handling in future phases
+   - Save screenshots of suspicious patterns
+   - Alert team if you see interesting security trends
+
+### Common Issues and Quick Fixes
+
+| Issue | Cause | Fix |
+| --- | --- | --- |
+| "429 Too Many Requests" errors | Rate limit too strict | Increase limit or whitelist IP |
+| "403 Forbidden" on legitimate requests | Custom rule false positive | Adjust rule or add exception |
+| Website completely down | Application or DNS issue | Check origin server, not WAF |
+| Spike in blocked requests | Attack or bot activity | Monitor events, document patterns |
+| Users report slow page load | WAF processing overhead | Rare - usually other cause |
+| Cannot access dashboard | Permissions or authentication | Check account login, MFA |
+
+### General Troubleshooting Process
+
+If you're not sure what the issue is:
+
+1. **Gather Information**:
+   - What does the error say? (404, 429, 403, timeout, etc.)
+   - When did it start? (timestamp)
+   - Does it affect all users or specific ones?
+   - Does it affect all pages or specific URLs?
+   - Have you made recent changes? (WAF rules, rate limits, etc.)
+
+2. **Check Dashboard**:
+   - Dashboard > Security > Analytics
+   - Look for spikes or unusual activity
+   - Filter by date range when issue occurred
+   - Check if any WAF events correlate with issue
+
+3. **Review Recent Changes**:
+   - Did you recently modify WAF rules?
+   - Did rate limit change?
+   - Did you add new custom rules?
+   - If yes, consider disabling the change temporarily
+
+4. **Test Access**:
+   - Test from different IP if possible
+   - Test from incognito/private browser
+   - Test directly: `curl -I https://sebc.dev`
+   - Check if issue is specific to certain IPs/users
+
+5. **Escalate If Needed**:
+   - If you've tried above steps and issue persists
+   - Gather all information and screenshots
+   - Contact Cloudflare support
+   - Include: description, timestamps, WAF configuration, error details
 
 ---
 
