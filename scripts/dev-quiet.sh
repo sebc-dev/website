@@ -9,14 +9,5 @@
 set -o pipefail
 
 pnpm dev 2>&1 | grep -v \
-  -e "You have defined bindings to the following internal Durable Objects:" \
-  -e "These will not work in local development" \
-  -e "workerd/server/server.c++:1952: warning: A DurableObjectNamespace" \
-  -e "but no such Durable Object class is exported from the worker" \
-  -e "For detailed instructions, refer to the Durable Objects section here:" \
-  -e "NEXT_CACHE_DO_QUEUE" \
-  -e "NEXT_TAG_CACHE_DO_SHARDED" \
-  -e "NEXT_CACHE_DO_PURGE" \
-  -e "DOQueueHandler" \
-  -e "DOShardedTagCache" \
-  -e "BucketCachePurge"
+  -e "You have defined bindings to the following internal Durable Objects:\|These will not work in local development\|workerd/server/server.c++:1952: warning: A DurableObjectNamespace\|but no such Durable Object class is exported from the worker\|For detailed instructions, refer to the Durable Objects section here:" \
+  -e "\(NEXT_\|DO\)[A-Z_]*"

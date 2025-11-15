@@ -1,4 +1,4 @@
-# Story 0.5 - Phases Implementation Plan
+²# Story 0.5 - Phases Implementation Plan
 
 **Story**: Configurer wrangler.toml avec bindings
 **Epic**: Epic 0 - Socle technique (V1)
