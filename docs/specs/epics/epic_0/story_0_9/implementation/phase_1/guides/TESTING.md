@@ -18,6 +18,7 @@ Phase 1 uses a **validation-focused approach** rather than comprehensive testing
 **Estimated Test Duration**: 20-30 minutes
 
 **Why no negative tests in Phase 1?**
+
 - WAF is in "Log" mode (doesn't block anything yet)
 - Negative tests (attack simulation) are more meaningful in Phase 3 when WAF is in "Block" mode
 - Phase 1 focuses on ensuring we don't break legitimate traffic
@@ -43,11 +44,13 @@ Verify that legitimate traffic flows correctly and is not blocked or challenged 
 **Purpose**: Verify homepage is accessible and returns expected content
 
 **Command**:
+
 ```bash
 curl -I https://sebc.dev
 ```
 
 **Expected Result**:
+
 ```
 HTTP/2 200
 date: [current date]
@@ -58,6 +61,7 @@ cf-ray: [ray ID]
 ```
 
 **Pass Criteria**:
+
 - ✅ Status code is 200 OK
 - ✅ Server header contains "cloudflare"
 - ✅ No 403 Forbidden (WAF block)
@@ -65,6 +69,7 @@ cf-ray: [ray ID]
 - ✅ No 522 Connection Timeout
 
 **If test fails**:
+
 - Check if WAF mode is "Log" (should not block in Log mode)
 - Check Cloudflare Dashboard > Security > Events for any logged events
 - Verify application is deployed (Story 0.7 complete)
@@ -76,6 +81,7 @@ cf-ray: [ray ID]
 **Purpose**: Verify CSS, JavaScript, and image assets are served correctly
 
 **Commands**:
+
 ```bash
 # Test CSS asset (adjust path to actual CSS file)
 curl -I https://sebc.dev/_next/static/css/[filename].css
@@ -88,6 +94,7 @@ curl -I https://sebc.dev/images/[image-name].png
 ```
 
 **Expected Result**:
+
 ```
 HTTP/2 200
 content-type: text/css (or application/javascript, or image/png)
@@ -97,11 +104,13 @@ cf-cache-status: [HIT/MISS/DYNAMIC]
 ```
 
 **Pass Criteria**:
+
 - ✅ All static assets return 200 OK
 - ✅ No 403 Forbidden
 - ✅ Appropriate content-type headers
 
 **If test fails**:
+
 - Verify assets exist in deployment
 - Check if any WAF rules could misinterpret static asset requests as threats
 - Check Cloudflare Dashboard > Security > Events
@@ -113,6 +122,7 @@ cf-cache-status: [HIT/MISS/DYNAMIC]
 **Purpose**: Verify API endpoints are accessible (if application has API routes)
 
 **Command**:
+
 ```bash
 # Example: Health check endpoint
 curl -I https://sebc.dev/api/health
@@ -122,6 +132,7 @@ curl https://sebc.dev/api/articles
 ```
 
 **Expected Result**:
+
 ```
 HTTP/2 200
 content-type: application/json
@@ -130,10 +141,12 @@ server: cloudflare
 ```
 
 **Pass Criteria**:
+
 - ✅ API endpoints return expected status codes (200, 201, etc.)
 - ✅ No false positive blocks
 
 **If test fails**:
+
 - Check if API payloads trigger OWASP rules (unlikely in Log mode)
 - Verify API is deployed and functional
 - Check Security > Events for logged API requests
@@ -147,6 +160,7 @@ server: cloudflare
 **Note**: Only test if application has public-facing forms in V1. Admin forms will be tested separately.
 
 **Command** (example with contact form):
+
 ```bash
 # POST request to form endpoint
 curl -X POST https://sebc.dev/api/contact \
@@ -155,6 +169,7 @@ curl -X POST https://sebc.dev/api/contact \
 ```
 
 **Expected Result**:
+
 ```
 HTTP/2 200 (or 201 Created)
 content-type: application/json
@@ -162,11 +177,13 @@ content-type: application/json
 ```
 
 **Pass Criteria**:
+
 - ✅ Form submission accepted
 - ✅ No 403 Forbidden (WAF doesn't flag legitimate form data)
 - ✅ Response indicates success
 
 **If test fails**:
+
 - Check if form data contains patterns that trigger OWASP rules
 - Verify form validation on server side
 - Check WAF events for details
@@ -180,6 +197,7 @@ content-type: application/json
 **Note**: If Cloudflare Access (Story 0.8) is not yet configured, admin routes should be publicly accessible (which is why Story 0.8 is important).
 
 **Command**:
+
 ```bash
 # Test admin homepage
 curl -I https://sebc.dev/admin
@@ -188,6 +206,7 @@ curl -I https://sebc.dev/admin
 ```
 
 **Expected Result** (if Story 0.8 not complete):
+
 ```
 HTTP/2 200
 content-type: text/html
@@ -195,17 +214,20 @@ content-type: text/html
 ```
 
 **Expected Result** (if Story 0.8 complete):
+
 ```
 HTTP/2 302 Found
 location: [Cloudflare Access login URL]
 ```
 
 **Pass Criteria**:
+
 - ✅ Admin route responds (not blocked by WAF)
 - ✅ Cloudflare Access handles authentication (if Story 0.8 complete)
 - ✅ WAF doesn't interfere with Access flow
 
 **If test fails**:
+
 - Verify admin route exists in Next.js app
 - Check if WAF rules conflict with Access (unlikely)
 - Verify Story 0.7 deployment includes admin routes
@@ -216,13 +238,13 @@ location: [Cloudflare Access login URL]
 
 Run all smoke tests and record results:
 
-| Test                  | Status | Notes                |
-| --------------------- | ------ | -------------------- |
-| Homepage loads        | ⏳     | [Pass/Fail, details] |
-| Static assets load    | ⏳     | [Pass/Fail, details] |
-| API endpoints         | ⏳     | [Pass/Fail, details] |
-| Form submission       | ⏳     | [Pass/Fail, details] |
-| Admin routes          | ⏳     | [Pass/Fail, details] |
+| Test               | Status | Notes                |
+| ------------------ | ------ | -------------------- |
+| Homepage loads     | ⏳     | [Pass/Fail, details] |
+| Static assets load | ⏳     | [Pass/Fail, details] |
+| API endpoints      | ⏳     | [Pass/Fail, details] |
+| Form submission    | ⏳     | [Pass/Fail, details] |
+| Admin routes       | ⏳     | [Pass/Fail, details] |
 
 **All tests must pass before Phase 1 is considered complete.**
 
@@ -318,11 +340,13 @@ Verify WAF events are visible in Cloudflare Security Analytics (for future log a
 ### Expected Behavior
 
 **Immediately after Phase 1** (low traffic):
+
 - May see no WAF events (if no malicious traffic yet)
 - May see some logged events (if any requests triggered OWASP/Cloudflare Managed rules)
 - Rate limiting events only if someone exceeded 100 req/min
 
 **After 24-48 hours** (for Phase 2):
+
 - Should accumulate meaningful event logs
 - Can analyze patterns for false positives
 
@@ -344,6 +368,7 @@ Verify WAF events are visible in Cloudflare Security Analytics (for future log a
 ### Issue: Homepage returns 403 Forbidden
 
 **Symptoms**:
+
 ```bash
 curl -I https://sebc.dev
 # HTTP/2 403
@@ -375,6 +400,7 @@ curl -I https://sebc.dev
 ### Issue: Static assets return 404 or 522
 
 **Symptoms**:
+
 ```bash
 curl -I https://sebc.dev/_next/static/css/app.css
 # HTTP/2 404 or 522
@@ -401,6 +427,7 @@ curl -I https://sebc.dev/_next/static/css/app.css
 ### Issue: Rate limiting blocks normal traffic
 
 **Symptoms**:
+
 ```bash
 curl -I https://sebc.dev
 # HTTP/2 429 Too Many Requests
@@ -472,13 +499,13 @@ Document all test results in this format:
 
 ### Smoke Tests
 
-| Test                  | Status | Details                              |
-| --------------------- | ------ | ------------------------------------ |
-| Homepage loads        | ✅ Pass | HTTP 200 OK, cf-ray: [ID]           |
-| Static assets load    | ✅ Pass | CSS, JS, images all 200 OK          |
-| API endpoints         | ✅ Pass | /api/health returns 200 OK          |
-| Form submission       | N/A    | No public forms in V1                |
-| Admin routes          | ✅ Pass | Redirects to Access login (Story 0.8)|
+| Test               | Status  | Details                               |
+| ------------------ | ------- | ------------------------------------- |
+| Homepage loads     | ✅ Pass | HTTP 200 OK, cf-ray: [ID]             |
+| Static assets load | ✅ Pass | CSS, JS, images all 200 OK            |
+| API endpoints      | ✅ Pass | /api/health returns 200 OK            |
+| Form submission    | N/A     | No public forms in V1                 |
+| Admin routes       | ✅ Pass | Redirects to Access login (Story 0.8) |
 
 ### Dashboard Verification
 

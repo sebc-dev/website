@@ -44,6 +44,7 @@ Phase 1 is split into **4 documentation commits**. You can:
 ### Commit 1: Enable WAF & OWASP Core Rule Set
 
 **Files**:
+
 - `docs/security/waf-configuration.md` (new)
 - `docs/security/README.md` (new or updated)
 
@@ -162,6 +163,7 @@ curl -I https://sebc.dev
 ### Commit 2: Activate Cloudflare Managed Ruleset
 
 **Files**:
+
 - `docs/security/waf-configuration.md` (updated)
 
 **Duration**: 15-20 minutes
@@ -226,6 +228,7 @@ curl -I https://sebc.dev
 ### Commit 3: Configure Basic Rate Limiting
 
 **Files**:
+
 - `docs/security/rate-limiting-rules.md` (new)
 - `docs/security/waf-configuration.md` (updated)
 
@@ -312,6 +315,7 @@ curl -I https://sebc.dev
 ### Commit 4: Comprehensive Documentation & Screenshots
 
 **Files**:
+
 - `docs/deployment/cloudflare-dashboard-access.md` (new)
 - `docs/security/waf-configuration.md` (final polish)
 - `docs/security/README.md` (final update)
@@ -551,14 +555,14 @@ Use this template for final Phase 1 review:
 
 ### 📊 Documentation Metrics
 
-| Metric                     | Target      | Actual      | Status |
-| -------------------------- | ----------- | ----------- | ------ |
-| Documents Created/Updated  | 5           | [X]         | ✅/❌  |
-| Screenshots Included       | 6+          | [X]         | ✅/❌  |
-| Rollback Procedures        | Documented  | [Yes/No]    | ✅/❌  |
-| Troubleshooting Section    | Documented  | [Yes/No]    | ✅/❌  |
-| Internal Links Functional  | 100%        | [XX%]       | ✅/❌  |
-| External Links Valid       | 100%        | [XX%]       | ✅/❌  |
+| Metric                    | Target     | Actual   | Status |
+| ------------------------- | ---------- | -------- | ------ |
+| Documents Created/Updated | 5          | [X]      | ✅/❌  |
+| Screenshots Included      | 6+         | [X]      | ✅/❌  |
+| Rollback Procedures       | Documented | [Yes/No] | ✅/❌  |
+| Troubleshooting Section   | Documented | [Yes/No] | ✅/❌  |
+| Internal Links Functional | 100%       | [XX%]    | ✅/❌  |
+| External Links Valid      | 100%       | [XX%]    | ✅/❌  |
 
 ### 📊 Verdict
 
@@ -569,17 +573,20 @@ Use this template for final Phase 1 review:
 ### Next Steps
 
 **If Approved**:
+
 1. Mark Phase 1 as COMPLETED in INDEX.md
 2. Update EPIC_TRACKING.md (Story 0.9 progress: 1/3 phases)
 3. Wait 24-48 hours for traffic logs to accumulate
 4. Proceed to Phase 2: Custom Rules & Tuning (analyze logs, switch to Block mode)
 
 **If Changes Requested**:
+
 1. Address all required changes listed above
 2. Re-capture screenshots if configuration changes
 3. Request re-review after fixes
 
 **If Rejected** (rare):
+
 1. Document major issues
 2. Plan rework strategy
 3. Schedule review discussion
@@ -592,6 +599,7 @@ Use this template for final Phase 1 review:
 ### If Approved ✅
 
 1. **Update Phase 1 Status**:
+
    ```bash
    # Edit INDEX.md
    # Change: Status: 🚧 NOT STARTED

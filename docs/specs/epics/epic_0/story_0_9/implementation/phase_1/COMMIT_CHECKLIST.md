@@ -9,6 +9,7 @@ This document provides a detailed checklist for each atomic commit of Phase 1.
 ## 📋 Commit 1: Enable WAF & OWASP Core Rule Set
 
 **Files**:
+
 - `docs/security/waf-configuration.md` (new)
 - `docs/security/README.md` (new or updated)
 
@@ -26,6 +27,8 @@ This document provides a detailed checklist for each atomic commit of Phase 1.
   - [ ] Sensitivity: "Medium"
 - [ ] Save configuration
 - [ ] Verify WAF shows as "Active" in Security > WAF > Overview
+
+**Note**: Configuration tasks must be completed in Cloudflare Dashboard. Documentation has been prepared in advance for Phase 1 Commit 1 to provide the context and structure needed for dashboard configuration.
 
 ### Screenshot Checklist
 
@@ -84,6 +87,7 @@ curl -I https://sebc.dev
 ```
 
 **Expected Result**:
+
 - ✅ WAF enabled in dashboard
 - ✅ OWASP Core Rule Set shows as "Enabled"
 - ✅ WAF mode = "Log"
@@ -139,6 +143,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 ## 📋 Commit 2: Activate Cloudflare Managed Ruleset
 
 **Files**:
+
 - `docs/security/waf-configuration.md` (updated)
 
 **Estimated Duration**: 30-45 minutes (20-30 min config + 10-15 min docs/review)
@@ -189,6 +194,7 @@ curl -I https://sebc.dev
 ```
 
 **Expected Result**:
+
 - ✅ Cloudflare Managed Ruleset enabled
 - ✅ Both rulesets visible in dashboard
 - ✅ Homepage still loads normally
@@ -239,6 +245,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 ## 📋 Commit 3: Configure Basic Rate Limiting
 
 **Files**:
+
 - `docs/security/rate-limiting-rules.md` (new)
 - `docs/security/waf-configuration.md` (updated with rate limiting reference)
 
@@ -250,7 +257,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 - [ ] Click "Create rate limiting rule"
 - [ ] Configure rule:
   - [ ] Rule name: "Global Rate Limit - Protection"
-  - [ ] If incoming requests match: "All incoming requests" (or URI Path equals "*")
+  - [ ] If incoming requests match: "All incoming requests" (or URI Path equals "\*")
   - [ ] Rate: 100 requests per 1 minute
   - [ ] Action: Block
   - [ ] Mitigation timeout: 1 minute (how long to block IP)
@@ -314,6 +321,7 @@ curl -I https://sebc.dev
 ```
 
 **Expected Result**:
+
 - ✅ Rate limiting rule created and enabled
 - ✅ Homepage loads normally under normal traffic
 - ✅ Documentation explains configuration and rationale
@@ -369,6 +377,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 ## 📋 Commit 4: Comprehensive Documentation & Screenshots
 
 **Files**:
+
 - `docs/deployment/cloudflare-dashboard-access.md` (new)
 - `docs/security/waf-configuration.md` (final polish)
 - `docs/security/README.md` (final update)
@@ -473,6 +482,7 @@ curl -I https://sebc.dev
 ```
 
 **Expected Result**:
+
 - ✅ Dashboard access guide complete
 - ✅ WAF configuration fully documented with rollback procedures
 - ✅ Security README provides clear navigation
@@ -581,5 +591,6 @@ ls docs/deployment/cloudflare-dashboard-access.md
 **Phase 1 is complete when all checkboxes are checked! 🎉**
 
 **Next Steps**:
+
 1. Wait 24-48 hours for traffic logs to accumulate
 2. Proceed to Phase 2: Custom Rules & Tuning (analyze logs, switch to Block mode)
