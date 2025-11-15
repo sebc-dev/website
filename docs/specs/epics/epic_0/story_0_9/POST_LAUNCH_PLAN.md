@@ -16,11 +16,13 @@ Ce document planifie l'implémentation des **Phases 2 et 3** de Story 0.9 (Cloud
 **Phase 1 Minimale** a été complétée le 2025-11-15 avec une stratégie adaptée pour un site "en construction" :
 
 ✅ **Ce qui a été fait** :
+
 - Free Managed Ruleset (auto-déployé par Cloudflare)
 - Rate Limiting basique (100 req/min par IP)
 - Documentation complète (Dashboard access, rollback, troubleshooting)
 
 ⏸️ **Ce qui a été reporté** :
+
 - Custom WAF Rules (Commit 3 de Phase 1)
 - Phase 2 : Custom Rules & Tuning (nécessite 24-48h de logs de trafic réel)
 - Phase 3 : Testing & Validation (nécessite site complet déployé)
@@ -28,12 +30,14 @@ Ce document planifie l'implémentation des **Phases 2 et 3** de Story 0.9 (Cloud
 ### Pourquoi Reporter ?
 
 **Raison technique** :
+
 - Site actuel = page "En construction" uniquement
 - Trafic minimal ou inexistant
 - Impossible d'analyser les patterns de trafic pour tuner le WAF
 - Pas d'endpoints à protéger spécifiquement
 
 **Stratégie** :
+
 - Protection baseline suffisante pour la phase actuelle
 - Tuning WAF nécessite des données de trafic réel
 - Testing complet nécessite le site fonctionnel avec toutes ses fonctionnalités
@@ -47,16 +51,19 @@ Ce document planifie l'implémentation des **Phases 2 et 3** de Story 0.9 (Cloud
 Implémenter les Phases 2 & 3 **QUAND** :
 
 ✅ **Condition 1** : Site lancé en production avec contenu réel
+
 - Homepage fonctionnelle (pas "en construction")
 - Articles publiés et consultables
 - Toutes les routes principales actives (`/`, `/articles`, `/admin`, etc.)
 
 ✅ **Condition 2** : Trafic utilisateur significatif
+
 - Au moins 24-48 heures de trafic réel accumulé
 - Logs WAF disponibles dans Cloudflare Dashboard
 - Patterns de trafic identifiables (pages les plus visitées, chemins courants)
 
 ✅ **Condition 3** : Équipe prête pour le tuning
+
 - Accès au Cloudflare Dashboard configuré
 - Documentation Phase 1 lue et comprise
 - Temps disponible pour monitoring et ajustements (prévoir 2-3 jours)
@@ -64,16 +71,19 @@ Implémenter les Phases 2 & 3 **QUAND** :
 ### Indicateurs de Priorisation
 
 **Priorité HAUTE** si :
+
 - 🔴 Attaques détectées dans les logs WAF (XSS, SQLi, etc.)
 - 🔴 Trafic suspect ou volumétrique inhabituel
 - 🔴 False positives bloquant des utilisateurs légitimes
 
 **Priorité MOYENNE** si :
+
 - 🟡 Lancement officiel du site prévu dans <1 mois
 - 🟡 Trafic stable et croissant
 - 🟡 Besoin de compliance ou audit de sécurité
 
 **Priorité BASSE** si :
+
 - 🟢 Trafic encore faible (< 100 visites/jour)
 - 🟢 Pas d'attaques détectées
 - 🟢 Site encore en phase de développement actif
@@ -141,11 +151,13 @@ Créer des règles WAF personnalisées pour l'application, configurer des except
 ### Risques & Mitigation
 
 **Risques** :
+
 - 🟡 Custom rules peuvent introduire false positives
 - 🟡 Rate limiting trop strict peut bloquer utilisateurs légitimes
 - 🟡 Basculer en "Block" mode peut impacter UX si mal configuré
 
 **Mitigation** :
+
 - Tester custom rules en "Log" mode pendant 24h avant activation
 - Utiliser "Challenge" mode (CAPTCHA) avant "Block" mode
 - Monitorer intensément pendant 48h après changements
@@ -230,11 +242,13 @@ Validation complète de la sécurité WAF : tests positifs (trafic légitime pas
 ### Risques & Mitigation
 
 **Risques** :
+
 - 🟢 Tests peuvent révéler false positives non détectés en Phase 2
 - 🟢 Security scan peut déclencher des blocks WAF
 - 🟢 Performance impact peut être plus élevé qu'attendu
 
 **Mitigation** :
+
 - Whitelister temporairement IP du security scanner
 - Conduire tests négatifs depuis IP isolée (pas production)
 - Mesurer performance AVANT Phase 2 pour avoir baseline
@@ -243,17 +257,20 @@ Validation complète de la sécurité WAF : tests positifs (trafic légitime pas
 ### Success Criteria
 
 **Tests** :
+
 - ✅ 100% tests positifs passent (pas de false positives)
 - ✅ 100% tests négatifs bloqués (attaques rejetées)
 - ✅ Suite E2E Playwright complète passe
 - ✅ Security scan montre amélioration vs baseline
 
 **Performance** :
+
 - ✅ Impact latency p95 < 10ms
 - ✅ LCP, INP, CLS maintenus
 - ✅ Lighthouse score ≥ baseline
 
 **Monitoring** :
+
 - ✅ Dashboard accessible et fonctionnel
 - ✅ Alertes configurées et testées
 - ✅ Équipe formée sur procédures
@@ -347,12 +364,14 @@ Avant de commencer Phase 2, vérifier :
 Ce plan a été créé suite à une décision stratégique de **reporter Phases 2 & 3** jusqu'après le lancement du site. Cette approche :
 
 ✅ **Avantages** :
+
 - Focus sur baseline protection adaptée au contexte actuel ("en construction")
 - Économie de temps (pas de tuning sans données réelles)
 - Meilleure qualité de tuning avec vrais logs de trafic
 - Flexibilité pour ajuster en fonction des besoins réels
 
 ⚠️ **Considérations** :
+
 - Baseline protection = suffisante pour site "en construction"
 - Tuning final nécessite vraie production et trafic
 - Ne pas oublier de revenir aux Phases 2 & 3 post-lancement !
@@ -360,11 +379,13 @@ Ce plan a été créé suite à une décision stratégique de **reporter Phases 
 ### Rappel : Story 0.9 Status
 
 **Actuellement** :
+
 - Phase 1 Minimale : ✅ COMPLETED
 - Phase 2 (Custom Rules & Tuning) : ⏸️ DEFERRED
 - Phase 3 (Testing & Validation) : ⏸️ DEFERRED
 
 **Post-Lancement** :
+
 - Phase 2 : À implémenter (1.5j)
 - Phase 3 : À implémenter (1.5j)
 - Story 0.9 : Sera marquée COMPLETED après Phase 3 ✅
