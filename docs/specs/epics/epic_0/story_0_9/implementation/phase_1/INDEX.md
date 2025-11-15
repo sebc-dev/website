@@ -33,6 +33,7 @@ Configure Cloudflare Web Application Firewall (WAF) for sebc.dev using Free Plan
 The WAF operates at the Cloudflare Edge level, filtering malicious traffic before it reaches the Cloudflare Worker application.
 
 **Important**: This phase is adapted for **Cloudflare Free Plan** which includes:
+
 - ✅ Free Managed Ruleset (auto-deployed, basic protection)
 - ✅ Rate Limiting (basic)
 - ✅ Custom WAF Rules (limited number, typically 5)
