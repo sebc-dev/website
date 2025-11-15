@@ -1,6 +1,6 @@
 # Epic 0 - Socle technique (V1)
 
-**Status**: 📋 PLANNING
+**Status**: 🚧 IN PROGRESS
 **Created**: 2025-11-06
 **Target Completion**: Q1 2025
 
@@ -36,18 +36,18 @@ Pour les développeurs et mainteneurs du projet, cet epic fournit une base techn
 
 This epic contains **10 stories** as defined in the PRD:
 
-| Story | Title                                  | Description                                                   | Status         | Phases | Progress                        |
-| ----- | -------------------------------------- | ------------------------------------------------------------- | -------------- | ------ | ------------------------------- |
-| 0.1   | Initialiser le projet Next.js 15       | Next.js 15.4.7 + React 19 + TypeScript 5 + App Router         | ✅ COMPLETED   | 3      | 3/3                             |
-| 0.2   | Configurer adaptateur OpenNext         | `@opennextjs/cloudflare` v1.3.0 installé et configuré         | ✅ COMPLETED   | -      | ✅                              |
-| 0.3   | Configurer TailwindCSS 4 + shadcn/ui   | TailwindCSS 4 + shadcn/ui + palette projet (teal #14B8A6)     | ✅ COMPLETED   | -      | ✅                              |
-| 0.4   | Configurer Drizzle ORM + Cloudflare D1 | Schéma initial + migrations setup                             | ✅ COMPLETED   | 5      | 5/5                             |
-| 0.5   | Configurer wrangler.toml avec bindings | All bindings configured (D1, R2, DO Queue, DO Tags, Service)  | ✅ COMPLETED   | 3      | 3/3 (E2E tests deferred)        |
-| 0.6   | Configurer compatibility flags         | `nodejs_compat` + `compatibility_date: 2025-03-01`            | ✅ COMPLETED   | -      | ✅                              |
-| 0.7   | Mettre en place CI/CD GitHub Actions   | Pipeline de tests, build OpenNext, migrations D1, déploiement | 🚧 IN PROGRESS | 4      | 4/4 📋 (Phase 4 docs generated) |
-| 0.8   | Configurer Cloudflare Access           | Protection routes `/admin/*` avec Zero Trust                  | 📋 PLANNED     | 4      | 0/4                             |
-| 0.9   | Configurer Cloudflare WAF              | Sécurité de base contre menaces web                           | 📋 PLANNED     | 3      | 0/3                             |
-| 0.10  | Base tests & linting                   | ESLint + Vitest (avec tests) + Playwright configurés          | ✅ COMPLETED   | -      | ✅                              |
+| Story | Title                                  | Description                                                   | Status         | Phases | Progress                           |
+| ----- | -------------------------------------- | ------------------------------------------------------------- | -------------- | ------ | ---------------------------------- |
+| 0.1   | Initialiser le projet Next.js 15       | Next.js 15.4.7 + React 19 + TypeScript 5 + App Router         | ✅ COMPLETED   | 3      | 3/3                                |
+| 0.2   | Configurer adaptateur OpenNext         | `@opennextjs/cloudflare` v1.3.0 installé et configuré         | ✅ COMPLETED   | -      | ✅                                 |
+| 0.3   | Configurer TailwindCSS 4 + shadcn/ui   | TailwindCSS 4 + shadcn/ui + palette projet (teal #14B8A6)     | ✅ COMPLETED   | -      | ✅                                 |
+| 0.4   | Configurer Drizzle ORM + Cloudflare D1 | Schéma initial + migrations setup                             | ✅ COMPLETED   | 5      | 5/5                                |
+| 0.5   | Configurer wrangler.toml avec bindings | All bindings configured (D1, R2, DO Queue, DO Tags, Service)  | ✅ COMPLETED   | 3      | 3/3                                |
+| 0.6   | Configurer compatibility flags         | `nodejs_compat` + `compatibility_date: 2025-03-01`            | ✅ COMPLETED   | -      | ✅                                 |
+| 0.7   | Mettre en place CI/CD GitHub Actions   | Pipeline de tests, build OpenNext, migrations D1, déploiement | ✅ COMPLETED   | 4      | 4/4                                |
+| 0.8   | Configurer Cloudflare Access           | Protection routes `/admin/*` avec Zero Trust                  | ✅ COMPLETED   | 4      | 4/4                                |
+| 0.9   | Configurer Cloudflare WAF              | Sécurité de base contre menaces web                           | 🚧 IN PROGRESS | 3      | 0/3 📋 (Phase 1 docs generated)    |
+| 0.10  | Base tests & linting                   | ESLint + Vitest (avec tests) + Playwright configurés          | ✅ COMPLETED   | -      | ✅                                 |
 
 **Columns Explained**:
 
@@ -103,16 +103,16 @@ cat docs/specs/epics/epic_0/EPIC_TRACKING.md
 
 ### Progress Summary
 
-- **Stories Started**: 8 / 10
-- **Stories Completed**: 6 / 10 ✅
-- **Stories Planned**: 5 / 10 (Stories 0.1, 0.4, 0.5, 0.7, 0.8, 0.9)
-- **Stories In Progress**: 1 / 10 (Story 0.7: 75%)
-- **Stories Not Started**: 0 / 10 (All stories now planned!)
+- **Stories Started**: 9 / 10
+- **Stories Completed**: 8 / 10 ✅
+- **Stories Planned**: 6 / 10 (Stories 0.1, 0.4, 0.5, 0.7, 0.8, 0.9)
+- **Stories In Progress**: 1 / 10 (Story 0.9: Phase 1 docs ready)
+- **Stories Not Started**: 1 / 10 (None - all stories completed or in progress!)
 - **Total Phases**: 22 (Story 0.1: 3, Story 0.4: 5, Story 0.5: 3, Story 0.7: 4, Story 0.8: 4, Story 0.9: 3)
-- **Phases Completed**: 11 / 22 (Story 0.1: 3/3, Story 0.4: 5/5, Story 0.5: 3/3, Story 0.7: 3/4, Story 0.8: 0/4, Story 0.9: 0/3)
+- **Phases Completed**: 19 / 22 (Story 0.1: 3/3, Story 0.4: 5/5, Story 0.5: 3/3, Story 0.7: 4/4, Story 0.8: 4/4, Story 0.9: 0/3)
 
-**Epic Completion**: 60% (6 stories complétées / 10 total)
-**Weighted Progress**: ~68% (incluant stories partielles: 0.5 à 0%, 0.7 à 75%)
+**Epic Completion**: 80% (8 stories complétées / 10 total)
+**Weighted Progress**: ~86% (incluant Story 0.9 en cours: 0/3 phases, soit ~0%)
 
 ### Timeline
 
@@ -163,12 +163,55 @@ Track epic-level milestones here:
 
 - [x] **Milestone 1**: Project initialized and Next.js working locally - ✅ COMPLETED
 - [x] **Milestone 2**: Database infrastructure configured (D1 + Drizzle ORM) - ✅ COMPLETED
-- [ ] **Milestone 3**: All bindings configured (R2, KV, Durable Objects) - 🚧 PARTIAL (Story 0.5)
-- [ ] **Milestone 4**: Security configured (Access, WAF) - Target: Week 2
-- [ ] **Milestone 5**: CI/CD pipeline functional and first deployment successful - Target: Week 2
-- [ ] **Milestone 6**: All tests passing and Epic 0 complete - Target: Week 2
+- [x] **Milestone 3**: All bindings configured (R2, KV, Durable Objects) - ✅ COMPLETED
+- [x] **Milestone 4**: Security configured (Access) - ✅ COMPLETED
+- [x] **Milestone 5**: CI/CD pipeline functional and first deployment successful - ✅ COMPLETED
+- [ ] **Milestone 6**: WAF security configured (Story 0.9) - 🚧 IN PROGRESS
+- [ ] **Milestone 7**: Epic 0 complete and validated - Target: Soon
 
 ### Recent Updates
+
+**2025-11-15 (Night - Epic Update)**: Stories 0.7 et 0.8 complétées! 🎉
+
+- ✅ **Story 0.7 (CI/CD GitHub Actions) COMPLETED**: Pipeline complet fonctionnel!
+  - Phase 1: D1 Migrations Automation ✅
+  - Phase 2: Deployment Workflow ✅
+  - Phase 3: Environment Management (Production) ✅
+  - Phase 4: Documentation & Final Validation ✅
+  - **Delivered**: Tests automatiques, build OpenNext, migrations D1, déploiement Cloudflare Workers
+  - **Key features**: Quality pipeline (lint, tests, E2E, mutation testing), deployment workflow, environment protection
+
+- ✅ **Story 0.8 (Cloudflare Access) COMPLETED**: Protection Zero Trust active!
+  - Phase 1: Access Policy & Application Setup ✅
+  - Phase 2: JWT Validation Middleware ✅
+  - Phase 3: Admin Route Protection ✅
+  - Phase 4: Testing & Documentation ✅
+  - **Delivered**: Routes `/admin/*` protégées par Cloudflare Access, JWT validation middleware, Zero Trust authentication
+
+- 📊 **Epic Progress Update**:
+  - **8 / 10 stories complétées** (80% completion!) 🎯
+  - **19 / 22 phases complétées** (86% weighted progress)
+  - **Seule Story 0.9 (WAF) reste à implémenter**
+  - Toute l'infrastructure technique est opérationnelle!
+  - Sécurité Access configurée, reste WAF à activer
+  - Epic 0 presque terminé! 🚀
+
+**2025-11-15 (Night)**: Phase 1 documentation generated for Story 0.9! 📚
+
+- ✅ **Phase 1 (WAF Core Configuration) documentation complete**: 7 files, ~3,550 lines generated
+  - INDEX.md: Navigation hub and phase overview (198 lines)
+  - IMPLEMENTATION_PLAN.md: 4 atomic commits strategy (566 lines)
+  - COMMIT_CHECKLIST.md: Per-commit detailed checklist (577 lines)
+  - ENVIRONMENT_SETUP.md: Cloudflare Dashboard setup guide (505 lines)
+  - guides/REVIEW.md: Documentation review guide (656 lines)
+  - guides/TESTING.md: Smoke testing and validation (549 lines)
+  - validation/VALIDATION_CHECKLIST.md: Final validation (499 lines)
+- **Atomic commits**: 4 commits (OWASP Core → CF Managed → Rate Limiting → Final Docs)
+- **Estimated time**: 4-5h configuration + documentation + review
+- **Focus**: Configure WAF in Log mode with OWASP Core Rule Set, Cloudflare Managed Ruleset, and basic rate limiting
+- **Configuration-only**: Zero code changes, all dashboard configuration + documentation
+- **Ready for implementation**: All Phase 1 documentation ready! 🚀
+- **Next steps**: Implement Phase 1, wait 24-48h for logs, then generate Phase 2 docs
 
 **2025-11-13 (Evening)**: Story 0.9 planned via story-phase-planner skill! 🔒
 
