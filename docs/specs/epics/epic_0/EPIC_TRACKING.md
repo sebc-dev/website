@@ -46,7 +46,7 @@ This epic contains **10 stories** as defined in the PRD:
 | 0.6   | Configurer compatibility flags         | `nodejs_compat` + `compatibility_date: 2025-03-01`            | ✅ COMPLETED   | -      | ✅                              |
 | 0.7   | Mettre en place CI/CD GitHub Actions   | Pipeline de tests, build OpenNext, migrations D1, déploiement | ✅ COMPLETED   | 4      | 4/4                             |
 | 0.8   | Configurer Cloudflare Access           | Protection routes `/admin/*` avec Zero Trust                  | ✅ COMPLETED   | 4      | 4/4                             |
-| 0.9   | Configurer Cloudflare WAF              | Sécurité de base contre menaces web                           | 🚧 IN PROGRESS | 3      | 0/3 📋 (Phase 1 docs generated) |
+| 0.9   | Configurer Cloudflare WAF              | Sécurité de base contre menaces web                           | 🚧 IN PROGRESS | 3      | 1/3 ✅ (Phase 1 Minimale DONE, 2&3 post-launch) |
 | 0.10  | Base tests & linting                   | ESLint + Vitest (avec tests) + Playwright configurés          | ✅ COMPLETED   | -      | ✅                              |
 
 **Columns Explained**:
@@ -106,13 +106,13 @@ cat docs/specs/epics/epic_0/EPIC_TRACKING.md
 - **Stories Started**: 9 / 10
 - **Stories Completed**: 8 / 10 ✅
 - **Stories Planned**: 6 / 10 (Stories 0.1, 0.4, 0.5, 0.7, 0.8, 0.9)
-- **Stories In Progress**: 1 / 10 (Story 0.9: Phase 1 docs ready)
+- **Stories In Progress**: 1 / 10 (Story 0.9: Phase 1 Minimale complete, Phases 2-3 post-launch)
 - **Stories Not Started**: 1 / 10 (None - all stories completed or in progress!)
 - **Total Phases**: 22 (Story 0.1: 3, Story 0.4: 5, Story 0.5: 3, Story 0.7: 4, Story 0.8: 4, Story 0.9: 3)
-- **Phases Completed**: 19 / 22 (Story 0.1: 3/3, Story 0.4: 5/5, Story 0.5: 3/3, Story 0.7: 4/4, Story 0.8: 4/4, Story 0.9: 0/3)
+- **Phases Completed**: 20 / 22 (Story 0.1: 3/3, Story 0.4: 5/5, Story 0.5: 3/3, Story 0.7: 4/4, Story 0.8: 4/4, Story 0.9: 1/3)
 
 **Epic Completion**: 80% (8 stories complétées / 10 total)
-**Weighted Progress**: ~86% (incluant Story 0.9 en cours: 0/3 phases, soit ~0%)
+**Weighted Progress**: ~91% (incluant Story 0.9 Phase 1: 1/3 phases, soit ~33%)
 
 ### Timeline
 
@@ -170,6 +170,27 @@ Track epic-level milestones here:
 - [ ] **Milestone 7**: Epic 0 complete and validated - Target: Soon
 
 ### Recent Updates
+
+**2025-11-15 (Late Night - Phase 1 Minimale)**: Story 0.9 Phase 1 COMPLETED (Baseline)! 🛡️
+
+- ✅ **Story 0.9 Phase 1 (Baseline WAF Configuration) COMPLETED**: Strategy adapted for "en construction" site
+  - Commit 1/4: Free Managed Ruleset documentation ✅
+  - Commit 2/4: Rate Limiting configuration (100 req/min) ✅
+  - Commit 3/4: Custom WAF Rules - **SKIPPED** (deferred post-launch)
+  - Commit 4/4: Comprehensive documentation & team guides ✅
+  - **PR #27 Created**: https://github.com/sebc-dev/website/pull/27
+  - **Delivered**: Baseline WAF protection + Dashboard access guide + Rollback procedures
+  - **Key features**: Free Managed Ruleset (auto-deployed) + Rate Limiting + Full documentation
+- 📊 **Epic Progress Update**:
+  - **Phase 1 Minimale**: Adapted for low-traffic "en construction" site
+  - **Baseline protection active**: Free Managed Ruleset + Rate Limiting configured
+  - **Phases 2 & 3 deferred**: Will be implemented post-launch with real traffic data
+  - **Progress**: 20/22 phases completed (91% weighted progress!)
+  - **Post-launch plan**: `docs/specs/epics/epic_0/story_0_9/POST_LAUNCH_PLAN.md` created
+- 🎯 **Strategic decision**: Focus on baseline protection now, advanced tuning when site goes live
+  - **Why?**: Site currently "en construction" with minimal traffic
+  - **What's next**: Full WAF tuning with real traffic patterns after launch
+  - **Documentation**: Complete guides ready for team (Dashboard access, rollback, troubleshooting)
 
 **2025-11-15 (Night - Epic Update)**: Stories 0.7 et 0.8 complétées! 🎉
 
