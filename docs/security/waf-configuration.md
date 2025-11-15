@@ -31,16 +31,17 @@ Web Application Firewalls are critical for protecting against common web vulnera
 
 This implementation follows a phased approach to build security progressively:
 
-1. **Phase 1 - Free Managed Ruleset** (Current)
+1. **Phase 1 - Free Managed Ruleset** (Completed)
    - Auto-deployed protection against high-impact vulnerabilities
    - Automatic updates with zero configuration
    - Available on Free plan
-   - This commit verifies this layer
+   - Verified and documented in Commit 1
 
-2. **Phase 2 - Rate Limiting** (Planned)
+2. **Phase 2 - Rate Limiting** (Current)
    - Protects against volumetric attacks and DoS
-   - Global rate limiting (100 req/min per IP)
+   - Global rate limiting (100 requests per 1 minute per IP)
    - Available on Free plan
+   - Configured and documented in Commit 2
 
 3. **Phase 3 - Custom WAF Rules** (Planned)
    - Custom rules for XSS, SQL injection, path traversal
@@ -125,7 +126,7 @@ For these advanced features, upgrade to Pro plan ($20/month).
 | Component | Status | Mode | Purpose |
 | --- | --- | --- | --- |
 | **Free Managed Ruleset** | ✅ Active | Monitor | Baseline protection (auto-deployed) |
-| **Rate Limiting** | ⏳ Phase 2 | - | Volumetric attack protection |
+| **Rate Limiting** | ✅ Configured | Block | Volumetric attack protection (100 req/min per IP) |
 | **Custom WAF Rules** | ⏳ Phase 3 | - | Enhanced specific attack patterns |
 
 ### Verification Details
@@ -173,6 +174,26 @@ To see which requests are being monitored by WAF:
    - Review patterns of detected threats
    - Document any unexpected matches for Phase 2 analysis
 
+### Rate Limiting
+
+Rate limiting protects sebc.dev against volumetric attacks and resource exhaustion. Currently configured:
+
+- **Status**: ✅ Configured (Phase 1 Commit 2)
+- **Type**: Global rate limiting per IP address
+- **Rate**: 100 requests per 1 minute
+- **Action**: Block
+- **Purpose**: Protect against DoS, brute force, and bot attacks
+
+For detailed configuration, adjustment procedures, and monitoring instructions, see:
+
+**Full Documentation**: [`rate-limiting-rules.md`](./rate-limiting-rules.md)
+
+Key points:
+- Conservative limit suitable for "en construction" site
+- Will be tuned post-launch based on real traffic patterns
+- See `rate-limiting-rules.md` for how to adjust limits
+- See `rate-limiting-rules.md` for whitelisting procedures
+
 ### Configuration History
 
 This section documents WAF configuration changes as the project evolves:
@@ -180,7 +201,7 @@ This section documents WAF configuration changes as the project evolves:
 | Date       | Commit   | Change                                                    |
 | ---------- | -------- | --------------------------------------------------------- |
 | 2025-11-15 | Commit 1 | Verify & Document Free Managed Ruleset (auto-deployed)    |
-| TBD        | Commit 2 | Configure Basic Rate Limiting (100 req/min per IP)        |
+| 2025-11-15 | Commit 2 | Configure Basic Rate Limiting (100 req/min per IP)        |
 | TBD        | Commit 3 | Create Custom WAF Rules (XSS, SQLi, Path Traversal)       |
 | TBD        | Commit 4 | Comprehensive Documentation & Screenshots                 |
 

@@ -3,6 +3,7 @@
 **Status**: 🚧 IN PROGRESS
 **Started**: 2025-11-15
 **Target Completion**: TBD
+**Current Commit**: 2/4 - Configure Basic Rate Limiting
 
 ---
 
@@ -27,20 +28,27 @@ phase_1/
 
 ## 🎯 Phase Objective
 
-Enable Cloudflare Web Application Firewall (WAF) for sebc.dev with foundational security protections to defend against common web threats. This phase establishes the baseline WAF configuration using industry-standard managed rulesets (OWASP Core Rule Set + Cloudflare Managed Ruleset) and implements basic rate limiting to protect against volumetric attacks.
+Configure Cloudflare Web Application Firewall (WAF) for sebc.dev using Free Plan features to establish foundational security protections. This phase verifies the auto-deployed Free Managed Ruleset, implements rate limiting, and creates custom WAF rules to enhance protection against common web threats.
 
-The WAF operates at the Cloudflare Edge level, filtering malicious traffic before it reaches the Cloudflare Worker application. Starting in "Log" mode allows safe validation without impacting legitimate users, with a planned transition to "Block" mode after log analysis in Phase 2.
+The WAF operates at the Cloudflare Edge level, filtering malicious traffic before it reaches the Cloudflare Worker application.
+
+**Important**: This phase is adapted for **Cloudflare Free Plan** which includes:
+- ✅ Free Managed Ruleset (auto-deployed, basic protection)
+- ✅ Rate Limiting (basic)
+- ✅ Custom WAF Rules (limited number, typically 5)
+- ❌ OWASP Core Ruleset (requires Pro plan - $20/month)
+- ❌ Cloudflare Managed Ruleset (requires Pro plan)
 
 ### Scope
 
-- ✅ Enable Cloudflare WAF in Cloudflare Dashboard for sebc.dev zone
-- ✅ Activate OWASP Core Rule Set (Medium sensitivity)
-- ✅ Activate Cloudflare Managed Ruleset (threat intelligence)
-- ✅ Configure WAF in "Log" mode for initial validation
+- ✅ Verify Free Managed Ruleset is active (auto-deployed)
+- ✅ Document Free Managed Ruleset capabilities and limitations
 - ✅ Implement basic rate limiting (100 req/min per IP globally)
+- ✅ Create custom WAF rules (XSS, SQL injection, path traversal)
 - ✅ Document complete WAF configuration
-- ✅ Capture screenshots of dashboard configuration
-- ✅ Validate with basic smoke tests (homepage, static assets)
+- ✅ Capture screenshots of Free plan dashboard configuration
+- ✅ Validate with smoke tests and attack pattern tests
+- ✅ Document upgrade path to Pro plan for OWASP features
 
 ---
 
@@ -77,16 +85,16 @@ cat docs/specs/epics/epic_0/story_0_9/implementation/phase_1/ENVIRONMENT_SETUP.m
 **Note**: This phase is **configuration-only** (no code changes). Each "commit" represents a documentation commit capturing configuration state.
 
 ```bash
-# Commit 1: Enable WAF & OWASP Core Rule Set
+# Commit 1: Verify & Document Free Managed Ruleset ✅ COMPLETED
 cat docs/specs/epics/epic_0/story_0_9/implementation/phase_1/COMMIT_CHECKLIST.md  # Section Commit 1
 
-# Commit 2: Activate Cloudflare Managed Ruleset
+# Commit 2: Configure Basic Rate Limiting (Current)
 cat docs/specs/epics/epic_0/story_0_9/implementation/phase_1/COMMIT_CHECKLIST.md  # Section Commit 2
 
-# Commit 3: Configure Basic Rate Limiting
+# Commit 3: Create Custom WAF Rules (Planned)
 cat docs/specs/epics/epic_0/story_0_9/implementation/phase_1/COMMIT_CHECKLIST.md  # Section Commit 3
 
-# Commit 4: Comprehensive Documentation & Screenshots
+# Commit 4: Comprehensive Documentation & Screenshots (Planned)
 cat docs/specs/epics/epic_0/story_0_9/implementation/phase_1/COMMIT_CHECKLIST.md  # Section Commit 4
 ```
 
@@ -159,29 +167,33 @@ cat docs/specs/epics/epic_0/story_0_9/implementation/phase_1/validation/VALIDATI
 
 ## 🔒 Security Context
 
-This phase establishes the first layer of defense-in-depth security for sebc.dev:
+This phase establishes the first layer of defense-in-depth security for sebc.dev using Free Plan features:
 
-- **OWASP Top 10 Protection**: Blocks common web vulnerabilities (XSS, SQLi, Command Injection)
-- **Cloudflare Threat Intelligence**: Real-time protection based on global attack patterns
-- **Rate Limiting**: Prevents volumetric attacks and resource exhaustion
-- **Log Mode**: Safe validation phase before active blocking
+- **Free Managed Ruleset**: Auto-deployed protection against high-impact vulnerabilities and zero-day exploits
+- **Custom WAF Rules**: Targeted protection against XSS, SQL injection, and path traversal attacks
+- **Rate Limiting**: Prevents volumetric attacks and resource exhaustion (DoS protection)
+- **Edge-Level Protection**: Malicious traffic blocked before reaching the application
 - **Complements**: Works alongside Cloudflare Access (Story 0.8) for comprehensive security
+- **Upgrade Path**: Pro plan available for OWASP Core Ruleset and advanced features
 
 ---
 
 ## ❓ FAQ
 
-**Q: Why start in "Log" mode instead of "Block" mode?**
-A: Log mode allows us to monitor WAF events without blocking legitimate traffic. We can analyze logs for false positives before switching to Block mode in Phase 2.
+**Q: Is the Free Managed Ruleset sufficient for production?**
+A: The Free Managed Ruleset provides basic protection against high-impact vulnerabilities. For production, combine it with custom WAF rules (Phase 1, Commit 3) or consider Pro plan for OWASP Core Ruleset.
 
 **Q: Can I configure WAF via Infrastructure as Code (wrangler.toml)?**
 A: No. WAF is zone-specific and configured via Cloudflare Dashboard. We document configuration for reproducibility.
 
-**Q: What if WAF blocks legitimate traffic?**
-A: In Phase 1 (Log mode), nothing is blocked. In Phase 2, we'll analyze logs and create exceptions before activating Block mode.
+**Q: How many custom WAF rules can I create on the Free plan?**
+A: Typically 5 custom rules on Free plan. Use them strategically for the most critical attack patterns (XSS, SQLi, path traversal).
+
+**Q: What's the difference between Free Managed Ruleset and OWASP Core Ruleset?**
+A: Free Managed Ruleset is auto-deployed and provides basic protection. OWASP Core Ruleset (Pro plan, $20/month) is comprehensive, configurable, covers OWASP Top 10, and allows sensitivity tuning.
 
 **Q: How do I test WAF configuration?**
-A: Use smoke tests (guides/TESTING.md) to verify legitimate traffic works. Negative tests (attack simulation) happen in Phase 3.
+A: Use smoke tests (guides/TESTING.md) for legitimate traffic. Test custom rules with attack payloads (curl commands with XSS/SQLi patterns).
 
 **Q: Do I need to modify application code?**
 A: No. WAF is a Cloudflare Edge service. No code changes required.
