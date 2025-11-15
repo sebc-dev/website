@@ -11,7 +11,7 @@
     "lint:fix": "eslint . --fix",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
-    "arch:validate": "depcruise src app",
+    "arch:validate": "depcruise lib app",
     "bundle:analyze": "ANALYZE=true pnpm build",
     "test:mutation": "stryker run",
     "test:mutation:critical": "stryker run stryker.critical.config.json",
