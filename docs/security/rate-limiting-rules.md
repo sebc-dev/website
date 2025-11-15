@@ -44,13 +44,13 @@ Once the site goes live with real traffic, we'll monitor the Security Events and
 
 **Rule Name**: Global Rate Limit - Protection
 
-| Property | Value | Rationale |
-| --- | --- | --- |
-| **Rate Limit** | 100 requests per minute | Conservative limit suitable for "en construction" site. Legitimate users rarely exceed this. Real traffic patterns will inform post-launch tuning. |
-| **Scope** | All incoming requests | Global protection across entire domain |
-| **IP-Based** | Per IP address | Each unique client IP has its own 100 req/min quota |
-| **Action** | Block | Requests exceeding limit are blocked immediately |
-| **Mitigation Timeout** | 1 minute | After blocking, IP remains blocked for 1 minute before being allowed to try again |
+| Property               | Value                   | Rationale                                                                                                                                          |
+| ---------------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Rate Limit**         | 100 requests per minute | Conservative limit suitable for "en construction" site. Legitimate users rarely exceed this. Real traffic patterns will inform post-launch tuning. |
+| **Scope**              | All incoming requests   | Global protection across entire domain                                                                                                             |
+| **IP-Based**           | Per IP address          | Each unique client IP has its own 100 req/min quota                                                                                                |
+| **Action**             | Block                   | Requests exceeding limit are blocked immediately                                                                                                   |
+| **Mitigation Timeout** | 1 minute                | After blocking, IP remains blocked for 1 minute before being allowed to try again                                                                  |
 
 ### Configuration Steps (Cloudflare Dashboard)
 
@@ -224,6 +224,7 @@ A false positive occurs when legitimate traffic is blocked:
 4. **Check Timing**: Do blocks correlate with known legitimate activity?
 
 **Example False Positive Detection**:
+
 - Office IP X.X.X.X blocked at 10:00 AM
 - Know that office team was testing deployment at that time
 - Rate limit was too strict for that legitimate activity
@@ -272,16 +273,19 @@ done
 ### Interpreting Test Results
 
 **Expected behavior**:
+
 - First ~100 requests: HTTP 200 (Success)
 - Requests 101+: HTTP 429 (Too Many Requests)
 - After 1 minute: Reset and counter starts again
 
 **If you see HTTP 429 too early** (before 100 requests):
+
 - Rate limit might be stricter than expected (unusual on Free plan)
 - Check dashboard configuration
 - May need to adjust or reload
 
 **If you never see HTTP 429**:
+
 - Rate limit may not be applied correctly
 - Verify rule is "Enabled" in dashboard
 - Check that rule expression is "All incoming requests"
@@ -374,6 +378,7 @@ If rate limiting is causing critical issues:
 5. **Recovery**: Immediate (takes seconds)
 
 After disabling:
+
 - Investigate the issue
 - Review Security Events for what triggered it
 - Document findings
@@ -385,9 +390,9 @@ After disabling:
 
 This section documents rate limiting changes as the project evolves:
 
-| Date       | Commit   | Change                                                               |
-| ---------- | -------- | -------------------------------------------------------------------- |
-| 2025-11-15 | Commit 2 | Configure Global Rate Limit: 100 req/min per IP, Block action       |
+| Date       | Commit   | Change                                                        |
+| ---------- | -------- | ------------------------------------------------------------- |
+| 2025-11-15 | Commit 2 | Configure Global Rate Limit: 100 req/min per IP, Block action |
 
 ---
 

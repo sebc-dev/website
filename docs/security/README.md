@@ -49,11 +49,11 @@ sebc.dev implements a **defense-in-depth** security strategy using multiple comp
 
 Core security infrastructure for sebc.dev:
 
-| Story | Title                | Description                                | Status         |
-| ----- | -------------------- | ------------------------------------------ | -------------- |
-| 0.7   | CI/CD GitHub Actions | Automated testing and deployment pipeline  | ✅ COMPLETED   |
-| 0.8   | Cloudflare Access    | Identity and access management             | ✅ COMPLETED   |
-| 0.9   | Cloudflare WAF       | Web application firewall & DDoS protection | ✅ COMPLETED   |
+| Story | Title                | Description                                | Status       |
+| ----- | -------------------- | ------------------------------------------ | ------------ |
+| 0.7   | CI/CD GitHub Actions | Automated testing and deployment pipeline  | ✅ COMPLETED |
+| 0.8   | Cloudflare Access    | Identity and access management             | ✅ COMPLETED |
+| 0.9   | Cloudflare WAF       | Web application firewall & DDoS protection | ✅ COMPLETED |
 
 ---
 
@@ -84,12 +84,14 @@ The Cloudflare Web Application Firewall (WAF) is a distributed security service 
 ### Phase 1 Completion Summary
 
 **Completed Commits**:
+
 - ✅ **Commit 1**: Free Managed Ruleset verified and documented
 - ✅ **Commit 2**: Rate Limiting configured (100 req/min per IP)
 - ⏭️ **Commit 3**: Custom WAF Rules skipped (deferred to Phase 2 post-launch)
 - ✅ **Commit 4**: Comprehensive documentation with rollback & troubleshooting
 
 **Baseline Protection Ready**: Free Managed Ruleset + Rate Limiting
+
 - Suitable for "en construction" site with low traffic
 - Zero configuration required for Free Managed Ruleset
 - Rate limit will be tuned post-launch based on real traffic patterns
@@ -124,6 +126,7 @@ Topics covered:
 **Rate Limiting Details**: [`rate-limiting-rules.md`](./rate-limiting-rules.md)
 
 Detailed guide for:
+
 - Understanding the 100 req/min rate limit
 - Adjusting limits if needed
 - Whitelisting specific IPs
@@ -142,6 +145,7 @@ Rate limiting protects sebc.dev from:
 - Volumetric DoS attacks
 
 **Current Configuration**:
+
 - **Rate**: 100 requests per minute per IP
 - **Action**: Block (HTTP 429)
 - **Timeout**: 1 minute
@@ -169,10 +173,12 @@ Identity and access management for sensitive resources:
 ### Cloudflare Dashboard
 
 **Dashboard Access**: https://dash.cloudflare.com
+
 - **Zone**: sebc.dev
 - **Full Access Guide**: [`docs/deployment/cloudflare-dashboard-access.md`](../deployment/cloudflare-dashboard-access.md)
 
 **Key Sections**:
+
 - Security Overview: Security > Overview
 - WAF Status: Security > WAF > Overview
 - Security Events: Security > Analytics (or Firewall Events)
@@ -192,11 +198,11 @@ View security events and metrics:
 
 Complete security documentation organized by task:
 
-| Document                                             | Purpose                                    | Audience         | Phase     |
-| ---------------------------------------------------- | ------------------------------------------ | ---------------- | --------- |
-| [`waf-configuration.md`](./waf-configuration.md)     | WAF setup, rollback, troubleshooting       | All team members | 1 (Done)  |
-| [`rate-limiting-rules.md`](./rate-limiting-rules.md) | Rate limiting configuration & tuning      | DevOps, Security | 1 (Done)  |
-| [`cloudflare-dashboard-access.md`](../deployment/cloudflare-dashboard-access.md) | Dashboard navigation & permissions | All team members | 1 (Done)  |
+| Document                                                                         | Purpose                              | Audience         | Phase    |
+| -------------------------------------------------------------------------------- | ------------------------------------ | ---------------- | -------- |
+| [`waf-configuration.md`](./waf-configuration.md)                                 | WAF setup, rollback, troubleshooting | All team members | 1 (Done) |
+| [`rate-limiting-rules.md`](./rate-limiting-rules.md)                             | Rate limiting configuration & tuning | DevOps, Security | 1 (Done) |
+| [`cloudflare-dashboard-access.md`](../deployment/cloudflare-dashboard-access.md) | Dashboard navigation & permissions   | All team members | 1 (Done) |
 
 ---
 

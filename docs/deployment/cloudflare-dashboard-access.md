@@ -184,22 +184,26 @@ For a high-level view of security status:
 ### Understanding Permission Levels
 
 **Super Administrator**:
+
 - Full access to all settings
 - Can manage team members and billing
 - Can enable/disable zones
 - Can create API tokens
 
 **Administrator**:
+
 - Configure all security features (WAF, rate limiting, DDoS)
 - View analytics and logs
 - Cannot manage team members or billing
 
 **Security & Compliance**:
+
 - View and modify security settings
 - View analytics and logs
 - Cannot modify DNS or other infrastructure settings
 
 **Read Only**:
+
 - View all settings and logs
 - Cannot make any modifications
 - Useful for analysts and compliance reviews
@@ -233,6 +237,7 @@ To save a backup of current WAF rules:
 3. **Save**: Save with filename like `waf-config-2025-11-15.png`
 
 For detailed export, you may need:
+
 - Cloudflare API access (requires Pro plan+)
 - Manual documentation of each rule
 
@@ -264,6 +269,7 @@ When viewing security events, each entry shows:
 **Problem**: Email/password incorrect or forgotten
 
 **Solution**:
+
 1. Click "Forgot password?" on login page
 2. Cloudflare sends password reset email
 3. Follow reset link to create new password
@@ -274,6 +280,7 @@ When viewing security events, each entry shows:
 **Problem**: Email with MFA code is missing
 
 **Solution**:
+
 1. Check spam/junk folder
 2. Wait up to 1 minute for email delivery
 3. If still missing, use backup authentication method
@@ -284,6 +291,7 @@ When viewing security events, each entry shows:
 **Problem**: Cannot see sebc.dev in zone list
 
 **Solution**:
+
 1. Verify you're logged in with correct account
 2. Ask administrator to verify you're added to sebc.dev
 3. Try logging out and in again
@@ -294,6 +302,7 @@ When viewing security events, each entry shows:
 **Problem**: Cannot edit WAF or other settings
 
 **Solution**:
+
 1. Check your role (see "Checking Your Current Permissions" section)
 2. If role is "Read Only", request higher permissions
 3. Ask zone administrator to grant access
@@ -304,6 +313,7 @@ When viewing security events, each entry shows:
 **Problem**: Dashboard loads slowly or doesn't respond
 
 **Solution**:
+
 1. Clear browser cache (Ctrl+Shift+Delete)
 2. Try incognito/private browsing mode
 3. Try different browser (Chrome, Firefox, Safari)
@@ -332,6 +342,7 @@ When viewing security events, each entry shows:
 ### Audit Trail
 
 Cloudflare logs all dashboard actions:
+
 - Who made changes
 - What was changed
 - When changes occurred
@@ -345,6 +356,7 @@ This provides accountability and helps detect unauthorized modifications.
 ### Analytics Dashboard
 
 Provides real-time metrics for:
+
 - **Traffic**: Requests, bandwidth, unique visitors
 - **Performance**: Response times, cache hit ratio
 - **Security**: Blocked requests, threats detected
@@ -353,6 +365,7 @@ Provides real-time metrics for:
 ### WAF Analytics
 
 Specific to WAF operations:
+
 - **Events by Rule**: Which rules are triggering most
 - **Top Blocked IPs**: Which IPs are being blocked most
 - **Events by Country**: Geographic distribution of attacks
@@ -361,6 +374,7 @@ Specific to WAF operations:
 ### DDoS Analytics
 
 For distributed denial of service attacks:
+
 - **Attack Timeline**: When attacks occurred
 - **Attack Size**: Requests per second during attacks
 - **Mitigation Status**: Whether attacks were blocked
@@ -412,6 +426,7 @@ A: First check Cloudflare documentation, then contact your zone administrator, t
 ## Contact & Support
 
 **For Questions About**:
+
 - Cloudflare Dashboard features → Cloudflare Support (https://support.cloudflare.com/)
 - sebc.dev access → Project Administrator
 - WAF configuration → See `waf-configuration.md`

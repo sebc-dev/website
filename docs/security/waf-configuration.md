@@ -66,14 +66,14 @@ The Free Managed Ruleset is Cloudflare's foundational WAF protection automatical
 
 ### Key Characteristics
 
-| Aspect | Details |
-| --- | --- |
-| **Availability** | Free plan (all zones) |
-| **Configuration Required** | None - auto-deployed |
-| **Update Frequency** | Continuous (Cloudflare managed) |
-| **Coverage** | High-impact vulnerabilities, critical CVEs |
-| **False Positive Rate** | Very low (optimized for all customers) |
-| **Cost** | Included with Free plan |
+| Aspect                     | Details                                    |
+| -------------------------- | ------------------------------------------ |
+| **Availability**           | Free plan (all zones)                      |
+| **Configuration Required** | None - auto-deployed                       |
+| **Update Frequency**       | Continuous (Cloudflare managed)            |
+| **Coverage**               | High-impact vulnerabilities, critical CVEs |
+| **False Positive Rate**    | Very low (optimized for all customers)     |
+| **Cost**                   | Included with Free plan                    |
 
 ### What the Free Managed Ruleset Protects Against
 
@@ -102,17 +102,18 @@ For these advanced features, upgrade to Pro plan ($20/month).
 
 ### Free Managed Ruleset vs. OWASP Core Ruleset
 
-| Feature | Free Managed | OWASP (Pro) | Cloudflare Managed (Pro) |
-| --- | --- | --- | --- |
-| **Availability** | Free | Pro ($20/mo) | Pro ($20/mo) |
-| **Auto-deployed** | Yes | Yes | Yes |
-| **Configurable** | No | Yes (3 sensitivity levels) | Yes |
-| **Coverage** | Critical CVEs, zero-days | OWASP Top 10 | Threat intelligence |
-| **Rule Count** | ~100s | ~1000s | ~1000s |
-| **Typical Use** | Baseline protection | Enhanced security | Advanced protection |
-| **False Positive Rate** | Very low | Low-Moderate | Low |
+| Feature                 | Free Managed             | OWASP (Pro)                | Cloudflare Managed (Pro) |
+| ----------------------- | ------------------------ | -------------------------- | ------------------------ |
+| **Availability**        | Free                     | Pro ($20/mo)               | Pro ($20/mo)             |
+| **Auto-deployed**       | Yes                      | Yes                        | Yes                      |
+| **Configurable**        | No                       | Yes (3 sensitivity levels) | Yes                      |
+| **Coverage**            | Critical CVEs, zero-days | OWASP Top 10               | Threat intelligence      |
+| **Rule Count**          | ~100s                    | ~1000s                     | ~1000s                   |
+| **Typical Use**         | Baseline protection      | Enhanced security          | Advanced protection      |
+| **False Positive Rate** | Very low                 | Low-Moderate               | Low                      |
 
 **Recommendation**:
+
 - Free plan: Use Free Managed Ruleset + Rate Limiting + Custom Rules
 - Pro plan: Add OWASP Core Ruleset for comprehensive OWASP Top 10 coverage
 - Business plan: Add Cloudflare Managed Ruleset for threat intelligence
@@ -123,11 +124,11 @@ For these advanced features, upgrade to Pro plan ($20/month).
 
 ### Verified Active Components
 
-| Component | Status | Mode | Purpose |
-| --- | --- | --- | --- |
-| **Free Managed Ruleset** | ✅ Active | Monitor | Baseline protection (auto-deployed) |
-| **Rate Limiting** | ✅ Configured | Block | Volumetric attack protection (100 req/min per IP) |
-| **Custom WAF Rules** | ⏳ Phase 3 | - | Enhanced specific attack patterns |
+| Component                | Status        | Mode    | Purpose                                           |
+| ------------------------ | ------------- | ------- | ------------------------------------------------- |
+| **Free Managed Ruleset** | ✅ Active     | Monitor | Baseline protection (auto-deployed)               |
+| **Rate Limiting**        | ✅ Configured | Block   | Volumetric attack protection (100 req/min per IP) |
+| **Custom WAF Rules**     | ⏳ Phase 3    | -       | Enhanced specific attack patterns                 |
 
 ### Verification Details
 
@@ -143,11 +144,11 @@ The Free Managed Ruleset is automatically deployed and active. No configuration 
 
 ### Current WAF Status at a Glance
 
-| Component | Status | Action | Details |
-| --- | --- | --- | --- |
-| **Free Managed Ruleset** | ✅ Active | Monitor | Auto-deployed baseline protection |
-| **Rate Limiting** | ✅ Enabled | Block | 100 req/min per IP, 1 min timeout |
-| **Custom WAF Rules** | ⏳ Planned | - | Deferred to Phase 1 Commit 3 (post-launch) |
+| Component                | Status     | Action  | Details                                    |
+| ------------------------ | ---------- | ------- | ------------------------------------------ |
+| **Free Managed Ruleset** | ✅ Active  | Monitor | Auto-deployed baseline protection          |
+| **Rate Limiting**        | ✅ Enabled | Block   | 100 req/min per IP, 1 min timeout          |
+| **Custom WAF Rules**     | ⏳ Planned | -       | Deferred to Phase 1 Commit 3 (post-launch) |
 
 ### Quick Action Links
 
@@ -159,6 +160,7 @@ The Free Managed Ruleset is automatically deployed and active. No configuration 
 ### Phase 1 Status Summary
 
 **Completed**:
+
 - ✅ Commit 1: Free Managed Ruleset verified and documented
 - ✅ Commit 2: Rate Limiting configured (100 req/min per IP)
 - ⏭️ Commit 3: Custom WAF Rules (skipped - deferred to post-launch)
@@ -220,6 +222,7 @@ For detailed configuration, adjustment procedures, and monitoring instructions, 
 **Full Documentation**: [`rate-limiting-rules.md`](./rate-limiting-rules.md)
 
 Key points:
+
 - Conservative limit suitable for "en construction" site
 - Will be tuned post-launch based on real traffic patterns
 - See `rate-limiting-rules.md` for how to adjust limits
@@ -229,14 +232,15 @@ Key points:
 
 This section documents WAF configuration changes as the project evolves:
 
-| Date       | Commit   | Change                                                    |
-| ---------- | -------- | --------------------------------------------------------- |
-| 2025-11-15 | Commit 1 | Verify & Document Free Managed Ruleset (auto-deployed)    |
-| 2025-11-15 | Commit 2 | Configure Basic Rate Limiting (100 req/min per IP)        |
-| SKIPPED    | Commit 3 | Custom WAF Rules (deferred to Phase 2 post-launch)        |
-| 2025-11-15 | Commit 4 | Comprehensive Documentation, Rollback, Troubleshooting    |
+| Date       | Commit   | Change                                                 |
+| ---------- | -------- | ------------------------------------------------------ |
+| 2025-11-15 | Commit 1 | Verify & Document Free Managed Ruleset (auto-deployed) |
+| 2025-11-15 | Commit 2 | Configure Basic Rate Limiting (100 req/min per IP)     |
+| SKIPPED    | Commit 3 | Custom WAF Rules (deferred to Phase 2 post-launch)     |
+| 2025-11-15 | Commit 4 | Comprehensive Documentation, Rollback, Troubleshooting |
 
 **Phase 1 Minimale Status**: ✅ BASELINE COMPLETE
+
 - Free Managed Ruleset: ✅ Active (auto-deployed)
 - Rate Limiting: ✅ Configured (100 req/min per IP)
 - Custom Rules: ⏳ Deferred to post-launch (Phase 2)
@@ -286,15 +290,15 @@ This section documents WAF configuration changes as the project evolves:
 
 The Free plan WAF has these limitations compared to Pro plan:
 
-| Feature | Free Plan | Pro Plan |
-| --- | --- | --- |
-| **Free Managed Ruleset** | ✅ Included | ✅ Included |
-| **OWASP Core Ruleset** | ❌ Not available | ✅ Included ($20/mo) |
-| **Custom Rules** | ⚠️ Limited (typically 5) | ✅ Up to 100 rules |
-| **Rule Configuration** | ❌ No tuning | ✅ Configurable |
-| **Sensitivity Levels** | ❌ Fixed | ✅ Low/Medium/High |
-| **Rate Limiting** | ✅ Basic | ✅ Advanced |
-| **API Access** | ❌ Limited | ✅ Full |
+| Feature                  | Free Plan                | Pro Plan             |
+| ------------------------ | ------------------------ | -------------------- |
+| **Free Managed Ruleset** | ✅ Included              | ✅ Included          |
+| **OWASP Core Ruleset**   | ❌ Not available         | ✅ Included ($20/mo) |
+| **Custom Rules**         | ⚠️ Limited (typically 5) | ✅ Up to 100 rules   |
+| **Rule Configuration**   | ❌ No tuning             | ✅ Configurable      |
+| **Sensitivity Levels**   | ❌ Fixed                 | ✅ Low/Medium/High   |
+| **Rate Limiting**        | ✅ Basic                 | ✅ Advanced          |
+| **API Access**           | ❌ Limited               | ✅ Full              |
 
 **Recommendation**: Start with Free plan features. Upgrade to Pro plan if you need OWASP Core Ruleset or advanced rule customization.
 
@@ -458,6 +462,7 @@ Problem: Website Issue or Security Event?
 **Symptom**: Users report "HTTP 429 Too Many Requests" error
 
 **Diagnosis**:
+
 1. **View Rate Limit Events**:
    - Navigate to: Dashboard > Security > Analytics
    - Filter for: Action = "Block" (rate limit)
@@ -469,6 +474,7 @@ Problem: Website Issue or Security Event?
    - Look for patterns (office IP, specific user, specific feature)
 
 **Solutions**:
+
 - **Option 1**: Increase rate limit (e.g., 100 → 200 req/min)
   - Edit rule: Security > WAF > Rate Limiting Rules
   - Click "Global Rate Limit - Protection" to edit
@@ -484,6 +490,7 @@ Problem: Website Issue or Security Event?
   - Plan fix and re-enable
 
 **Prevention**:
+
 - Monitor rate limit events daily during first week
 - Document legitimate traffic patterns
 - Adjust limits before launch based on testing
@@ -493,6 +500,7 @@ Problem: Website Issue or Security Event?
 **Symptom**: Legitimate requests return "403 Forbidden" or Cloudflare block page
 
 **Diagnosis**:
+
 1. **Check which requests are blocked**:
    - Navigate to: Dashboard > Security > Analytics
    - Filter by: Action = "Block"
@@ -509,6 +517,7 @@ Problem: Website Issue or Security Event?
    - Check IP address (office, home, partner, etc.)
 
 **Solutions**:
+
 - **Option 1**: Modify or disable problematic custom rule
   - Security > WAF > Custom rules
   - Find rule causing false positives
@@ -527,6 +536,7 @@ Problem: Website Issue or Security Event?
   - Rare - only if Free Managed Ruleset is clearly wrong
 
 **Prevention**:
+
 - Phase 1 uses Free Managed Ruleset in Monitor mode (usually no blocking)
 - Test custom rules thoroughly before deploying
 - Use "Log" mode during ramp-up period
@@ -593,6 +603,7 @@ If you see unusually many events in Security > Analytics:
 **Is this an attack?**
 
 Signs of active attack:
+
 - Spike in blocked requests (10x+ normal)
 - Same attack pattern repeated
 - Specific URL being targeted
@@ -641,14 +652,14 @@ For any WAF event in Analytics dashboard:
 
 ### Common Issues and Quick Fixes
 
-| Issue | Cause | Fix |
-| --- | --- | --- |
-| "429 Too Many Requests" errors | Rate limit too strict | Increase limit or whitelist IP |
-| "403 Forbidden" on legitimate requests | Custom rule false positive | Adjust rule or add exception |
-| Website completely down | Application or DNS issue | Check origin server, not WAF |
-| Spike in blocked requests | Attack or bot activity | Monitor events, document patterns |
-| Users report slow page load | WAF processing overhead | Rare - usually other cause |
-| Cannot access dashboard | Permissions or authentication | Check account login, MFA |
+| Issue                                  | Cause                         | Fix                               |
+| -------------------------------------- | ----------------------------- | --------------------------------- |
+| "429 Too Many Requests" errors         | Rate limit too strict         | Increase limit or whitelist IP    |
+| "403 Forbidden" on legitimate requests | Custom rule false positive    | Adjust rule or add exception      |
+| Website completely down                | Application or DNS issue      | Check origin server, not WAF      |
+| Spike in blocked requests              | Attack or bot activity        | Monitor events, document patterns |
+| Users report slow page load            | WAF processing overhead       | Rare - usually other cause        |
+| Cannot access dashboard                | Permissions or authentication | Check account login, MFA          |
 
 ### General Troubleshooting Process
 
