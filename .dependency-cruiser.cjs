@@ -7,12 +7,12 @@ module.exports = {
       comment:
         'Client Components cannot import server-only code (security & bundle size risk)',
       from: {
-        path: '^(src|app)/.*',
-        pathNot: '^src/lib/server',
+        path: '^(lib|app)/.*',
+        pathNot: '^lib/server',
       },
       to: {
         path: [
-          '^src/lib/server', // Code serveur explicite
+          '^lib/server', // Code serveur explicite
           'drizzle-orm', // ORM (DB queries)
           '@cloudflare/workers-types', // Types Workers
           'jose', // JWT validation (server-only)
