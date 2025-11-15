@@ -1,8 +1,9 @@
 # Story 0.7 - Mettre en place CI/CD GitHub Actions
 
 **Epic**: Epic 0 - Socle technique (V1)
-**Status**: 🚧 IN PROGRESS (70%)
+**Status**: ✅ COMPLETED
 **Created**: 2025-11-10
+**Completed**: 2025-11-15
 **PRD Reference**: PRD.md line 634
 
 ---
