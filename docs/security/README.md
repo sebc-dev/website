@@ -53,7 +53,7 @@ Core security infrastructure for sebc.dev:
 | ----- | -------------------- | ------------------------------------------ | -------------- |
 | 0.7   | CI/CD GitHub Actions | Automated testing and deployment pipeline  | ✅ COMPLETED   |
 | 0.8   | Cloudflare Access    | Identity and access management             | ✅ COMPLETED   |
-| 0.9   | Cloudflare WAF       | Web application firewall & DDoS protection | 🚧 IN PROGRESS |
+| 0.9   | Cloudflare WAF       | Web application firewall & DDoS protection | ✅ COMPLETED   |
 
 ---
 
@@ -69,32 +69,38 @@ The Cloudflare Web Application Firewall (WAF) is a distributed security service 
 - **Logs** security events for analysis and compliance
 - **Auto-Updates** with the latest threat signatures
 
-### Current Configuration (Phase 1)
+### Current Configuration (Phase 1 - Baseline)
 
-**Status**: Free Managed Ruleset verified and documented (Commit 1)
+**Status**: ✅ Phase 1 COMPLETE (Baseline Protection Ready)
 **Plan**: Cloudflare Free Plan
+**Launch Readiness**: Baseline protection suitable for "en construction" site
 
 | Component                | Status         | Phase | Purpose                                  |
 | ------------------------ | -------------- | ----- | ---------------------------------------- |
 | **Free Managed Ruleset** | ✅ Active      | 1     | Baseline protection (auto-deployed)      |
-| **Rate Limiting**        | ⏳ Phase 2     | 2     | Volumetric attack protection             |
-| **Custom WAF Rules**     | ⏳ Phase 3     | 3     | Enhanced specific attack pattern defense |
+| **Rate Limiting**        | ✅ Configured  | 1     | 100 req/min per IP, Block action         |
+| **Custom WAF Rules**     | ⏳ Post-Launch | 2     | Enhanced specific attack pattern defense |
 
-### Phase Progress
+### Phase 1 Completion Summary
 
-- **Phase 1 (Current)**: Verify Free Managed Ruleset - auto-deployed baseline protection
-  - Commit 1: Verify & document Free Managed Ruleset ✅ (current)
-  - Commit 2: Configure rate limiting (100 req/min per IP) - planned
-  - Commit 3: Create custom rules (XSS, SQLi, path traversal) - planned
-  - Commit 4: Complete documentation - planned
+**Completed Commits**:
+- ✅ **Commit 1**: Free Managed Ruleset verified and documented
+- ✅ **Commit 2**: Rate Limiting configured (100 req/min per IP)
+- ⏭️ **Commit 3**: Custom WAF Rules skipped (deferred to Phase 2 post-launch)
+- ✅ **Commit 4**: Comprehensive documentation with rollback & troubleshooting
+
+**Baseline Protection Ready**: Free Managed Ruleset + Rate Limiting
+- Suitable for "en construction" site with low traffic
+- Zero configuration required for Free Managed Ruleset
+- Rate limit will be tuned post-launch based on real traffic patterns
 
 ### Free Plan vs. Pro Plan
 
 sebc.dev is configured with **Cloudflare Free Plan WAF features**:
 
 - ✅ Free Managed Ruleset (auto-deployed, zero configuration)
-- ✅ Basic rate limiting
-- ✅ Limited custom rules
+- ✅ Basic rate limiting (configured, operational)
+- ✅ Limited custom rules (up to 5 on Free plan)
 - ❌ OWASP Core Ruleset (requires Pro, $20/month)
 - ❌ Cloudflare Managed Ruleset (requires Pro, $20/month)
 - ❌ Advanced configuration and tuning
@@ -107,16 +113,26 @@ See `waf-configuration.md` for upgrade considerations.
 
 Topics covered:
 
-- OWASP Core Rule Set configuration details
-- Why "Log" mode in Phase 1
-- Dashboard navigation and log viewing
-- Rollback procedures
-- Troubleshooting guide
+- Free Managed Ruleset capabilities and limitations
+- Rate limiting configuration and rationale
+- Quick Reference table and action links
+- Dashboard navigation guide (see `cloudflare-dashboard-access.md`)
+- Rollback procedures for emergency situations
+- Comprehensive troubleshooting guide
 - Team contact information
+
+**Rate Limiting Details**: [`rate-limiting-rules.md`](./rate-limiting-rules.md)
+
+Detailed guide for:
+- Understanding the 100 req/min rate limit
+- Adjusting limits if needed
+- Whitelisting specific IPs
+- Monitoring rate limit events
+- Testing procedures
 
 ---
 
-## Rate Limiting (Story 0.9 - Phase 3)
+## Rate Limiting (Story 0.9 - Phase 1)
 
 Rate limiting protects sebc.dev from:
 
@@ -125,7 +141,13 @@ Rate limiting protects sebc.dev from:
 - API abuse
 - Volumetric DoS attacks
 
-**Documentation**: `rate-limiting-rules.md` (added in Phase 1 Commit 3)
+**Current Configuration**:
+- **Rate**: 100 requests per minute per IP
+- **Action**: Block (HTTP 429)
+- **Timeout**: 1 minute
+- **Status**: ✅ Active and configured
+
+**Documentation**: [`rate-limiting-rules.md`](./rate-limiting-rules.md) (Phase 1 Commit 2)
 
 ---
 
@@ -146,26 +168,35 @@ Identity and access management for sensitive resources:
 
 ### Cloudflare Dashboard
 
-- **Dashboard**: https://dash.cloudflare.com
+**Dashboard Access**: https://dash.cloudflare.com
 - **Zone**: sebc.dev
-- **Access Guide**: See `docs/deployment/cloudflare-dashboard-access.md` (Phase 1 Commit 4)
+- **Full Access Guide**: [`docs/deployment/cloudflare-dashboard-access.md`](../deployment/cloudflare-dashboard-access.md)
+
+**Key Sections**:
+- Security Overview: Security > Overview
+- WAF Status: Security > WAF > Overview
+- Security Events: Security > Analytics (or Firewall Events)
+- Rate Limiting Rules: Security > WAF > Rate Limiting Rules
+- Custom Rules: Security > WAF > Custom rules
 
 ### Security Analytics
 
 View security events and metrics:
 
-1. Log into Cloudflare Dashboard
-2. Select **sebc.dev** zone
-3. Click **Security** > **Analytics**
-4. View real-time security metrics
+1. **Navigate to**: https://dash.cloudflare.com
+2. **Select Zone**: sebc.dev
+3. **Click**: Security > Analytics (or Firewall Events)
+4. **View**: Real-time security metrics and blocked requests
 
-### Documentation
+### Documentation Hub
 
-| Document                                             | Purpose                  | Audience         |
-| ---------------------------------------------------- | ------------------------ | ---------------- |
-| [`waf-configuration.md`](./waf-configuration.md)     | WAF setup and management | All team members |
-| [`rate-limiting-rules.md`](./rate-limiting-rules.md) | Rate limiting details    | DevOps, Security |
-| `docs/deployment/cloudflare-dashboard-access.md`     | Dashboard access guide   | All team members |
+Complete security documentation organized by task:
+
+| Document                                             | Purpose                                    | Audience         | Phase     |
+| ---------------------------------------------------- | ------------------------------------------ | ---------------- | --------- |
+| [`waf-configuration.md`](./waf-configuration.md)     | WAF setup, rollback, troubleshooting       | All team members | 1 (Done)  |
+| [`rate-limiting-rules.md`](./rate-limiting-rules.md) | Rate limiting configuration & tuning      | DevOps, Security | 1 (Done)  |
+| [`cloudflare-dashboard-access.md`](../deployment/cloudflare-dashboard-access.md) | Dashboard navigation & permissions | All team members | 1 (Done)  |
 
 ---
 

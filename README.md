@@ -149,11 +149,18 @@ pnpm deploy           # Deploy vers Cloudflare
 
 ## 📚 Documentation
 
+### Product & Architecture
+
 - **[Brief Projet](docs/specs/Brief.md)** - Vue d'ensemble et objectifs
 - **[Architecture Technique](docs/specs/Architecture_technique.md)** - Détails de la stack
 - **[Concept Produit](docs/specs/Concept.md)** - Vision et fonctionnalités
 - **[SPECS_WORKFLOW.md](.claude/SPECS_WORKFLOW.md)** - Système de workflow complet
+
+### Development & Operations
+
 - **[CLAUDE.md](CLAUDE.md)** - Guide pour Claude Code
+- **[Security Documentation](docs/security/README.md)** - Cloudflare Access, WAF, et protection
+- **[Deployment Guides](docs/deployment/)** - Configuration Cloudflare et déploiement
 
 ## 🚀 Démarrage Rapide
 
