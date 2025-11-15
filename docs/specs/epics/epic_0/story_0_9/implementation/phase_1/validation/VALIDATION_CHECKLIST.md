@@ -16,6 +16,7 @@ Complete validation checklist before marking Phase 1 as complete.
 - [ ] Git history is clean and tells a clear story
 
 **Validation**:
+
 ```bash
 # Check commit history
 git log --oneline --grep="Story 0.9 Phase 1"
@@ -39,6 +40,7 @@ git log --oneline --grep="Story 0.9 Phase 1"
 - [ ] WAF Overview shows expected rulesets
 
 **Validation**:
+
 ```bash
 # Manual check in dashboard:
 # Navigate to: Cloudflare Dashboard > sebc.dev > Security > WAF > Overview
@@ -53,6 +55,7 @@ git log --oneline --grep="Story 0.9 Phase 1"
 - [ ] Ruleset shows as "Enabled" in Managed Rules list
 
 **Validation**:
+
 ```bash
 # Manual check in dashboard:
 # Navigate to: Security > WAF > Managed Rules
@@ -67,6 +70,7 @@ git log --oneline --grep="Story 0.9 Phase 1"
 - [ ] Default action respected (varies by rule)
 
 **Validation**:
+
 ```bash
 # Manual check in dashboard:
 # Navigate to: Security > WAF > Managed Rules
@@ -83,6 +87,7 @@ git log --oneline --grep="Story 0.9 Phase 1"
 - [ ] Mitigation timeout = 1 minute
 
 **Validation**:
+
 ```bash
 # Manual check in dashboard:
 # Navigate to: Security > WAF > Rate Limiting Rules
@@ -103,6 +108,7 @@ git log --oneline --grep="Story 0.9 Phase 1"
 - [ ] `README.md` (project root) updated with security docs link
 
 **Validation**:
+
 ```bash
 # Verify all documentation files exist
 ls docs/security/waf-configuration.md
@@ -124,6 +130,7 @@ ls README.md
 - [ ] Configuration history section present (for future updates)
 
 **Validation**:
+
 ```bash
 # Manual review of each document
 # Check for: Headers, sections, completeness, clarity
@@ -140,6 +147,7 @@ ls README.md
 - [ ] No sensitive information in screenshots (account IDs redacted if needed)
 
 **Validation**:
+
 ```bash
 # Verify screenshots exist (if stored as files)
 # OR verify screenshots embedded in markdown documents
@@ -159,6 +167,7 @@ ls README.md
 - [ ] No discrepancies between docs and actual configuration
 
 **Validation**:
+
 ```bash
 # Manual cross-check:
 # Open: docs/security/waf-configuration.md
@@ -179,6 +188,7 @@ ls README.md
 - [ ] Recovery time estimates provided
 
 **Validation**:
+
 ```bash
 # Check: docs/security/waf-configuration.md
 # Verify "Rollback Procedures" section exists and is complete
@@ -196,6 +206,7 @@ ls README.md
 - [ ] No false positives detected (no legitimate traffic blocked)
 
 **Validation**:
+
 ```bash
 # Test homepage loads
 curl -I https://sebc.dev
@@ -223,6 +234,7 @@ curl -I https://sebc.dev/api/health
 - [ ] Dashboard bookmarked for future Phase 2 log analysis
 
 **Validation**:
+
 ```bash
 # Manual check in dashboard:
 # Navigate to: Security > Events (or Security > Analytics)
@@ -249,6 +261,7 @@ curl -I https://sebc.dev/api/health
 - [ ] No broken links (404s)
 
 **Validation**:
+
 ```bash
 # Manual check:
 # Open each document in markdown renderer
@@ -265,6 +278,7 @@ curl -I https://sebc.dev/api/health
 - [ ] No placeholder text ([TODO], TBD, [Insert screenshot])
 
 **Validation**:
+
 ```bash
 # Manual review of all documents
 # Check: Heading structure, formatting, placeholders
@@ -288,6 +302,7 @@ curl -I https://sebc.dev/api/health
 - [ ] Response headers indicate Cloudflare proxy is active
 
 **Validation**:
+
 ```bash
 # Check response headers
 curl -v https://sebc.dev 2>&1 | grep -i cloudflare
@@ -317,6 +332,7 @@ curl -v https://sebc.dev 2>&1 | grep -i cloudflare
 - [ ] Cloudflare Edge processing fast (<10ms overhead expected)
 
 **Validation**:
+
 ```bash
 # Test page load time (rough baseline)
 time curl -I https://sebc.dev
@@ -348,6 +364,7 @@ time curl -I https://sebc.dev
 - [ ] Troubleshooting guide covers common scenarios
 
 **Validation**:
+
 ```bash
 # Ask: Can a new team member access and understand WAF docs?
 # Check: README.md links to docs/security/README.md
@@ -384,6 +401,7 @@ time curl -I https://sebc.dev
 - [ ] Only documentation files changed
 
 **Validation**:
+
 ```bash
 # Check git diff for code changes
 git diff HEAD~4 HEAD --name-only | grep -v "^docs/"
@@ -448,20 +466,20 @@ git diff HEAD~4 HEAD --name-only | grep -v "^docs/"
 
 ## 📊 Success Metrics
 
-| Metric                          | Target            | Actual | Status |
-| ------------------------------- | ----------------- | ------ | ------ |
-| Commits Completed               | 4                 | -      | ⏳     |
-| WAF Status                      | Active            | -      | ⏳     |
-| OWASP Mode                      | Log               | -      | ⏳     |
-| Cloudflare Managed Status       | Enabled           | -      | ⏳     |
-| Rate Limiting Configured        | 100 req/min Block | -      | ⏳     |
-| Documentation Files Created     | 5                 | -      | ⏳     |
-| Screenshots Captured            | 4+                | -      | ⏳     |
-| Smoke Tests Pass Rate           | 100%              | -      | ⏳     |
-| False Positives                 | 0                 | -      | ⏳     |
-| Configuration Matches Docs      | 100%              | -      | ⏳     |
-| Links Functional                | 100%              | -      | ⏳     |
-| Team Can Access Dashboard       | Yes               | -      | ⏳     |
+| Metric                      | Target            | Actual | Status |
+| --------------------------- | ----------------- | ------ | ------ |
+| Commits Completed           | 4                 | -      | ⏳     |
+| WAF Status                  | Active            | -      | ⏳     |
+| OWASP Mode                  | Log               | -      | ⏳     |
+| Cloudflare Managed Status   | Enabled           | -      | ⏳     |
+| Rate Limiting Configured    | 100 req/min Block | -      | ⏳     |
+| Documentation Files Created | 5                 | -      | ⏳     |
+| Screenshots Captured        | 4+                | -      | ⏳     |
+| Smoke Tests Pass Rate       | 100%              | -      | ⏳     |
+| False Positives             | 0                 | -      | ⏳     |
+| Configuration Matches Docs  | 100%              | -      | ⏳     |
+| Links Functional            | 100%              | -      | ⏳     |
+| Team Can Access Dashboard   | Yes               | -      | ⏳     |
 
 ---
 

@@ -42,6 +42,7 @@ WAF enabled            Threat intel active       DoS prevention      Audit ready
 ### Commit 1: Enable WAF & OWASP Core Rule Set
 
 **Files**:
+
 - `docs/security/waf-configuration.md` (new)
 - `docs/security/README.md` (new or updated)
 
@@ -77,6 +78,7 @@ WAF enabled            Threat intel active       DoS prevention      Audit ready
 - **Safe rollback**: Can disable OWASP Core Rule Set in dashboard if needed
 
 **Cloudflare Dashboard Navigation**:
+
 ```
 Cloudflare Dashboard
   └── Select Zone: sebc.dev
@@ -90,6 +92,7 @@ Cloudflare Dashboard
 ```
 
 **Technical Validation**:
+
 ```bash
 # Verify WAF is enabled (manual check in dashboard)
 # Navigate to: Security > WAF > Overview
@@ -102,6 +105,7 @@ curl -I https://sebc.dev
 ```
 
 **Expected Result**:
+
 - WAF enabled in Cloudflare Dashboard
 - OWASP Core Rule Set visible as "Enabled" (Log mode)
 - Homepage still loads normally (no blocking yet)
@@ -120,6 +124,7 @@ curl -I https://sebc.dev
 ### Commit 2: Activate Cloudflare Managed Ruleset
 
 **Files**:
+
 - `docs/security/waf-configuration.md` (updated)
 
 **Size**: ~100 lines added (documentation)
@@ -147,6 +152,7 @@ curl -I https://sebc.dev
 - **Safe rollback**: Can disable Cloudflare Managed Ruleset without affecting OWASP rules
 
 **Cloudflare Dashboard Navigation**:
+
 ```
 Cloudflare Dashboard
   └── Security > WAF > Managed Rules
@@ -156,6 +162,7 @@ Cloudflare Dashboard
 ```
 
 **Technical Validation**:
+
 ```bash
 # Verify Cloudflare Managed Ruleset is enabled (manual dashboard check)
 # Navigate to: Security > WAF > Managed Rules
@@ -167,6 +174,7 @@ curl -I https://sebc.dev
 ```
 
 **Expected Result**:
+
 - Cloudflare Managed Ruleset enabled (uses global threat intelligence)
 - Homepage still loads normally
 - Documentation updated with Cloudflare Managed Ruleset details
@@ -183,6 +191,7 @@ curl -I https://sebc.dev
 ### Commit 3: Configure Basic Rate Limiting
 
 **Files**:
+
 - `docs/security/rate-limiting-rules.md` (new)
 - `docs/security/waf-configuration.md` (updated with rate limiting reference)
 
@@ -217,6 +226,7 @@ curl -I https://sebc.dev
 - **Safe rollback**: Can disable rate limiting rule without affecting other WAF components
 
 **Cloudflare Dashboard Navigation**:
+
 ```
 Cloudflare Dashboard
   └── Security > WAF > Rate Limiting Rules
@@ -233,6 +243,7 @@ Cloudflare Dashboard
 ```
 
 **Technical Validation**:
+
 ```bash
 # Verify rate limiting is configured (manual dashboard check)
 # Navigate to: Security > WAF > Rate Limiting Rules
@@ -249,6 +260,7 @@ curl -I https://sebc.dev
 ```
 
 **Expected Result**:
+
 - Rate limiting rule created and enabled
 - Global protection against volumetric attacks (100 req/min per IP)
 - Documentation explains rate limiting configuration
@@ -267,6 +279,7 @@ curl -I https://sebc.dev
 ### Commit 4: Comprehensive Documentation & Screenshots
 
 **Files**:
+
 - `docs/deployment/cloudflare-dashboard-access.md` (new)
 - `docs/security/waf-configuration.md` (final polish)
 - `docs/security/README.md` (final update)
@@ -309,6 +322,7 @@ curl -I https://sebc.dev
 - **Safe rollback**: Documentation-only changes
 
 **Technical Validation**:
+
 ```bash
 # Verify all documentation files exist
 ls docs/security/waf-configuration.md
@@ -321,6 +335,7 @@ ls docs/deployment/cloudflare-dashboard-access.md
 ```
 
 **Expected Result**:
+
 - Complete documentation covering all WAF configuration
 - Dashboard access guide for team members
 - Rollback procedures documented
@@ -390,13 +405,13 @@ All must pass before moving to next commit.
 
 ## 📊 Commit Metrics
 
-| Commit     | Files      | Lines     | Configuration | Documentation | Review   | Total    |
-| ---------- | ---------- | --------- | ------------- | ------------- | -------- | -------- |
-| 1. OWASP   | 2          | ~250      | 30-45 min     | 15-20 min     | 15 min   | 1-1.5h   |
-| 2. CF Mgd  | 1          | ~100      | 20-30 min     | 10-15 min     | 10 min   | 40-55min |
-| 3. Rate    | 2          | ~200      | 30-45 min     | 15-20 min     | 15 min   | 1-1.5h   |
-| 4. Docs    | 4          | ~250      | 0 min         | 30-45 min     | 20 min   | 50-65min |
-| **TOTAL**  | **9 files**| **~800**  | **1.5-2h**    | **1.5-2h**    | **1h**   | **4-5h** |
+| Commit    | Files       | Lines    | Configuration | Documentation | Review | Total    |
+| --------- | ----------- | -------- | ------------- | ------------- | ------ | -------- |
+| 1. OWASP  | 2           | ~250     | 30-45 min     | 15-20 min     | 15 min | 1-1.5h   |
+| 2. CF Mgd | 1           | ~100     | 20-30 min     | 10-15 min     | 10 min | 40-55min |
+| 3. Rate   | 2           | ~200     | 30-45 min     | 15-20 min     | 15 min | 1-1.5h   |
+| 4. Docs   | 4           | ~250     | 0 min         | 30-45 min     | 20 min | 50-65min |
+| **TOTAL** | **9 files** | **~800** | **1.5-2h**    | **1.5-2h**    | **1h** | **4-5h** |
 
 **Note**: Total time includes configuration, documentation, and review. Excludes time for log accumulation (happens passively between Phase 1 and Phase 2).
 
@@ -429,6 +444,7 @@ All must pass before moving to next commit.
 ### Commit Messages
 
 Format (documentation commits for configuration changes):
+
 ```
 🔧 docs(security): enable WAF OWASP Core Rule Set
 
@@ -442,6 +458,7 @@ Part of Story 0.9 Phase 1 - Commit 1/4
 ```
 
 Types:
+
 - `🔧 docs(security)`: Configuration + documentation (use for all Phase 1 commits)
 - `🔒 security`: For actual security code changes (not applicable in Phase 1)
 
@@ -485,6 +502,7 @@ Before each commit:
 **Why**: Log mode allows monitoring without blocking legitimate users. Phase 2 will analyze logs before switching to Block mode.
 
 **If you accidentally enable Block mode**:
+
 1. Immediately switch back to "Log" mode
 2. Check Cloudflare Security Analytics for any blocked requests
 3. Document the incident in `docs/security/waf-configuration.md`
@@ -496,6 +514,7 @@ Before each commit:
 **Why**: Better to start lenient and tighten later than block legitimate users.
 
 **If rate limiting blocks legitimate traffic**:
+
 1. Immediately increase rate limit or disable rule
 2. Check Cloudflare Firewall Events for blocked IPs
 3. Whitelist known good IPs if needed

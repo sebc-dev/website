@@ -36,18 +36,18 @@ Pour les développeurs et mainteneurs du projet, cet epic fournit une base techn
 
 This epic contains **10 stories** as defined in the PRD:
 
-| Story | Title                                  | Description                                                   | Status         | Phases | Progress                           |
-| ----- | -------------------------------------- | ------------------------------------------------------------- | -------------- | ------ | ---------------------------------- |
-| 0.1   | Initialiser le projet Next.js 15       | Next.js 15.4.7 + React 19 + TypeScript 5 + App Router         | ✅ COMPLETED   | 3      | 3/3                                |
-| 0.2   | Configurer adaptateur OpenNext         | `@opennextjs/cloudflare` v1.3.0 installé et configuré         | ✅ COMPLETED   | -      | ✅                                 |
-| 0.3   | Configurer TailwindCSS 4 + shadcn/ui   | TailwindCSS 4 + shadcn/ui + palette projet (teal #14B8A6)     | ✅ COMPLETED   | -      | ✅                                 |
-| 0.4   | Configurer Drizzle ORM + Cloudflare D1 | Schéma initial + migrations setup                             | ✅ COMPLETED   | 5      | 5/5                                |
-| 0.5   | Configurer wrangler.toml avec bindings | All bindings configured (D1, R2, DO Queue, DO Tags, Service)  | ✅ COMPLETED   | 3      | 3/3                                |
-| 0.6   | Configurer compatibility flags         | `nodejs_compat` + `compatibility_date: 2025-03-01`            | ✅ COMPLETED   | -      | ✅                                 |
-| 0.7   | Mettre en place CI/CD GitHub Actions   | Pipeline de tests, build OpenNext, migrations D1, déploiement | ✅ COMPLETED   | 4      | 4/4                                |
-| 0.8   | Configurer Cloudflare Access           | Protection routes `/admin/*` avec Zero Trust                  | ✅ COMPLETED   | 4      | 4/4                                |
-| 0.9   | Configurer Cloudflare WAF              | Sécurité de base contre menaces web                           | 🚧 IN PROGRESS | 3      | 0/3 📋 (Phase 1 docs generated)    |
-| 0.10  | Base tests & linting                   | ESLint + Vitest (avec tests) + Playwright configurés          | ✅ COMPLETED   | -      | ✅                                 |
+| Story | Title                                  | Description                                                   | Status         | Phases | Progress                        |
+| ----- | -------------------------------------- | ------------------------------------------------------------- | -------------- | ------ | ------------------------------- |
+| 0.1   | Initialiser le projet Next.js 15       | Next.js 15.4.7 + React 19 + TypeScript 5 + App Router         | ✅ COMPLETED   | 3      | 3/3                             |
+| 0.2   | Configurer adaptateur OpenNext         | `@opennextjs/cloudflare` v1.3.0 installé et configuré         | ✅ COMPLETED   | -      | ✅                              |
+| 0.3   | Configurer TailwindCSS 4 + shadcn/ui   | TailwindCSS 4 + shadcn/ui + palette projet (teal #14B8A6)     | ✅ COMPLETED   | -      | ✅                              |
+| 0.4   | Configurer Drizzle ORM + Cloudflare D1 | Schéma initial + migrations setup                             | ✅ COMPLETED   | 5      | 5/5                             |
+| 0.5   | Configurer wrangler.toml avec bindings | All bindings configured (D1, R2, DO Queue, DO Tags, Service)  | ✅ COMPLETED   | 3      | 3/3                             |
+| 0.6   | Configurer compatibility flags         | `nodejs_compat` + `compatibility_date: 2025-03-01`            | ✅ COMPLETED   | -      | ✅                              |
+| 0.7   | Mettre en place CI/CD GitHub Actions   | Pipeline de tests, build OpenNext, migrations D1, déploiement | ✅ COMPLETED   | 4      | 4/4                             |
+| 0.8   | Configurer Cloudflare Access           | Protection routes `/admin/*` avec Zero Trust                  | ✅ COMPLETED   | 4      | 4/4                             |
+| 0.9   | Configurer Cloudflare WAF              | Sécurité de base contre menaces web                           | 🚧 IN PROGRESS | 3      | 0/3 📋 (Phase 1 docs generated) |
+| 0.10  | Base tests & linting                   | ESLint + Vitest (avec tests) + Playwright configurés          | ✅ COMPLETED   | -      | ✅                              |
 
 **Columns Explained**:
 

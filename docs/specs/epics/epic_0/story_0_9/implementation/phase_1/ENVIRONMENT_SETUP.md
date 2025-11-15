@@ -20,6 +20,7 @@ This guide covers all environment setup needed for Phase 1 (WAF Core Configurati
 - [ ] **Administrator** or **Super Administrator** role
 
 **Verification**:
+
 ```bash
 # Navigate to: https://dash.cloudflare.com
 # Select zone: sebc.dev
@@ -30,6 +31,7 @@ This guide covers all environment setup needed for Phase 1 (WAF Core Configurati
 **Why Pro Plan**: Advanced WAF features (OWASP Core Rule Set, Cloudflare Managed Ruleset, custom rules) require Pro plan or higher. Free plans have limited WAF capabilities.
 
 **If you don't have Pro plan**:
+
 - Upgrade at: https://dash.cloudflare.com/[account-id]/sebc.dev/analytics
 - Contact account owner to upgrade plan
 - Estimated cost: ~$20/month for Pro plan
@@ -42,6 +44,7 @@ This guide covers all environment setup needed for Phase 1 (WAF Core Configurati
 - [ ] **Git**: For committing documentation
 
 **Verification**:
+
 ```bash
 # Verify curl is installed
 curl --version
@@ -59,6 +62,7 @@ git --version
 - [ ] **Application accessible** (homepage loads at https://sebc.dev)
 
 **Verification**:
+
 ```bash
 # Test homepage loads
 curl -I https://sebc.dev
@@ -94,6 +98,7 @@ dig sebc.dev +short
 3. You should see WAF Overview page
 
 **Dashboard Navigation Path**:
+
 ```
 Cloudflare Dashboard
   └── Select Zone: sebc.dev
@@ -114,6 +119,7 @@ Cloudflare Dashboard
 4. **If button is disabled or missing**: You need higher permissions ❌
 
 **If you don't have permissions**:
+
 - Contact your Cloudflare account administrator
 - Request "Administrator" role for sebc.dev zone
 - Provide reason: "Need to configure WAF for Story 0.9"
@@ -149,6 +155,7 @@ WAF configuration is stored in Cloudflare's infrastructure, not in your applicat
 **Service Type**: Managed Cloudflare service (no manual setup required)
 
 **Access**:
+
 - **URL**: https://dash.cloudflare.com
 - **Zone**: sebc.dev
 - **Navigation**: Security > WAF
@@ -161,11 +168,13 @@ WAF configuration is stored in Cloudflare's infrastructure, not in your applicat
 4. Verify you can see WAF Overview page (may show "No rules deployed" if first time)
 
 **Expected State Before Phase 1**:
+
 - WAF section accessible
 - No managed rulesets deployed (unless previously configured)
 - Rate limiting rules may be empty
 
 **If WAF section is missing**:
+
 - Verify you have Cloudflare Pro plan (Free plans have limited access)
 - Verify you're on the correct zone (sebc.dev)
 - Contact Cloudflare support if issue persists
@@ -177,6 +186,7 @@ WAF configuration is stored in Cloudflare's infrastructure, not in your applicat
 **Purpose**: Monitor WAF events and analyze traffic patterns
 
 **Access**:
+
 - **Navigation**: Security > Analytics OR Security > Events
 
 **Setup**: No setup required, automatically available with WAF
@@ -190,6 +200,7 @@ WAF configuration is stored in Cloudflare's infrastructure, not in your applicat
 ```
 
 **Key Metrics to Monitor**:
+
 - Total requests
 - Requests blocked by WAF
 - Requests challenged
@@ -207,6 +218,7 @@ WAF configuration is stored in Cloudflare's infrastructure, not in your applicat
 **Purpose**: Verify you can access Cloudflare Dashboard and sebc.dev zone
 
 **Steps**:
+
 1. Open browser
 2. Navigate to: https://dash.cloudflare.com
 3. Login with your credentials
@@ -214,12 +226,14 @@ WAF configuration is stored in Cloudflare's infrastructure, not in your applicat
 5. Navigate to: Security > WAF
 
 **Expected Result**:
+
 - ✅ Dashboard loads successfully
 - ✅ sebc.dev zone selectable
 - ✅ WAF section accessible
 - ✅ "Deploy managed ruleset" button visible (or similar WAF configuration options)
 
 **If test fails**:
+
 - Verify login credentials
 - Verify sebc.dev zone exists in your account
 - Verify you have Administrator role
@@ -232,6 +246,7 @@ WAF configuration is stored in Cloudflare's infrastructure, not in your applicat
 **Purpose**: Verify sebc.dev is deployed and accessible (baseline before WAF)
 
 **Test Commands**:
+
 ```bash
 # Test homepage loads
 curl -I https://sebc.dev
@@ -250,11 +265,13 @@ curl -v https://sebc.dev
 ```
 
 **Expected Result**:
+
 - ✅ HTTP 200 OK response
 - ✅ Cloudflare headers present (`server: cloudflare`, `cf-ray`, etc.)
 - ✅ HTML content loads correctly
 
 **If test fails**:
+
 - Verify Story 0.7 (deployment) is complete
 - Verify DNS is configured correctly: `dig sebc.dev +short`
 - Verify application is deployed to Cloudflare Workers
@@ -267,14 +284,17 @@ curl -v https://sebc.dev
 **Purpose**: Confirm WAF is in "unconfigured" state before Phase 1
 
 **Steps**:
+
 1. Navigate to: Security > WAF > Managed Rules
 2. Check if any managed rulesets are deployed
 
 **Expected Result**:
+
 - ✅ **Before Phase 1**: No managed rulesets deployed (or only default/basic rules)
 - ✅ **After Phase 1**: OWASP Core Rule Set + Cloudflare Managed Ruleset deployed
 
 **If managed rulesets already exist**:
+
 - Document existing configuration
 - Decide whether to keep or replace with Phase 1 configuration
 - Consult with team before making changes
@@ -286,10 +306,12 @@ curl -v https://sebc.dev
 ### Issue: "WAF section not visible in dashboard"
 
 **Symptoms**:
+
 - Security section exists but no WAF submenu
 - WAF Overview shows "Upgrade required" message
 
 **Solutions**:
+
 1. **Verify Cloudflare plan**:
    - Navigate to: Account > Billing
    - Check plan type for sebc.dev
@@ -309,6 +331,7 @@ curl -v https://sebc.dev
    ```
 
 **Verify Fix**:
+
 - WAF section should now be visible
 - "Deploy managed ruleset" button accessible
 
@@ -317,11 +340,14 @@ curl -v https://sebc.dev
 ### Issue: "Insufficient permissions to configure WAF"
 
 **Symptoms**:
+
 - WAF section visible but "Deploy managed ruleset" button disabled
 - Error message: "You don't have permission to perform this action"
 
 **Solutions**:
+
 1. **Check your role**:
+
    ```bash
    # Navigate to: Account > Members
    # Find your account in the list
@@ -340,6 +366,7 @@ curl -v https://sebc.dev
    - Use Cloudflare API to configure WAF (advanced, not recommended for Phase 1)
 
 **Verify Fix**:
+
 - Role updated to Administrator
 - "Deploy managed ruleset" button now clickable
 
@@ -348,11 +375,14 @@ curl -v https://sebc.dev
 ### Issue: "Homepage not loading (404 or 522 error)"
 
 **Symptoms**:
+
 - `curl https://sebc.dev` returns 404 Not Found
 - or: 522 Connection Timed Out
 
 **Solutions**:
+
 1. **Verify deployment (Story 0.7)**:
+
    ```bash
    # Check if Worker is deployed
    # Navigate to: Workers & Pages
@@ -360,6 +390,7 @@ curl -v https://sebc.dev
    ```
 
 2. **Verify DNS configuration**:
+
    ```bash
    # Check DNS records
    dig sebc.dev +short
@@ -373,6 +404,7 @@ curl -v https://sebc.dev
    - If "DNS only" (grey cloud): Click to enable proxy
 
 **Verify Fix**:
+
 ```bash
 curl -I https://sebc.dev
 # Expected: HTTP 200 OK
@@ -383,12 +415,14 @@ curl -I https://sebc.dev
 ### Issue: "Can't take screenshots"
 
 **Symptoms**:
+
 - Screenshot tool not working
 - Need to capture dashboard configuration for documentation
 
 **Solutions**:
 
 **macOS**:
+
 ```bash
 # Full screen: Cmd + Shift + 3
 # Selection: Cmd + Shift + 4
@@ -396,6 +430,7 @@ curl -I https://sebc.dev
 ```
 
 **Windows**:
+
 ```bash
 # Snipping Tool: Win + Shift + S
 # Full screen: PrtScn (Print Screen key)
@@ -403,6 +438,7 @@ curl -I https://sebc.dev
 ```
 
 **Linux (Ubuntu/GNOME)**:
+
 ```bash
 # Selection: Shift + PrtScn
 # Full screen: PrtScn
@@ -410,11 +446,13 @@ curl -I https://sebc.dev
 ```
 
 **Alternative: Browser extensions**:
+
 - Install: Fireshot (Chrome/Firefox)
 - Or: Awesome Screenshot (Chrome/Firefox)
 - Or: Use browser DevTools: F12 > Cmd/Ctrl + Shift + P > "Screenshot"
 
 **Verify Fix**:
+
 - Successfully capture dashboard screenshot
 - Screenshot saved to accessible location
 
@@ -471,6 +509,7 @@ Complete this checklist before starting Phase 1 implementation:
 **If all checkboxes above are checked, you're ready to begin Phase 1 implementation! 🎉**
 
 Next steps:
+
 1. Read IMPLEMENTATION_PLAN.md for atomic commit strategy
 2. Follow COMMIT_CHECKLIST.md for each commit
 3. Capture screenshots as you configure WAF
