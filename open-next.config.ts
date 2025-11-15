@@ -1,4 +1,5 @@
 import { defineCloudflareConfig } from '@opennextjs/cloudflare';
+import purgeCache from '@opennextjs/cloudflare/overrides/cache-purge/index';
 import r2IncrementalCache from '@opennextjs/cloudflare/overrides/incremental-cache/r2-incremental-cache';
 import doQueue from '@opennextjs/cloudflare/overrides/queue/do-queue';
 import doShardedTagCache from '@opennextjs/cloudflare/overrides/tag-cache/do-sharded-tag-cache';
@@ -11,4 +12,9 @@ export default defineCloudflareConfig({
   queue: doQueue,
   // Sharded tag cache for on-demand revalidations - uses NEXT_TAG_CACHE_DO_SHARDED binding
   tagCache: doShardedTagCache({ baseShardSize: 12 }),
+  // Cache purge for Cloudflare CDN - uses NEXT_CACHE_DO_PURGE binding from wrangler.jsonc
+  // Buffers purge requests through Durable Object to avoid rate limits
+  // Triggered by revalidateTag(), revalidatePath(), or res.revalidate()
+  // Requires CACHE_PURGE_API_TOKEN and CACHE_PURGE_ZONE_ID secrets in wrangler
+  cachePurge: purgeCache({ type: 'durableObject' }),
 });
