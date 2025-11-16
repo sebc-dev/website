@@ -39,9 +39,9 @@ jobs:
         id: filter
         run: |
           # On pull_request, vérifier les fichiers changés
-          # Patterns critiques: app/admin/, lib/server/, lib/utils/
+          # Patterns critiques: app/admin/, lib/server/, lib/utils/ et lib/utils.ts
           if [ "${{ github.event_name }}" = "pull_request" ]; then
-            CRITICAL_CHANGED=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep -E '^(app/admin/|lib/server/|lib/utils/)' || echo "")
+            CRITICAL_CHANGED=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} | grep -E '^(app/admin/|lib/server/|lib/utils)' || echo "")
             if [ -n "$CRITICAL_CHANGED" ]; then
               echo "critical=true" >> $GITHUB_OUTPUT
             else
