@@ -214,19 +214,19 @@ describe('Message Files - Translation Values', () => {
 
 describe('Message Files - Key Count Validation', () => {
   /**
-   * Test: French file has expected number of keys (~50)
-   * Expected: Total key count is approximately 50
+   * Test: French file has expected number of keys (~70+)
+   * Expected: Total key count is approximately 70+ after all translations
    */
-  it('should have approximately 50 keys in French message file', () => {
+  it('should have approximately 70+ keys in French message file', () => {
     const messages = loadMessages('fr');
     const totalKeys = Object.values(messages).reduce(
       (sum: number, namespace: Record<string, string>) => sum + Object.keys(namespace).length,
       0,
     );
 
-    // Allow some flexibility (45-55 keys acceptable)
-    expect(totalKeys).toBeGreaterThanOrEqual(45);
-    expect(totalKeys).toBeLessThanOrEqual(55);
+    // Allow some flexibility (65-75 keys acceptable)
+    expect(totalKeys).toBeGreaterThanOrEqual(65);
+    expect(totalKeys).toBeLessThanOrEqual(75);
   });
 
   /**
@@ -290,6 +290,205 @@ describe('Message Files - Parameterized Values', () => {
   });
 });
 
+/**
+ * Helper function to recursively extract all nested key paths from an object
+ * @param obj - Object to extract keys from
+ * @param prefix - Current key path prefix
+ * @returns Array of full key paths (e.g., ['common.appName', 'nav.home'])
+ */
+function getNestedKeys(
+  obj: Record<string, unknown>,
+  prefix = '',
+): string[] {
+  const keys: string[] = [];
+
+  Object.entries(obj).forEach(([key, value]) => {
+    const fullPath = prefix ? `${prefix}.${key}` : key;
+
+    if (value === null || value === undefined) {
+      // Skip null/undefined values
+      return;
+    }
+
+    if (typeof value === 'object' && !Array.isArray(value)) {
+      // Recursively get nested keys
+      const nestedKeys = getNestedKeys(value as Record<string, unknown>, fullPath);
+      keys.push(...nestedKeys);
+    } else if (typeof value === 'string') {
+      // Leaf node is a string value
+      keys.push(fullPath);
+    }
+  });
+
+  return keys;
+}
+
+/**
+ * Helper function to safely retrieve a value at a nested path
+ * @param obj - Object to retrieve from
+ * @param path - Dot-separated path (e.g., 'common.appName')
+ * @returns The value at the path, or undefined if not found
+ */
+function getValueByPath(
+  obj: Record<string, unknown>,
+  path: string,
+): unknown {
+  const parts = path.split('.');
+  let current: unknown = obj;
+
+  for (const part of parts) {
+    if (typeof current === 'object' && current !== null) {
+      current = (current as Record<string, unknown>)[part];
+    } else {
+      return undefined;
+    }
+  }
+
+  return current;
+}
+
+describe('Message Files - Key Parity Validation', () => {
+  /**
+   * Test: All French keys exist in English (forward parity)
+   * Expected: No missing keys in English file
+   */
+  it('should have all French keys exist in English file (forward parity)', () => {
+    const frMessages = loadMessages('fr');
+    const enMessages = loadMessages('en');
+
+    const frenchKeys = getNestedKeys(frMessages);
+    const missingKeys: string[] = [];
+
+    frenchKeys.forEach((keyPath) => {
+      const value = getValueByPath(enMessages, keyPath);
+      if (value === undefined) {
+        missingKeys.push(keyPath);
+      }
+    });
+
+    if (missingKeys.length > 0) {
+      throw new Error(`Missing English translations for: ${missingKeys.join(', ')}`);
+    }
+    expect(missingKeys).toEqual([]);
+  });
+
+  /**
+   * Test: All English keys exist in French (reverse parity)
+   * Expected: No extra keys in English that don't exist in French
+   */
+  it('should have all English keys exist in French file (reverse parity)', () => {
+    const frMessages = loadMessages('fr');
+    const enMessages = loadMessages('en');
+
+    const englishKeys = getNestedKeys(enMessages);
+    const extraKeys: string[] = [];
+
+    englishKeys.forEach((keyPath) => {
+      const value = getValueByPath(frMessages, keyPath);
+      if (value === undefined) {
+        extraKeys.push(keyPath);
+      }
+    });
+
+    if (extraKeys.length > 0) {
+      throw new Error(`Extra English translations not in French: ${extraKeys.join(', ')}`);
+    }
+    expect(extraKeys).toEqual([]);
+  });
+
+  /**
+   * Test: Key counts match between French and English
+   * Expected: Both files have identical number of keys
+   */
+  it('should have matching key counts between French and English files', () => {
+    const frMessages = loadMessages('fr');
+    const enMessages = loadMessages('en');
+
+    const frenchKeys = getNestedKeys(frMessages);
+    const englishKeys = getNestedKeys(enMessages);
+
+    if (englishKeys.length !== frenchKeys.length) {
+      throw new Error(
+        `English has ${englishKeys.length} keys but French has ${frenchKeys.length}`,
+      );
+    }
+    expect(englishKeys.length).toBe(frenchKeys.length);
+  });
+});
+
+describe('Message Files - Parameterized Translation Validation', () => {
+  /**
+   * Test: Parameterized translations have consistent variable names
+   * Expected: Same variables in French and English translations
+   */
+  it('should have consistent parameterized variables between French and English', () => {
+    const frMessages = loadMessages('fr');
+    const enMessages = loadMessages('en');
+
+    // Get all keys with parameters
+    const allKeys = getNestedKeys(frMessages);
+    const inconsistencies: string[] = [];
+
+    allKeys.forEach((keyPath) => {
+      const frValueRaw = getValueByPath(frMessages, keyPath);
+      const enValueRaw = getValueByPath(enMessages, keyPath);
+
+      const frValue = typeof frValueRaw === 'string' ? frValueRaw : '';
+      const enValue = typeof enValueRaw === 'string' ? enValueRaw : '';
+
+      // Extract all {variable} placeholders
+      const frVariables = Array.from(frValue.matchAll(/\{(\w+)\}/g), (m) => m[1]).sort();
+      const enVariables = Array.from(enValue.matchAll(/\{(\w+)\}/g), (m) => m[1]).sort();
+
+      if (JSON.stringify(frVariables) !== JSON.stringify(enVariables)) {
+        inconsistencies.push(
+          `${keyPath}: FR=[${frVariables.join(', ')}] EN=[${enVariables.join(', ')}]`,
+        );
+      }
+    });
+
+    if (inconsistencies.length > 0) {
+      throw new Error(
+        `Parameterized variable inconsistencies: ${inconsistencies.join('; ')}`,
+      );
+    }
+    expect(inconsistencies).toEqual([]);
+  });
+
+  /**
+   * Test: Parameterized translations can be substituted
+   * Expected: Example substitutions work correctly
+   */
+  it('should allow example parameterized substitutions in article namespace', () => {
+    const frMessages = loadMessages('fr');
+    const enMessages = loadMessages('en');
+
+    // Test readingTime substitution
+    const frReadingTime = frMessages.article?.readingTime || '';
+    const enReadingTime = enMessages.article?.readingTime || '';
+
+    const exampleMinutes = '5';
+    const frResult = frReadingTime.replace('{minutes}', exampleMinutes);
+    const enResult = enReadingTime.replace('{minutes}', exampleMinutes);
+
+    expect(frResult).toContain('5');
+    expect(enResult).toContain('5');
+    expect(frResult).not.toContain('{minutes}');
+    expect(enResult).not.toContain('{minutes}');
+
+    // Test publishedOn substitution
+    const frPublished = frMessages.article?.publishedOn || '';
+    const enPublished = enMessages.article?.publishedOn || '';
+
+    const exampleDate = 'November 16, 2025';
+    const frDateResult = frPublished.replace('{date}', exampleDate);
+    const enDateResult = enPublished.replace('{date}', exampleDate);
+
+    expect(frDateResult).toContain('November 16, 2025');
+    expect(enDateResult).toContain('November 16, 2025');
+  });
+});
+
 describe('Message Files - Integration', () => {
   /**
    * Test: French and English files have same namespace structure
@@ -320,5 +519,31 @@ describe('Message Files - Integration', () => {
     // Common namespace should have certain keys
     const commonKeys = Object.keys(frMessages.common);
     expect(commonKeys.length).toBeGreaterThan(0);
+  });
+
+  /**
+   * Test: No undefined or null values in message files
+   * Expected: All translation values are non-null strings
+   */
+  it('should have no null or undefined values in either message file', () => {
+    const frMessages = loadMessages('fr');
+    const enMessages = loadMessages('en');
+
+    const validateNoNulls = (messages: Record<string, unknown>) => {
+      Object.entries(messages).forEach(([, namespaceObj]) => {
+        if (typeof namespaceObj === 'object' && namespaceObj !== null) {
+          Object.entries(namespaceObj as Record<string, unknown>).forEach(
+            ([, value]) => {
+              expect(value).not.toBeNull();
+              expect(value).not.toBeUndefined();
+              expect(typeof value).toBe('string');
+            },
+          );
+        }
+      });
+    };
+
+    validateNoNulls(frMessages);
+    validateNoNulls(enMessages);
   });
 });
