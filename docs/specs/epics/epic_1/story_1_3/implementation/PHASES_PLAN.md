@@ -351,14 +351,14 @@ Phase Complete: All AC 1-12 verified, documentation ready
 
 ### Overall Estimates
 
-| Metric                   | Estimate         | Notes                                |
-| ------------------------ | ---------------- | ------------------------------------ |
-| **Total Phases**         | 3                | Atomic, independent phases           |
-| **Total Duration**       | 4–6 weeks        | Sequential implementation            |
-| **Parallel Duration**    | 2–3 weeks        | If teams work on parallel tasks      |
-| **Total Commits**        | 6–8              | Across all phases                    |
-| **Total Files**          | ~8–10 new/mod    | Middleware, tests, docs, configs     |
-| **Test Coverage Target** | ≥ 80%            | Unit + integration + E2E             |
+| Metric                   | Estimate      | Notes                            |
+| ------------------------ | ------------- | -------------------------------- |
+| **Total Phases**         | 3             | Atomic, independent phases       |
+| **Total Duration**       | 4–6 weeks     | Sequential implementation        |
+| **Parallel Duration**    | 2–3 weeks     | If teams work on parallel tasks  |
+| **Total Commits**        | 6–8           | Across all phases                |
+| **Total Files**          | ~8–10 new/mod | Middleware, tests, docs, configs |
+| **Test Coverage Target** | ≥ 80%         | Unit + integration + E2E         |
 
 ### Per-Phase Timeline
 
@@ -412,12 +412,12 @@ Phase Complete: All AC 1-12 verified, documentation ready
 
 ### Overall Story Risks
 
-| Risk                    | Likelihood | Impact | Mitigation                                  |
-| ----------------------- | ---------- | ------ | ------------------------------------------- |
-| Cloudflare runtime edge | Medium     | High   | Test in `wrangler dev` + `pnpm preview`    |
-| E2E flakiness           | Medium     | Medium | Fixtures, explicit waits, isolated env     |
-| Type inference issues   | Low        | Medium | Comprehensive TypeScript tests             |
-| Performance degradation | Low        | Medium | Benchmark middleware < 50ms on edge        |
+| Risk                    | Likelihood | Impact | Mitigation                              |
+| ----------------------- | ---------- | ------ | --------------------------------------- |
+| Cloudflare runtime edge | Medium     | High   | Test in `wrangler dev` + `pnpm preview` |
+| E2E flakiness           | Medium     | Medium | Fixtures, explicit waits, isolated env  |
+| Type inference issues   | Low        | Medium | Comprehensive TypeScript tests          |
+| Performance degradation | Low        | Medium | Benchmark middleware < 50ms on edge     |
 
 ---
 
@@ -425,11 +425,11 @@ Phase Complete: All AC 1-12 verified, documentation ready
 
 ### Test Coverage by Phase
 
-| Phase       | Unit Tests    | Integration Tests | E2E Tests |
-| ----------- | ------------- | ----------------- | --------- |
-| 1. Detection | 12–15 tests   | -                 | -         |
-| 2. Cookies   | 8–10 tests    | 6–8 tests         | -         |
-| 3. Validation | -            | -                 | 15–20     |
+| Phase         | Unit Tests  | Integration Tests | E2E Tests |
+| ------------- | ----------- | ----------------- | --------- |
+| 1. Detection  | 12–15 tests | -                 | -         |
+| 2. Cookies    | 8–10 tests  | 6–8 tests         | -         |
+| 3. Validation | -           | -                 | 15–20     |
 
 **Total Tests**: ~50–60 tests across all phases
 
@@ -516,6 +516,7 @@ For each phase, comprehensive technical docs:
    - Identify any missing phases
 
 2. **Set up project structure**
+
    ```bash
    mkdir -p docs/specs/epics/epic_1/story_1_3/implementation/phase_1
    mkdir -p docs/specs/epics/epic_1/story_1_3/implementation/phase_2
@@ -580,15 +581,15 @@ This story is considered complete when:
 
 ### Quality Metrics
 
-| Metric                 | Target               | Actual |
-| ---------------------- | -------------------- | ------ |
-| Test Coverage (Unit)   | ≥ 80%                | -      |
-| Test Coverage (E2E)    | ≥ 80% (AC coverage)  | -      |
-| TypeScript             | 100% (zero errors)   | -      |
-| ESLint                 | Zero critical errors | -      |
-| Performance (P50)      | < 30ms               | -      |
-| Performance (P95)      | < 50ms               | -      |
-| Code Review Approval   | 100%                 | -      |
+| Metric               | Target               | Actual |
+| -------------------- | -------------------- | ------ |
+| Test Coverage (Unit) | ≥ 80%                | -      |
+| Test Coverage (E2E)  | ≥ 80% (AC coverage)  | -      |
+| TypeScript           | 100% (zero errors)   | -      |
+| ESLint               | Zero critical errors | -      |
+| Performance (P50)    | < 30ms               | -      |
+| Performance (P95)    | < 50ms               | -      |
+| Code Review Approval | 100%                 | -      |
 
 ---
 

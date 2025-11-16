@@ -53,6 +53,7 @@ pnpm build
 ```
 
 **Expected Result**:
+
 - `src/middleware.ts` created with middleware skeleton
 - No TypeScript errors
 - ESLint passes
@@ -157,6 +158,7 @@ pnpm build
 ```
 
 **Expected Result**:
+
 - URL detection function works correctly
 - No TypeScript errors
 - ESLint passes
@@ -277,6 +279,7 @@ pnpm build
 ```
 
 **Expected Result**:
+
 - Cookie and header detection functions work correctly
 - Accept-Language parsing handles quality values
 - No TypeScript errors
@@ -420,6 +423,7 @@ pnpm build
 ```
 
 **Expected Result**:
+
 - Full detection pipeline works
 - Redirects are appropriate
 - Public routes are excluded
@@ -606,6 +610,7 @@ pnpm build
 ```
 
 **Expected Result**:
+
 - All unit tests pass
 - Coverage ≥80% (ideally 85%+)
 - No TypeScript errors

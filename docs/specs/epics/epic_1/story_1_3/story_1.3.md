@@ -147,13 +147,13 @@ Implement a Next.js middleware (`src/middleware.ts`) that integrates next-intl f
 
 ## 🗂️ Files to Create/Modify
 
-| File                      | Type      | Purpose                                                     |
-| ------------------------- | --------- | ----------------------------------------------------------- |
-| `src/middleware.ts`       | **Create** | Main middleware for i18n routing and language detection     |
-| `i18n/config.ts`          | **Modify** | Add routing config for middleware (localePrefix, prefixMode) |
-| `i18n/types.ts`           | **Modify** | Export locale types for middleware type safety             |
-| `tsconfig.json`           | **Modify** | Register middleware path alias if needed                    |
-| `.env.local` (dev)        | **Note**  | (Optional) Set `NEXT_PUBLIC_DEFAULT_LOCALE` if env-var driven |
+| File                | Type       | Purpose                                                       |
+| ------------------- | ---------- | ------------------------------------------------------------- |
+| `src/middleware.ts` | **Create** | Main middleware for i18n routing and language detection       |
+| `i18n/config.ts`    | **Modify** | Add routing config for middleware (localePrefix, prefixMode)  |
+| `i18n/types.ts`     | **Modify** | Export locale types for middleware type safety                |
+| `tsconfig.json`     | **Modify** | Register middleware path alias if needed                      |
+| `.env.local` (dev)  | **Note**   | (Optional) Set `NEXT_PUBLIC_DEFAULT_LOCALE` if env-var driven |
 
 ---
 
