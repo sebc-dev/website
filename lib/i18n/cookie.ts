@@ -4,8 +4,6 @@
  * Provides type-safe functions for managing the NEXT_LOCALE cookie with secure flags.
  * Supports HTTP cookie operations with security best practices (HttpOnly, SameSite, Secure).
  *
- * @module lib/i18n/cookie
- *
  * @see https://nextjs.org/docs/app/building-your-application/routing/middleware
  * @see https://owasp.org/www-community/attacks/Cookie_Security
  */
@@ -22,8 +20,6 @@ export interface CookieOptions {
    * Cookie expiration time in seconds
    *
    * Defaults to 31536000 (1 year)
-   *
-   * @default 31536000
    */
   maxAge?: number;
 
@@ -34,7 +30,7 @@ export interface CookieOptions {
    * - 'lax': Cookie sent in top-level navigation from other sites (default)
    * - 'none': Cookie sent in all requests (requires Secure flag)
    *
-   * @default 'lax'
+   * Defaults to 'lax'
    *
    * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite
    */
@@ -47,7 +43,7 @@ export interface CookieOptions {
    * In development (NODE_ENV !== 'production'), this is conditionally set to false
    * to allow testing over HTTP.
    *
-   * @default true in production, false in development
+   * Defaults to true in production, false in development
    *
    * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#secure
    */
@@ -59,7 +55,7 @@ export interface CookieOptions {
    * When set to true, cookie cannot be accessed from JavaScript (document.cookie),
    * only sent with HTTP requests. This protects against XSS attacks.
    *
-   * @default true
+   * Defaults to true
    *
    * @see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie#httponly
    */
@@ -70,7 +66,7 @@ export interface CookieOptions {
    *
    * Restricts the cookie to a specific URL path within the domain.
    *
-   * @default '/'
+   * Defaults to '/'
    */
   path?: string;
 }
@@ -118,12 +114,14 @@ export function getCookie(
  * @returns The Set-Cookie header value
  *
  * @example
+ * ```ts
  * // Create a language preference cookie
  * const cookieHeader = setCookie('NEXT_LOCALE', 'en', {
  *   maxAge: 31536000,
  *   sameSite: 'lax',
  * });
  * // Returns: 'NEXT_LOCALE=en; Max-Age=31536000; SameSite=Lax; HttpOnly; Path=/; Secure' (in prod)
+ * ```
  *
  * @remarks
  * The cookie includes these default security flags:
