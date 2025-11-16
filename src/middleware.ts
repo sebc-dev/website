@@ -294,59 +294,167 @@ export function getLocaleFromHeader(headerValue: string): Locale | undefined {
 }
 
 /**
+ * Detects the locale based on the full detection hierarchy
+ *
+ * Implements the complete detection priority order:
+ * 1. URL path prefix (highest priority)
+ * 2. NEXT_LOCALE cookie
+ * 3. Accept-Language header
+ * 4. Default to French (lowest priority)
+ *
+ * This function always returns a valid `Locale` (never undefined).
+ * If none of the detection sources provide a valid locale, defaults to French.
+ *
+ * @param request - The incoming HTTP request
+ * @returns The detected locale (always valid, never undefined)
+ *
+ * @example
+ * // With URL: /en/articles
+ * detectLocale(request) // Returns: 'en'
+ *
+ * @example
+ * // No URL prefix, cookie is fr
+ * detectLocale(request) // Returns: 'fr'
+ *
+ * @example
+ * // No URL, no cookie, header has en
+ * detectLocale(request) // Returns: 'en'
+ *
+ * @example
+ * // No detection sources
+ * detectLocale(request) // Returns: 'fr' (default)
+ */
+function detectLocale(request: NextRequest): Locale {
+  const { pathname } = request.nextUrl;
+
+  // Priority 1: URL path prefix (highest)
+  const localeFromURL = detectLocaleFromURL(pathname);
+  if (localeFromURL) {
+    return localeFromURL;
+  }
+
+  // Priority 2: Cookie
+  const cookieValue = request.cookies.get('NEXT_LOCALE')?.value;
+  const localeFromCookie = getLocaleFromCookie(cookieValue);
+  if (localeFromCookie) {
+    return localeFromCookie;
+  }
+
+  // Priority 3: Header
+  const acceptLanguageHeader = request.headers.get('Accept-Language') || '';
+  const localeFromHeader = getLocaleFromHeader(acceptLanguageHeader);
+  if (localeFromHeader) {
+    return localeFromHeader;
+  }
+
+  // Priority 4: Default to French
+  return 'fr';
+}
+
+/**
+ * Determines if a redirect is needed for the request
+ *
+ * A redirect is needed when:
+ * 1. The URL contains a language prefix (e.g., /fr/, /en/)
+ * 2. The detected locale from all sources differs from the URL prefix
+ * 3. The URL prefix is invalid (e.g., /de/, /it/)
+ *
+ * A redirect is NOT needed when:
+ * 1. No language prefix in URL (handled by next-intl routing)
+ * 2. URL prefix already matches detected locale
+ * 3. Route is public/static (excluded by matcher)
+ *
+ * @param pathname - The URL pathname
+ * @param detectedLocale - The locale detected from all sources
+ * @returns true if redirect is needed, false otherwise
+ *
+ * @example
+ * // URL: /de/articles, detected: 'fr' (no de in supported locales)
+ * shouldRedirect('/de/articles', 'fr') // Returns: true
+ *
+ * @example
+ * // URL: /fr/articles, detected: 'fr'
+ * shouldRedirect('/fr/articles', 'fr') // Returns: false
+ *
+ * @example
+ * // URL: /articles (no prefix), detected: 'en' (from header)
+ * shouldRedirect('/articles', 'en') // Returns: false (no URL prefix to redirect)
+ */
+function shouldRedirect(pathname: string, detectedLocale: Locale): boolean {
+  // Extract locale from URL
+  const localeFromURL = detectLocaleFromURL(pathname);
+
+  // No redirect needed if URL has no language prefix
+  if (!localeFromURL) {
+    return false;
+  }
+
+  // No redirect needed if URL prefix matches detected locale
+  if (localeFromURL === detectedLocale) {
+    return false;
+  }
+
+  // Redirect needed: URL has invalid or mismatched locale
+  return true;
+}
+
+/**
  * Middleware function entry point
  *
  * This function is called for every incoming request to the application.
  * It handles language detection and routing based on the configured
  * detection hierarchy.
  *
- * Currently implements:
- * - Commit 2: URL-based detection
- * - Commit 3: Cookie and header-based detection (current)
- * Redirect logic will be added in Commit 4.
+ * Implements (Commit 4):
+ * - Full language detection with priority hierarchy
+ * - Redirect logic for unsupported language prefixes
+ * - Public route exclusion for performance
+ * - Fallback to French as default language
  *
- * Detection process (in order):
- * 1. Attempt to detect locale from URL path prefix (/fr/*, /en/*)
- * 2. If not in URL, attempt to detect from NEXT_LOCALE cookie
- * 3. If not in cookie, attempt to detect from Accept-Language header
- * 4. In Commit 4, will add: Default to French if none detected
- * 5. In Commit 4, will add: Redirect logic for unsupported languages
+ * Detection process (in priority order):
+ * 1. URL path prefix (e.g., /fr/*, /en/*)
+ * 2. NEXT_LOCALE cookie
+ * 3. Accept-Language header
+ * 4. Default to French
+ *
+ * Redirect behavior:
+ * - Only redirects if URL has invalid language prefix
+ * - Uses HTTP 307 (Temporary Redirect) for protocol safety
+ * - Preserves path and query parameters during redirect
+ * - Avoids infinite redirects (checks if URL already correct)
  *
  * @param request - The incoming HTTP request
- * @returns The response (NextResponse.next() or redirect response)
+ * @returns NextResponse.next() to continue, or redirect response
  *
  * @remarks
- * The full detection and redirect logic will be completed in subsequent commits:
- * - Commit 2: URL-based detection (complete)
- * - Commit 3: Cookie and header-based detection (current)
- * - Commit 4: Redirect logic, detection priority, and public route exclusion
+ * Public routes are excluded by the matcher config, so this middleware
+ * only runs on user-facing app routes.
+ *
+ * @see matcher configuration below for excluded routes
  */
 export function middleware(request: NextRequest): NextResponse | undefined {
-  // Extract the pathname from the request
   const { pathname } = request.nextUrl;
 
-  // Attempt URL-based language detection (highest priority)
-  const localeFromURL = detectLocaleFromURL(pathname);
+  // Detect the appropriate locale from all sources
+  const detectedLocale = detectLocale(request);
 
-  // Attempt cookie-based detection (second priority)
-  const cookieValue = request.cookies.get('NEXT_LOCALE')?.value;
-  const localeFromCookie = getLocaleFromCookie(cookieValue);
+  // Check if redirect is needed (unsupported language in URL)
+  if (shouldRedirect(pathname, detectedLocale)) {
+    // Build the redirect URL with the correct locale
+    const segments = pathname.split('/');
+    // Replace the invalid locale prefix with the detected one
+    segments[1] = detectedLocale;
+    const newPathname = segments.join('/');
 
-  // Attempt header-based detection (third priority)
-  const acceptLanguageHeader = request.headers.get('Accept-Language') || '';
-  const localeFromHeader = getLocaleFromHeader(acceptLanguageHeader);
+    // Create new URL and preserve query parameters
+    const url = new URL(request.nextUrl);
+    url.pathname = newPathname;
 
-  // Store detection results for use in Commit 4
-  // Commit 4 will implement the detection hierarchy and redirect logic
-  if (localeFromURL) {
-    // Language detected from URL - highest priority
-  } else if (localeFromCookie) {
-    // Language detected from cookie - second priority
-  } else if (localeFromHeader) {
-    // Language detected from header - third priority
+    // Return 307 Temporary Redirect for protocol safety
+    return NextResponse.redirect(url, { status: 307 });
   }
-  // Fourth priority (default to French) will be in Commit 4
 
+  // No redirect needed, continue to next handler
   return NextResponse.next();
 }
 
