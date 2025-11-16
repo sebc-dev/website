@@ -1,5 +1,14 @@
 {
-  "article": {},
+  "article": {
+    "readingTime": "{minutes} min de lecture",
+    "publishedOn": "Publié le {date}",
+    "updatedOn": "Mis à jour le {date}",
+    "category": "Catégorie",
+    "tags": "Balises",
+    "complexity": "Complexité",
+    "tableOfContents": "Table des matières",
+    "readingProgress": "Progression de lecture"
+  },
   "common": {
     "appName": "sebc.dev",
     "close": "Fermer",
@@ -12,19 +21,44 @@
     "success": "Succès",
     "warning": "Attention"
   },
-  "complexity": {},
-  "error": {},
+  "complexity": {
+    "beginner": "Débutant",
+    "intermediate": "Intermédiaire",
+    "advanced": "Avancé"
+  },
+  "error": {
+    "notFound": "Page non trouvée",
+    "serverError": "Erreur serveur interne",
+    "goHome": "Aller à la page d'accueil"
+  },
   "footer": {
     "copyright": "© 2025 sebc.dev. Tous droits réservés.",
     "privacy": "Politique de confidentialité",
     "terms": "Conditions d'utilisation"
   },
-  "form": {},
+  "form": {
+    "submit": "Soumettre",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "required": "Ce champ est requis",
+    "invalidEmail": "Adresse e-mail invalide"
+  },
   "nav": {
     "home": "Accueil",
     "articles": "Articles",
     "search": "Rechercher",
     "about": "À propos"
   },
-  "search": {}
+  "search": {
+    "placeholder": "Rechercher les articles...",
+    "noResults": "Aucun article trouvé",
+    "filters": "Filtres",
+    "clearFilters": "Effacer les filtres",
+    "categories": "Catégories",
+    "complexityLevel": "Niveau de complexité",
+    "readingDuration": "Durée de lecture",
+    "dateRange": "Plage de dates"
+  }
 }
