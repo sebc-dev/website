@@ -91,6 +91,7 @@ Ensure the following structure exists:
 ```
 
 **Verify**:
+
 ```bash
 # Check key files exist
 ls -la package.json pnpm-lock.yaml tsconfig.json next.config.js
@@ -151,6 +152,7 @@ Before running Commit 2 (package installation), verify:
 - [ ] Git working directory is clean (no uncommitted changes)
 
 **Validation**:
+
 ```bash
 # Complete pre-installation check script
 echo "Node.js: $(node --version)"
@@ -171,17 +173,20 @@ git status --short
 ### Issue: pnpm not found
 
 **Symptoms**:
+
 - `command not found: pnpm`
 - Cannot run pnpm commands
 
 **Solutions**:
 
 1. **Install pnpm globally**:
+
    ```bash
    npm install -g pnpm
    ```
 
 2. **Verify installation**:
+
    ```bash
    pnpm --version
    ```
@@ -193,6 +198,7 @@ git status --short
    ```
 
 **Verify Fix**:
+
 ```bash
 pnpm --version
 # Should output version number
@@ -203,17 +209,20 @@ pnpm --version
 ### Issue: Node.js version too old
 
 **Symptoms**:
+
 - Node version < 18.17.0
 - Warnings about unsupported Node version
 
 **Solutions**:
 
 1. **Check current version**:
+
    ```bash
    node --version
    ```
 
 2. **Upgrade Node.js** (using nvm recommended):
+
    ```bash
    # Install nvm if not already installed
    # Then install latest LTS:
@@ -228,6 +237,7 @@ pnpm --version
    ```
 
 **Verify Fix**:
+
 ```bash
 node --version && pnpm --version
 ```
@@ -237,6 +247,7 @@ node --version && pnpm --version
 ### Issue: Cannot reach npm registry
 
 **Symptoms**:
+
 - `pnpm ping` fails
 - Cannot install packages
 - Network timeout errors
@@ -244,11 +255,13 @@ node --version && pnpm --version
 **Solutions**:
 
 1. **Check internet connection**:
+
    ```bash
    ping -c 3 registry.npmjs.org
    ```
 
 2. **Check proxy settings** (if behind corporate proxy):
+
    ```bash
    pnpm config get proxy
    pnpm config get https-proxy
@@ -263,6 +276,7 @@ node --version && pnpm --version
    ```
 
 **Verify Fix**:
+
 ```bash
 pnpm ping
 # Should output: PONG
@@ -273,17 +287,20 @@ pnpm ping
 ### Issue: Existing i18n library conflicts
 
 **Symptoms**:
+
 - `react-i18next` or other i18n library already installed
 - Peer dependency conflicts during installation
 
 **Solutions**:
 
 1. **Check for existing i18n libraries**:
+
    ```bash
    grep -E "(i18n|intl)" package.json
    ```
 
 2. **Remove conflicting libraries** (if safe to do so):
+
    ```bash
    pnpm remove react-i18next # Or other i18n library
    ```
@@ -291,6 +308,7 @@ pnpm ping
 3. **Consult team** if unsure about removal
 
 **Verify Fix**:
+
 ```bash
 grep -E "(i18n|intl)" package.json
 # Should only show next-intl after Phase 1 Commit 2
@@ -301,12 +319,14 @@ grep -E "(i18n|intl)" package.json
 ### Issue: TypeScript compilation fails
 
 **Symptoms**:
+
 - `pnpm tsc --noEmit` shows errors
 - Errors unrelated to next-intl
 
 **Solutions**:
 
 1. **Review error messages**:
+
    ```bash
    pnpm tsc --noEmit 2>&1 | head -20
    ```
@@ -321,6 +341,7 @@ grep -E "(i18n|intl)" package.json
    ```
 
 **Verify Fix**:
+
 ```bash
 pnpm tsc --noEmit
 # Should exit with code 0 (no errors)

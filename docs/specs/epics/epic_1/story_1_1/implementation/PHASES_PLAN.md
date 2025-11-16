@@ -201,13 +201,15 @@ Install     Configure   Validate
 - **File location decision**: Choose between `src/i18n/config.ts` (organized) vs `i18n.ts` (next-intl convention)
   - Recommendation: `src/i18n/config.ts` for consistency with project structure
 - **getRequestConfig pattern** (Next.js 15 App Router):
-  ```typescript
-  import {getRequestConfig} from 'next-intl/server';
 
-  export default getRequestConfig(async ({locale}) => ({
-    messages: (await import(`../../messages/${locale}.json`)).default
+  ```typescript
+  import { getRequestConfig } from 'next-intl/server';
+
+  export default getRequestConfig(async ({ locale }) => ({
+    messages: (await import(`../../messages/${locale}.json`)).default,
   }));
   ```
+
 - **TypeScript types**: next-intl provides built-in types, minimal custom typing needed
 - **Message files**: Will be created in Story 1.2, but import structure prepared here
 - **Locale type**: `type Locale = 'fr' | 'en'` for type safety
@@ -330,22 +332,22 @@ Phase 3 (Validation)
 
 ### Overall Estimates
 
-| Metric                   | Estimate    | Notes                           |
-| ------------------------ | ----------- | ------------------------------- |
-| **Total Phases**         | 3           | Atomic, sequential phases       |
-| **Total Duration**       | 3-4 days    | Sequential implementation       |
-| **Parallel Duration**    | N/A         | No parallelization possible     |
-| **Total Commits**        | ~10-13      | Across all phases               |
-| **Total Files**          | ~4 new, ~2 modified | Configuration + docs     |
-| **Test Coverage Target** | N/A         | Config validation only          |
+| Metric                   | Estimate            | Notes                       |
+| ------------------------ | ------------------- | --------------------------- |
+| **Total Phases**         | 3                   | Atomic, sequential phases   |
+| **Total Duration**       | 3-4 days            | Sequential implementation   |
+| **Parallel Duration**    | N/A                 | No parallelization possible |
+| **Total Commits**        | ~10-13              | Across all phases           |
+| **Total Files**          | ~4 new, ~2 modified | Configuration + docs        |
+| **Test Coverage Target** | N/A                 | Config validation only      |
 
 ### Per-Phase Timeline
 
-| Phase | Duration | Commits | Start After | Blocks             |
-| ----- | -------- | ------- | ----------- | ------------------ |
-| 1. Installation | 1d | 3-4 | - | Phase 2, 3 |
-| 2. Configuration | 1.5d | 4-5 | Phase 1 | Phase 3, Story 1.2 |
-| 3. Validation | 1d | 3-4 | Phase 2 | Story 1.2-1.7 |
+| Phase            | Duration | Commits | Start After | Blocks             |
+| ---------------- | -------- | ------- | ----------- | ------------------ |
+| 1. Installation  | 1d       | 3-4     | -           | Phase 2, 3         |
+| 2. Configuration | 1.5d     | 4-5     | Phase 1     | Phase 3, Story 1.2 |
+| 3. Validation    | 1d       | 3-4     | Phase 2     | Story 1.2-1.7      |
 
 ### Resource Requirements
 
@@ -385,12 +387,12 @@ None - all phases are low-medium risk for this simple story.
 
 ### Overall Story Risks
 
-| Risk                          | Likelihood | Impact | Mitigation                                    |
-| ----------------------------- | ---------- | ------ | --------------------------------------------- |
-| Package version incompatibility | Medium     | High   | Check compatibility, use latest stable        |
-| Configuration pattern errors  | Low        | Medium | Follow official docs, validate early          |
-| TypeScript setup issues       | Low        | Low    | Use built-in types, validate compilation      |
-| Cloudflare Workers compatibility | Low     | Medium | next-intl supports edge, test build           |
+| Risk                             | Likelihood | Impact | Mitigation                               |
+| -------------------------------- | ---------- | ------ | ---------------------------------------- |
+| Package version incompatibility  | Medium     | High   | Check compatibility, use latest stable   |
+| Configuration pattern errors     | Low        | Medium | Follow official docs, validate early     |
+| TypeScript setup issues          | Low        | Low    | Use built-in types, validate compilation |
+| Cloudflare Workers compatibility | Low        | Medium | next-intl supports edge, test build      |
 
 ---
 
@@ -398,11 +400,11 @@ None - all phases are low-medium risk for this simple story.
 
 ### Test Coverage by Phase
 
-| Phase             | Unit Tests | Integration Tests | E2E Tests |
-| ----------------- | ---------- | ----------------- | --------- |
-| 1. Installation   | -          | -                 | -         |
-| 2. Configuration  | -          | 1 test (optional) | -         |
-| 3. Validation     | -          | 1 test (server start) | -     |
+| Phase            | Unit Tests | Integration Tests     | E2E Tests |
+| ---------------- | ---------- | --------------------- | --------- |
+| 1. Installation  | -          | -                     | -         |
+| 2. Configuration | -          | 1 test (optional)     | -         |
+| 3. Validation    | -          | 1 test (server start) | -         |
 
 **Note**: This is configuration/setup work. Testing is primarily validation-based (compilation, server start) rather than unit/integration tests.
 
@@ -469,6 +471,7 @@ For each phase, use the `phase-doc-generator` skill to create:
    - Verify no missing dependencies
 
 2. **Set up project structure**
+
    ```bash
    mkdir -p docs/specs/epics/epic_1/story_1_1/implementation/phase_1
    mkdir -p docs/specs/epics/epic_1/story_1_1/implementation/phase_2
@@ -514,6 +517,7 @@ Update this document as phases complete:
 - [ ] **Phase 3: Validation** - Status: 📋 NOT STARTED, Actual duration: TBD, Notes: -
 
 **Update EPIC_TRACKING.md** after each phase completion:
+
 - Progress: X/3 phases complete
 - Status: 🚧 IN PROGRESS (after Phase 1 starts)
 - Status: ✅ COMPLETED (after Phase 3 completes)
@@ -538,13 +542,13 @@ This story is considered complete when:
 
 ### Quality Metrics
 
-| Metric               | Target | Actual |
-| -------------------- | ------ | ------ |
-| TypeScript Compilation | Pass   | -      |
-| Linter Status        | Pass   | -      |
-| Server Startup       | Success | -     |
-| Code Review Approval | 100%   | -      |
-| Documentation        | Complete | -    |
+| Metric                 | Target   | Actual |
+| ---------------------- | -------- | ------ |
+| TypeScript Compilation | Pass     | -      |
+| Linter Status          | Pass     | -      |
+| Server Startup         | Success  | -      |
+| Code Review Approval   | 100%     | -      |
+| Documentation          | Complete | -      |
 
 ---
 

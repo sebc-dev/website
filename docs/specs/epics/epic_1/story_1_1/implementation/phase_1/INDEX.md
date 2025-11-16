@@ -42,14 +42,14 @@ Install the next-intl package and validate its compatibility with the project's 
 
 ## 📚 Available Documents
 
-| Document                                                                       | Description                               | For Who    | Duration  |
-| ------------------------------------------------------------------------------ | ----------------------------------------- | ---------- | --------- |
-| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)**                         | Atomic strategy in 4 commits              | Developer  | 10 min    |
-| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)**                               | Detailed checklist per commit             | Developer  | Reference |
-| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)**                             | Environment variables & setup             | DevOps/Dev | 5 min     |
-| **[guides/REVIEW.md](./guides/REVIEW.md)**                                     | Code review guide                         | Reviewer   | 15 min    |
-| **[guides/TESTING.md](./guides/TESTING.md)**                                   | Testing guide (validation-based)          | QA/Dev     | 10 min    |
-| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist                | Tech Lead  | 20 min    |
+| Document                                                                       | Description                      | For Who    | Duration  |
+| ------------------------------------------------------------------------------ | -------------------------------- | ---------- | --------- |
+| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)**                         | Atomic strategy in 4 commits     | Developer  | 10 min    |
+| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)**                               | Detailed checklist per commit    | Developer  | Reference |
+| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)**                             | Environment variables & setup    | DevOps/Dev | 5 min     |
+| **[guides/REVIEW.md](./guides/REVIEW.md)**                                     | Code review guide                | Reviewer   | 15 min    |
+| **[guides/TESTING.md](./guides/TESTING.md)**                                   | Testing guide (validation-based) | QA/Dev     | 10 min    |
+| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist       | Tech Lead  | 20 min    |
 
 ---
 
