@@ -14,9 +14,11 @@ Translation messages are organized in `messages/fr.json` and `messages/en.json`,
 ## Namespace Structure
 
 ### 1. Common Messages (`common`)
+
 UI actions, status messages, and common terminology used throughout the application.
 
 **Keys** (12 total):
+
 - `appName` - Application name: "sebc.dev"
 - `loading` - Loading indicator: "Loading..." / "Chargement..."
 - `error` - Generic error message
@@ -31,6 +33,7 @@ UI actions, status messages, and common terminology used throughout the applicat
 - `noData` - No data available message
 
 **Example Usage:**
+
 ```typescript
 import { useTranslations } from 'next-intl';
 
@@ -41,9 +44,11 @@ export function LoadingIndicator() {
 ```
 
 ### 2. Navigation (`nav`)
+
 Navigation menu items and language selection controls.
 
 **Keys** (9 total):
+
 - `home` - Home link
 - `articles` - Articles section
 - `search` - Search functionality
@@ -55,6 +60,7 @@ Navigation menu items and language selection controls.
 - `language` - Language selector
 
 **Example Usage:**
+
 ```typescript
 const tNav = useTranslations('nav');
 
@@ -66,9 +72,11 @@ const navItems = [
 ```
 
 ### 3. Footer (`footer`)
+
 Footer links, copyright information, and site navigation.
 
 **Keys** (5 total):
+
 - `copyright` - Copyright notice: "© 2025 sebc.dev. All rights reserved."
 - `privacy` - Privacy Policy link
 - `terms` - Terms of Service link
@@ -76,6 +84,7 @@ Footer links, copyright information, and site navigation.
 - `sitemap` - Sitemap link
 
 **Example Usage:**
+
 ```typescript
 const tFooter = useTranslations('footer');
 
@@ -93,9 +102,11 @@ export function Footer() {
 ```
 
 ### 4. Form Messages (`form`)
+
 Form labels, validation messages, and submission feedback.
 
 **Keys** (15 total):
+
 - `submit` - Form submit button
 - `cancel` - Cancel form submission
 - `save` - Save form data
@@ -113,6 +124,7 @@ Form labels, validation messages, and submission feedback.
 - `success` - Form submission success message
 
 **Example Usage:**
+
 ```typescript
 const tForm = useTranslations('form');
 
@@ -127,9 +139,11 @@ function ContactForm() {
 ```
 
 ### 5. Article Metadata (`article`)
+
 Article headers, reading information, and metadata labels.
 
 **Keys** (9 total):
+
 - `readingTime` - Estimated reading duration (parameterized): "{minutes} min read"
 - `publishedOn` - Publication date (parameterized): "Published on {date}"
 - `updatedOn` - Last update date (parameterized): "Updated on {date}"
@@ -160,14 +174,17 @@ const byline = tArticle('byAuthor', { author: 'Jane Doe' });
 ```
 
 ### 6. Complexity Levels (`complexity`)
+
 Article difficulty and complexity level labels.
 
 **Keys** (3 total):
+
 - `beginner` - Beginner level
 - `intermediate` - Intermediate level
 - `advanced` - Advanced level
 
 **Example Usage:**
+
 ```typescript
 const tComplexity = useTranslations('complexity');
 
@@ -179,9 +196,11 @@ const complexityLevels = [
 ```
 
 ### 7. Search & Filters (`search`)
+
 Search interface, filter controls, and result messages.
 
 **Keys** (10 total):
+
 - `placeholder` - Search input placeholder: "Search articles..."
 - `noResults` - No search results found
 - `filters` - Filters section heading
@@ -194,6 +213,7 @@ Search interface, filter controls, and result messages.
 - `loading` - Search loading state: "Loading results..."
 
 **Example Usage:**
+
 ```typescript
 const tSearch = useTranslations('search');
 
@@ -219,9 +239,11 @@ function SearchFilters() {
 ```
 
 ### 8. Error Messages (`error`)
+
 HTTP error codes and general application error messages.
 
 **Keys** (10 total):
+
 - `notFound` - 404 Page Not Found
 - `serverError` - 500 Internal Server Error
 - `goHome` - Return to homepage link
@@ -234,6 +256,7 @@ HTTP error codes and general application error messages.
 - `unknown` - Unknown/generic error
 
 **Example Usage:**
+
 ```typescript
 const tError = useTranslations('error');
 
@@ -326,7 +349,7 @@ const tArticle = useTranslations('article');
 // Pass parameters as second argument
 const timeEstimate = tArticle('readingTime', { minutes: 8 });
 const publishDate = tArticle('publishedOn', {
-  date: new Date('2025-11-16').toLocaleDateString()
+  date: new Date('2025-11-16').toLocaleDateString(),
 });
 const author = tArticle('byAuthor', { author: 'Claude Dupont' });
 ```
@@ -404,11 +427,11 @@ Examples:
 
 Use consistent terminology across all translations. Create a terminology glossary:
 
-| English | French |
-|---------|--------|
-| Article | Article |
-| Complexity | Complexité |
-| Reading Time | Durée de lecture |
+| English           | French             |
+| ----------------- | ------------------ |
+| Article           | Article            |
+| Complexity        | Complexité         |
+| Reading Time      | Durée de lecture   |
 | Table of Contents | Table des matières |
 
 ### Character Encoding
@@ -493,6 +516,7 @@ http://localhost:3000/[locale]/messages-test
 ```
 
 This page displays:
+
 - All 8 namespaces side-by-side
 - French and English translations in columns
 - Parameterized examples with sample values

@@ -263,6 +263,7 @@ Complete this checklist before starting Commit 1:
    - Check encoding is UTF-8
 
 2. **In Terminal**:
+
    ```bash
    # Verify terminal uses UTF-8
    locale | grep UTF
@@ -281,6 +282,7 @@ Complete this checklist before starting Commit 1:
    ```
 
 **Verify Fix**:
+
 ```bash
 # Create test file with accents
 echo '{"test": "Café français"}' > test.json

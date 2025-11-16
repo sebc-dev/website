@@ -153,7 +153,7 @@ it('should have all required namespaces in French', () => {
     'error',
   ];
 
-  requiredNamespaces.forEach(ns => {
+  requiredNamespaces.forEach((ns) => {
     expect(messages).toHaveProperty(ns);
     expect(typeof messages[ns]).toBe('object');
   });
@@ -182,7 +182,7 @@ it('should have all required namespaces in English', () => {
     'error',
   ];
 
-  requiredNamespaces.forEach(ns => {
+  requiredNamespaces.forEach((ns) => {
     expect(messages).toHaveProperty(ns);
   });
 });
@@ -221,7 +221,7 @@ it('should have approximately 50 translation keys in French', () => {
 
   const totalKeys = Object.values(messages).reduce(
     (sum, ns: any) => sum + Object.keys(ns).length,
-    0
+    0,
   );
 
   // Allow range: 48-52 keys
@@ -259,8 +259,8 @@ it('should have all values as strings (no nested objects)', () => {
   const frenchPath = path.join(process.cwd(), 'messages', 'fr.json');
   const messages = JSON.parse(fs.readFileSync(frenchPath, 'utf8'));
 
-  Object.values(messages).forEach(namespace => {
-    Object.values(namespace as any).forEach(value => {
+  Object.values(messages).forEach((namespace) => {
+    Object.values(namespace as any).forEach((value) => {
       expect(typeof value).toBe('string');
     });
   });
@@ -340,12 +340,12 @@ pnpm test messages -- --grep "should load and parse"
 
 Coverage metrics for message tests:
 
-| Metric | Target | Meaning |
-|--------|--------|---------|
-| **Line Coverage** | >80% | % of code lines executed |
-| **Branch Coverage** | >80% | % of conditional branches tested |
-| **Function Coverage** | >80% | % of functions called |
-| **Statement Coverage** | >80% | % of statements executed |
+| Metric                 | Target | Meaning                          |
+| ---------------------- | ------ | -------------------------------- |
+| **Line Coverage**      | >80%   | % of code lines executed         |
+| **Branch Coverage**    | >80%   | % of conditional branches tested |
+| **Function Coverage**  | >80%   | % of functions called            |
+| **Statement Coverage** | >80%   | % of statements executed         |
 
 ### View HTML Coverage Report
 
@@ -495,11 +495,11 @@ Use clear, descriptive names:
 
 ```typescript
 // ✓ Good
-it('should load and parse messages/fr.json without errors', () => {})
+it('should load and parse messages/fr.json without errors', () => {});
 
 // ✗ Bad
-it('parses messages', () => {})
-it('test 1', () => {})
+it('parses messages', () => {});
+it('test 1', () => {});
 ```
 
 ---

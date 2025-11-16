@@ -33,6 +33,7 @@ Valid JSON   ~20 keys    ~30 keys     100% ready
 ### Commit 1: Create Message File Structure
 
 **Files**:
+
 - `messages/fr.json` (new)
 - `messages/en.json` (new)
 
@@ -55,6 +56,7 @@ Valid JSON   ~20 keys    ~30 keys     100% ready
 - Provides foundation for next commits
 
 **Technical Validation**:
+
 ```bash
 # Validate JSON syntax
 node -e "JSON.parse(require('fs').readFileSync('messages/fr.json', 'utf8'))"
@@ -78,6 +80,7 @@ node -e "JSON.parse(require('fs').readFileSync('messages/en.json', 'utf8'))"
 ### Commit 2: Add French Translations - Part 1 (Common, Nav, Footer)
 
 **Files**:
+
 - `messages/fr.json` (modify)
 
 **Size**: ~200 lines
@@ -103,6 +106,7 @@ node -e "JSON.parse(require('fs').readFileSync('messages/en.json', 'utf8'))"
 - Natural stopping point (other sections are independent)
 
 **Technical Validation**:
+
 ```bash
 # Validate JSON syntax
 node -e "JSON.parse(require('fs').readFileSync('messages/fr.json', 'utf8'))" && echo "Valid JSON"
@@ -127,6 +131,7 @@ node -e "const fr = JSON.parse(require('fs').readFileSync('messages/fr.json', 'u
 ### Commit 3: Add French Translations - Part 2 (Forms, Articles, Complexity, Search, Errors)
 
 **Files**:
+
 - `messages/fr.json` (modify)
 
 **Size**: ~300 lines
@@ -155,6 +160,7 @@ node -e "const fr = JSON.parse(require('fs').readFileSync('messages/fr.json', 'u
 - Natural grouping (forms + content + errors = complete feature set)
 
 **Technical Validation**:
+
 ```bash
 # Validate JSON syntax and count all keys
 node -e "const fr = JSON.parse(require('fs').readFileSync('messages/fr.json', 'utf8')); const count = Object.values(fr).reduce((sum, ns) => sum + Object.keys(ns).length, 0); console.log('Total French keys:', count); console.log('Namespaces:', Object.keys(fr).sort())"
@@ -176,6 +182,7 @@ node -e "const fr = JSON.parse(require('fs').readFileSync('messages/fr.json', 'u
 ### Commit 4: Add Message Loading Tests and Config Validation
 
 **Files**:
+
 - `tests/messages.test.ts` (new)
 - `i18n/config.ts` (modify - import messages if needed)
 
@@ -205,6 +212,7 @@ node -e "const fr = JSON.parse(require('fs').readFileSync('messages/fr.json', 'u
 - Validates the work of previous commits
 
 **Technical Validation**:
+
 ```bash
 # Run tests
 pnpm test messages
@@ -243,6 +251,7 @@ pnpm test:coverage -- tests/messages.test.ts
 ### Validation at Each Step
 
 After each commit:
+
 ```bash
 # JSON validation
 node -e "JSON.parse(require('fs').readFileSync('messages/fr.json', 'utf8'))" && echo "Valid JSON"
@@ -261,13 +270,13 @@ All must pass before moving to next commit.
 
 ## 📊 Commit Metrics
 
-| Commit | Files | Lines | Implementation | Review | Total |
-|--------|-------|-------|-----------------|--------|-------|
-| 1. Structure | 2 | ~100 | 15 min | 12 min | 27 min |
-| 2. French P1 | 1 | ~200 | 35 min | 18 min | 53 min |
-| 3. French P2 | 1 | ~300 | 45 min | 18 min | 63 min |
-| 4. Tests & Config | 2 | ~250 | 40 min | 18 min | 58 min |
-| **TOTAL** | **4** | **~850** | **2-3h** | **1-1.5h** | **3-4.5h** |
+| Commit            | Files | Lines    | Implementation | Review     | Total      |
+| ----------------- | ----- | -------- | -------------- | ---------- | ---------- |
+| 1. Structure      | 2     | ~100     | 15 min         | 12 min     | 27 min     |
+| 2. French P1      | 1     | ~200     | 35 min         | 18 min     | 53 min     |
+| 3. French P2      | 1     | ~300     | 45 min         | 18 min     | 63 min     |
+| 4. Tests & Config | 2     | ~250     | 40 min         | 18 min     | 58 min     |
+| **TOTAL**         | **4** | **~850** | **2-3h**       | **1-1.5h** | **3-4.5h** |
 
 ---
 
@@ -298,6 +307,7 @@ All must pass before moving to next commit.
 ### Commit Messages
 
 Format:
+
 ```
 type(scope): short description (max 50 chars)
 

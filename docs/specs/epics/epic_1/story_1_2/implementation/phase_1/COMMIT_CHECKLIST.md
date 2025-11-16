@@ -327,7 +327,7 @@ pnpm tsc --noEmit
 #### Test Coverage
 
 - [ ] Test file created at `/tests/messages.test.ts`
-- [ ] >=8 test cases implemented
+- [ ] > =8 test cases implemented
 - [ ] Tests cover JSON parsing, encoding, structure, and values
 - [ ] Edge cases tested
 - [ ] Coverage >80% for message-related code

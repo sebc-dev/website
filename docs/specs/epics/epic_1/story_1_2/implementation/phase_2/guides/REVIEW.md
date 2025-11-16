@@ -74,6 +74,7 @@ Phase 2 is split into **4 atomic commits**. You can:
 ##### Specific Namespace Reviews
 
 **Common Namespace** (10 keys):
+
 - [ ] `appName`: "sebc.dev" - Brand name correct
 - [ ] `loading`: "Loading..." - Standard pattern
 - [ ] `error`: "An error occurred" - User-friendly message
@@ -81,12 +82,14 @@ Phase 2 is split into **4 atomic commits**. You can:
 - [ ] Terminology matches rest of UI
 
 **Nav Namespace** (9 keys):
+
 - [ ] All navigation items are clear and descriptive
 - [ ] Consistent with app structure
 - [ ] Proper capitalization for menu items
 - [ ] No duplicates with other namespaces
 
 **Footer Namespace** (5 keys):
+
 - [ ] Legal terms are appropriate ("Privacy Policy", "Terms of Service")
 - [ ] Copyright notice is correct ("© 2025 sebc.dev...")
 - [ ] Professional tone suitable for footer
@@ -101,6 +104,7 @@ jq '[.. | objects | keys[]] | unique | length' messages/en.json  # Count keys
 ```
 
 **Expected Results**:
+
 - JSON is valid (no error from `jq empty`)
 - Three namespaces: common, footer, nav
 - 25+ total keys
@@ -193,6 +197,7 @@ jq '[.. | objects | keys[]] | unique | length' messages/en.json  # Should be 55-
 ```
 
 **Expected Results**:
+
 - Valid JSON with 5 total namespaces
 - 55-60 total translation keys
 - Parameterized translations use `{variable}` syntax
@@ -259,6 +264,7 @@ pnpm test:coverage tests/messages.test.ts
 ```
 
 **Expected Results**:
+
 - All tests pass
 - No parity errors
 - Coverage > 80%
@@ -275,6 +281,7 @@ pnpm test:coverage tests/messages.test.ts
 ### Commit 4: Create Test Page & Documentation
 
 **Files**:
+
 - `app/[locale]/(test)/messages-test/page.tsx` (~200 lines)
 - `i18n/README.md` (~150 lines)
 - `CLAUDE.md` (modified)
@@ -391,6 +398,7 @@ kill %1
 ```
 
 **Expected Results**:
+
 - No TypeScript errors
 - No linting issues
 - Page renders without errors
@@ -558,4 +566,3 @@ A: Check that examples are accurate and non-broken. Try running them if not obvi
 ---
 
 **Ready to review! Start with Commit 1. Happy reviewing! 🎉**
-

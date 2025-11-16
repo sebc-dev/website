@@ -27,17 +27,14 @@ Validate that message files are properly formatted and structured.
 ### Test 1: French file is valid JSON
 
 ```typescript
-import fs from "fs";
+import fs from 'fs';
 
-describe("Message Files - Structure", () => {
-  it("French file is valid JSON", () => {
-    const frenchContent = fs.readFileSync(
-      "messages/fr.json",
-      "utf-8"
-    );
+describe('Message Files - Structure', () => {
+  it('French file is valid JSON', () => {
+    const frenchContent = fs.readFileSync('messages/fr.json', 'utf-8');
     expect(() => JSON.parse(frenchContent)).not.toThrow();
     const parsed = JSON.parse(frenchContent);
-    expect(typeof parsed).toBe("object");
+    expect(typeof parsed).toBe('object');
     expect(Object.keys(parsed).length).toBeGreaterThan(0);
   });
 });
@@ -48,14 +45,11 @@ describe("Message Files - Structure", () => {
 ### Test 2: English file is valid JSON
 
 ```typescript
-it("English file is valid JSON", () => {
-  const englishContent = fs.readFileSync(
-    "messages/en.json",
-    "utf-8"
-  );
+it('English file is valid JSON', () => {
+  const englishContent = fs.readFileSync('messages/en.json', 'utf-8');
   expect(() => JSON.parse(englishContent)).not.toThrow();
   const parsed = JSON.parse(englishContent);
-  expect(typeof parsed).toBe("object");
+  expect(typeof parsed).toBe('object');
   expect(Object.keys(parsed).length).toBeGreaterThan(0);
 });
 ```
@@ -65,24 +59,22 @@ it("English file is valid JSON", () => {
 ### Test 3: Required namespaces exist in French
 
 ```typescript
-it("French file has all required namespaces", () => {
-  const fr = JSON.parse(
-    fs.readFileSync("messages/fr.json", "utf-8")
-  );
+it('French file has all required namespaces', () => {
+  const fr = JSON.parse(fs.readFileSync('messages/fr.json', 'utf-8'));
   const requiredNamespaces = [
-    "common",
-    "nav",
-    "footer",
-    "form",
-    "article",
-    "complexity",
-    "search",
-    "error",
+    'common',
+    'nav',
+    'footer',
+    'form',
+    'article',
+    'complexity',
+    'search',
+    'error',
   ];
 
   requiredNamespaces.forEach((namespace) => {
     expect(fr).toHaveProperty(namespace);
-    expect(typeof fr[namespace]).toBe("object");
+    expect(typeof fr[namespace]).toBe('object');
   });
 });
 ```
@@ -92,24 +84,22 @@ it("French file has all required namespaces", () => {
 ### Test 4: Required namespaces exist in English
 
 ```typescript
-it("English file has all required namespaces", () => {
-  const en = JSON.parse(
-    fs.readFileSync("messages/en.json", "utf-8")
-  );
+it('English file has all required namespaces', () => {
+  const en = JSON.parse(fs.readFileSync('messages/en.json', 'utf-8'));
   const requiredNamespaces = [
-    "common",
-    "nav",
-    "footer",
-    "form",
-    "article",
-    "complexity",
-    "search",
-    "error",
+    'common',
+    'nav',
+    'footer',
+    'form',
+    'article',
+    'complexity',
+    'search',
+    'error',
   ];
 
   requiredNamespaces.forEach((namespace) => {
     expect(en).toHaveProperty(namespace);
-    expect(typeof en[namespace]).toBe("object");
+    expect(typeof en[namespace]).toBe('object');
   });
 });
 ```
@@ -128,16 +118,16 @@ Ensure 100% key coverage between French and English. No missing translations.
 
 ```typescript
 // Helper: Extract all nested keys from an object
-function getNestedKeys(obj: any, prefix = ""): string[] {
+function getNestedKeys(obj: any, prefix = ''): string[] {
   const keys: string[] = [];
 
   for (const key in obj) {
     const value = obj[key];
     const fullKey = prefix ? `${prefix}.${key}` : key;
 
-    if (typeof value === "object" && value !== null) {
+    if (typeof value === 'object' && value !== null) {
       keys.push(...getNestedKeys(value, fullKey));
-    } else if (typeof value === "string") {
+    } else if (typeof value === 'string') {
       keys.push(fullKey);
     }
   }
@@ -149,13 +139,9 @@ function getNestedKeys(obj: any, prefix = ""): string[] {
 ### Test 5: Forward Parity (French → English)
 
 ```typescript
-it("All French keys exist in English", () => {
-  const fr = JSON.parse(
-    fs.readFileSync("messages/fr.json", "utf-8")
-  );
-  const en = JSON.parse(
-    fs.readFileSync("messages/en.json", "utf-8")
-  );
+it('All French keys exist in English', () => {
+  const fr = JSON.parse(fs.readFileSync('messages/fr.json', 'utf-8'));
+  const en = JSON.parse(fs.readFileSync('messages/en.json', 'utf-8'));
 
   const frKeys = getNestedKeys(fr);
   const enKeys = getNestedKeys(en);
@@ -165,7 +151,7 @@ it("All French keys exist in English", () => {
   expect(missingInEnglish).toEqual([]);
 
   if (missingInEnglish.length > 0) {
-    console.error("Missing English keys:", missingInEnglish);
+    console.error('Missing English keys:', missingInEnglish);
   }
 });
 ```
@@ -173,6 +159,7 @@ it("All French keys exist in English", () => {
 **Expected Result**: No keys missing from English file
 
 **Error Message Example**:
+
 ```
 Expected: []
 Received: ["article.byAuthor", "search.sort"]
@@ -183,13 +170,9 @@ Missing English keys: ["article.byAuthor", "search.sort"]
 ### Test 6: Reverse Parity (English → French)
 
 ```typescript
-it("All English keys exist in French", () => {
-  const fr = JSON.parse(
-    fs.readFileSync("messages/fr.json", "utf-8")
-  );
-  const en = JSON.parse(
-    fs.readFileSync("messages/en.json", "utf-8")
-  );
+it('All English keys exist in French', () => {
+  const fr = JSON.parse(fs.readFileSync('messages/fr.json', 'utf-8'));
+  const en = JSON.parse(fs.readFileSync('messages/en.json', 'utf-8'));
 
   const frKeys = getNestedKeys(fr);
   const enKeys = getNestedKeys(en);
@@ -199,7 +182,7 @@ it("All English keys exist in French", () => {
   expect(missingInFrench).toEqual([]);
 
   if (missingInFrench.length > 0) {
-    console.error("Missing French keys:", missingInFrench);
+    console.error('Missing French keys:', missingInFrench);
   }
 });
 ```
@@ -213,13 +196,9 @@ it("All English keys exist in French", () => {
 ### Test 7: Namespace structure is consistent
 
 ```typescript
-it("Namespace structure is identical in both files", () => {
-  const fr = JSON.parse(
-    fs.readFileSync("messages/fr.json", "utf-8")
-  );
-  const en = JSON.parse(
-    fs.readFileSync("messages/en.json", "utf-8")
-  );
+it('Namespace structure is identical in both files', () => {
+  const fr = JSON.parse(fs.readFileSync('messages/fr.json', 'utf-8'));
+  const en = JSON.parse(fs.readFileSync('messages/en.json', 'utf-8'));
 
   // Check each namespace has same keys
   for (const namespace in fr) {
@@ -236,15 +215,11 @@ it("Namespace structure is identical in both files", () => {
 ### Test 8: No undefined or null values
 
 ```typescript
-it("No undefined or null values in message files", () => {
-  const fr = JSON.parse(
-    fs.readFileSync("messages/fr.json", "utf-8")
-  );
-  const en = JSON.parse(
-    fs.readFileSync("messages/en.json", "utf-8")
-  );
+it('No undefined or null values in message files', () => {
+  const fr = JSON.parse(fs.readFileSync('messages/fr.json', 'utf-8'));
+  const en = JSON.parse(fs.readFileSync('messages/en.json', 'utf-8'));
 
-  const checkValues = (obj: any, path = "") => {
+  const checkValues = (obj: any, path = '') => {
     for (const key in obj) {
       const value = obj[key];
       const fullPath = path ? `${path}.${key}` : key;
@@ -253,7 +228,7 @@ it("No undefined or null values in message files", () => {
         throw new Error(`Null/undefined value at: ${fullPath}`);
       }
 
-      if (typeof value === "object") {
+      if (typeof value === 'object') {
         checkValues(value, fullPath);
       }
     }
@@ -273,26 +248,22 @@ it("No undefined or null values in message files", () => {
 ### Test 9: Parameterized translations use consistent syntax
 
 ```typescript
-it("Parameterized translations use correct {variable} syntax", () => {
-  const fr = JSON.parse(
-    fs.readFileSync("messages/fr.json", "utf-8")
-  );
-  const en = JSON.parse(
-    fs.readFileSync("messages/en.json", "utf-8")
-  );
+it('Parameterized translations use correct {variable} syntax', () => {
+  const fr = JSON.parse(fs.readFileSync('messages/fr.json', 'utf-8'));
+  const en = JSON.parse(fs.readFileSync('messages/en.json', 'utf-8'));
 
   // Extract all strings with {placeholder}
   const getParameterizedKeys = (obj: any) => {
     const params: { [key: string]: string } = {};
-    const findParams = (o: any, path = "") => {
+    const findParams = (o: any, path = '') => {
       for (const key in o) {
         const fullPath = path ? `${path}.${key}` : key;
-        if (typeof o[key] === "string") {
+        if (typeof o[key] === 'string') {
           const matches = o[key].match(/\{(\w+)\}/g);
           if (matches) {
             params[fullPath] = o[key];
           }
-        } else if (typeof o[key] === "object") {
+        } else if (typeof o[key] === 'object') {
           findParams(o[key], fullPath);
         }
       }
@@ -323,27 +294,25 @@ it("Parameterized translations use correct {variable} syntax", () => {
 ### Test 10: Parameterized examples work correctly
 
 ```typescript
-it("Example parameterized translations render correctly", () => {
-  const en = JSON.parse(
-    fs.readFileSync("messages/en.json", "utf-8")
-  );
+it('Example parameterized translations render correctly', () => {
+  const en = JSON.parse(fs.readFileSync('messages/en.json', 'utf-8'));
 
   // Test examples
   const examples = [
     {
       template: en.article.readingTime,
       params: { minutes: 5 },
-      expected: "5 min read",
+      expected: '5 min read',
     },
     {
       template: en.article.publishedOn,
-      params: { date: "November 16, 2025" },
-      expected: "Published on November 16, 2025",
+      params: { date: 'November 16, 2025' },
+      expected: 'Published on November 16, 2025',
     },
     {
       template: en.article.byAuthor,
-      params: { author: "John Doe" },
-      expected: "By John Doe",
+      params: { author: 'John Doe' },
+      expected: 'By John Doe',
     },
   ];
 
@@ -366,20 +335,28 @@ it("Example parameterized translations render correctly", () => {
 ### Test 11: Configuration loads messages correctly
 
 ```typescript
-it("next-intl config loads both message files", async () => {
+it('next-intl config loads both message files', async () => {
   // This test depends on your i18n/config.ts implementation
-  const config = require("../../../i18n/config");
+  const config = require('../../../i18n/config');
 
   expect(config.messages).toBeDefined();
   expect(config.messages.fr).toBeDefined();
   expect(config.messages.en).toBeDefined();
 
   // Check namespace structure
-  ["common", "nav", "footer", "form", "article", "complexity", "search", "error"]
-    .forEach((namespace) => {
-      expect(config.messages.fr).toHaveProperty(namespace);
-      expect(config.messages.en).toHaveProperty(namespace);
-    });
+  [
+    'common',
+    'nav',
+    'footer',
+    'form',
+    'article',
+    'complexity',
+    'search',
+    'error',
+  ].forEach((namespace) => {
+    expect(config.messages.fr).toHaveProperty(namespace);
+    expect(config.messages.en).toHaveProperty(namespace);
+  });
 });
 ```
 
@@ -487,14 +464,17 @@ node -e "console.log(JSON.stringify(require('./messages/fr.json'), null, 2))" | 
 ### Common Issues
 
 **Issue**: "Cannot find module 'messages/fr.json'"
+
 - **Solution**: Ensure `messages/fr.json` exists from Phase 1
 - **Check**: `ls -la messages/fr.json`
 
 **Issue**: Test fails with "Unexpected end of JSON input"
+
 - **Solution**: JSON file has syntax error
 - **Check**: `jq empty messages/en.json`
 
 **Issue**: Parity test fails with missing keys
+
 - **Solution**: Manually add missing keys to the other file
 - **Check**: Compare with `jq 'keys' messages/fr.json` and `jq 'keys' messages/en.json`
 
@@ -524,6 +504,7 @@ Before committing tests (Commit 3):
 ### GitHub Actions (if configured)
 
 Tests should run automatically on:
+
 - Pull requests
 - Push to main branch
 
@@ -541,6 +522,7 @@ Tests should run automatically on:
 ### Required Checks
 
 All PRs must:
+
 - [ ] Pass all message tests
 - [ ] Pass parity validation specifically
 - [ ] Achieve >80% coverage
@@ -550,17 +532,17 @@ All PRs must:
 
 ## ✅ Testing Summary
 
-| Test Name | Purpose | Critical | Time |
-|-----------|---------|----------|------|
-| JSON Validity | Ensure files parse correctly | Yes | 1s |
-| Namespace Existence | Verify all 8 namespaces present | Yes | 1s |
-| Forward Parity | All French keys in English | Yes | 1s |
-| Reverse Parity | All English keys in French | Yes | 1s |
-| Structure Consistency | Same structure in both files | Yes | 1s |
-| No Null Values | No undefined/null entries | Yes | 1s |
-| Parameterized Syntax | Correct `{variable}` usage | High | 1s |
-| Parameter Examples | Variables substitute correctly | High | 1s |
-| Config Loading | next-intl loads messages | High | 1s |
+| Test Name             | Purpose                         | Critical | Time |
+| --------------------- | ------------------------------- | -------- | ---- |
+| JSON Validity         | Ensure files parse correctly    | Yes      | 1s   |
+| Namespace Existence   | Verify all 8 namespaces present | Yes      | 1s   |
+| Forward Parity        | All French keys in English      | Yes      | 1s   |
+| Reverse Parity        | All English keys in French      | Yes      | 1s   |
+| Structure Consistency | Same structure in both files    | Yes      | 1s   |
+| No Null Values        | No undefined/null entries       | Yes      | 1s   |
+| Parameterized Syntax  | Correct `{variable}` usage      | High     | 1s   |
+| Parameter Examples    | Variables substitute correctly  | High     | 1s   |
+| Config Loading        | next-intl loads messages        | High     | 1s   |
 
 **Total Test Time**: <15 seconds
 
@@ -595,4 +577,3 @@ A: Use UTF-8 encoding and test with actual characters (é, ç, etc.).
 ---
 
 **Happy testing! 🧪**
-
