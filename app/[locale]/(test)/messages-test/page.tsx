@@ -1,7 +1,9 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
 import { useState } from 'react';
+
+import enMessages from '@/messages/en.json';
+import frMessages from '@/messages/fr.json';
 
 /**
  * MessageTestPage Component
@@ -132,6 +134,7 @@ function KeyRow({
       <div className='mb-2 flex items-start gap-4'>
         <div className='min-w-32 flex-none'>
           <button
+            type="button"
             onClick={handleCopy}
             className='hover:text-accent truncate font-mono text-xs text-zinc-400 transition-colors'
             title='Copy key path'
@@ -173,13 +176,15 @@ function KeyRow({
  */
 function NamespaceSection({
   namespace,
-  messages,
+  frMessages: fr,
+  enMessages: en,
 }: {
   namespace: Namespace;
-  messages: Record<string, string>;
+  frMessages: Record<string, string>;
+  enMessages: Record<string, string>;
 }) {
   const info = NAMESPACE_INFO[namespace];
-  const keyCount = Object.keys(messages).length;
+  const keyCount = Object.keys(fr).length;
 
   return (
     <section className='mb-8'>
@@ -194,8 +199,8 @@ function NamespaceSection({
       </div>
 
       <div className='divide-y divide-zinc-700 border border-t-0 border-zinc-800'>
-        {Object.entries(messages).map(([key, frValue]) => {
-          const enValue = messages[key] || '';
+        {Object.entries(fr).map(([key, frValue]) => {
+          const enValue = en[key] || '';
           const hasParameters = frValue.includes('{');
 
           return (
@@ -218,112 +223,9 @@ function NamespaceSection({
  * MessageTestPage Main Component
  */
 export default function MessageTestPage() {
-  // Use the translations hook to get namespace functions
-  const tCommon = useTranslations('common');
-  const tNav = useTranslations('nav');
-  const tFooter = useTranslations('footer');
-  const tForm = useTranslations('form');
-  const tArticle = useTranslations('article');
-  const tComplexity = useTranslations('complexity');
-  const tSearch = useTranslations('search');
-  const tError = useTranslations('error');
-
-  // Import raw message data for display
-  // In a real scenario, these would come from your message files
-  const messages = {
-    common: {
-      appName: tCommon('appName'),
-      loading: tCommon('loading'),
-      error: tCommon('error'),
-      close: tCommon('close'),
-      success: tCommon('success'),
-      warning: tCommon('warning'),
-      info: tCommon('info'),
-      cancel: tCommon('cancel'),
-      apply: tCommon('apply'),
-      retry: tCommon('retry'),
-      confirm: tCommon('confirm'),
-      noData: tCommon('noData'),
-    },
-    nav: {
-      home: tNav('home'),
-      articles: tNav('articles'),
-      search: tNav('search'),
-      about: tNav('about'),
-      projects: tNav('projects'),
-      blog: tNav('blog'),
-      documentation: tNav('documentation'),
-      contact: tNav('contact'),
-      language: tNav('language'),
-    },
-    footer: {
-      copyright: tFooter('copyright'),
-      privacy: tFooter('privacy'),
-      terms: tFooter('terms'),
-      contact: tFooter('contact'),
-      sitemap: tFooter('sitemap'),
-    },
-    form: {
-      submit: tForm('submit'),
-      cancel: tForm('cancel'),
-      save: tForm('save'),
-      delete: tForm('delete'),
-      edit: tForm('edit'),
-      required: tForm('required'),
-      invalidEmail: tForm('invalidEmail'),
-      emailTaken: tForm('emailTaken'),
-      passwordTooShort: tForm('passwordTooShort'),
-      confirmPassword: tForm('confirmPassword'),
-      forgotPassword: tForm('forgotPassword'),
-      resetPassword: tForm('resetPassword'),
-      loading: tForm('loading'),
-      error: tForm('error'),
-      success: tForm('success'),
-    },
-    article: {
-      readingTime: tArticle('readingTime'),
-      publishedOn: tArticle('publishedOn'),
-      updatedOn: tArticle('updatedOn'),
-      category: tArticle('category'),
-      tags: tArticle('tags'),
-      complexity: tArticle('complexity'),
-      tableOfContents: tArticle('tableOfContents'),
-      readingProgress: tArticle('readingProgress'),
-      byAuthor: tArticle('byAuthor'),
-    },
-    complexity: {
-      beginner: tComplexity('beginner'),
-      intermediate: tComplexity('intermediate'),
-      advanced: tComplexity('advanced'),
-    },
-    search: {
-      placeholder: tSearch('placeholder'),
-      noResults: tSearch('noResults'),
-      filters: tSearch('filters'),
-      clearFilters: tSearch('clearFilters'),
-      categories: tSearch('categories'),
-      complexityLevel: tSearch('complexityLevel'),
-      readingDuration: tSearch('readingDuration'),
-      dateRange: tSearch('dateRange'),
-      sort: tSearch('sort'),
-      loading: tSearch('loading'),
-    },
-    error: {
-      notFound: tError('notFound'),
-      serverError: tError('serverError'),
-      goHome: tError('goHome'),
-      unauthorized: tError('unauthorized'),
-      forbidden: tError('forbidden'),
-      badRequest: tError('badRequest'),
-      conflict: tError('conflict'),
-      timeout: tError('timeout'),
-      unavailable: tError('unavailable'),
-      unknown: tError('unknown'),
-    },
-  };
-
-  const totalKeys = Object.values(messages).reduce(
-    (sum, ns) => sum + Object.keys(ns).length,
+  // Calculate total keys from FR messages (both have same structure)
+  const totalKeys = Object.values(frMessages).reduce(
+    (sum, ns) => sum + Object.keys(ns as Record<string, string>).length,
     0,
   );
 
@@ -367,31 +269,60 @@ export default function MessageTestPage() {
       {/* Content */}
       <main className='mx-auto max-w-6xl px-4 py-8'>
         {/* Common Messages */}
-        <NamespaceSection namespace='common' messages={messages.common} />
+        <NamespaceSection
+          namespace='common'
+          frMessages={frMessages.common as Record<string, string>}
+          enMessages={enMessages.common as Record<string, string>}
+        />
 
         {/* Navigation */}
-        <NamespaceSection namespace='nav' messages={messages.nav} />
+        <NamespaceSection
+          namespace='nav'
+          frMessages={frMessages.nav as Record<string, string>}
+          enMessages={enMessages.nav as Record<string, string>}
+        />
 
         {/* Footer */}
-        <NamespaceSection namespace='footer' messages={messages.footer} />
+        <NamespaceSection
+          namespace='footer'
+          frMessages={frMessages.footer as Record<string, string>}
+          enMessages={enMessages.footer as Record<string, string>}
+        />
 
         {/* Form Messages */}
-        <NamespaceSection namespace='form' messages={messages.form} />
+        <NamespaceSection
+          namespace='form'
+          frMessages={frMessages.form as Record<string, string>}
+          enMessages={enMessages.form as Record<string, string>}
+        />
 
         {/* Article Metadata */}
-        <NamespaceSection namespace='article' messages={messages.article} />
+        <NamespaceSection
+          namespace='article'
+          frMessages={frMessages.article as Record<string, string>}
+          enMessages={enMessages.article as Record<string, string>}
+        />
 
         {/* Complexity */}
         <NamespaceSection
           namespace='complexity'
-          messages={messages.complexity}
+          frMessages={frMessages.complexity as Record<string, string>}
+          enMessages={enMessages.complexity as Record<string, string>}
         />
 
         {/* Search & Filters */}
-        <NamespaceSection namespace='search' messages={messages.search} />
+        <NamespaceSection
+          namespace='search'
+          frMessages={frMessages.search as Record<string, string>}
+          enMessages={enMessages.search as Record<string, string>}
+        />
 
         {/* Error Messages */}
-        <NamespaceSection namespace='error' messages={messages.error} />
+        <NamespaceSection
+          namespace='error'
+          frMessages={frMessages.error as Record<string, string>}
+          enMessages={enMessages.error as Record<string, string>}
+        />
 
         {/* Footer Note */}
         <div className='mt-12 border-t border-zinc-800 py-8'>
