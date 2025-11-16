@@ -51,6 +51,7 @@ pnpm lint src/i18n/config.ts
 ```
 
 **Expected Result**:
+
 - ✅ File exists at `src/i18n/config.ts`
 - ✅ TypeScript recognizes import from `next-intl/server`
 - ✅ No compilation errors
@@ -59,21 +60,25 @@ pnpm lint src/i18n/config.ts
 ### Review Checklist
 
 #### File Structure
+
 - [ ] File created in correct location: `src/i18n/config.ts`
 - [ ] Directory structure follows project conventions
 - [ ] File has proper UTF-8 encoding
 
 #### Imports
+
 - [ ] `getRequestConfig` imported from `'next-intl/server'`
 - [ ] Import statement uses correct syntax
 - [ ] No unused imports
 
 #### Documentation
+
 - [ ] File header comment is clear and informative
 - [ ] Comment explains purpose of configuration
 - [ ] Link to next-intl documentation included
 
 #### Code Quality
+
 - [ ] Consistent formatting (matches project Prettier/Biome config)
 - [ ] No commented code
 - [ ] Clean and minimal (foundation only)
@@ -152,6 +157,7 @@ pnpm lint src/i18n/config.ts
 ```
 
 **Expected Result**:
+
 - ✅ TypeScript recognizes `Locale` type
 - ✅ `locales` is readonly array (due to `as const`)
 - ✅ `defaultLocale` is typed as `Locale` (not widened to `string`)
@@ -162,11 +168,13 @@ pnpm lint src/i18n/config.ts
 ### Review Checklist
 
 #### Type Definitions
+
 - [ ] `Locale` type is union type: `'fr' | 'en'`
 - [ ] `Locale` is exported for use in other files
 - [ ] Type uses string literals (not string enum)
 
 #### Constants
+
 - [ ] `locales` array contains `['fr', 'en']`
 - [ ] `locales` uses `as const` assertion for readonly
 - [ ] `locales` is exported
@@ -175,11 +183,13 @@ pnpm lint src/i18n/config.ts
 - [ ] `defaultLocale` is exported
 
 #### Documentation
+
 - [ ] Each export has JSDoc comment
 - [ ] JSDoc explains purpose and usage
 - [ ] Reference to PRD requirement for French as default
 
 #### Code Quality
+
 - [ ] No type widening (e.g., `defaultLocale` not typed as `string`)
 - [ ] Follows TypeScript best practices
 - [ ] Const assertions used appropriately
@@ -241,7 +251,9 @@ Story 1.1 - Install and configure next-intl"
 export default getRequestConfig(async ({ locale }) => {
   // Validate that the incoming locale is valid
   if (!locales.includes(locale as Locale)) {
-    console.warn(`Invalid locale requested: ${locale}. Falling back to ${defaultLocale}.`);
+    console.warn(
+      `Invalid locale requested: ${locale}. Falling back to ${defaultLocale}.`,
+    );
     locale = defaultLocale;
   }
 
@@ -265,6 +277,7 @@ pnpm lint src/i18n/config.ts
 ```
 
 **Expected Result**:
+
 - ✅ `getRequestConfig` is properly typed
 - ✅ Dynamic import syntax is correct (no TypeScript errors)
 - ✅ Locale validation logic is present
@@ -275,39 +288,46 @@ pnpm lint src/i18n/config.ts
 ### Review Checklist
 
 #### Function Implementation
+
 - [ ] `getRequestConfig()` is called with async callback
 - [ ] Callback parameter is destructured: `{ locale }`
 - [ ] Function is exported as default
 
 #### Locale Validation
+
 - [ ] Locale is validated against `locales` array
 - [ ] Invalid locales trigger warning and fallback
 - [ ] Fallback uses `defaultLocale`
 - [ ] Type assertion `locale as Locale` is used for includes check
 
 #### Dynamic Import
+
 - [ ] Import path is correct: `../../messages/${locale}.json`
 - [ ] Import uses template literal syntax correctly
 - [ ] `.default` is accessed from import result
 - [ ] Path will resolve correctly relative to `src/i18n/config.ts`
 
 #### Return Value
+
 - [ ] Returns object with `messages` property
 - [ ] Messages are assigned the imported JSON
 - [ ] Return type matches next-intl's expected configuration
 
 #### Documentation
+
 - [ ] JSDoc explains function purpose
 - [ ] Documents that message files are created in Story 1.2
 - [ ] Includes link to next-intl documentation
 - [ ] Parameter and return value documented
 
 #### Error Handling
+
 - [ ] Invalid locale is handled gracefully
 - [ ] Warning is logged for debugging
 - [ ] Fallback to default locale prevents crashes
 
 #### Code Quality
+
 - [ ] Clean and readable implementation
 - [ ] No hardcoded values (uses constants)
 - [ ] Follows async/await best practices
@@ -334,6 +354,7 @@ Story 1.1 - Install and configure next-intl"
 ## 📋 Commit 4: Add TypeScript configuration and type exports
 
 **Files**:
+
 - `src/i18n/types.ts` (new)
 - `src/i18n/index.ts` (new)
 
@@ -414,6 +435,7 @@ pnpm lint src/i18n/
 ```
 
 **Expected Result**:
+
 - ✅ All types properly exported
 - ✅ Barrel export provides clean import path
 - ✅ TypeScript recognizes all type definitions
@@ -424,6 +446,7 @@ pnpm lint src/i18n/
 ### Review Checklist
 
 #### types.ts
+
 - [ ] File created at `src/i18n/types.ts`
 - [ ] `IntlMessages` type defined (generic/placeholder is OK)
 - [ ] `LocaleParam` utility type defined
@@ -432,6 +455,7 @@ pnpm lint src/i18n/
 - [ ] Documentation notes refinement in Story 1.2
 
 #### index.ts
+
 - [ ] File created at `src/i18n/index.ts`
 - [ ] Default config exported as named export `i18nConfig`
 - [ ] `Locale` type re-exported with `type` keyword
@@ -440,12 +464,14 @@ pnpm lint src/i18n/
 - [ ] JSDoc documentation explaining barrel pattern
 
 #### Code Quality
+
 - [ ] No circular dependencies
 - [ ] Clean export organization
 - [ ] Follows project conventions for barrel exports
 - [ ] Type-only exports use `type` keyword (e.g., `export type { ... }`)
 
 #### Integration
+
 - [ ] Can import from `@/i18n` in other files
 - [ ] Imports provide proper TypeScript types
 - [ ] No import errors in IDE
@@ -472,6 +498,7 @@ Story 1.1 - Install and configure next-intl"
 ## 📋 Commit 5: Validate configuration and add documentation
 
 **Files**:
+
 - `src/i18n/README.md` (new)
 - `CLAUDE.md` (modified)
 
@@ -501,10 +528,10 @@ This directory contains the internationalization (i18n) configuration for the ap
 
 \`\`\`
 src/i18n/
-├── config.ts     # next-intl request configuration
-├── types.ts      # TypeScript type definitions
-├── index.ts      # Barrel exports
-└── README.md     # This file
+├── config.ts # next-intl request configuration
+├── types.ts # TypeScript type definitions
+├── index.ts # Barrel exports
+└── README.md # This file
 \`\`\`
 
 ## 🌍 Supported Locales
@@ -546,8 +573,8 @@ Message files will be created in **Story 1.2** at:
 
 \`\`\`
 messages/
-├── fr.json       # French translations
-└── en.json       # English translations
+├── fr.json # French translations
+└── en.json # English translations
 \`\`\`
 
 The configuration is already set up to dynamically import these files based on the current locale.
@@ -560,9 +587,9 @@ The configuration is already set up to dynamically import these files based on t
 import { useTranslations } from 'next-intl';
 
 export default function MyPage() {
-  const t = useTranslations();
+const t = useTranslations();
 
-  return <h1>{t('welcome')}</h1>;
+return <h1>{t('welcome')}</h1>;
 }
 \`\`\`
 
@@ -574,9 +601,9 @@ export default function MyPage() {
 import { useTranslations } from 'next-intl';
 
 export default function MyClientComponent() {
-  const t = useTranslations();
+const t = useTranslations();
 
-  return <p>{t('description')}</p>;
+return <p>{t('description')}</p>;
 }
 \`\`\`
 
@@ -642,6 +669,7 @@ pnpm dev
 ```
 
 **Expected Result**:
+
 - ✅ README.md is comprehensive and clear
 - ✅ CLAUDE.md references i18n configuration
 - ✅ All TypeScript validations pass
@@ -652,6 +680,7 @@ pnpm dev
 ### Review Checklist
 
 #### src/i18n/README.md
+
 - [ ] File created and properly formatted (Markdown)
 - [ ] Documents directory structure
 - [ ] Lists supported locales (fr, en)
@@ -663,6 +692,7 @@ pnpm dev
 - [ ] Clear and helpful for developers
 
 #### CLAUDE.md Update
+
 - [ ] i18n section added or updated
 - [ ] Lists next-intl version (4.5.3)
 - [ ] Documents configuration file locations
@@ -672,6 +702,7 @@ pnpm dev
 - [ ] Current status updated
 
 #### Final Validation
+
 - [ ] TypeScript compilation passes (`pnpm tsc --noEmit`)
 - [ ] Linter passes (`pnpm lint`)
 - [ ] Dev server starts without errors (`pnpm dev`)
@@ -679,6 +710,7 @@ pnpm dev
 - [ ] Configuration is ready for Story 1.2
 
 #### Code Quality
+
 - [ ] Markdown formatting is correct
 - [ ] Code examples are accurate
 - [ ] Links work correctly
@@ -742,6 +774,7 @@ git log --oneline -5
 ```
 
 **Expected Results**:
+
 - ✅ All validations pass
 - ✅ 4 files created in `src/i18n/` (config.ts, types.ts, index.ts, README.md)
 - ✅ CLAUDE.md updated
@@ -766,13 +799,13 @@ git log --oneline -5
 
 ## 📊 Summary
 
-| Metric | Target | Status |
-|--------|--------|--------|
-| Commits | 5 | ⏳ In Progress |
-| Files Created | 4 | ⏳ In Progress |
-| TypeScript Errors | 0 | ⏳ Pending |
-| Linter Errors | 0 | ⏳ Pending |
-| Dev Server | Starts OK | ⏳ Pending |
-| Documentation | Complete | ⏳ Pending |
+| Metric            | Target    | Status         |
+| ----------------- | --------- | -------------- |
+| Commits           | 5         | ⏳ In Progress |
+| Files Created     | 4         | ⏳ In Progress |
+| TypeScript Errors | 0         | ⏳ Pending     |
+| Linter Errors     | 0         | ⏳ Pending     |
+| Dev Server        | Starts OK | ⏳ Pending     |
+| Documentation     | Complete  | ⏳ Pending     |
 
 **Once all commits are done and validations pass, proceed to VALIDATION_CHECKLIST.md for final sign-off!**

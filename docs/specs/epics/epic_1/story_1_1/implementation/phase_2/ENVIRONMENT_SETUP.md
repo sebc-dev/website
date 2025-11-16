@@ -15,6 +15,7 @@ This guide covers all environment setup needed for Phase 2 (Configuration File C
   - No dependency conflicts
 
 **Verification**:
+
 ```bash
 # Verify next-intl is installed
 pnpm list next-intl
@@ -35,6 +36,7 @@ pnpm lint
 - [x] **Code Editor** with TypeScript support (VS Code recommended)
 
 **Verification**:
+
 ```bash
 # Check Node.js version
 node --version
@@ -57,6 +59,7 @@ pnpm tsc --version
 - [x] ESLint configured and working
 
 **Verification**:
+
 ```bash
 # From project root
 pnpm install
@@ -78,14 +81,15 @@ pnpm dev
 
 Phase 2 uses packages installed in Phase 1. No new dependencies needed.
 
-| Package     | Version       | Purpose                      | Installed In |
-|-------------|---------------|------------------------------|--------------|
-| `next-intl` | 4.5.3         | Internationalization library | Phase 1      |
-| `next`      | 15.x          | Next.js framework            | Epic 0       |
-| `react`     | 19.x          | React library                | Epic 0       |
-| `typescript`| 5.x           | TypeScript compiler          | Epic 0       |
+| Package      | Version | Purpose                      | Installed In |
+| ------------ | ------- | ---------------------------- | ------------ |
+| `next-intl`  | 4.5.3   | Internationalization library | Phase 1      |
+| `next`       | 15.x    | Next.js framework            | Epic 0       |
+| `react`      | 19.x    | React library                | Epic 0       |
+| `typescript` | 5.x     | TypeScript compiler          | Epic 0       |
 
 **Verification**:
+
 ```bash
 # Check all required packages are installed
 pnpm list next-intl next react typescript
@@ -126,6 +130,7 @@ For Phase 2, **no environment setup required**. ✅
 Phase 2 will create files in the `src/i18n/` directory.
 
 **Verify `src/` directory exists**:
+
 ```bash
 # Check if src directory exists
 ls -la src/
@@ -157,6 +162,7 @@ src/
 Verify TypeScript path alias is configured for `@/`:
 
 **Check `tsconfig.json`**:
+
 ```json
 {
   "compilerOptions": {
@@ -168,6 +174,7 @@ Verify TypeScript path alias is configured for `@/`:
 ```
 
 **Verification**:
+
 ```bash
 # Check tsconfig.json for path aliases
 grep -A 3 '"paths"' tsconfig.json
@@ -182,11 +189,13 @@ If path aliases are configured, you can import from `@/i18n` instead of relative
 ### VS Code (Recommended)
 
 **Recommended Extensions**:
+
 - **ESLint** (`dbaeumer.vscode-eslint`) - For linting
 - **Prettier** (`esbenp.prettier-vscode`) - For formatting
 - **TypeScript Error Lens** (optional) - Shows TypeScript errors inline
 
 **Workspace Settings** (`.vscode/settings.json`):
+
 ```json
 {
   "typescript.tsdk": "node_modules/typescript/lib",
@@ -208,6 +217,7 @@ Ensure TypeScript IntelliSense is working:
 
 **Troubleshooting**:
 If IntelliSense doesn't work:
+
 ```bash
 # Reload TypeScript server in VS Code
 # Command Palette (Ctrl+Shift+P): "TypeScript: Restart TS Server"
@@ -261,6 +271,7 @@ Complete this checklist **before starting Commit 1**:
 - [ ] Ready to create 5 atomic commits
 
 **Verification Command**:
+
 ```bash
 # Verify git is ready
 git status
@@ -276,16 +287,20 @@ git status
 ### Issue: next-intl not found
 
 **Symptoms**:
+
 - TypeScript error: `Cannot find module 'next-intl/server'`
 - Import statements show errors in IDE
 
 **Solutions**:
+
 1. Verify package is installed:
+
    ```bash
    pnpm list next-intl
    ```
 
 2. Reinstall if needed:
+
    ```bash
    pnpm install
    ```
@@ -294,6 +309,7 @@ git status
    - Command Palette: "TypeScript: Restart TS Server"
 
 **Verify Fix**:
+
 ```bash
 pnpm tsc --noEmit
 # Should complete without errors about next-intl
@@ -304,16 +320,20 @@ pnpm tsc --noEmit
 ### Issue: TypeScript path alias not working
 
 **Symptoms**:
+
 - Cannot import from `@/i18n`
 - TypeScript error: `Cannot find module '@/i18n'`
 
 **Solutions**:
+
 1. Check `tsconfig.json` has path aliases:
+
    ```bash
    grep -A 5 '"paths"' tsconfig.json
    ```
 
 2. Verify `baseUrl` is set:
+
    ```json
    {
      "compilerOptions": {
@@ -335,11 +355,14 @@ Try importing from `@/i18n` in a test file - should autocomplete.
 ### Issue: ESLint errors
 
 **Symptoms**:
+
 - ESLint shows errors unrelated to your changes
 - Cannot pass `pnpm lint`
 
 **Solutions**:
+
 1. Check if errors existed before Phase 2:
+
    ```bash
    git stash
    pnpm lint
@@ -357,16 +380,20 @@ Try importing from `@/i18n` in a test file - should autocomplete.
 ### Issue: Dev server won't start
 
 **Symptoms**:
+
 - `pnpm dev` fails with errors
 - Server crashes on startup
 
 **Solutions**:
+
 1. Check for syntax errors in existing code:
+
    ```bash
    pnpm tsc --noEmit
    ```
 
 2. Clear Next.js cache:
+
    ```bash
    rm -rf .next
    pnpm dev
@@ -378,6 +405,7 @@ Try importing from `@/i18n` in a test file - should autocomplete.
    ```
 
 **Verify Fix**:
+
 ```bash
 pnpm dev
 # Should start on http://localhost:3000

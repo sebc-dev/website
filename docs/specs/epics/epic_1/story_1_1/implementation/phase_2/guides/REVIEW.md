@@ -24,12 +24,14 @@ Validate that the implementation:
 Phase 2 is split into **5 atomic commits**. You can:
 
 **Option A: Commit-by-commit review** (recommended)
+
 - Easier to digest (10-30 min per commit)
 - Progressive validation
 - Targeted feedback
 - **Total time**: ~1.5-2h
 
 **Option B: Global review at once**
+
 - Faster overview
 - See complete picture
 - Requires more focus
@@ -49,24 +51,28 @@ Phase 2 is split into **5 atomic commits**. You can:
 #### Review Checklist
 
 ##### File Structure
+
 - [ ] File created at correct location: `src/i18n/config.ts`
 - [ ] Directory `src/i18n/` created
 - [ ] File has proper UTF-8 encoding
 - [ ] Clean and minimal (foundation only)
 
 ##### Imports
+
 - [ ] Imports `getRequestConfig` from `'next-intl/server'`
 - [ ] Import statement syntax is correct
 - [ ] No unused imports
 - [ ] Import is from correct package (not `next-intl` without `/server`)
 
 ##### Documentation
+
 - [ ] File header comment explains purpose
 - [ ] Comment mentions next-intl and Next.js 15 App Router
 - [ ] Link to next-intl documentation included
 - [ ] Documentation is clear and helpful
 
 ##### Code Quality
+
 - [ ] Follows project formatting (Prettier/Biome)
 - [ ] No commented code
 - [ ] Clean indentation and spacing
@@ -86,6 +92,7 @@ pnpm lint src/i18n/config.ts
 ```
 
 **Expected Result**:
+
 - ✅ TypeScript recognizes import from `next-intl/server`
 - ✅ No compilation errors
 - ✅ No linter warnings
@@ -106,12 +113,14 @@ pnpm lint src/i18n/config.ts
 #### Review Checklist
 
 ##### Type Definitions
+
 - [ ] `Locale` type defined as union: `'fr' | 'en'`
 - [ ] Type uses string literals (not enum)
 - [ ] Type is exported with `export type`
 - [ ] Type name follows conventions (PascalCase)
 
 ##### Constants
+
 - [ ] `locales` array contains `['fr', 'en']`
 - [ ] `locales` uses `as const` assertion
 - [ ] `locales` is exported
@@ -120,12 +129,14 @@ pnpm lint src/i18n/config.ts
 - [ ] `defaultLocale` is exported
 
 ##### Documentation
+
 - [ ] Each export has JSDoc comment
 - [ ] JSDoc explains purpose and usage
 - [ ] Comment mentions PRD requirement for French as default
 - [ ] Documentation is comprehensive
 
 ##### Type Safety
+
 - [ ] No type widening (hover over `defaultLocale` should show `Locale`, not `string`)
 - [ ] Const assertion prevents array mutation
 - [ ] Types are strict and precise
@@ -144,6 +155,7 @@ pnpm lint src/i18n/config.ts
 ```
 
 **Expected Result**:
+
 - ✅ TypeScript recognizes `Locale` type
 - ✅ `locales` is readonly array
 - ✅ `defaultLocale` typed as `Locale` (not `string`)
@@ -166,12 +178,14 @@ pnpm lint src/i18n/config.ts
 #### Review Checklist
 
 ##### Function Implementation
+
 - [ ] `getRequestConfig()` is called with async callback
 - [ ] Callback parameter is destructured: `{ locale }`
 - [ ] Function is exported as `default export`
 - [ ] Async/await used correctly
 
 ##### Locale Validation
+
 - [ ] Locale validated against `locales` array
 - [ ] Invalid locales trigger warning (console.warn)
 - [ ] Invalid locales fall back to `defaultLocale`
@@ -179,6 +193,7 @@ pnpm lint src/i18n/config.ts
 - [ ] Validation logic is correct and safe
 
 ##### Dynamic Import
+
 - [ ] Import path is correct: `../../messages/${locale}.json`
 - [ ] Import uses template literal syntax
 - [ ] `.default` is accessed from import result
@@ -186,11 +201,13 @@ pnpm lint src/i18n/config.ts
 - [ ] Dynamic import is async (with `await`)
 
 ##### Return Value
+
 - [ ] Returns object with `messages` property
 - [ ] Messages are assigned imported JSON
 - [ ] Return type matches next-intl's expected configuration
 
 ##### Documentation
+
 - [ ] JSDoc explains function purpose
 - [ ] Documents that message files created in Story 1.2
 - [ ] Includes link to next-intl documentation
@@ -198,6 +215,7 @@ pnpm lint src/i18n/config.ts
 - [ ] Return value documented
 
 ##### Error Handling
+
 - [ ] Invalid locale handled gracefully
 - [ ] Warning logged for debugging
 - [ ] Fallback prevents crashes
@@ -217,6 +235,7 @@ pnpm lint src/i18n/config.ts
 ```
 
 **Expected Result**:
+
 - ✅ `getRequestConfig` properly typed
 - ✅ Dynamic import syntax correct
 - ✅ TypeScript compiles (even without message files)
@@ -235,6 +254,7 @@ pnpm lint src/i18n/config.ts
 ### Commit 4: Add TypeScript configuration and type exports
 
 **Files**:
+
 - `src/i18n/types.ts` (new, ~40 lines)
 - `src/i18n/index.ts` (new, ~15 lines)
 
@@ -243,6 +263,7 @@ pnpm lint src/i18n/config.ts
 #### Review Checklist
 
 ##### types.ts
+
 - [ ] File created at `src/i18n/types.ts`
 - [ ] `IntlMessages` type defined
 - [ ] `IntlMessages` type is generic/placeholder (will be refined in Story 1.2)
@@ -252,6 +273,7 @@ pnpm lint src/i18n/config.ts
 - [ ] Documentation mentions refinement in Story 1.2
 
 ##### index.ts (Barrel Export)
+
 - [ ] File created at `src/i18n/index.ts`
 - [ ] Default config exported as named export `i18nConfig`
 - [ ] `Locale` type re-exported with `export type` keyword
@@ -261,12 +283,14 @@ pnpm lint src/i18n/config.ts
 - [ ] All public APIs are exported
 
 ##### Export Organization
+
 - [ ] Type-only exports use `export type` keyword
 - [ ] Value exports use `export` keyword
 - [ ] No circular dependencies
 - [ ] Clean and organized structure
 
 ##### Code Quality
+
 - [ ] No circular dependencies
 - [ ] Follows project barrel export conventions
 - [ ] Clear separation of types and values
@@ -287,6 +311,7 @@ pnpm lint src/i18n/
 ```
 
 **Expected Result**:
+
 - ✅ All types properly exported
 - ✅ Barrel export works (can import from `@/i18n`)
 - ✅ No circular dependencies
@@ -304,6 +329,7 @@ pnpm lint src/i18n/
 ### Commit 5: Validate configuration and add documentation
 
 **Files**:
+
 - `src/i18n/README.md` (new, ~80 lines)
 - `CLAUDE.md` (modified, +~15 lines)
 
@@ -312,6 +338,7 @@ pnpm lint src/i18n/
 #### Review Checklist
 
 ##### src/i18n/README.md
+
 - [ ] File created and properly formatted (Markdown)
 - [ ] Documents directory structure clearly
 - [ ] Lists supported locales (fr, en)
@@ -326,6 +353,7 @@ pnpm lint src/i18n/
 - [ ] Code examples are correct and runnable
 
 ##### CLAUDE.md Update
+
 - [ ] i18n section added or updated
 - [ ] Lists next-intl version (4.5.3 or current)
 - [ ] Documents configuration file locations
@@ -335,6 +363,7 @@ pnpm lint src/i18n/
 - [ ] Current status/phase documented
 
 ##### Final Validation
+
 - [ ] TypeScript compilation passes
 - [ ] Linter passes
 - [ ] Dev server starts without errors
@@ -342,6 +371,7 @@ pnpm lint src/i18n/
 - [ ] Configuration ready for Story 1.2
 
 ##### Documentation Quality
+
 - [ ] Markdown formatting correct
 - [ ] Code blocks have language tags
 - [ ] Links work and are not broken
@@ -370,6 +400,7 @@ pnpm dev
 ```
 
 **Expected Result**:
+
 - ✅ README is comprehensive and clear
 - ✅ CLAUDE.md references i18n config
 - ✅ All validations pass
@@ -461,6 +492,7 @@ Use this template for feedback:
 ### 🔧 Required Changes
 
 #### Commit X: [Title]
+
 1. **[File/Area]**: [Issue description]
    - **Why**: [Explanation of the issue]
    - **Suggestion**: [How to fix]
@@ -524,24 +556,28 @@ Use this template for feedback:
 ## 🎓 Common Issues to Watch For
 
 ### Configuration Errors
+
 - ❌ Importing from `next-intl` instead of `next-intl/server`
 - ❌ Missing `as const` on locales array (loses type safety)
 - ❌ Type widening on `defaultLocale` (should be `Locale`, not `string`)
 - ❌ Incorrect dynamic import path
 
 ### TypeScript Issues
+
 - ❌ Using `any` without justification
 - ❌ Missing type exports in barrel file
 - ❌ Circular dependencies between files
 - ❌ Type-value exports not properly separated
 
 ### Documentation Issues
+
 - ❌ Missing or incomplete JSDoc
 - ❌ Examples that won't work
 - ❌ Broken links or references
 - ❌ Unclear next steps
 
 ### Integration Issues
+
 - ❌ Configuration incompatible with Next.js 15 patterns
 - ❌ Missing exports in barrel file
 - ❌ Dev server fails to start
@@ -552,14 +588,14 @@ Use this template for feedback:
 
 Track these during review:
 
-| Metric | Target | Actual | Status |
-|--------|--------|--------|--------|
-| TypeScript Errors | 0 | - | ⏳ |
-| ESLint Warnings | 0 | - | ⏳ |
-| Files Created | 5 | - | ⏳ |
-| Lines of Code | ~225 | - | ⏳ |
-| Documentation | Complete | - | ⏳ |
-| Dev Server | Starts OK | - | ⏳ |
+| Metric            | Target    | Actual | Status |
+| ----------------- | --------- | ------ | ------ |
+| TypeScript Errors | 0         | -      | ⏳     |
+| ESLint Warnings   | 0         | -      | ⏳     |
+| Files Created     | 5         | -      | ⏳     |
+| Lines of Code     | ~225      | -      | ⏳     |
+| Documentation     | Complete  | -      | ⏳     |
+| Dev Server        | Starts OK | -      | ⏳     |
 
 ---
 
