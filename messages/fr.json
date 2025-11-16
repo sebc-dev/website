@@ -1,64 +1,91 @@
 {
   "article": {
-    "readingTime": "{minutes} min de lecture",
-    "publishedOn": "Publié le {date}",
-    "updatedOn": "Mis à jour le {date}",
+    "byAuthor": "Par {author}",
     "category": "Catégorie",
-    "tags": "Balises",
     "complexity": "Complexité",
+    "publishedOn": "Publié le {date}",
+    "readingProgress": "Progression de lecture",
+    "readingTime": "{minutes} min de lecture",
     "tableOfContents": "Table des matières",
-    "readingProgress": "Progression de lecture"
+    "tags": "Balises",
+    "updatedOn": "Mis à jour le {date}"
   },
   "common": {
     "appName": "sebc.dev",
+    "apply": "Appliquer",
+    "cancel": "Annuler",
     "close": "Fermer",
+    "confirm": "Confirmer",
     "error": "Une erreur s'est produite",
+    "info": "Information",
     "loading": "Chargement...",
     "noData": "Aucune donnée disponible",
-    "confirm": "Confirmer",
-    "cancel": "Annuler",
     "retry": "Réessayer",
     "success": "Succès",
     "warning": "Attention"
   },
   "complexity": {
+    "advanced": "Avancé",
     "beginner": "Débutant",
-    "intermediate": "Intermédiaire",
-    "advanced": "Avancé"
+    "intermediate": "Intermédiaire"
   },
   "error": {
+    "badRequest": "Mauvaise requête",
+    "conflict": "Conflit de ressource",
+    "forbidden": "Accès interdit",
+    "goHome": "Aller à la page d'accueil",
     "notFound": "Page non trouvée",
     "serverError": "Erreur serveur interne",
-    "goHome": "Aller à la page d'accueil"
+    "timeout": "Délai d'attente dépassé",
+    "unauthorized": "Non autorisé",
+    "unavailable": "Service indisponible",
+    "unknown": "Une erreur inconnue s'est produite"
   },
   "footer": {
+    "contact": "Contact",
     "copyright": "© 2025 sebc.dev. Tous droits réservés.",
     "privacy": "Politique de confidentialité",
+    "sitemap": "Plan du site",
     "terms": "Conditions d'utilisation"
   },
   "form": {
-    "submit": "Soumettre",
     "cancel": "Annuler",
-    "save": "Enregistrer",
+    "confirmPassword": "Confirmer le mot de passe",
     "delete": "Supprimer",
     "edit": "Modifier",
+    "emailTaken": "Cet e-mail est déjà enregistré",
+    "error": "Une erreur s'est produite lors de la soumission du formulaire",
+    "forgotPassword": "Mot de passe oublié ?",
+    "invalidEmail": "Adresse e-mail invalide",
+    "loading": "Envoi en cours...",
+    "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
     "required": "Ce champ est requis",
-    "invalidEmail": "Adresse e-mail invalide"
+    "resetPassword": "Réinitialiser le mot de passe",
+    "save": "Enregistrer",
+    "submit": "Soumettre",
+    "success": "Formulaire soumis avec succès"
   },
   "nav": {
-    "home": "Accueil",
+    "about": "À propos",
     "articles": "Articles",
-    "search": "Rechercher",
-    "about": "À propos"
+    "blog": "Blog",
+    "contact": "Contact",
+    "documentation": "Documentation",
+    "home": "Accueil",
+    "language": "Langue",
+    "projects": "Projets",
+    "search": "Rechercher"
   },
   "search": {
-    "placeholder": "Rechercher les articles...",
-    "noResults": "Aucun article trouvé",
-    "filters": "Filtres",
-    "clearFilters": "Effacer les filtres",
     "categories": "Catégories",
+    "clearFilters": "Effacer les filtres",
     "complexityLevel": "Niveau de complexité",
+    "dateRange": "Plage de dates",
+    "filters": "Filtres",
+    "loading": "Chargement des résultats...",
+    "noResults": "Aucun article trouvé",
+    "placeholder": "Rechercher les articles...",
     "readingDuration": "Durée de lecture",
-    "dateRange": "Plage de dates"
+    "sort": "Trier par"
   }
 }
