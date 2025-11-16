@@ -34,6 +34,7 @@ test -f i18n/types.ts && echo "✅ Locale types exist"
 ### Services Required
 
 None. This phase only requires:
+
 - Dev server running (started with `pnpm dev`)
 - No external APIs or databases
 
@@ -177,6 +178,7 @@ cat i18n/config.ts | head -30
 ```
 
 **Expected to see**:
+
 - Import of message files (fr.json)
 - Configuration with locales
 - Message loading logic
@@ -189,6 +191,7 @@ cat i18n/types.ts | head -20
 ```
 
 **Expected to see**:
+
 - `Locale` type with 'fr' and 'en'
 - `DEFAULT_LOCALE` set to 'fr'
 - Route configuration
@@ -221,15 +224,18 @@ Complete this checklist before starting implementation:
 ### Issue: `messages/fr.json` doesn't exist
 
 **Symptoms**:
+
 - `test -f messages/fr.json` returns false
 - Tests fail with "Cannot find module messages/fr.json"
 
 **Solution**:
+
 1. Run Phase 1 implementation first
 2. Verify `messages/fr.json` was created during Phase 1
 3. If not: Check Phase 1 documentation for why it wasn't created
 
 **Verify Fix**:
+
 ```bash
 ls -la messages/fr.json
 jq '.' messages/fr.json  # Should show valid JSON
@@ -240,16 +246,19 @@ jq '.' messages/fr.json  # Should show valid JSON
 ### Issue: `pnpm test` fails with existing tests
 
 **Symptoms**:
+
 - Some existing tests fail before starting Phase 2
 - Error messages about missing modules or type issues
 
 **Solution**:
+
 1. This is a **blocker**. Do not proceed with Phase 2 until existing tests pass
 2. Check if there are recent commits that broke tests
 3. Run `pnpm install` to ensure dependencies are correct
 4. Run `pnpm tsc` to check for type errors
 
 **Verify Fix**:
+
 ```bash
 pnpm test  # All tests should pass
 ```
@@ -259,16 +268,19 @@ pnpm test  # All tests should pass
 ### Issue: Can't create `messages/en.json`
 
 **Symptoms**:
+
 - Permission denied when creating file
 - File system read-only error
 
 **Solution**:
+
 1. Check directory permissions: `ls -ld messages/`
 2. Try creating a test file: `touch messages/test.json`
 3. If that fails, fix permissions: `chmod 755 messages/`
 4. Delete test file: `rm messages/test.json`
 
 **Verify Fix**:
+
 ```bash
 touch messages/test.json && rm messages/test.json && echo "✅ Can write to messages/"
 ```
@@ -278,17 +290,20 @@ touch messages/test.json && rm messages/test.json && echo "✅ Can write to mess
 ### Issue: TypeScript errors when editing message files
 
 **Symptoms**:
+
 - VS Code shows type errors
 - `pnpm tsc` reports type issues
 - Red squiggles in editor
 
 **Solution**:
+
 1. These are usually expected during implementation
 2. Restart VS Code's TypeScript server: `Cmd+Shift+P` → "TypeScript: Restart TS Server"
 3. Ensure `tsconfig.json` is configured correctly
 4. Check that imports use correct paths
 
 **Verify Fix**:
+
 ```bash
 pnpm tsc  # Should pass after fixing imports
 ```
@@ -298,15 +313,18 @@ pnpm tsc  # Should pass after fixing imports
 ### Issue: Dev server crashes on startup
 
 **Symptoms**:
+
 - `pnpm dev` fails with error
 - Port 3000 already in use
 
 **Solution**:
+
 1. Check if dev server already running: `lsof -i :3000`
 2. Kill existing process: `kill -9 <PID>`
 3. Or use different port: `PORT=3001 pnpm dev`
 
 **Verify Fix**:
+
 ```bash
 pnpm dev  # Should start without errors
 # Visit http://localhost:3000 to verify
@@ -318,15 +336,18 @@ pnpm dev  # Should start without errors
 ### Issue: JSON files have encoding issues
 
 **Symptoms**:
+
 - Non-ASCII characters (é, ü, etc.) display incorrectly
 - JSON validation fails with encoding error
 
 **Solution**:
+
 1. Ensure editor is set to UTF-8: VS Code → Bottom right corner → UTF-8
 2. Save file: `Ctrl+S`
 3. Verify: `file messages/en.json` (should show UTF-8)
 
 **Verify Fix**:
+
 ```bash
 file messages/en.json  # Should show "UTF-8 Unicode text"
 jq '.' messages/en.json | grep -i "é"  # Should display correctly
@@ -377,4 +398,3 @@ When all checks pass, you're ready to:
 5. Reference `REVIEW.md` for code review guidelines
 
 **Happy implementing! 🎉**
-

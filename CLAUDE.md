@@ -103,6 +103,7 @@ Uses Geist font family (Geist Sans and Geist Mono) via `next/font/google`
   - Common patterns include parameterized translations (e.g., `{minutes} min read`)
 - **Import Pattern**: Use `import { ... } from '@/i18n'` for clean imports
 - **Component Usage**:
+
   ```typescript
   import { useTranslations } from 'next-intl';
 
@@ -111,6 +112,7 @@ Uses Geist font family (Geist Sans and Geist Mono) via `next/font/google`
     return <div>{t('appName')}</div>;
   }
   ```
+
 - **Testing**: Run `pnpm test messages.test.ts` to validate translation parity
 - **Documentation**: See `i18n/README.md` for complete usage guide, examples, and best practices
 - **Development Tools**: Test page at `[locale]/messages-test` shows all translations side-by-side

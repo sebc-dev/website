@@ -154,10 +154,12 @@ cat docs/specs/epics/epic_1/story_1_2/implementation/phase_2/validation/VALIDATI
 ## 🔗 Dependencies
 
 **This phase depends on**:
+
 - Phase 1 completion (French translations in place)
 - Story 1.1 completion (next-intl configured)
 
 **This phase enables**:
+
 - Full bilingual UI functionality
 - Type-safe translation access across the application
 - Stories 1.4, 1.5, 1.7 implementation (they depend on translations)
@@ -193,4 +195,3 @@ A: No. Tests ensure each commit is validated and key parity is maintained.
 **Phase Created**: 2025-11-16
 **Status**: 🚧 NOT STARTED
 **Next Step**: Read IMPLEMENTATION_PLAN.md to begin
-

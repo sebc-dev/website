@@ -54,6 +54,7 @@ The implementation is split into **4 independent commits** to:
 - ~180 lines total (easily reviewable)
 
 **Technical Validation**:
+
 ```bash
 # Validate JSON syntax
 jq empty messages/en.json
@@ -103,6 +104,7 @@ test -f messages/en.json && echo "✅ File created"
 - Brings total English keys to ~55-60
 
 **Technical Validation**:
+
 ```bash
 # Validate JSON syntax
 jq empty messages/en.json
@@ -149,6 +151,7 @@ jq 'keys' messages/en.json | grep -E "form|article|complexity|search|error"
 - Ensures quality gate before deployment
 
 **Technical Validation**:
+
 ```bash
 # Run message tests
 pnpm test messages.test.ts
@@ -173,6 +176,7 @@ pnpm test:coverage
 ### Commit 4: Create Test Page & Documentation
 
 **Files**:
+
 - `app/[locale]/(test)/messages-test/page.tsx` (new) - ~200 lines
 - `i18n/README.md` (new) - ~150 lines
 - `CLAUDE.md` (modified) - update i18n section
@@ -183,6 +187,7 @@ pnpm test:coverage
 **Content**:
 
 **Test Page**:
+
 - Display all translation keys from all namespaces
 - Show both French and English translations side-by-side
 - Display parameterized translations with sample variables
@@ -193,6 +198,7 @@ pnpm test:coverage
 - Note: This page should be behind a feature flag or hidden route (not for production)
 
 **i18n/README.md**:
+
 - Overview of message file structure
 - Explanation of namespaces and naming conventions
 - How to access translations from components (usage examples)
@@ -203,6 +209,7 @@ pnpm test:coverage
 - Examples of parameterized translations
 
 **CLAUDE.md Update**:
+
 - Add section about message files
 - Document namespace structure
 - Add import patterns for translations
@@ -218,6 +225,7 @@ pnpm test:coverage
 - Sets up proper documentation patterns
 
 **Technical Validation**:
+
 ```bash
 # Verify page renders without errors
 curl http://localhost:3000/fr/messages-test 2>/dev/null | grep -q "html"
@@ -230,6 +238,7 @@ pnpm lint
 ```
 
 **Expected Result**:
+
 - Test page displays all translations correctly
 - Both French and English render properly
 - Parameterized translations show example values
@@ -276,6 +285,7 @@ pnpm lint
 ### Validation at Each Step
 
 After each commit:
+
 ```bash
 # Type checking
 pnpm tsc
@@ -296,13 +306,13 @@ All must pass before moving to next commit.
 
 ## 📊 Commit Metrics
 
-| Commit | Files  | Lines     | Implementation | Review  | Total  |
-|--------|--------|-----------|----------------|---------|--------|
-| 1. English (Common/Nav/Footer) | 1 | ~180 | 30-45 min | 15-20 min | 45-65 min |
-| 2. English (Forms/Article/Search/Error) | 1 | ~220 | 40-60 min | 20-25 min | 60-85 min |
-| 3. Parity Validation Tests | 1 | ~250 | 45-60 min | 15-20 min | 60-80 min |
-| 4. Test Page & Documentation | 2-3 | ~350 | 50-70 min | 20-30 min | 70-100 min |
-| **TOTAL** | **5-6** | **~1000** | **3-4h** | **1.5-2h** | **4.5-6h** |
+| Commit                                  | Files   | Lines     | Implementation | Review     | Total      |
+| --------------------------------------- | ------- | --------- | -------------- | ---------- | ---------- |
+| 1. English (Common/Nav/Footer)          | 1       | ~180      | 30-45 min      | 15-20 min  | 45-65 min  |
+| 2. English (Forms/Article/Search/Error) | 1       | ~220      | 40-60 min      | 20-25 min  | 60-85 min  |
+| 3. Parity Validation Tests              | 1       | ~250      | 45-60 min      | 15-20 min  | 60-80 min  |
+| 4. Test Page & Documentation            | 2-3     | ~350      | 50-70 min      | 20-30 min  | 70-100 min |
+| **TOTAL**                               | **5-6** | **~1000** | **3-4h**       | **1.5-2h** | **4.5-6h** |
 
 ---
 
@@ -333,6 +343,7 @@ All must pass before moving to next commit.
 ### Commit Messages
 
 Format:
+
 ```
 type(scope): short description (max 50 chars)
 
@@ -344,6 +355,7 @@ Part of Phase 2 - Commit X/4
 ```
 
 **Commit 1 Template**:
+
 ```
 ✨ feat(i18n): add English translations for common, nav, footer namespaces
 
@@ -356,6 +368,7 @@ Part of Phase 2 - Commit 1/4
 ```
 
 **Commit 2 Template**:
+
 ```
 ✨ feat(i18n): add English translations for form, article, search, error namespaces
 
@@ -368,6 +381,7 @@ Part of Phase 2 - Commit 2/4
 ```
 
 **Commit 3 Template**:
+
 ```
 ✅ test(i18n): implement parity validation tests for French-English translation keys
 
@@ -380,6 +394,7 @@ Part of Phase 2 - Commit 3/4
 ```
 
 **Commit 4 Template**:
+
 ```
 📚 docs(i18n): create test page and comprehensive translation documentation
 
@@ -461,4 +476,3 @@ A: Stick to the Phase 2 spec (60+ keys). Additional translations can be added in
 **Plan Created**: 2025-11-16
 **Status**: 📋 READY FOR IMPLEMENTATION
 **Next**: Follow COMMIT_CHECKLIST.md to implement each commit
-

@@ -15,6 +15,7 @@ Complete validation checklist before marking Phase 2 as complete.
 - [ ] Commit messages are descriptive and follow template
 
 **Validation**:
+
 ```bash
 git log --oneline --decorate -6
 # Should show 4 commits with gitmoji and clear messages
@@ -32,6 +33,7 @@ git log --oneline --decorate -6
 - [ ] Both files are readable and accessible
 
 **Validation**:
+
 ```bash
 test -f messages/en.json && echo "✅ English file exists"
 test -f messages/fr.json && echo "✅ French file exists"
@@ -46,6 +48,7 @@ test -f messages/fr.json && echo "✅ French file exists"
 - [ ] No commented-out code
 
 **Validation**:
+
 ```bash
 jq empty messages/en.json && echo "✅ English JSON valid"
 jq empty messages/fr.json && echo "✅ French JSON valid"
@@ -60,6 +63,7 @@ jq empty messages/fr.json && echo "✅ French JSON valid"
 - [ ] Namespace names match between languages
 
 **Validation**:
+
 ```bash
 # Check French namespaces
 jq 'keys | sort' messages/fr.json
@@ -77,6 +81,7 @@ jq 'keys | sort' messages/en.json
 - [ ] Count is approximately equal between languages
 
 **Validation**:
+
 ```bash
 echo "French key count: $(jq '[.. | objects | keys[]] | unique | length' messages/fr.json)"
 echo "English key count: $(jq '[.. | objects | keys[]] | unique | length' messages/en.json)"
@@ -97,6 +102,7 @@ echo "English key count: $(jq '[.. | objects | keys[]] | unique | length' messag
 - [ ] Terminology consistent with UI/UX spec
 
 **Spot Check** (review samples from each namespace):
+
 ```bash
 # Review common namespace
 jq '.common' messages/en.json
@@ -116,6 +122,7 @@ jq '.error' messages/en.json
 - [ ] Examples: `{minutes}`, `{date}`, `{author}` all present where expected
 
 **Validation**:
+
 ```bash
 # Find all parameterized strings
 jq '[.. | strings | select(contains("{"))] | unique' messages/en.json
@@ -132,6 +139,7 @@ jq '[.. | strings | select(contains("{"))] | unique' messages/en.json
 - [ ] Navigation items use consistent capitalization
 
 **Examples to check**:
+
 - "Cancel" appears in form and common with same capitalization
 - Error messages use same tone ("is required" vs "required field")
 - Navigation items consistently capitalized
@@ -147,6 +155,7 @@ jq '[.. | strings | select(contains("{"))] | unique' messages/en.json
 - [ ] Parity test passes
 
 **Validation**:
+
 ```bash
 pnpm test tests/messages.test.ts -t "Forward Parity"
 # Expected: ✓ All French keys exist in English
@@ -159,6 +168,7 @@ pnpm test tests/messages.test.ts -t "Forward Parity"
 - [ ] Parity test passes
 
 **Validation**:
+
 ```bash
 pnpm test tests/messages.test.ts -t "Reverse Parity"
 # Expected: ✓ All English keys exist in French
@@ -171,6 +181,7 @@ pnpm test tests/messages.test.ts -t "Reverse Parity"
 - [ ] Same key names (no variations)
 
 **Validation**:
+
 ```bash
 pnpm test tests/messages.test.ts -t "Structure"
 # Expected: ✓ Namespace structure is identical
@@ -191,6 +202,7 @@ pnpm test tests/messages.test.ts -t "Structure"
 - [ ] No console errors
 
 **Validation**:
+
 ```bash
 pnpm test tests/messages.test.ts
 
@@ -206,6 +218,7 @@ pnpm test tests/messages.test.ts
 - [ ] Edge cases covered
 
 **Validation**:
+
 ```bash
 pnpm test:coverage tests/messages.test.ts
 
@@ -234,6 +247,7 @@ pnpm test:coverage tests/messages.test.ts
 - [ ] Type inference works correctly
 
 **Validation**:
+
 ```bash
 pnpm tsc
 
@@ -248,6 +262,7 @@ pnpm tsc
 - [ ] Consistent formatting
 
 **Validation**:
+
 ```bash
 pnpm lint
 
@@ -278,6 +293,7 @@ pnpm lint
 - [ ] No console errors when rendering
 
 **Validation**:
+
 ```bash
 # Start dev server
 pnpm dev &
@@ -301,6 +317,7 @@ pnpm dev &
 - [ ] Professional formatting and organization
 
 **Validation**:
+
 ```bash
 test -f i18n/README.md && echo "✅ Documentation exists"
 
@@ -319,6 +336,7 @@ cat i18n/README.md | grep -E "^\[.*\]\(.*\)" | head -10
 - [ ] All references are current
 
 **Validation**:
+
 ```bash
 # Check CLAUDE.md mentions Phase 2
 grep -i "phase 2" CLAUDE.md | head -3
@@ -338,6 +356,7 @@ grep -i "55\|60\|translation key" CLAUDE.md
 - [ ] No missing type definitions
 
 **Validation**:
+
 ```bash
 pnpm tsc
 # Expected: No output (or just warnings, no errors)
@@ -350,6 +369,7 @@ pnpm tsc
 - [ ] Code style is consistent
 
 **Validation**:
+
 ```bash
 pnpm lint
 # Expected: No issues found
@@ -362,6 +382,7 @@ pnpm lint
 - [ ] No warnings about missing modules
 
 **Validation**:
+
 ```bash
 pnpm dev
 # Should start cleanly on port 3000
@@ -381,6 +402,7 @@ pnpm dev
 - [ ] Configuration still loads both files
 
 **Validation**:
+
 ```bash
 # Verify Phase 1 structure is intact
 jq 'keys' messages/fr.json | jq 'sort'
@@ -398,6 +420,7 @@ jq '[.. | objects | keys[]] | unique | length' messages/fr.json
 - [ ] No breaking changes to i18n configuration
 
 **Validation**:
+
 ```bash
 # Check config compiles
 pnpm tsc i18n/config.ts
@@ -421,6 +444,7 @@ pnpm tsc i18n/config.ts
 - [ ] Tests run quickly (<15s total)
 
 **Validation**:
+
 ```bash
 ls -lh messages/en.json messages/fr.json
 # Should be reasonable size (typically 2-5KB each)
@@ -492,15 +516,15 @@ echo "=== Phase 2 Complete ==="
 
 ## 📊 Success Metrics
 
-| Metric        | Target | Actual | Status |
-| ------------- | ------ | ------ | ------ |
-| Commits       | 4      | -      | ⏳     |
-| Total Keys    | 55-60  | -      | ⏳     |
-| Key Parity    | 100%   | -      | ⏳     |
-| Test Coverage | >80%   | -      | ⏳     |
-| TypeScript    | 0 errors | -     | ⏳     |
-| ESLint        | 0 errors | -     | ⏳     |
-| Tests Pass    | 100%   | -      | ⏳     |
+| Metric        | Target   | Actual | Status |
+| ------------- | -------- | ------ | ------ |
+| Commits       | 4        | -      | ⏳     |
+| Total Keys    | 55-60    | -      | ⏳     |
+| Key Parity    | 100%     | -      | ⏳     |
+| Test Coverage | >80%     | -      | ⏳     |
+| TypeScript    | 0 errors | -      | ⏳     |
+| ESLint        | 0 errors | -      | ⏳     |
+| Tests Pass    | 100%     | -      | ⏳     |
 
 ---
 
@@ -531,6 +555,7 @@ Select one:
 7. [ ] Archive phase documentation (keep for reference)
 
 **Commit message for completion**:
+
 ```bash
 git tag -a phase-2-complete -m "Phase 2 - English Translations & Parity Validation complete"
 git push origin phase-2-complete
@@ -557,9 +582,8 @@ git push origin phase-2-complete
 
 **Validation Date**: [Date]
 **Validated By**: [Name/Role]
-**Sign-Off**: _________________
+**Sign-Off**: ********\_********
 
 ---
 
 **Phase 2 is ready when all checklist items are verified! 🎉**
-

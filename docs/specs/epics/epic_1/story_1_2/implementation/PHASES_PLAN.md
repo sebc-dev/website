@@ -18,9 +18,11 @@ Story 1.2 focuses on creating translation message files (`messages/fr.json` and 
 Based on the story requirements, implementation is divided into **2 phases**:
 
 ### Phase 1: Message File Structure & French Translations
+
 **Objective**: Create the message file structure and implement complete French translations
 
 **Scope**:
+
 - Design and implement hierarchical namespace structure for messages
 - Create `messages/fr.json` with all required translation keys
 - Ensure proper JSON formatting and UTF-8 encoding
@@ -28,23 +30,27 @@ Based on the story requirements, implementation is divided into **2 phases**:
 - Write unit tests for message file validation
 
 **Files to Create/Modify**:
+
 - `messages/fr.json` (new) - French translations (~50-80 keys)
 - `messages/en.json` (new) - English translations (initial structure)
 - `i18n/config.ts` (modify) - Update to load message files
 - `tests/messages.test.ts` (new) - Message validation tests
 
 **Dependencies**:
+
 - Story 1.1 completion (next-intl configuration)
 - No external package dependencies
 - Project structure established
 
 **Tests Required**:
+
 - JSON validation (parsing, UTF-8 encoding)
 - Key structure validation
 - Namespace completeness
 - Basic type safety if using TypeScript
 
 **Validation Criteria**:
+
 - ✅ `messages/fr.json` exists with all required namespaces
 - ✅ Valid JSON with no syntax errors
 - ✅ French translations are complete and natural
@@ -54,9 +60,11 @@ Based on the story requirements, implementation is divided into **2 phases**:
 ---
 
 ### Phase 2: English Translations & Parity Validation
+
 **Objective**: Complete English translations and ensure parity between languages
 
 **Scope**:
+
 - Create `messages/en.json` with complete English translations
 - Implement parity validation (all keys exist in both languages)
 - Create type-safe translation access (TypeScript support)
@@ -64,6 +72,7 @@ Based on the story requirements, implementation is divided into **2 phases**:
 - Document translation keys and update project docs
 
 **Files to Create/Modify**:
+
 - `messages/en.json` (complete) - English translations
 - `tests/messages.test.ts` (expand) - Parity validation tests
 - `tests/messages.page.tsx` (new) - Test page for manual verification
@@ -71,16 +80,19 @@ Based on the story requirements, implementation is divided into **2 phases**:
 - `CLAUDE.md` (modify) - Update project context with message file info
 
 **Dependencies**:
+
 - Phase 1 completion (French translations in place)
 - Message structure established
 
 **Tests Required**:
+
 - Parity validation (all keys in fr.json exist in en.json)
 - Reverse parity (all keys in en.json exist in fr.json)
 - Parameterized translation validation
 - Type generation validation (if applicable)
 
 **Validation Criteria**:
+
 - ✅ `messages/en.json` exists with all required keys
 - ✅ 100% key parity between languages
 - ✅ All parameterized translations work correctly
@@ -100,6 +112,7 @@ Phase 2: English Translations & Parity Validation
 ```
 
 **External Dependencies**:
+
 - Story 1.1 (i18n configuration) - COMPLETED ✅
 
 ---
@@ -107,18 +120,21 @@ Phase 2: English Translations & Parity Validation
 ## 🧪 Overall Testing Strategy
 
 ### Unit Tests
+
 - Message file JSON validation
 - Key structure validation
 - Namespace completeness
 - Type safety for translation keys
 
 ### Manual Testing
+
 - Test page displaying all translation keys and values
 - Language switching validation
 - Parameterized translation testing (e.g., `{minutes} min read`)
 - Visual inspection of translation quality
 
 ### Integration Testing
+
 - Configuration loading messages correctly
 - No missing translation warnings
 - Type-safe access from components
@@ -192,6 +208,7 @@ The message files will be organized into the following namespaces:
 
 **Estimated Total Keys**: 50-80 keys per language
 **Deferred to Later Stories**:
+
 - Admin panel translations
 - Newsletter translations
 - Comment system translations

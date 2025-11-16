@@ -14,6 +14,7 @@ Complete validation checklist before marking Phase 1 as complete.
 - [ ] Git history is clean and readable
 
 **Validation**:
+
 ```bash
 # Check commits
 git log --oneline -5
@@ -34,6 +35,7 @@ git log --oneline -5
 - [ ] UTF-8 encoding verified
 
 **Validation**:
+
 ```bash
 # Test JSON validity
 node -e "JSON.parse(require('fs').readFileSync('messages/fr.json', 'utf8'))" && echo "✓ fr.json valid"
@@ -79,6 +81,7 @@ node -e "const fr = JSON.parse(require('fs').readFileSync('messages/fr.json', 'u
 - [ ] Placeholders are descriptive and consistent
 
 **Manual Inspection**:
+
 ```bash
 # Show French translations to verify
 cat messages/fr.json | grep -A 100 '"common"' | head -20
@@ -95,6 +98,7 @@ cat messages/fr.json | grep -A 100 '"common"' | head -20
 - [ ] English text is clear and concise
 
 **Validation**:
+
 ```bash
 # Verify structure
 node -e "const en = JSON.parse(require('fs').readFileSync('messages/en.json', 'utf8')); console.log('Namespaces in en.json:', Object.keys(en).sort())"
@@ -111,6 +115,7 @@ node -e "const en = JSON.parse(require('fs').readFileSync('messages/en.json', 'u
 - [ ] Files are clean and production-ready
 
 **Validation**:
+
 ```bash
 # Check for common issues
 grep -n "TODO\|FIXME\|XXX" messages/fr.json messages/en.json
@@ -139,6 +144,7 @@ node -e "const fr = JSON.parse(require('fs').readFileSync('messages/fr.json', 'u
 - [ ] No console errors or warnings during tests
 
 **Validation**:
+
 ```bash
 # Run all message tests
 pnpm test messages
@@ -153,6 +159,7 @@ pnpm test messages 2>&1 | grep -i warning
 ```
 
 **Expected Results**:
+
 - All tests pass ✓
 - Coverage >80%
 - No failures or errors
@@ -168,6 +175,7 @@ pnpm test messages 2>&1 | grep -i warning
 - [ ] Test file follows project style guide
 
 **Validation**:
+
 ```bash
 # Type check
 pnpm tsc --noEmit
@@ -192,6 +200,7 @@ pnpm tsc --noEmit messages/
 - [ ] No breaking changes to existing i18n setup
 
 **Validation**:
+
 ```bash
 # Verify config imports work
 node -e "require('./i18n/config.ts')" 2>&1
@@ -211,6 +220,7 @@ node -e "require('./i18n/config.ts')" 2>&1
 - [ ] No encoding issues with French accents
 
 **Validation**:
+
 ```bash
 # Check file permissions
 ls -la messages/
@@ -248,6 +258,7 @@ node -e "const fr = JSON.parse(require('fs').readFileSync('messages/fr.json', 'u
 - [ ] pnpm.lock is consistent (if not committed, it will be)
 
 **Validation**:
+
 ```bash
 # Verify no new dependencies
 git diff package.json pnpm-lock.yaml
@@ -318,16 +329,16 @@ git log --oneline -5
 
 ## 📊 Success Metrics
 
-| Metric | Target | Actual | Status |
-|--------|--------|--------|--------|
-| **Commits** | 4 | - | ⏳ |
-| **French Keys** | ~50 | - | ⏳ |
-| **JSON Validity** | 100% | - | ⏳ |
-| **Test Coverage** | >80% | - | ⏳ |
-| **Tests Passing** | 100% | - | ⏳ |
-| **Type Safety** | No errors | - | ⏳ |
-| **Linting** | No errors | - | ⏳ |
-| **Encoding** | UTF-8 | - | ⏳ |
+| Metric            | Target    | Actual | Status |
+| ----------------- | --------- | ------ | ------ |
+| **Commits**       | 4         | -      | ⏳     |
+| **French Keys**   | ~50       | -      | ⏳     |
+| **JSON Validity** | 100%      | -      | ⏳     |
+| **Test Coverage** | >80%      | -      | ⏳     |
+| **Tests Passing** | 100%      | -      | ⏳     |
+| **Type Safety**   | No errors | -      | ⏳     |
+| **Linting**       | No errors | -      | ⏳     |
+| **Encoding**      | UTF-8     | -      | ⏳     |
 
 ---
 

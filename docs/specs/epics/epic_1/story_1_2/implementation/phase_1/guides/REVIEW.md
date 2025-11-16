@@ -311,12 +311,14 @@ Use this template for feedback:
 ### French Translation Quality
 
 **Good Signs**:
+
 - ✅ Accents are correct (é, è, ç, etc.)
 - ✅ Terminology is consistent
 - ✅ Tone matches project identity
 - ✅ Form messages provide guidance
 
 **Red Flags**:
+
 - ❌ Literal English-to-French translation (unnatural)
 - ❌ Missing accents
 - ❌ Inconsistent terminology
@@ -325,12 +327,14 @@ Use this template for feedback:
 ### JSON Structure Quality
 
 **Good Signs**:
+
 - ✅ Consistent indentation (2 spaces)
 - ✅ Alphabetical ordering within namespaces
 - ✅ All values are strings
 - ✅ No trailing commas
 
 **Red Flags**:
+
 - ❌ Inconsistent formatting
 - ❌ Missing or extra braces
 - ❌ Non-string values (booleans, numbers)
@@ -339,12 +343,14 @@ Use this template for feedback:
 ### Test Quality
 
 **Good Signs**:
+
 - ✅ Tests validate critical functionality
 - ✅ Clear test names describe what's tested
 - ✅ Both positive and negative cases
 - ✅ Proper assertions
 
 **Red Flags**:
+
 - ❌ Tests that just check existence (no validation)
 - ❌ Unclear test names
 - ❌ Only happy-path tests

@@ -21,7 +21,9 @@ import { describe, expect, it } from 'vitest';
  * @param locale - The locale code ('fr' or 'en')
  * @returns Parsed message object
  */
-function loadMessages(locale: 'fr' | 'en'): Record<string, Record<string, string>> {
+function loadMessages(
+  locale: 'fr' | 'en',
+): Record<string, Record<string, string>> {
   const filePath = path.join(process.cwd(), 'messages', `${locale}.json`);
   const content = fs.readFileSync(filePath, 'utf8');
   return JSON.parse(content) as Record<string, Record<string, string>>;
@@ -220,7 +222,8 @@ describe('Message Files - Key Count Validation', () => {
   it('should have approximately 70+ keys in French message file', () => {
     const messages = loadMessages('fr');
     const totalKeys = Object.values(messages).reduce(
-      (sum: number, namespace: Record<string, string>) => sum + Object.keys(namespace).length,
+      (sum: number, namespace: Record<string, string>) =>
+        sum + Object.keys(namespace).length,
       0,
     );
 
@@ -296,10 +299,7 @@ describe('Message Files - Parameterized Values', () => {
  * @param prefix - Current key path prefix
  * @returns Array of full key paths (e.g., ['common.appName', 'nav.home'])
  */
-function getNestedKeys(
-  obj: Record<string, unknown>,
-  prefix = '',
-): string[] {
+function getNestedKeys(obj: Record<string, unknown>, prefix = ''): string[] {
   const keys: string[] = [];
 
   Object.entries(obj).forEach(([key, value]) => {
@@ -312,7 +312,10 @@ function getNestedKeys(
 
     if (typeof value === 'object' && !Array.isArray(value)) {
       // Recursively get nested keys
-      const nestedKeys = getNestedKeys(value as Record<string, unknown>, fullPath);
+      const nestedKeys = getNestedKeys(
+        value as Record<string, unknown>,
+        fullPath,
+      );
       keys.push(...nestedKeys);
     } else if (typeof value === 'string') {
       // Leaf node is a string value
@@ -329,10 +332,7 @@ function getNestedKeys(
  * @param path - Dot-separated path (e.g., 'common.appName')
  * @returns The value at the path, or undefined if not found
  */
-function getValueByPath(
-  obj: Record<string, unknown>,
-  path: string,
-): unknown {
+function getValueByPath(obj: Record<string, unknown>, path: string): unknown {
   const parts = path.split('.');
   let current: unknown = obj;
 
@@ -367,7 +367,9 @@ describe('Message Files - Key Parity Validation', () => {
     });
 
     if (missingKeys.length > 0) {
-      throw new Error(`Missing English translations for: ${missingKeys.join(', ')}`);
+      throw new Error(
+        `Missing English translations for: ${missingKeys.join(', ')}`,
+      );
     }
     expect(missingKeys).toEqual([]);
   });
@@ -391,7 +393,9 @@ describe('Message Files - Key Parity Validation', () => {
     });
 
     if (extraKeys.length > 0) {
-      throw new Error(`Extra English translations not in French: ${extraKeys.join(', ')}`);
+      throw new Error(
+        `Extra English translations not in French: ${extraKeys.join(', ')}`,
+      );
     }
     expect(extraKeys).toEqual([]);
   });
@@ -437,8 +441,14 @@ describe('Message Files - Parameterized Translation Validation', () => {
       const enValue = typeof enValueRaw === 'string' ? enValueRaw : '';
 
       // Extract all {variable} placeholders
-      const frVariables = Array.from(frValue.matchAll(/\{(\w+)\}/g), (m) => m[1]).sort();
-      const enVariables = Array.from(enValue.matchAll(/\{(\w+)\}/g), (m) => m[1]).sort();
+      const frVariables = Array.from(
+        frValue.matchAll(/\{(\w+)\}/g),
+        (m) => m[1],
+      ).sort();
+      const enVariables = Array.from(
+        enValue.matchAll(/\{(\w+)\}/g),
+        (m) => m[1],
+      ).sort();
 
       if (JSON.stringify(frVariables) !== JSON.stringify(enVariables)) {
         inconsistencies.push(

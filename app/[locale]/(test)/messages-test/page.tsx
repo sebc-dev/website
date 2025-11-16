@@ -128,31 +128,27 @@ function KeyRow({
   };
 
   return (
-    <div className='border-b border-zinc-700 last:border-b-0 px-4 py-3 hover:bg-zinc-900/50 transition-colors'>
-      <div className='flex items-start gap-4 mb-2'>
-        <div className='flex-none min-w-32'>
+    <div className='border-b border-zinc-700 px-4 py-3 transition-colors last:border-b-0 hover:bg-zinc-900/50'>
+      <div className='mb-2 flex items-start gap-4'>
+        <div className='min-w-32 flex-none'>
           <button
             onClick={handleCopy}
-            className='text-xs font-mono text-zinc-400 hover:text-accent transition-colors truncate'
+            className='hover:text-accent truncate font-mono text-xs text-zinc-400 transition-colors'
             title='Copy key path'
           >
             {keyName}
             {hasParameters && ' *'}
           </button>
-          {copied && (
-            <span className='text-xs text-accent ml-1'>copied!</span>
-          )}
+          {copied && <span className='text-accent ml-1 text-xs'>copied!</span>}
         </div>
         {hasParameters && (
-          <span className='text-xs text-zinc-500 italic'>
-            (parameterized)
-          </span>
+          <span className='text-xs text-zinc-500 italic'>(parameterized)</span>
         )}
       </div>
 
       <div className='grid grid-cols-2 gap-4'>
         <div>
-          <div className='text-xs text-zinc-500 font-semibold mb-1'>
+          <div className='mb-1 text-xs font-semibold text-zinc-500'>
             Français
           </div>
           <div className='text-sm text-zinc-200'>
@@ -160,7 +156,7 @@ function KeyRow({
           </div>
         </div>
         <div>
-          <div className='text-xs text-zinc-500 font-semibold mb-1'>
+          <div className='mb-1 text-xs font-semibold text-zinc-500'>
             English
           </div>
           <div className='text-sm text-zinc-200'>
@@ -187,19 +183,17 @@ function NamespaceSection({
 
   return (
     <section className='mb-8'>
-      <div className='sticky top-0 bg-zinc-950 border-b border-zinc-800 px-4 py-3 z-10'>
-        <h2 className='text-lg font-semibold text-white mb-1'>
-          {info.title}
-        </h2>
+      <div className='sticky top-0 z-10 border-b border-zinc-800 bg-zinc-950 px-4 py-3'>
+        <h2 className='mb-1 text-lg font-semibold text-white'>{info.title}</h2>
         <p className='text-sm text-zinc-400'>
           {info.description}
-          <span className='ml-2 text-xs font-mono text-zinc-600'>
+          <span className='ml-2 font-mono text-xs text-zinc-600'>
             ({keyCount} keys)
           </span>
         </p>
       </div>
 
-      <div className='border border-zinc-800 border-t-0 divide-y divide-zinc-700'>
+      <div className='divide-y divide-zinc-700 border border-t-0 border-zinc-800'>
         {Object.entries(messages).map(([key, frValue]) => {
           const enValue = messages[key] || '';
           const hasParameters = frValue.includes('{');
@@ -330,30 +324,30 @@ export default function MessageTestPage() {
 
   const totalKeys = Object.values(messages).reduce(
     (sum, ns) => sum + Object.keys(ns).length,
-    0
+    0,
   );
 
   return (
     <div className='min-h-screen bg-zinc-950'>
       {/* Header */}
-      <header className='sticky top-0 z-50 bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-950/80 border-b border-zinc-800 backdrop-blur supports-[backdrop-filter]:bg-zinc-950/60'>
-        <div className='max-w-6xl mx-auto px-4 py-8'>
+      <header className='sticky top-0 z-50 border-b border-zinc-800 bg-gradient-to-b from-zinc-950 via-zinc-950 to-zinc-950/80 backdrop-blur supports-[backdrop-filter]:bg-zinc-950/60'>
+        <div className='mx-auto max-w-6xl px-4 py-8'>
           <div className='mb-2'>
-            <span className='inline-block px-2 py-1 rounded-full bg-yellow-500/10 text-yellow-400 text-xs font-semibold mb-3'>
+            <span className='mb-3 inline-block rounded-full bg-yellow-500/10 px-2 py-1 text-xs font-semibold text-yellow-400'>
               DEVELOPMENT / TESTING PAGE
             </span>
           </div>
-          <h1 className='text-4xl font-bold text-white mb-2'>
+          <h1 className='mb-2 text-4xl font-bold text-white'>
             Translation Messages Test
           </h1>
-          <p className='text-zinc-400 max-w-2xl'>
+          <p className='max-w-2xl text-zinc-400'>
             All translation keys displayed side-by-side for validation and
             testing. Click key names to copy. Asterisks (*) indicate
             parameterized translations with example values.
           </p>
 
           {/* Stats */}
-          <div className='flex gap-4 mt-6 text-sm'>
+          <div className='mt-6 flex gap-4 text-sm'>
             <div className='flex items-center gap-2'>
               <span className='text-zinc-500'>Namespaces:</span>
               <span className='font-semibold text-white'>8</span>
@@ -371,7 +365,7 @@ export default function MessageTestPage() {
       </header>
 
       {/* Content */}
-      <main className='max-w-6xl mx-auto px-4 py-8'>
+      <main className='mx-auto max-w-6xl px-4 py-8'>
         {/* Common Messages */}
         <NamespaceSection namespace='common' messages={messages.common} />
 
@@ -388,7 +382,10 @@ export default function MessageTestPage() {
         <NamespaceSection namespace='article' messages={messages.article} />
 
         {/* Complexity */}
-        <NamespaceSection namespace='complexity' messages={messages.complexity} />
+        <NamespaceSection
+          namespace='complexity'
+          messages={messages.complexity}
+        />
 
         {/* Search & Filters */}
         <NamespaceSection namespace='search' messages={messages.search} />
@@ -397,12 +394,12 @@ export default function MessageTestPage() {
         <NamespaceSection namespace='error' messages={messages.error} />
 
         {/* Footer Note */}
-        <div className='mt-12 py-8 border-t border-zinc-800'>
-          <p className='text-sm text-zinc-500 text-center'>
-            This page is for development and testing only. It is not visible
-            in production.
+        <div className='mt-12 border-t border-zinc-800 py-8'>
+          <p className='text-center text-sm text-zinc-500'>
+            This page is for development and testing only. It is not visible in
+            production.
           </p>
-          <p className='text-xs text-zinc-600 text-center mt-2'>
+          <p className='mt-2 text-center text-xs text-zinc-600'>
             To add new translations, update both{' '}
             <span className='font-mono'>messages/fr.json</span> and{' '}
             <span className='font-mono'>messages/en.json</span>, then verify
