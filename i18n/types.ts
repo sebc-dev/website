@@ -4,9 +4,17 @@
  * This file contains type definitions for the internationalization
  * infrastructure. These types will be refined when message files
  * are created in Story 1.2.
+ *
+ * These types are used throughout the application for:
+ * - Middleware language detection (src/middleware.ts)
+ * - Component props and routing
+ * - API response types
+ * - Cookie value types
  */
 
 import type { Locale } from './config';
+
+export type { Locale };
 
 /**
  * Structure of translation messages
