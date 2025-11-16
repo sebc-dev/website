@@ -25,6 +25,7 @@ import { NextResponse } from 'next/server';
 
 import type { Locale } from '@/i18n';
 import { locales } from '@/i18n/config';
+import { handleRootPathRedirect } from '@/lib/i18n/redirect';
 
 /**
  * Detects the locale from the URL pathname prefix
@@ -437,6 +438,13 @@ export function middleware(request: NextRequest): NextResponse | undefined {
 
   // Detect the appropriate locale from all sources
   const detectedLocale = detectLocale(request);
+
+  // Early check: Handle root path redirection
+  // Redirect `/` to `/fr/` or `/en/` based on detected language
+  const rootPathRedirect = handleRootPathRedirect(request, detectedLocale);
+  if (rootPathRedirect) {
+    return rootPathRedirect;
+  }
 
   // Check if redirect is needed (unsupported language in URL)
   if (shouldRedirect(pathname, detectedLocale)) {
