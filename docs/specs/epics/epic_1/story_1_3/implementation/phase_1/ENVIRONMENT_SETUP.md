@@ -386,10 +386,12 @@ Complete this checklist before starting Commit 1:
 ### Issue: next-intl Not Installed
 
 **Symptoms**:
+
 - `npm ERR! Cannot find module 'next-intl'`
 - Build fails with `next-intl` errors
 
 **Solution**:
+
 ```bash
 # Install next-intl (should be v4.5.3+)
 pnpm add next-intl@latest
@@ -401,10 +403,12 @@ pnpm list next-intl
 ### Issue: TypeScript Errors on src/middleware.ts
 
 **Symptoms**:
+
 - `src/middleware.ts not found` error in TypeScript
 - Cannot resolve path `@/i18n`
 
 **Solution**:
+
 ```bash
 # Ensure src/ directory exists
 mkdir -p src/
@@ -418,10 +422,12 @@ grep -A2 '"paths"' tsconfig.json
 ### Issue: Vitest Not Found
 
 **Symptoms**:
+
 - `command not found: vitest`
 - Tests won't run
 
 **Solution**:
+
 ```bash
 # Install Vitest
 pnpm add -D vitest
@@ -436,10 +442,12 @@ pnpm list vitest
 ### Issue: ESLint Fails
 
 **Symptoms**:
+
 - ESLint throws errors when running `pnpm lint`
 - Cannot find eslint config
 
 **Solution**:
+
 ```bash
 # Verify ESLint config exists
 ls -la .eslintrc.json || ls -la eslint.config.js
@@ -451,10 +459,12 @@ ls -la .eslintrc.json || ls -la eslint.config.js
 ### Issue: Build Fails
 
 **Symptoms**:
+
 - `pnpm build` fails with errors
 - Next.js compilation error
 
 **Solution**:
+
 ```bash
 # Clean build artifacts
 rm -rf .next/

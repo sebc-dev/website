@@ -427,7 +427,9 @@ describe('Redirect Logic', () => {
       search: '?page=2&sort=date',
     });
     const response = middleware(request);
-    expect(response.headers.get('location')).toBe('/fr/articles?page=2&sort=date');
+    expect(response.headers.get('location')).toBe(
+      '/fr/articles?page=2&sort=date',
+    );
   });
 
   it('should redirect with both path and query parameters', () => {
@@ -524,7 +526,9 @@ function createMockRequest(options: {
   cookies?: Record<string, string>;
   headers?: Record<string, string>;
 }): NextRequest {
-  const url = new URL(`http://localhost:3000${options.pathname}${options.search || ''}`);
+  const url = new URL(
+    `http://localhost:3000${options.pathname}${options.search || ''}`,
+  );
 
   const request = {
     nextUrl: { pathname: options.pathname },
@@ -574,13 +578,13 @@ pnpm test:coverage
 
 ### Coverage Goals
 
-| Module | Target | Justification |
-|--------|--------|---------------|
-| URL Detection | 100% | Core logic, no reason to leave untested |
-| Cookie Detection | 100% | Small, critical function |
-| Header Parsing | 100% | Complex, edge cases important |
-| Redirect Logic | 100% | Critical for user experience |
-| **Overall** | **≥80%** | Industry standard, achievable with comprehensive tests |
+| Module           | Target   | Justification                                          |
+| ---------------- | -------- | ------------------------------------------------------ |
+| URL Detection    | 100%     | Core logic, no reason to leave untested                |
+| Cookie Detection | 100%     | Small, critical function                               |
+| Header Parsing   | 100%     | Complex, edge cases important                          |
+| Redirect Logic   | 100%     | Critical for user experience                           |
+| **Overall**      | **≥80%** | Industry standard, achievable with comprehensive tests |
 
 ### Coverage Improvement
 

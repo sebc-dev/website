@@ -47,6 +47,7 @@ Implement core language detection logic for Next.js middleware that automaticall
 - ✅ TypeScript type safety with zero errors
 
 **Not in Scope (Phase 2)**:
+
 - Cookie creation/persistence (Phase 2)
 - Root path redirection logic (Phase 2)
 - next-intl context initialization (Phase 2)
@@ -57,14 +58,14 @@ Implement core language detection logic for Next.js middleware that automaticall
 
 ## 📚 Available Documents
 
-| Document | Description | For Who | Duration |
-|----------|-------------|---------|----------|
-| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)** | Atomic strategy in 5 commits | Developer | 15 min |
-| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)** | Detailed checklist per commit | Developer | Reference |
-| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)** | Environment configuration | DevOps/Dev | 10 min |
-| **[guides/REVIEW.md](./guides/REVIEW.md)** | Code review guide | Reviewer | 20 min |
-| **[guides/TESTING.md](./guides/TESTING.md)** | Testing guide (unit tests) | QA/Dev | 20 min |
-| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist | Tech Lead | 30 min |
+| Document                                                                       | Description                   | For Who    | Duration  |
+| ------------------------------------------------------------------------------ | ----------------------------- | ---------- | --------- |
+| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)**                         | Atomic strategy in 5 commits  | Developer  | 15 min    |
+| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)**                               | Detailed checklist per commit | Developer  | Reference |
+| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)**                             | Environment configuration     | DevOps/Dev | 10 min    |
+| **[guides/REVIEW.md](./guides/REVIEW.md)**                                     | Code review guide             | Reviewer   | 20 min    |
+| **[guides/TESTING.md](./guides/TESTING.md)**                                   | Testing guide (unit tests)    | QA/Dev     | 20 min    |
+| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist    | Tech Lead  | 30 min    |
 
 ---
 
@@ -156,15 +157,15 @@ All must pass before proceeding to Phase 2.
 
 ## 📊 Metrics
 
-| Metric | Target | Actual |
-|--------|--------|--------|
-| **Total Commits** | 5 | - |
-| **Implementation Time** | 4–6h | - |
-| **Review Time** | 2–3h | - |
-| **Test Coverage** | >80% | - |
-| **Type Safety** | 100% (zero errors) | - |
-| **Lines of Code** | ~300–400 | - |
-| **Test Lines** | ~400–500 | - |
+| Metric                  | Target             | Actual |
+| ----------------------- | ------------------ | ------ |
+| **Total Commits**       | 5                  | -      |
+| **Implementation Time** | 4–6h               | -      |
+| **Review Time**         | 2–3h               | -      |
+| **Test Coverage**       | >80%               | -      |
+| **Type Safety**         | 100% (zero errors) | -      |
+| **Lines of Code**       | ~300–400           | -      |
+| **Test Lines**          | ~400–500           | -      |
 
 ---
 

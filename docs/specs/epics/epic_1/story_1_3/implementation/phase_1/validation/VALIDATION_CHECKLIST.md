@@ -46,6 +46,7 @@ This checklist ensures all 5 atomic commits meet quality standards and acceptanc
 - [ ] Request/Response types correct
 
 **Validation**:
+
 ```bash
 pnpm tsc --noEmit
 ```
@@ -64,6 +65,7 @@ pnpm tsc --noEmit
 - [ ] Pure functions have no side effects
 
 **Validation**:
+
 ```bash
 pnpm lint
 ```
@@ -87,6 +89,7 @@ pnpm lint
 - [ ] Test names are descriptive
 
 **Validation**:
+
 ```bash
 pnpm test
 pnpm test:coverage
@@ -102,6 +105,7 @@ pnpm test:coverage
 - [ ] Build size is reasonable
 
 **Validation**:
+
 ```bash
 pnpm build
 ```
@@ -116,6 +120,7 @@ pnpm build
 - [ ] No ESLint `disable` comments (unless justified)
 
 **Validation**:
+
 ```bash
 pnpm lint
 ```
@@ -244,34 +249,34 @@ pnpm build
 
 ## 📊 Success Metrics
 
-| Metric | Target | Actual | Status |
-|--------|--------|--------|--------|
-| **Commits** | 5 | - | ⏳ |
-| **TypeScript** | 0 errors | - | ⏳ |
-| **Test Coverage** | ≥80% | - | ⏳ |
-| **Build Status** | ✅ Pass | - | ⏳ |
-| **Lint Status** | ✅ Pass | - | ⏳ |
-| **Code Review** | Approved | - | ⏳ |
-| **AC Coverage** | AC1-4,7-8,12 | - | ⏳ |
+| Metric            | Target       | Actual | Status |
+| ----------------- | ------------ | ------ | ------ |
+| **Commits**       | 5            | -      | ⏳     |
+| **TypeScript**    | 0 errors     | -      | ⏳     |
+| **Test Coverage** | ≥80%         | -      | ⏳     |
+| **Build Status**  | ✅ Pass      | -      | ⏳     |
+| **Lint Status**   | ✅ Pass      | -      | ⏳     |
+| **Code Review**   | Approved     | -      | ⏳     |
+| **AC Coverage**   | AC1-4,7-8,12 | -      | ⏳     |
 
 ---
 
 ## 🎯 Acceptance Criteria Coverage Matrix
 
-| AC | Description | Phase 1 | Tested | Status |
-|----|-------------|---------|--------|--------|
-| AC1 | URL detection | ✅ | ✅ | - |
-| AC2 | Header detection | ✅ | ✅ | - |
-| AC3 | Cookie detection | ✅ | ✅ | - |
-| AC4 | Unsupported language redirect | ✅ | ✅ | - |
-| AC5 | Root path redirection | ❌ | ❌ | Phase 2 |
-| AC6 | next-intl context | ❌ | ❌ | Phase 2 |
-| AC7 | Public route exclusion | ✅ | ✅ | - |
-| AC8 | Language validation | ✅ | ✅ | - |
-| AC9 | Cookie setting | ❌ | ❌ | Phase 2 |
-| AC10 | Mobile deep links | ❌ | ❌ | Phase 3 |
-| AC11 | Debug logging | ❌ | ❌ | Phase 3 |
-| AC12 | No infinite redirects | ✅ | ✅ | - |
+| AC   | Description                   | Phase 1 | Tested | Status  |
+| ---- | ----------------------------- | ------- | ------ | ------- |
+| AC1  | URL detection                 | ✅      | ✅     | -       |
+| AC2  | Header detection              | ✅      | ✅     | -       |
+| AC3  | Cookie detection              | ✅      | ✅     | -       |
+| AC4  | Unsupported language redirect | ✅      | ✅     | -       |
+| AC5  | Root path redirection         | ❌      | ❌     | Phase 2 |
+| AC6  | next-intl context             | ❌      | ❌     | Phase 2 |
+| AC7  | Public route exclusion        | ✅      | ✅     | -       |
+| AC8  | Language validation           | ✅      | ✅     | -       |
+| AC9  | Cookie setting                | ❌      | ❌     | Phase 2 |
+| AC10 | Mobile deep links             | ❌      | ❌     | Phase 3 |
+| AC11 | Debug logging                 | ❌      | ❌     | Phase 3 |
+| AC12 | No infinite redirects         | ✅      | ✅     | -       |
 
 ---
 

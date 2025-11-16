@@ -55,6 +55,7 @@ The implementation is split into **5 independent commits** to:
 - Sets up import paths and configuration patterns
 
 **Technical Validation**:
+
 ```bash
 pnpm tsc --noEmit
 pnpm lint
@@ -98,6 +99,7 @@ pnpm lint
 - No external dependencies or side effects
 
 **Technical Validation**:
+
 ```bash
 pnpm tsc --noEmit
 pnpm lint
@@ -146,6 +148,7 @@ pnpm lint
 - Builds on middleware structure from Commit 1
 
 **Technical Validation**:
+
 ```bash
 pnpm tsc --noEmit
 pnpm lint
@@ -192,6 +195,7 @@ pnpm lint
 - Clear detection priority prevents ambiguity
 
 **Technical Validation**:
+
 ```bash
 pnpm tsc --noEmit
 pnpm lint
@@ -251,6 +255,7 @@ pnpm build
 - Ensures all AC 1–4, 7–8 are testable
 
 **Technical Validation**:
+
 ```bash
 pnpm test
 pnpm test:coverage
@@ -292,6 +297,7 @@ pnpm lint
 ### Validation at Each Step
 
 After each commit:
+
 ```bash
 # Type-checking
 pnpm tsc --noEmit
@@ -312,14 +318,14 @@ All must pass before moving to next commit.
 
 ## 📊 Commit Metrics
 
-| Commit | Purpose | Files | Lines | Implementation | Review | Total |
-|--------|---------|-------|-------|---|---|---|
-| 1 | Structure & Types | 4 | ~80 | 20–30 min | 10 min | 30–40 min |
-| 2 | URL Detection | 1 | ~80 | 30–45 min | 15 min | 45–60 min |
-| 3 | Cookie & Header | 1 | ~120 | 45–60 min | 15 min | 60–75 min |
-| 4 | Redirect Logic | 1 | ~100 | 30–45 min | 15 min | 45–60 min |
-| 5 | Unit Tests | 2 | ~450 | 60–90 min | 20 min | 80–110 min |
-| **TOTAL** | **Language Detection** | **9** | **~830** | **3.5–4.5h** | **1.5–2h** | **5–6.5h** |
+| Commit    | Purpose                | Files | Lines    | Implementation | Review     | Total      |
+| --------- | ---------------------- | ----- | -------- | -------------- | ---------- | ---------- |
+| 1         | Structure & Types      | 4     | ~80      | 20–30 min      | 10 min     | 30–40 min  |
+| 2         | URL Detection          | 1     | ~80      | 30–45 min      | 15 min     | 45–60 min  |
+| 3         | Cookie & Header        | 1     | ~120     | 45–60 min      | 15 min     | 60–75 min  |
+| 4         | Redirect Logic         | 1     | ~100     | 30–45 min      | 15 min     | 45–60 min  |
+| 5         | Unit Tests             | 2     | ~450     | 60–90 min      | 20 min     | 80–110 min |
+| **TOTAL** | **Language Detection** | **9** | **~830** | **3.5–4.5h**   | **1.5–2h** | **5–6.5h** |
 
 ---
 
@@ -353,6 +359,7 @@ All must pass before moving to next commit.
 ### Commit Messages
 
 Format:
+
 ```
 feat(middleware): implement language detection from URL path (Commit 1/5)
 
@@ -437,6 +444,7 @@ No new dependencies need to be installed.
 **Issue**: Middleware redirects user to `/fr/` → checks path → redirects again
 
 **Solution**: Check if URL already has correct language prefix before redirecting
+
 ```typescript
 // DON'T: Always redirect
 if (!hasLanguagePrefix(pathname)) {
@@ -444,7 +452,10 @@ if (!hasLanguagePrefix(pathname)) {
 }
 
 // DO: Check if redirect is necessary
-if (hasLanguagePrefix(pathname) && getLocaleFromURL(pathname) === detectedLocale) {
+if (
+  hasLanguagePrefix(pathname) &&
+  getLocaleFromURL(pathname) === detectedLocale
+) {
   return NextResponse.next(); // Already correct, don't redirect
 }
 ```
@@ -454,6 +465,7 @@ if (hasLanguagePrefix(pathname) && getLocaleFromURL(pathname) === detectedLocale
 **Issue**: Complex header format causes parsing errors
 
 **Solution**: Handle quality values, multiple locales, and language variants
+
 ```
 Header: "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7,de;q=0.5"
 
@@ -471,6 +483,7 @@ Result: Try fr first, then en, default to fr
 **Issue**: Redirecting `/de/articles?page=2` to `/fr/articles` loses query params
 
 **Solution**: Use `NextResponse.redirect()` which preserves query string
+
 ```typescript
 const url = new URL(`/${detectedLocale}${pathname}`, request.url);
 // url.search is automatically preserved from request.url
