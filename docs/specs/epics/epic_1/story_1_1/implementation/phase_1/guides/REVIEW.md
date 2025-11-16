@@ -86,8 +86,10 @@ No technical validation needed - this is a documentation commit.
 #### Feedback Template
 
 If issues found:
+
 ```markdown
 **Commit 1 Feedback**:
+
 - [ ] Add specific next-intl version number
 - [ ] Include link to changelog/documentation
 - [ ] Confirm edge runtime support explicitly
@@ -220,8 +222,10 @@ ls src/test-next-intl-types.ts 2>/dev/null
 #### Feedback Template
 
 If issues found:
+
 ```markdown
 **Commit 3 Feedback**:
+
 - [ ] Confirm `pnpm tsc --noEmit` passed
 - [ ] Document specific imports tested
 - [ ] Clarify test file approach (created, deleted, kept)
@@ -289,8 +293,10 @@ cat package.json | jq . > /dev/null && echo "✅ Valid JSON"
 #### Feedback Template
 
 If issues found:
+
 ```markdown
 **Commit 4 Feedback**:
+
 - [ ] Confirm dev server started successfully
 - [ ] Document edge compatibility explicitly
 - [ ] Clarify Phase 1 completion status

@@ -36,6 +36,7 @@ The implementation is split into **4 independent commits** to:
 **Duration**: 15-20 min (implementation) + 10-15 min (review)
 
 **Content**:
+
 - Research next-intl compatibility with Next.js 15
 - Check next-intl changelog and documentation
 - Verify React 19 compatibility
@@ -43,24 +44,28 @@ The implementation is split into **4 independent commits** to:
 - Document findings in commit message
 
 **Why it's atomic**:
+
 - Single responsibility: research and document compatibility
 - No code changes - pure documentation
 - Can be validated by reviewing commit message
 - Provides clear rationale for version choice in Commit 2
 
 **Technical Validation**:
+
 ```bash
 # No technical validation needed - this is a research commit
 # Validation is through commit message content
 ```
 
 **Expected Result**: Commit message documents:
+
 - Latest next-intl stable version
 - Next.js 15 compatibility confirmed
 - React 19 compatibility confirmed
 - Edge runtime support confirmed
 
 **Review Criteria**:
+
 - [ ] Commit message includes specific next-intl version researched
 - [ ] Next.js 15 compatibility explicitly confirmed
 - [ ] React 19 compatibility explicitly confirmed
@@ -76,6 +81,7 @@ The implementation is split into **4 independent commits** to:
 **Duration**: 10-15 min (implementation) + 10-15 min (review)
 
 **Content**:
+
 - Run `pnpm add next-intl`
 - Verify package added to dependencies (not devDependencies)
 - Check pnpm lockfile updated correctly
@@ -83,12 +89,14 @@ The implementation is split into **4 independent commits** to:
 - Document installed version in commit message
 
 **Why it's atomic**:
+
 - Single responsibility: add package dependency
 - Independent of configuration (Phase 2)
 - Can be tested immediately (pnpm install succeeds)
 - Minimal diff (clear to review)
 
 **Technical Validation**:
+
 ```bash
 # Verify installation succeeded
 pnpm install
@@ -101,12 +109,14 @@ echo "Check terminal output for warnings"
 ```
 
 **Expected Result**:
+
 - `next-intl` appears in `dependencies` section of package.json
 - `pnpm-lock.yaml` updated with next-intl and its dependencies
 - No peer dependency warnings in terminal
 - Installation completes successfully
 
 **Review Criteria**:
+
 - [ ] next-intl added to `dependencies` (not `devDependencies`)
 - [ ] Version matches the researched stable version from Commit 1
 - [ ] pnpm-lock.yaml updated (file changed)
@@ -122,6 +132,7 @@ echo "Check terminal output for warnings"
 **Duration**: 15-20 min (implementation) + 10-15 min (review)
 
 **Content**:
+
 - Verify TypeScript recognizes next-intl types
 - Run `pnpm tsc --noEmit` to check compilation
 - Optionally create simple import test (can be deleted)
@@ -129,12 +140,14 @@ echo "Check terminal output for warnings"
 - Document TypeScript validation in commit message
 
 **Why it's atomic**:
+
 - Single responsibility: validate TypeScript integration
 - Independent validation step
 - Can include temporary test code if needed
 - Proves types are available before Phase 2 configuration
 
 **Technical Validation**:
+
 ```bash
 # TypeScript compilation check
 pnpm tsc --noEmit
@@ -150,12 +163,14 @@ pnpm tsc --noEmit /tmp/test-next-intl.ts
 ```
 
 **Expected Result**:
+
 - TypeScript compilation passes with no errors
 - next-intl types are recognized
 - Import statements for next-intl work correctly
 - No type definition warnings
 
 **Review Criteria**:
+
 - [ ] `pnpm tsc --noEmit` passes successfully
 - [ ] Commit message confirms TypeScript types validated
 - [ ] No errors related to next-intl types
@@ -171,6 +186,7 @@ pnpm tsc --noEmit /tmp/test-next-intl.ts
 **Duration**: 15-20 min (implementation) + 15-20 min (review)
 
 **Content**:
+
 - Add comment in package.json documenting next-intl purpose (optional)
 - Verify edge runtime compatibility (next-intl supports edge)
 - Document Cloudflare Workers compatibility confirmation
@@ -178,12 +194,14 @@ pnpm tsc --noEmit /tmp/test-next-intl.ts
 - Confirm installation complete and ready for Phase 2
 
 **Why it's atomic**:
+
 - Single responsibility: documentation and edge validation
 - Final verification before Phase 2
 - Provides clear "Phase 1 complete" milestone
 - Documents any compatibility notes for team
 
 **Technical Validation**:
+
 ```bash
 # Verify Next.js dev server starts with new dependency
 pnpm dev
@@ -196,12 +214,14 @@ cat package.json | jq . > /dev/null && echo "Valid JSON"
 ```
 
 **Expected Result**:
+
 - Next.js dev server starts without errors
 - No console warnings related to next-intl
 - Documentation updated with installation notes
 - Edge runtime compatibility confirmed
 
 **Review Criteria**:
+
 - [ ] Next.js server starts successfully with next-intl installed
 - [ ] No warnings or errors in console
 - [ ] Edge runtime compatibility documented
@@ -233,6 +253,7 @@ cat package.json | jq . > /dev/null && echo "Valid JSON"
 ### Validation at Each Step
 
 After each commit:
+
 ```bash
 # Ensure package.json is valid
 cat package.json | jq . > /dev/null
@@ -250,13 +271,13 @@ All must pass before moving to next commit.
 
 ## 📊 Commit Metrics
 
-| Commit | Files | Lines  | Implementation | Review  | Total   |
-| ------ | ----- | ------ | -------------- | ------- | ------- |
-| 1. Research compatibility | 0 | 0 | 15-20 min | 10-15 min | 25-35 min |
-| 2. Install package | 2 | ~510 | 10-15 min | 10-15 min | 20-30 min |
-| 3. Validate TypeScript | 0-1 | 0-20 | 15-20 min | 10-15 min | 25-35 min |
-| 4. Document & validate edge | 1-2 | 5-15 | 15-20 min | 15-20 min | 30-40 min |
-| **TOTAL** | **2-5** | **~515-545** | **55-75 min** | **45-65 min** | **1.7-2.3h** |
+| Commit                      | Files   | Lines        | Implementation | Review        | Total        |
+| --------------------------- | ------- | ------------ | -------------- | ------------- | ------------ |
+| 1. Research compatibility   | 0       | 0            | 15-20 min      | 10-15 min     | 25-35 min    |
+| 2. Install package          | 2       | ~510         | 10-15 min      | 10-15 min     | 20-30 min    |
+| 3. Validate TypeScript      | 0-1     | 0-20         | 15-20 min      | 10-15 min     | 25-35 min    |
+| 4. Document & validate edge | 1-2     | 5-15         | 15-20 min      | 15-20 min     | 30-40 min    |
+| **TOTAL**                   | **2-5** | **~515-545** | **55-75 min**  | **45-65 min** | **1.7-2.3h** |
 
 ---
 
@@ -287,6 +308,7 @@ All must pass before moving to next commit.
 ### Commit Messages
 
 Format:
+
 ```
 type(scope): short description (max 50 chars)
 
@@ -302,6 +324,7 @@ Part of Phase 1 - Commit X/4
 **Examples**:
 
 Commit 1:
+
 ```
 chore(i18n): research next-intl compatibility with Next.js 15
 
@@ -315,6 +338,7 @@ Part of Phase 1 - Commit 1/4
 ```
 
 Commit 2:
+
 ```
 chore(i18n): install next-intl package
 
@@ -327,6 +351,7 @@ Part of Phase 1 - Commit 2/4
 ```
 
 Commit 3:
+
 ```
 test(i18n): verify next-intl TypeScript types
 
@@ -339,6 +364,7 @@ Part of Phase 1 - Commit 3/4
 ```
 
 Commit 4:
+
 ```
 docs(i18n): document next-intl installation and edge compatibility
 

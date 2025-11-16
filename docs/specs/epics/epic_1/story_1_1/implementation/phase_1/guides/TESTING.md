@@ -86,6 +86,7 @@ pnpm list next-intl | grep next-intl
 ```
 
 **Pass Criteria**:
+
 - [ ] `pnpm install` exits with code 0
 - [ ] next-intl appears in dependency tree
 - [ ] No peer dependency errors
@@ -107,6 +108,7 @@ echo $?  # Should be 0 (no errors)
 ```
 
 **Pass Criteria**:
+
 - [ ] TypeScript compilation succeeds
 - [ ] No errors related to next-intl types
 - [ ] Exit code is 0
@@ -151,6 +153,7 @@ echo $?  # Should be 0
 ```
 
 **Pass Criteria**:
+
 - [ ] Linter passes
 - [ ] No new errors introduced
 - [ ] Exit code is 0
@@ -174,6 +177,7 @@ pnpm dev
 ```
 
 **Pass Criteria**:
+
 - [ ] Server starts successfully
 - [ ] Ready message appears
 - [ ] No errors in console output
@@ -196,6 +200,7 @@ echo $?  # Should be 0
 ```
 
 **Pass Criteria**:
+
 - [ ] Build completes without errors
 - [ ] No next-intl build errors
 - [ ] Exit code is 0
@@ -205,13 +210,13 @@ echo $?  # Should be 0
 
 ## 📊 Validation Test Results Table
 
-| Validation Test         | Command               | Expected Exit Code | Pass/Fail |
-| ----------------------- | --------------------- | ------------------ | --------- |
-| Package Installation    | `pnpm install`        | 0                  | -         |
-| TypeScript Compilation  | `pnpm tsc --noEmit`   | 0                  | -         |
-| Linter                  | `pnpm lint`           | 0                  | -         |
-| Dev Server Startup      | `pnpm dev`            | Server starts      | -         |
-| Build (Optional)        | `pnpm build`          | 0                  | -         |
+| Validation Test        | Command             | Expected Exit Code | Pass/Fail |
+| ---------------------- | ------------------- | ------------------ | --------- |
+| Package Installation   | `pnpm install`      | 0                  | -         |
+| TypeScript Compilation | `pnpm tsc --noEmit` | 0                  | -         |
+| Linter                 | `pnpm lint`         | 0                  | -         |
+| Dev Server Startup     | `pnpm dev`          | Server starts      | -         |
+| Build (Optional)       | `pnpm build`        | 0                  | -         |
 
 **Fill in Pass/Fail after running each validation.**
 
@@ -222,6 +227,7 @@ echo $?  # Should be 0
 ### Failure: pnpm install errors
 
 **Symptoms**:
+
 - Installation fails
 - Peer dependency errors
 - Network errors
@@ -229,18 +235,21 @@ echo $?  # Should be 0
 **Debug Steps**:
 
 1. **Check error message**:
+
    ```bash
    pnpm install 2>&1 | tee install-error.log
    # Review install-error.log for specific error
    ```
 
 2. **Verify package exists**:
+
    ```bash
    pnpm info next-intl
    # Should show package information
    ```
 
 3. **Check network**:
+
    ```bash
    pnpm ping
    # Should output: PONG
@@ -257,24 +266,28 @@ echo $?  # Should be 0
 ### Failure: TypeScript compilation errors
 
 **Symptoms**:
+
 - `pnpm tsc --noEmit` fails
 - Type errors in output
 
 **Debug Steps**:
 
 1. **Check error details**:
+
    ```bash
    pnpm tsc --noEmit 2>&1 | head -20
    # Review first 20 lines of errors
    ```
 
 2. **Verify next-intl types**:
+
    ```bash
    ls node_modules/next-intl/dist/*.d.ts
    # Should list type definition files
    ```
 
 3. **Check TypeScript version**:
+
    ```bash
    pnpm list typescript
    # Ensure TypeScript version is compatible
@@ -291,6 +304,7 @@ echo $?  # Should be 0
 ### Failure: Dev server won't start
 
 **Symptoms**:
+
 - `pnpm dev` fails
 - Server crashes on startup
 - Port already in use
@@ -298,18 +312,21 @@ echo $?  # Should be 0
 **Debug Steps**:
 
 1. **Check error message**:
+
    ```bash
    pnpm dev 2>&1 | tee dev-error.log
    # Review dev-error.log
    ```
 
 2. **Check if port 3000 is busy**:
+
    ```bash
    lsof -i :3000
    # If output shows a process, kill it or use different port
    ```
 
 3. **Try different port**:
+
    ```bash
    PORT=3001 pnpm dev
    ```
@@ -414,6 +431,7 @@ Before marking Phase 1 as complete:
 ### Validation Workflow
 
 ✅ **Do**:
+
 - Run all validations after each commit
 - Document any warnings or errors
 - Verify exit codes (should be 0)
@@ -421,6 +439,7 @@ Before marking Phase 1 as complete:
 - Test server startup
 
 ❌ **Don't**:
+
 - Skip validation steps
 - Ignore warnings (document them)
 - Proceed if validations fail

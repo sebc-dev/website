@@ -113,6 +113,7 @@ echo "Check terminal output - should show no errors"
 ```
 
 **Expected Result**:
+
 - next-intl appears in dependencies
 - pnpm-lock.yaml updated
 - No peer dependency errors
@@ -210,6 +211,7 @@ echo $?  # Should be 0 (success)
 ```
 
 **Expected Result**:
+
 - TypeScript compilation passes
 - No errors related to missing types
 - Import statements work correctly
@@ -237,6 +239,7 @@ echo $?  # Should be 0 (success)
 ### Commit Message
 
 **Option A: Without test file**
+
 ```bash
 git commit --allow-empty -m "test(i18n): verify next-intl TypeScript types
 
@@ -252,6 +255,7 @@ Part of Phase 1 - Commit 3/4"
 ```
 
 **Option B: With test file (then deleted)**
+
 ```bash
 git commit --allow-empty -m "test(i18n): verify next-intl TypeScript types
 
@@ -300,6 +304,7 @@ cat package.json | jq . > /dev/null && echo "✅ Valid JSON"
 ```
 
 **Expected Result**:
+
 - Dev server starts without errors
 - No next-intl warnings in console
 - Edge compatibility confirmed
@@ -338,6 +343,7 @@ If updating CLAUDE.md (recommended for team knowledge):
 ### Commit Message
 
 **Option A: No documentation file changes**
+
 ```bash
 git commit --allow-empty -m "docs(i18n): validate next-intl edge compatibility
 
@@ -353,6 +359,7 @@ Part of Phase 1 - Commit 4/4"
 ```
 
 **Option B: With CLAUDE.md update**
+
 ```bash
 git add CLAUDE.md
 git commit -m "docs(i18n): document next-intl installation and edge compatibility
@@ -406,6 +413,7 @@ git log --oneline -4
 ```
 
 **Expected git log**:
+
 ```
 abcd123 docs(i18n): validate next-intl edge compatibility
 def4567 test(i18n): verify next-intl TypeScript types
@@ -422,16 +430,19 @@ jkl2345 chore(i18n): research next-intl compatibility with Next.js 15
 ### If Issues Arise
 
 **Issue: Peer dependency warning**
+
 - Document in commit message
 - Check if it's a warning (can proceed) or error (must resolve)
 - Investigate compatibility if error
 
 **Issue: TypeScript errors**
+
 - Verify next-intl version is correct
 - Check TypeScript version compatibility
 - Review next-intl documentation for type setup
 
 **Issue: Dev server won't start**
+
 - Check error message carefully
 - Likely unrelated to next-intl (pre-existing issue)
 - Resolve before completing Phase 1

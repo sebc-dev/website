@@ -18,6 +18,7 @@ Complete validation checklist before marking Phase 1 as complete.
 - [ ] Git history is clean and readable
 
 **Validation**:
+
 ```bash
 # Review git log
 git log --oneline -4
@@ -42,6 +43,7 @@ git log --oneline -4
 - [ ] No unexpected packages added
 
 **Validation**:
+
 ```bash
 # Verify installation
 pnpm list next-intl
@@ -68,6 +70,7 @@ pnpm install
 - [ ] Type definitions are built-in (no @types package needed)
 
 **Validation**:
+
 ```bash
 # Run TypeScript compiler in check mode
 pnpm tsc --noEmit
@@ -91,6 +94,7 @@ echo $?  # Should output: 0
 - [ ] No debug statements (not applicable for Phase 1)
 
 **Validation**:
+
 ```bash
 # Run linter
 pnpm lint
@@ -118,6 +122,7 @@ cat pnpm-lock.yaml | head -10  # Should show valid YAML
 - [ ] No unexpected warnings
 
 **Validation**:
+
 ```bash
 # Run all validation tests
 echo "=== Installation ==="
@@ -162,6 +167,7 @@ pnpm build && echo "✅ Pass" || echo "❌ Fail"
 - [ ] No Node.js-specific API usage warnings
 
 **Validation**:
+
 ```bash
 # Verify Next.js version
 pnpm list next
@@ -193,6 +199,7 @@ pnpm list next-intl
 - [ ] Documentation is concise and accurate
 
 **Validation**:
+
 ```bash
 # Review all commit messages
 git log --format="%B" -4
@@ -215,6 +222,7 @@ git log --format="%B" -4
 - [ ] All existing functionality works
 
 **Validation**:
+
 ```bash
 # Verify project still works
 pnpm dev
@@ -240,6 +248,7 @@ pnpm list | grep -i conflict
 - [ ] Git working directory clean
 
 **Validation**:
+
 ```bash
 # Check git status
 git status
@@ -265,6 +274,7 @@ git status --short
 - [ ] Edge runtime compatibility confirmed
 
 **Validation**:
+
 ```bash
 # Verify environment
 echo "Node: $(node --version)"
@@ -289,6 +299,7 @@ pnpm dev
 - [ ] Ready for peer review (if required)
 
 **Validation**:
+
 ```bash
 # Review own commits
 git diff HEAD~4..HEAD
@@ -354,17 +365,17 @@ git log --oneline -4
 
 ## 📊 Success Metrics
 
-| Metric                       | Target | Actual | Status |
-| ---------------------------- | ------ | ------ | ------ |
-| Commits Completed            | 4      | -      | ⏳     |
-| Package Installed            | ✅     | -      | ⏳     |
-| TypeScript Compilation       | Pass   | -      | ⏳     |
-| Linter Status                | Pass   | -      | ⏳     |
-| Dev Server Startup           | Pass   | -      | ⏳     |
-| Build Status (Optional)      | Pass   | -      | ⏳     |
-| Next.js 15 Compatibility     | ✅     | -      | ⏳     |
-| React 19 Compatibility       | ✅     | -      | ⏳     |
-| Edge Runtime Compatibility   | ✅     | -      | ⏳     |
+| Metric                     | Target | Actual | Status |
+| -------------------------- | ------ | ------ | ------ |
+| Commits Completed          | 4      | -      | ⏳     |
+| Package Installed          | ✅     | -      | ⏳     |
+| TypeScript Compilation     | Pass   | -      | ⏳     |
+| Linter Status              | Pass   | -      | ⏳     |
+| Dev Server Startup         | Pass   | -      | ⏳     |
+| Build Status (Optional)    | Pass   | -      | ⏳     |
+| Next.js 15 Compatibility   | ✅     | -      | ⏳     |
+| React 19 Compatibility     | ✅     | -      | ⏳     |
+| Edge Runtime Compatibility | ✅     | -      | ⏳     |
 
 **Fill in Actual values and Status (✅/❌) after validation.**
 
@@ -430,6 +441,7 @@ Select one:
 ### Issue: TypeScript still shows errors after installation
 
 **Solution**:
+
 ```bash
 # Restart TypeScript server (if using VS Code)
 # Command Palette -> TypeScript: Restart TS Server
@@ -440,6 +452,7 @@ Select one:
 ### Issue: Dev server shows warnings about next-intl
 
 **Solution**:
+
 - Check if warnings are documented in commit messages
 - Verify warnings are not errors
 - If errors, investigate compatibility
@@ -447,6 +460,7 @@ Select one:
 ### Issue: Build fails after installation
 
 **Solution**:
+
 - Check build error message
 - Verify it's not a pre-existing issue
 - Ensure next-intl is in dependencies, not devDependencies

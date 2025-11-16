@@ -156,10 +156,10 @@ According to next-intl documentation for App Router:
 
 ```typescript
 // This is what we'll create (simplified example)
-import {getRequestConfig} from 'next-intl/server';
+import { getRequestConfig } from 'next-intl/server';
 
-export default getRequestConfig(async ({locale}) => ({
-  messages: (await import(`../messages/${locale}.json`)).default
+export default getRequestConfig(async ({ locale }) => ({
+  messages: (await import(`../messages/${locale}.json`)).default,
 }));
 ```
 
@@ -201,29 +201,32 @@ export default getRequestConfig(async ({locale}) => ({
 **Risk**: next-intl version incompatible with Next.js 15 or React 19
 **Impact**: Configuration errors, runtime failures
 **Mitigation**:
+
 - Check next-intl changelog for Next.js 15 compatibility
 - Use latest stable version
 - Test server start immediately after installation
-**Contingency**: Pin to last known compatible version, report issue
+  **Contingency**: Pin to last known compatible version, report issue
 
 ### Risk 2: TypeScript Configuration 🟢 Low
 
 **Risk**: TypeScript types not properly configured
 **Impact**: Loss of type safety
 **Mitigation**:
+
 - Follow next-intl TypeScript setup guide
 - Validate with `pnpm tsc --noEmit`
-**Contingency**: Manual type definitions if needed
+  **Contingency**: Manual type definitions if needed
 
 ### Risk 3: Cloudflare Workers Compatibility 🟢 Low
 
 **Risk**: next-intl uses Node.js-specific APIs incompatible with Workers
 **Impact**: Build or runtime failures
 **Mitigation**:
+
 - next-intl is designed for edge runtimes
 - OpenNext adapter handles compatibility
 - Test build early
-**Contingency**: Unlikely, but could use alternative if needed
+  **Contingency**: Unlikely, but could use alternative if needed
 
 ---
 
@@ -232,6 +235,7 @@ export default getRequestConfig(async ({locale}) => ({
 This story will be broken down into atomic phases in `PHASES_PLAN.md`.
 
 Expected phases (preview):
+
 1. Package installation and dependency validation
 2. Configuration file creation and TypeScript setup
 3. Integration validation and documentation
