@@ -7,7 +7,6 @@
  * @see https://next-intl-docs.vercel.app/docs/getting-started/app-router
  */
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { getRequestConfig } from 'next-intl/server';
 
 /**
@@ -31,4 +30,33 @@ export const locales = ['fr', 'en'] as const;
  */
 export const defaultLocale: Locale = 'fr';
 
-// getRequestConfig implementation will be added in subsequent commits
+/**
+ * next-intl request configuration for Server Components
+ *
+ * This function is called by next-intl for each request to load
+ * the appropriate translations based on the current locale.
+ *
+ * Message files will be created in Story 1.2 (messages/fr.json, messages/en.json).
+ * The dynamic import prepares the structure for those files.
+ *
+ * @param locale - The current locale (provided by next-intl middleware)
+ * @returns Configuration object with messages for the locale
+ *
+ * @see https://next-intl-docs.vercel.app/docs/usage/configuration#i18n-request
+ */
+export default getRequestConfig(async ({ locale }) => {
+  // Validate that the incoming locale is valid
+  const validLocale: Locale = locales.includes(locale as Locale)
+    ? (locale as Locale)
+    : defaultLocale;
+
+  if (validLocale !== locale) {
+    console.warn(`Invalid locale requested: ${locale}. Falling back to ${defaultLocale}.`);
+  }
+
+  return {
+    locale: validLocale,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    messages: (await import(`../messages/${validLocale}.json`)).default,
+  };
+});
