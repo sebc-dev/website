@@ -8,10 +8,10 @@
     "configFile": "vitest.config.ts"
   },
   "mutate": [
-    "src/lib/server/**/*.ts",
-    "!src/lib/server/**/*.test.ts",
-    "!src/lib/server/**/*.spec.ts",
-    "!src/lib/server/db/schema.ts"
+    "lib/server/**/*.ts",
+    "!lib/server/**/*.test.ts",
+    "!lib/server/**/*.spec.ts",
+    "!lib/server/db/schema.ts"
   ],
   "mutator": {
     "excludedMutations": ["StringLiteral", "ObjectLiteral"]
