@@ -94,12 +94,28 @@ Uses Geist font family (Geist Sans and Geist Mono) via `next/font/google`
   - `config.ts` - Request configuration for Server Components
   - `types.ts` - TypeScript type definitions
   - `index.ts` - Barrel exports for clean imports
+  - `README.md` - Comprehensive usage documentation
 - **Supported Locales**: French (fr) - default, English (en)
-- **Message Files**: `messages/fr.json`, `messages/en.json` (Story 1.2)
+- **Message Files**: `messages/fr.json`, `messages/en.json`
+  - **8 namespaces**: common, nav, footer, form, article, complexity, search, error
+  - **73 total keys** organized into semantic groups
+  - **100% translation parity** between French and English (validated by tests)
+  - Common patterns include parameterized translations (e.g., `{minutes} min read`)
 - **Import Pattern**: Use `import { ... } from '@/i18n'` for clean imports
-- **Documentation**: See `i18n/README.md` for usage and examples
+- **Component Usage**:
+  ```typescript
+  import { useTranslations } from 'next-intl';
 
-**Current Status**: Phase 2 complete (configuration), Story 1.2 (message files) in progress
+  export function MyComponent() {
+    const t = useTranslations('common');
+    return <div>{t('appName')}</div>;
+  }
+  ```
+- **Testing**: Run `pnpm test messages.test.ts` to validate translation parity
+- **Documentation**: See `i18n/README.md` for complete usage guide, examples, and best practices
+- **Development Tools**: Test page at `[locale]/messages-test` shows all translations side-by-side
+
+**Current Status**: Phase 2 complete - Configuration (Phase 1) and Message Files (Phase 2) fully implemented
 
 ## Project Workflow System
 
