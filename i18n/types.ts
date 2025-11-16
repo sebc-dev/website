@@ -6,6 +6,8 @@
  * are created in Story 1.2.
  */
 
+import type { Locale } from './config';
+
 /**
  * Structure of translation messages
  *
@@ -19,5 +21,5 @@ export type IntlMessages = Record<string, any>;
  * Locale parameter type for use in components and utilities
  */
 export type LocaleParam = {
-  locale: string;
+  locale: Locale;
 };
