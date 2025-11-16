@@ -8,17 +8,18 @@
  * - Locale validation
  * - Environment-based flag behavior
  *
- * @see src/lib/i18n/cookie.ts
+ * @see ./cookie.ts
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { NextRequest } from 'next/server';
+import { describe, expect, it, vi } from 'vitest';
+
 import {
+  type CookieOptions,
+  deleteCookie,
   getCookie,
   setCookie,
-  deleteCookie,
   validateLocale,
-  type CookieOptions,
 } from './cookie';
 
 describe('Cookie Utilities', () => {
@@ -76,23 +77,21 @@ describe('Cookie Utilities', () => {
     });
 
     it('should include Secure flag in production', () => {
-      const originalEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = 'production';
+      vi.stubEnv('NODE_ENV', 'production');
 
       const result = setCookie('NEXT_LOCALE', 'en');
       expect(result).toContain('Secure');
 
-      process.env.NODE_ENV = originalEnv;
+      vi.unstubAllEnvs();
     });
 
     it('should not include Secure flag in development', () => {
-      const originalEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = 'development';
+      vi.stubEnv('NODE_ENV', 'development');
 
       const result = setCookie('NEXT_LOCALE', 'fr');
       expect(result).not.toContain('Secure');
 
-      process.env.NODE_ENV = originalEnv;
+      vi.unstubAllEnvs();
     });
 
     it('should respect custom maxAge option', () => {
@@ -180,13 +179,12 @@ describe('Cookie Utilities', () => {
     });
 
     it('should include Secure flag in production', () => {
-      const originalEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = 'production';
+      vi.stubEnv('NODE_ENV', 'production');
 
       const result = deleteCookie('NEXT_LOCALE');
       expect(result).toContain('Secure');
 
-      process.env.NODE_ENV = originalEnv;
+      vi.unstubAllEnvs();
     });
 
     it('should work for any cookie name', () => {
