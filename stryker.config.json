@@ -8,14 +8,14 @@
     "configFile": "vitest.config.ts"
   },
   "mutate": [
-    "src/lib/server/**/*.ts",
-    "!src/lib/server/**/*.test.ts",
-    "!src/lib/server/**/*.spec.ts",
-    "!src/lib/server/db/schema.ts",
+    "lib/server/**/*.ts",
+    "!lib/server/**/*.test.ts",
+    "!lib/server/**/*.spec.ts",
+    "!lib/server/db/schema.ts",
     "app/admin/actions.ts",
-    "src/lib/utils/**/*.ts",
-    "!src/lib/utils/**/*.test.ts",
-    "!src/lib/utils/**/*.spec.ts",
+    "lib/utils/**/*.ts",
+    "!lib/utils/**/*.test.ts",
+    "!lib/utils/**/*.spec.ts",
     "!**/__tests__/**"
   ],
   "mutator": {
