@@ -34,7 +34,7 @@ This epic contains **7 stories** as defined in the PRD:
 | Story | Title                           | Description                                                        | Status         | Phases | Progress |
 | ----- | ------------------------------- | ------------------------------------------------------------------ | -------------- | ------ | -------- |
 | 1.1   | Install and configure next-intl | Set up next-intl library and basic configuration                   | 🚧 IN PROGRESS | 3      | 1/3      |
-| 1.2   | Create message files            | Create `messages/fr.json` and `messages/en.json` translation files | 📋 NOT STARTED | -      | 0/0      |
+| 1.2   | Create message files            | Create `messages/fr.json` and `messages/en.json` translation files | 📋 PLANNING    | 2      | 0/2      |
 | 1.3   | Create Next.js middleware       | Implement middleware with next-intl for routing                    | 📋 NOT STARTED | -      | 0/0      |
 | 1.4   | Bilingual URL structure         | Implement route groups with language detection and cookie support  | 📋 NOT STARTED | -      | 0/0      |
 | 1.5   | Content fallback                | Add language badges and FR/EN toggle for missing translations      | 📋 NOT STARTED | -      | 0/0      |
@@ -160,7 +160,7 @@ Track epic-level milestones here:
 Stories will be linked here as they are planned:
 
 - Story 1.1: `docs/specs/epics/epic_1/story_1_1/story_1.1.md` ✅
-- Story 1.2: `docs/specs/epics/epic_1/story_1_2/story_1.2.md` (not yet created)
+- Story 1.2: `docs/specs/epics/epic_1/story_1_2/story_1.2.md` ✅
 - Story 1.3: `docs/specs/epics/epic_1/story_1_3/story_1.3.md` (not yet created)
 - Story 1.4: `docs/specs/epics/epic_1/story_1_4/story_1.4.md` (not yet created)
 - Story 1.5: `docs/specs/epics/epic_1/story_1_5/story_1.5.md` (not yet created)
@@ -172,6 +172,7 @@ Stories will be linked here as they are planned:
 Phase plans will be linked here as stories are planned:
 
 - Story 1.1: `docs/specs/epics/epic_1/story_1_1/implementation/PHASES_PLAN.md` ✅ (3 phases)
+- Story 1.2: `docs/specs/epics/epic_1/story_1_2/implementation/PHASES_PLAN.md` ✅ (2 phases)
 
 ### Related Documentation
 
@@ -227,6 +228,16 @@ Phase plans will be linked here as stories are planned:
 
 ## 📝 Recent Updates
 
+- **2025-11-16**: Story 1.2 Phase 1 documentation generated (7 comprehensive documents)
+  - Generated complete implementation documentation for Message File Structure & French Translations phase
+  - 4 atomic commits planned: structure → French common/nav/footer → French forms/articles/search/errors → tests & config
+  - Documents: INDEX.md, IMPLEMENTATION_PLAN.md, COMMIT_CHECKLIST.md, ENVIRONMENT_SETUP.md, guides (REVIEW.md, TESTING.md), validation/VALIDATION_CHECKLIST.md
+  - Total: ~3,200 lines of professional documentation
+  - Ready for Phase 1 implementation
+- **2025-11-16**: Story 1.2 specification and phase plan created (2 phases: Message Files + Parity Validation)
+  - Detailed story specification with requirements, acceptance criteria, and testing strategy
+  - Phase breakdown: Phase 1 (French translations) and Phase 2 (English + parity validation)
+  - Total estimated translation keys: 50-80 across 8 namespaces
 - **2025-11-16**: Story 1.1 Phase 2 documentation generated (7 comprehensive documents)
   - Generated complete implementation documentation for Configuration phase
   - 5 atomic commits planned: structure → types → config → TypeScript → docs
