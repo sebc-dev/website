@@ -35,7 +35,7 @@ This epic contains **7 stories** as defined in the PRD:
 | ----- | ------------------------------- | ------------------------------------------------------------------ | -------------- | ------ | -------- |
 | 1.1   | Install and configure next-intl | Set up next-intl library and basic configuration                   | 🚧 IN PROGRESS | 3      | 1/3      |
 | 1.2   | Create message files            | Create `messages/fr.json` and `messages/en.json` translation files | 📋 PLANNING    | 2      | 1/2      |
-| 1.3   | Create Next.js middleware       | Implement middleware with next-intl for routing                    | 📋 NOT STARTED | -      | 0/0      |
+| 1.3   | Create Next.js middleware       | Implement middleware with next-intl for routing                    | 📋 PLANNING    | 3      | 0/3      |
 | 1.4   | Bilingual URL structure         | Implement route groups with language detection and cookie support  | 📋 NOT STARTED | -      | 0/0      |
 | 1.5   | Content fallback                | Add language badges and FR/EN toggle for missing translations      | 📋 NOT STARTED | -      | 0/0      |
 | 1.6   | SEO hreflang + canonical        | Implement SEO metadata via Next.js Metadata API                    | 📋 NOT STARTED | -      | 0/0      |
@@ -93,12 +93,12 @@ cat docs/specs/epics/epic_1/EPIC_TRACKING.md
 
 ### Progress Summary
 
-- **Stories Started**: 1 / 7
+- **Stories Started**: 2 / 7 (Stories 1.1, 1.2 planned; 1.3 planned)
 - **Stories Completed**: 0 / 7
-- **Total Phases**: 3 (Story 1.1 only, others TBD)
-- **Phases Completed**: 1 / 3
+- **Total Phases**: 8 (Story 1.1: 3, Story 1.2: 2, Story 1.3: 3)
+- **Phases Completed**: 1 / 8
 
-**Completion**: 33% (Story 1.1: 1/3 phases complete)
+**Completion**: 12% (Story 1.1: 1/3 phases complete)
 
 ### Timeline
 
@@ -161,7 +161,7 @@ Stories will be linked here as they are planned:
 
 - Story 1.1: `docs/specs/epics/epic_1/story_1_1/story_1.1.md` ✅
 - Story 1.2: `docs/specs/epics/epic_1/story_1_2/story_1.2.md` ✅
-- Story 1.3: `docs/specs/epics/epic_1/story_1_3/story_1.3.md` (not yet created)
+- Story 1.3: `docs/specs/epics/epic_1/story_1_3/story_1.3.md` ✅
 - Story 1.4: `docs/specs/epics/epic_1/story_1_4/story_1.4.md` (not yet created)
 - Story 1.5: `docs/specs/epics/epic_1/story_1_5/story_1.5.md` (not yet created)
 - Story 1.6: `docs/specs/epics/epic_1/story_1_6/story_1.6.md` (not yet created)
@@ -173,6 +173,7 @@ Phase plans will be linked here as stories are planned:
 
 - Story 1.1: `docs/specs/epics/epic_1/story_1_1/implementation/PHASES_PLAN.md` ✅ (3 phases)
 - Story 1.2: `docs/specs/epics/epic_1/story_1_2/implementation/PHASES_PLAN.md` ✅ (2 phases)
+- Story 1.3: `docs/specs/epics/epic_1/story_1_3/implementation/PHASES_PLAN.md` ✅ (3 phases)
 
 ### Related Documentation
 
@@ -255,4 +256,9 @@ Phase plans will be linked here as stories are planned:
   - Verified TypeScript types and Next.js dev server compatibility
   - Updated CLAUDE.md with installation documentation
   - All validations passing (TypeScript, ESLint, tests)
+- **2025-11-16**: Story 1.3 specification and phase plan created (3 phases: Language Detection Foundation, Cookie Persistence & i18n Context, Testing & Validation)
+  - Comprehensive story spec with 12 acceptance criteria and detailed technical requirements
+  - Phase breakdown: Phase 1 (Detection, 1.5-2d), Phase 2 (Cookies, 1.5-2d), Phase 3 (E2E Testing, 1-1.5d)
+  - Total estimated duration: 4-6 days, 6-8 commits
+  - Ready for Phase 1 documentation generation
 - **2025-11-16**: Story 1.1 planned with 3 phases (Installation, Configuration, Validation)
