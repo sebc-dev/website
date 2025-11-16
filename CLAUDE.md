@@ -87,6 +87,20 @@ This is a Next.js 15 website deployed to Cloudflare Workers using OpenNext. The 
 
 Uses Geist font family (Geist Sans and Geist Mono) via `next/font/google`
 
+### Internationalization (i18n)
+
+- **Library**: next-intl v4.5.3 (supports Next.js 15 + edge runtime)
+- **Configuration**: `i18n/` directory
+  - `config.ts` - Request configuration for Server Components
+  - `types.ts` - TypeScript type definitions
+  - `index.ts` - Barrel exports for clean imports
+- **Supported Locales**: French (fr) - default, English (en)
+- **Message Files**: `messages/fr.json`, `messages/en.json` (Story 1.2)
+- **Import Pattern**: Use `import { ... } from '@/i18n'` for clean imports
+- **Documentation**: See `i18n/README.md` for usage and examples
+
+**Current Status**: Phase 2 complete (configuration), Story 1.2 (message files) in progress
+
 ## Project Workflow System
 
 This project uses a comprehensive 5-level specification workflow system for managing features:
