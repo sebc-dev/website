@@ -1,5 +1,15 @@
 {
-  "article": {},
+  "article": {
+    "byAuthor": "By {author}",
+    "category": "Category",
+    "complexity": "Complexity",
+    "publishedOn": "Published on {date}",
+    "readingProgress": "Reading Progress",
+    "readingTime": "{minutes} min read",
+    "tableOfContents": "Table of Contents",
+    "tags": "Tags",
+    "updatedOn": "Updated on {date}"
+  },
   "common": {
     "appName": "sebc.dev",
     "apply": "Apply",
@@ -14,8 +24,23 @@
     "success": "Success",
     "warning": "Warning"
   },
-  "complexity": {},
-  "error": {},
+  "complexity": {
+    "advanced": "Advanced",
+    "beginner": "Beginner",
+    "intermediate": "Intermediate"
+  },
+  "error": {
+    "badRequest": "Bad request",
+    "conflict": "Resource conflict",
+    "forbidden": "Forbidden",
+    "goHome": "Go to homepage",
+    "notFound": "Page not found",
+    "serverError": "Internal server error",
+    "timeout": "Request timeout",
+    "unauthorized": "Unauthorized",
+    "unavailable": "Service unavailable",
+    "unknown": "An unknown error occurred"
+  },
   "footer": {
     "contact": "Contact",
     "copyright": "© 2025 sebc.dev. All rights reserved.",
@@ -23,7 +48,23 @@
     "sitemap": "Sitemap",
     "terms": "Terms of Service"
   },
-  "form": {},
+  "form": {
+    "cancel": "Cancel",
+    "confirmPassword": "Confirm password",
+    "delete": "Delete",
+    "edit": "Edit",
+    "error": "An error occurred while submitting the form",
+    "forgotPassword": "Forgot password?",
+    "invalidEmail": "Invalid email address",
+    "loading": "Submitting...",
+    "passwordTooShort": "Password must be at least 8 characters",
+    "required": "This field is required",
+    "resetPassword": "Reset password",
+    "save": "Save",
+    "success": "Form submitted successfully",
+    "submit": "Submit",
+    "emailTaken": "This email is already registered"
+  },
   "nav": {
     "about": "About",
     "articles": "Articles",
@@ -35,5 +76,16 @@
     "projects": "Projects",
     "search": "Search"
   },
-  "search": {}
+  "search": {
+    "categories": "Categories",
+    "clearFilters": "Clear filters",
+    "complexityLevel": "Complexity Level",
+    "dateRange": "Date Range",
+    "filters": "Filters",
+    "loading": "Loading results...",
+    "noResults": "No articles found",
+    "placeholder": "Search articles...",
+    "readingDuration": "Reading Duration",
+    "sort": "Sort by"
+  }
 }
