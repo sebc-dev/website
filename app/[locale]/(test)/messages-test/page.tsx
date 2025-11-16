@@ -134,7 +134,7 @@ function KeyRow({
       <div className='mb-2 flex items-start gap-4'>
         <div className='min-w-32 flex-none'>
           <button
-            type="button"
+            type='button'
             onClick={handleCopy}
             className='hover:text-accent truncate font-mono text-xs text-zinc-400 transition-colors'
             title='Copy key path'
