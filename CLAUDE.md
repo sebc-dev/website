@@ -53,6 +53,7 @@ This is a Next.js 15 website deployed to Cloudflare Workers using OpenNext. The 
 
 - **Framework**: Next.js 15 (App Router, RSC enabled)
 - **Runtime**: Cloudflare Workers via @opennextjs/cloudflare
+- **Internationalization**: next-intl v4.5.3 (supports edge runtime)
 - **Styling**: Tailwind CSS v4 with cssVariables, shadcn/ui "new-york" style
 - **Icons**: Lucide React
 - **Testing**: Vitest (unit/integration), Playwright (E2E)
