@@ -4,7 +4,7 @@ This directory contains the internationalization (i18n) configuration for the ap
 
 ## 📁 Structure
 
-```
+```text
 i18n/
 ├── config.ts     # next-intl request configuration
 ├── types.ts      # TypeScript type definitions
@@ -49,7 +49,7 @@ The `config.ts` file exports a `getRequestConfig` function that next-intl uses t
 
 Message files will be created in **Story 1.2** at:
 
-```
+```text
 messages/
 ├── fr.json       # French translations
 └── en.json       # English translations
