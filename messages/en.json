@@ -1,10 +1,39 @@
 {
   "article": {},
-  "common": {},
+  "common": {
+    "appName": "sebc.dev",
+    "apply": "Apply",
+    "cancel": "Cancel",
+    "close": "Close",
+    "confirm": "Confirm",
+    "error": "An error occurred",
+    "info": "Information",
+    "loading": "Loading...",
+    "noData": "No data available",
+    "retry": "Retry",
+    "success": "Success",
+    "warning": "Warning"
+  },
   "complexity": {},
   "error": {},
-  "footer": {},
+  "footer": {
+    "contact": "Contact",
+    "copyright": "© 2025 sebc.dev. All rights reserved.",
+    "privacy": "Privacy Policy",
+    "sitemap": "Sitemap",
+    "terms": "Terms of Service"
+  },
   "form": {},
-  "nav": {},
+  "nav": {
+    "about": "About",
+    "articles": "Articles",
+    "blog": "Blog",
+    "contact": "Contact",
+    "documentation": "Documentation",
+    "home": "Home",
+    "language": "Language",
+    "projects": "Projects",
+    "search": "Search"
+  },
   "search": {}
 }
