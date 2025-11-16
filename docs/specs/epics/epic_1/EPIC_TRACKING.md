@@ -34,7 +34,7 @@ This epic contains **7 stories** as defined in the PRD:
 | Story | Title                           | Description                                                        | Status         | Phases | Progress |
 | ----- | ------------------------------- | ------------------------------------------------------------------ | -------------- | ------ | -------- |
 | 1.1   | Install and configure next-intl | Set up next-intl library and basic configuration                   | 🚧 IN PROGRESS | 3      | 1/3      |
-| 1.2   | Create message files            | Create `messages/fr.json` and `messages/en.json` translation files | 📋 PLANNING    | 2      | 0/2      |
+| 1.2   | Create message files            | Create `messages/fr.json` and `messages/en.json` translation files | 📋 PLANNING    | 2      | 1/2      |
 | 1.3   | Create Next.js middleware       | Implement middleware with next-intl for routing                    | 📋 NOT STARTED | -      | 0/0      |
 | 1.4   | Bilingual URL structure         | Implement route groups with language detection and cookie support  | 📋 NOT STARTED | -      | 0/0      |
 | 1.5   | Content fallback                | Add language badges and FR/EN toggle for missing translations      | 📋 NOT STARTED | -      | 0/0      |
@@ -228,6 +228,12 @@ Phase plans will be linked here as stories are planned:
 
 ## 📝 Recent Updates
 
+- **2025-11-16**: Story 1.2 Phase 2 documentation generated (7 comprehensive documents)
+  - Generated complete implementation documentation for English Translations & Parity Validation phase
+  - 4 atomic commits planned: English translations (common/nav/footer) → English (form/article/search/error) → parity tests → test page & docs
+  - Documents: INDEX.md, IMPLEMENTATION_PLAN.md, COMMIT_CHECKLIST.md, ENVIRONMENT_SETUP.md, guides (REVIEW.md, TESTING.md), validation/VALIDATION_CHECKLIST.md
+  - Total: ~3,400 lines of professional documentation
+  - Ready for Phase 2 implementation
 - **2025-11-16**: Story 1.2 Phase 1 documentation generated (7 comprehensive documents)
   - Generated complete implementation documentation for Message File Structure & French Translations phase
   - 4 atomic commits planned: structure → French common/nav/footer → French forms/articles/search/errors → tests & config
