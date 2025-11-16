@@ -9,8 +9,9 @@
  * - Status code validation (307)
  */
 
-import { describe, expect, it } from 'vitest';
 import { NextRequest } from 'next/server';
+import { describe, expect, it } from 'vitest';
+
 import { handleRootPathRedirect, isRootPath } from './redirect';
 
 /**
