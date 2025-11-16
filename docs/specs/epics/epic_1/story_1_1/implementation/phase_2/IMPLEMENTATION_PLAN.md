@@ -35,12 +35,14 @@ Created        Defined        Implemented    Configured    Complete
 ### Commit 1: Create base i18n configuration structure
 
 **Files**:
+
 - `src/i18n/config.ts` (new, ~20 lines)
 
 **Size**: ~20 lines
 **Duration**: 20-30 min (implementation) + 10-15 min (review)
 
 **Content**:
+
 - Create `src/i18n/` directory
 - Create `config.ts` file with basic imports
 - Import `getRequestConfig` from `next-intl/server`
@@ -48,12 +50,14 @@ Created        Defined        Implemented    Configured    Complete
 - Export placeholder configuration (to be implemented in Commit 3)
 
 **Why it's atomic**:
+
 - **Single responsibility**: Establish file structure and basic imports
 - **No external dependencies**: Only imports from next-intl (installed in Phase 1)
 - **Independently testable**: File exists, TypeScript recognizes imports
 - **Foundation for next commits**: Provides the file where configuration will be implemented
 
 **Technical Validation**:
+
 ```bash
 # Verify file created
 ls -la src/i18n/config.ts
@@ -66,12 +70,14 @@ pnpm lint src/i18n/config.ts
 ```
 
 **Expected Result**:
+
 - File `src/i18n/config.ts` exists
 - TypeScript recognizes `getRequestConfig` import
 - No compilation errors
 - No linter errors
 
 **Review Criteria**:
+
 - [ ] File created in correct location: `src/i18n/config.ts`
 - [ ] Imports from `next-intl/server` are correct
 - [ ] File header documentation is clear
@@ -83,12 +89,14 @@ pnpm lint src/i18n/config.ts
 ### Commit 2: Define locale types and constants
 
 **Files**:
+
 - `src/i18n/config.ts` (modified, +25 lines, ~45 lines total)
 
 **Size**: ~25 lines added
 **Duration**: 30-40 min (implementation) + 15-20 min (review)
 
 **Content**:
+
 - Define `Locale` type: `'fr' | 'en'`
 - Define `locales` constant array: `['fr', 'en'] as const`
 - Define `defaultLocale` constant: `'fr'`
@@ -97,12 +105,14 @@ pnpm lint src/i18n/config.ts
 - Type-safe locale definitions
 
 **Why it's atomic**:
+
 - **Single responsibility**: Define all locale-related types and constants
 - **Type-safe foundation**: Provides types used by configuration and future code
 - **Independently valuable**: Exports can be imported and used elsewhere
 - **No external dependencies**: Pure TypeScript definitions
 
 **Technical Validation**:
+
 ```bash
 # TypeScript compilation (verify types are correct)
 pnpm tsc --noEmit
@@ -112,12 +122,14 @@ pnpm tsc --noEmit
 ```
 
 **Expected Result**:
+
 - TypeScript recognizes `Locale` type
 - `locales` constant is readonly array
 - `defaultLocale` is type-safe (typed as `'fr'`, not just `string`)
 - Intellisense/autocomplete works for locale values
 
 **Review Criteria**:
+
 - [ ] `Locale` type correctly defined as union type `'fr' | 'en'`
 - [ ] `locales` array uses `as const` for type safety
 - [ ] `defaultLocale` is typed correctly (not widened to `string`)
@@ -131,12 +143,14 @@ pnpm tsc --noEmit
 ### Commit 3: Implement getRequestConfig for Server Components
 
 **Files**:
+
 - `src/i18n/config.ts` (modified, +30 lines, ~75 lines total)
 
 **Size**: ~30 lines added
 **Duration**: 45-60 min (implementation) + 20-30 min (review)
 
 **Content**:
+
 - Implement `getRequestConfig()` function
 - Accept `locale` parameter (typed as `string` from next-intl)
 - Validate locale against supported locales (type guard)
@@ -147,12 +161,14 @@ pnpm tsc --noEmit
 - Export as default
 
 **Why it's atomic**:
+
 - **Single responsibility**: Implement the core configuration function
 - **Complete feature**: getRequestConfig is fully functional (ready for messages)
 - **Independently testable**: Can be imported and tested (messages don't exist yet, but import logic is correct)
 - **Logical progression**: Builds on types from Commit 2
 
 **Technical Validation**:
+
 ```bash
 # TypeScript compilation
 pnpm tsc --noEmit
@@ -165,6 +181,7 @@ pnpm lint src/i18n/config.ts
 ```
 
 **Expected Result**:
+
 - `getRequestConfig` is properly typed
 - Dynamic import syntax is correct
 - Locale validation logic works
@@ -172,6 +189,7 @@ pnpm lint src/i18n/config.ts
 - Default export is present
 
 **Review Criteria**:
+
 - [ ] `getRequestConfig()` correctly typed with next-intl's expected signature
 - [ ] Locale parameter is validated before use
 - [ ] Dynamic import path is correct: `../../messages/${locale}.json`
@@ -187,6 +205,7 @@ pnpm lint src/i18n/config.ts
 ### Commit 4: Add TypeScript configuration and type exports
 
 **Files**:
+
 - `src/i18n/types.ts` (new, ~40 lines)
 - `src/i18n/index.ts` (new, ~15 lines)
 
@@ -194,6 +213,7 @@ pnpm lint src/i18n/config.ts
 **Duration**: 40-50 min (implementation) + 20-25 min (review)
 
 **Content**:
+
 - Create `types.ts` for i18n type definitions
 - Define `IntlMessages` type (for translation message structure)
 - Define utility types for translation keys (if needed)
@@ -202,12 +222,14 @@ pnpm lint src/i18n/config.ts
 - Add comprehensive TypeScript documentation
 
 **Why it's atomic**:
+
 - **Single responsibility**: TypeScript infrastructure and export organization
 - **Independently valuable**: Provides types for use across the application
 - **Clean architecture**: Barrel exports make imports cleaner
 - **No logic changes**: Pure type definitions and exports
 
 **Technical Validation**:
+
 ```bash
 # TypeScript compilation
 pnpm tsc --noEmit
@@ -220,12 +242,14 @@ pnpm lint src/i18n/
 ```
 
 **Expected Result**:
+
 - All types properly exported
 - Barrel export (`index.ts`) provides clean import paths
 - TypeScript recognizes all type definitions
 - No circular dependency issues
 
 **Review Criteria**:
+
 - [ ] `types.ts` contains appropriate type definitions
 - [ ] `IntlMessages` type is correctly defined (can be generic/placeholder)
 - [ ] `index.ts` exports all public APIs (`locales`, `defaultLocale`, `Locale`, config)
@@ -239,6 +263,7 @@ pnpm lint src/i18n/
 ### Commit 5: Validate configuration and add documentation
 
 **Files**:
+
 - `src/i18n/README.md` (new, ~80 lines)
 - `CLAUDE.md` (modified, +15 lines)
 
@@ -246,6 +271,7 @@ pnpm lint src/i18n/
 **Duration**: 45-60 min (implementation) + 15-20 min (review)
 
 **Content**:
+
 - Create `README.md` in `src/i18n/` documenting the configuration
 - Document supported locales and default
 - Explain configuration structure and usage
@@ -256,12 +282,14 @@ pnpm lint src/i18n/
 - Document next steps (Story 1.2, Story 1.3)
 
 **Why it's atomic**:
+
 - **Single responsibility**: Documentation and validation
 - **No code changes**: Only documentation updates
 - **Valuable on its own**: Enables team to understand configuration
 - **Closure**: Completes the phase with clear next steps
 
 **Technical Validation**:
+
 ```bash
 # Verify documentation is complete
 cat src/i18n/README.md
@@ -281,6 +309,7 @@ pnpm dev
 ```
 
 **Expected Result**:
+
 - README.md is comprehensive and clear
 - CLAUDE.md references i18n configuration
 - All TypeScript validations pass
@@ -288,6 +317,7 @@ pnpm dev
 - Documentation explains next steps
 
 **Review Criteria**:
+
 - [ ] README.md covers all configuration aspects
 - [ ] Examples in README are correct and helpful
 - [ ] CLAUDE.md updated with i18n setup reference
@@ -326,6 +356,7 @@ pnpm dev
 ### Validation at Each Step
 
 After each commit:
+
 ```bash
 # TypeScript type checking
 pnpm tsc --noEmit
@@ -344,14 +375,14 @@ All must pass before moving to next commit.
 
 ## 📊 Commit Metrics
 
-| Commit | Files | Lines | Implementation | Review | Total |
-|--------|-------|-------|----------------|--------|-------|
-| 1. Base structure | 1 | ~20 | 20-30 min | 10-15 min | 30-45 min |
-| 2. Locale types | 1 | ~25 | 30-40 min | 15-20 min | 45-60 min |
-| 3. getRequestConfig | 1 | ~30 | 45-60 min | 20-30 min | 65-90 min |
-| 4. TypeScript setup | 2 | ~55 | 40-50 min | 20-25 min | 60-75 min |
-| 5. Documentation | 2 | ~95 | 45-60 min | 15-20 min | 60-80 min |
-| **TOTAL** | **5** | **~225** | **3-4h** | **1.5-2h** | **4.5-6h** |
+| Commit              | Files | Lines    | Implementation | Review     | Total      |
+| ------------------- | ----- | -------- | -------------- | ---------- | ---------- |
+| 1. Base structure   | 1     | ~20      | 20-30 min      | 10-15 min  | 30-45 min  |
+| 2. Locale types     | 1     | ~25      | 30-40 min      | 15-20 min  | 45-60 min  |
+| 3. getRequestConfig | 1     | ~30      | 45-60 min      | 20-30 min  | 65-90 min  |
+| 4. TypeScript setup | 2     | ~55      | 40-50 min      | 20-25 min  | 60-75 min  |
+| 5. Documentation    | 2     | ~95      | 45-60 min      | 15-20 min  | 60-80 min  |
+| **TOTAL**           | **5** | **~225** | **3-4h**       | **1.5-2h** | **4.5-6h** |
 
 **Note**: Estimates include thinking time, researching next-intl patterns, and validation steps.
 
@@ -387,6 +418,7 @@ All must pass before moving to next commit.
 ### Commit Messages
 
 Format:
+
 ```
 feat(i18n): short description (max 50 chars)
 
@@ -399,6 +431,7 @@ Story 1.1 - Install and configure next-intl
 ```
 
 **Example for Commit 1**:
+
 ```
 feat(i18n): create base configuration structure
 
@@ -414,6 +447,7 @@ Story 1.1 - Install and configure next-intl
 ### Review Checklist
 
 Before committing:
+
 - [ ] Code follows project style guide (ESLint passes)
 - [ ] TypeScript compilation passes (`pnpm tsc --noEmit`)
 - [ ] No `any` types (unless absolutely necessary and documented)

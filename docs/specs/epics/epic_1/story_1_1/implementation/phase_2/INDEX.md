@@ -46,14 +46,14 @@ Create the core next-intl configuration infrastructure for the i18n system by im
 
 ## 📚 Available Documents
 
-| Document                                                                       | Description                         | For Who    | Duration  |
-| ------------------------------------------------------------------------------ | ----------------------------------- | ---------- | --------- |
-| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)**                         | Atomic strategy in 5 commits        | Developer  | 15 min    |
-| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)**                               | Detailed checklist per commit       | Developer  | Reference |
-| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)**                             | Environment variables & setup       | DevOps/Dev | 10 min    |
-| **[guides/REVIEW.md](./guides/REVIEW.md)**                                     | Code review guide                   | Reviewer   | 20 min    |
-| **[guides/TESTING.md](./guides/TESTING.md)**                                   | Testing guide (unit + integration)  | QA/Dev     | 20 min    |
-| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist          | Tech Lead  | 30 min    |
+| Document                                                                       | Description                        | For Who    | Duration  |
+| ------------------------------------------------------------------------------ | ---------------------------------- | ---------- | --------- |
+| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)**                         | Atomic strategy in 5 commits       | Developer  | 15 min    |
+| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)**                               | Detailed checklist per commit      | Developer  | Reference |
+| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)**                             | Environment variables & setup      | DevOps/Dev | 10 min    |
+| **[guides/REVIEW.md](./guides/REVIEW.md)**                                     | Code review guide                  | Reviewer   | 20 min    |
+| **[guides/TESTING.md](./guides/TESTING.md)**                                   | Testing guide (unit + integration) | QA/Dev     | 20 min    |
+| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist         | Tech Lead  | 30 min    |
 
 ---
 
@@ -161,17 +161,17 @@ cat docs/specs/epics/epic_1/story_1_1/implementation/phase_2/validation/VALIDATI
 
 ## 📊 Metrics
 
-| Metric                  | Target  | Actual |
-| ----------------------- | ------- | ------ |
-| **Total Commits**       | 5       | -      |
-| **Implementation Time** | 4-6h    | -      |
-| **Review Time**         | 3-4h    | -      |
-| **Test Coverage**       | N/A*    | -      |
-| **Type Safety**         | 100%    | -      |
-| **Files Created**       | 3-4     | -      |
-| **Lines of Code**       | ~150    | -      |
+| Metric                  | Target | Actual |
+| ----------------------- | ------ | ------ |
+| **Total Commits**       | 5      | -      |
+| **Implementation Time** | 4-6h   | -      |
+| **Review Time**         | 3-4h   | -      |
+| **Test Coverage**       | N/A\*  | -      |
+| **Type Safety**         | 100%   | -      |
+| **Files Created**       | 3-4    | -      |
+| **Lines of Code**       | ~150   | -      |
 
-*Configuration phase - validation through TypeScript compilation and server startup, not unit tests
+\*Configuration phase - validation through TypeScript compilation and server startup, not unit tests
 
 ---
 

@@ -20,6 +20,7 @@ Complete validation checklist before marking Phase 2 as complete.
 - [ ] Git history is clean and meaningful
 
 **Verification**:
+
 ```bash
 # Check commit history
 git log --oneline -5
@@ -43,6 +44,7 @@ git log --oneline -5
 - [ ] Type-only exports use `export type` keyword
 
 **Validation**:
+
 ```bash
 # TypeScript compilation
 pnpm tsc --noEmit
@@ -51,6 +53,7 @@ pnpm tsc --noEmit
 ```
 
 **Manual Check**:
+
 - Hover over `defaultLocale` in IDE → Should show `Locale`, not `string`
 - Type `const x: Locale = ''` → Should autocomplete `'fr'` and `'en'`
 
@@ -69,6 +72,7 @@ pnpm tsc --noEmit
 - [ ] No unused variables or imports
 
 **Validation**:
+
 ```bash
 # ESLint check
 pnpm lint
@@ -81,6 +85,7 @@ pnpm lint
 ## ✅ 4. Configuration Files
 
 ### config.ts
+
 - [ ] File exists at `src/i18n/config.ts`
 - [ ] Imports `getRequestConfig` from `'next-intl/server'`
 - [ ] `Locale` type defined: `'fr' | 'en'`
@@ -93,6 +98,7 @@ pnpm lint
 - [ ] All exports documented with JSDoc
 
 ### types.ts
+
 - [ ] File exists at `src/i18n/types.ts`
 - [ ] `IntlMessages` type defined
 - [ ] Utility types defined (e.g., `LocaleParam`)
@@ -100,6 +106,7 @@ pnpm lint
 - [ ] JSDoc documentation complete
 
 ### index.ts
+
 - [ ] File exists at `src/i18n/index.ts`
 - [ ] Default config re-exported as `i18nConfig`
 - [ ] `Locale` type re-exported with `export type`
@@ -108,6 +115,7 @@ pnpm lint
 - [ ] Barrel export provides clean import interface
 
 ### README.md
+
 - [ ] File exists at `src/i18n/README.md`
 - [ ] Documents directory structure
 - [ ] Lists supported locales (fr, en)
@@ -118,6 +126,7 @@ pnpm lint
 - [ ] Includes links to documentation
 
 **Verification**:
+
 ```bash
 # Verify all files exist
 ls -la src/i18n/
@@ -136,6 +145,7 @@ ls -la src/i18n/
 - [ ] Dynamic import syntax is valid
 
 **Validation**:
+
 ```bash
 # TypeScript check
 pnpm tsc --noEmit
@@ -154,6 +164,7 @@ pnpm tsc --noEmit
 - [ ] All files pass linter
 
 **Validation**:
+
 ```bash
 # Lint check
 pnpm lint
@@ -177,6 +188,7 @@ pnpm exec prettier --check src/i18n/
 - [ ] Markdown formatting correct
 
 **Verification**:
+
 ```bash
 # Check README exists and is comprehensive
 cat src/i18n/README.md
@@ -196,6 +208,7 @@ grep -A 10 "Internationalization" CLAUDE.md
 - [ ] TypeScript types from next-intl accessible
 
 **Integration Tests**:
+
 ```bash
 # Verify next-intl package is installed
 pnpm list next-intl
@@ -215,6 +228,7 @@ pnpm list next-intl
 - [ ] Server compiles without issues
 
 **Validation**:
+
 ```bash
 # Start dev server
 pnpm dev
@@ -228,6 +242,7 @@ pnpm dev
 ```
 
 **Browser Check**:
+
 - [ ] Open http://localhost:3000
 - [ ] Check browser console (F12) - no errors
 - [ ] No i18n-related warnings
@@ -254,7 +269,7 @@ import {
   locales,
   defaultLocale,
   i18nConfig,
-  type IntlMessages
+  type IntlMessages,
 } from '@/i18n';
 
 // All imports should resolve without errors
@@ -348,15 +363,15 @@ grep "Internationalization" CLAUDE.md
 
 ## 📊 Success Metrics
 
-| Metric | Target | Actual | Status |
-|--------|--------|--------|--------|
-| Commits | 5 | - | ⏳ |
-| Files Created | 4 | - | ⏳ |
-| TypeScript Errors | 0 | - | ⏳ |
-| ESLint Errors | 0 | - | ⏳ |
-| Type Coverage | 100% | - | ⏳ |
-| Dev Server | Starts OK | - | ⏳ |
-| Documentation | Complete | - | ⏳ |
+| Metric            | Target    | Actual | Status |
+| ----------------- | --------- | ------ | ------ |
+| Commits           | 5         | -      | ⏳     |
+| Files Created     | 4         | -      | ⏳     |
+| TypeScript Errors | 0         | -      | ⏳     |
+| ESLint Errors     | 0         | -      | ⏳     |
+| Type Coverage     | 100%      | -      | ⏳     |
+| Dev Server        | Starts OK | -      | ⏳     |
+| Documentation     | Complete  | -      | ⏳     |
 
 **Update "Actual" column and "Status" (✅ or ❌) as you validate each metric.**
 
@@ -434,9 +449,9 @@ Select one:
 
 ## 📝 Sign-Off
 
-**Developer**: _________________ Date: _______
-**Reviewer**: _________________ Date: _______
-**Tech Lead**: _________________ Date: _______
+**Developer**: ********\_******** Date: **\_\_\_**
+**Reviewer**: ********\_******** Date: **\_\_\_**
+**Tech Lead**: ********\_******** Date: **\_\_\_**
 
 ---
 

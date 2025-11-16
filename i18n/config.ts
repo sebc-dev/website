@@ -51,7 +51,9 @@ export default getRequestConfig(async ({ locale }) => {
     : defaultLocale;
 
   if (validLocale !== locale) {
-    console.warn(`Invalid locale requested: ${locale}. Falling back to ${defaultLocale}.`);
+    console.warn(
+      `Invalid locale requested: ${locale}. Falling back to ${defaultLocale}.`,
+    );
   }
 
   return {
