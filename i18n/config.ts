@@ -20,32 +20,25 @@ export type Locale = 'fr' | 'en';
  * Routing configuration for middleware language detection
  *
  * Configuration used by middleware to determine how to handle language routing.
- * This is consumed by src/middleware.ts for URL rewriting and locale detection.
+ * This is consumed by middleware.ts for URL rewriting and locale detection.
  *
- * @see https://next-intl-docs.vercel.app/docs/next-js-app-router-integration
+ * @see https://next-intl.dev/docs/routing/middleware
  */
 export const routingConfig = {
   /**
    * Locale prefix mode for URL structure
    *
-   * Set to "as-needed" to make the default language (French) prefix optional
-   * in URLs. This allows:
-   * - `/articles` (French - no prefix needed)
-   * - `/en/articles` (English - prefix required)
+   * Set to "always" to require language prefix for all routes.
+   * This enforces:
+   * - `/fr/articles` (French - prefix always required)
+   * - `/en/articles` (English - prefix always required)
    *
-   * Alternative: "always" would require `/fr/articles` and `/en/articles`
+   * This configuration ensures consistent URL structure and clear language
+   * indication for all routes, improving SEO and user experience.
    *
-   * Decision: Using "as-needed" per sebc.dev UX requirements for cleaner default language URLs
+   * Alternative: "as-needed" would make the default language prefix optional
    */
-  localePrefix: 'as-needed' as const,
-
-  /**
-   * Default prefix mode for routing configuration
-   *
-   * Determines how next-intl handles the default locale in URL construction
-   * and middleware routing decisions.
-   */
-  prefixMode: 'default' as const,
+  localePrefix: 'always' as const,
 };
 
 /**

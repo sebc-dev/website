@@ -22,9 +22,11 @@
 
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
+import createMiddleware from 'next-intl/middleware';
 
 import type { Locale } from '@/i18n';
-import { locales } from '@/i18n/config';
+import { defaultLocale, locales, routingConfig } from '@/i18n/config';
+import { setCookie } from '@/lib/i18n/cookie';
 import { handleRootPathRedirect } from '@/lib/i18n/redirect';
 
 /**
@@ -353,79 +355,61 @@ function detectLocale(request: NextRequest): Locale {
 }
 
 /**
- * Determines if a redirect is needed for the request
+ * next-intl middleware configuration
  *
- * A redirect is needed when:
- * 1. The URL contains a language prefix (e.g., /fr/, /en/)
- * 2. The detected locale from all sources differs from the URL prefix
- * 3. The URL prefix is invalid (e.g., /de/, /it/)
+ * Creates the next-intl middleware handler with routing configuration.
+ * This handler initializes the i18n context and makes it available to
+ * Server Components and Client Components via `useTranslations()`.
  *
- * A redirect is NOT needed when:
- * 1. No language prefix in URL (handled by next-intl routing)
- * 2. URL prefix already matches detected locale
- * 3. Route is public/static (excluded by matcher)
+ * Configuration:
+ * - locales: ['fr', 'en'] - Supported language codes
+ * - defaultLocale: 'fr' - Fallback language
+ * - localePrefix: 'always' - All routes require language prefix (/fr/ or /en/)
  *
- * @param pathname - The URL pathname
- * @param detectedLocale - The locale detected from all sources
- * @returns true if redirect is needed, false otherwise
+ * The middleware automatically:
+ * - Detects locale from URL, cookie, or Accept-Language header
+ * - Redirects to appropriate locale-prefixed route if missing
+ * - Sets NEXT_LOCALE cookie for persistence
+ * - Initializes i18n context for component access
  *
- * @example
- * // URL: /de/articles, detected: 'fr' (no de in supported locales)
- * shouldRedirect('/de/articles', 'fr') // Returns: true
- *
- * @example
- * // URL: /fr/articles, detected: 'fr'
- * shouldRedirect('/fr/articles', 'fr') // Returns: false
- *
- * @example
- * // URL: /articles (no prefix), detected: 'en' (from header)
- * shouldRedirect('/articles', 'en') // Returns: false (no URL prefix to redirect)
+ * @see https://next-intl.dev/docs/routing/middleware
  */
-function shouldRedirect(pathname: string, detectedLocale: Locale): boolean {
-  // Extract locale from URL
-  const localeFromURL = detectLocaleFromURL(pathname);
-
-  // No redirect needed if URL has no language prefix
-  if (!localeFromURL) {
-    return false;
-  }
-
-  // No redirect needed if URL prefix matches detected locale
-  if (localeFromURL === detectedLocale) {
-    return false;
-  }
-
-  // Redirect needed: URL has invalid or mismatched locale
-  return true;
-}
+const intlMiddleware = createMiddleware({
+  locales,
+  defaultLocale,
+  ...routingConfig,
+});
 
 /**
  * Middleware function entry point
  *
- * This function is called for every incoming request to the application.
- * It handles language detection and routing based on the configured
- * detection hierarchy.
+ * This function wraps next-intl middleware with custom logic for:
+ * 1. Language detection from URL, cookie, and Accept-Language header
+ * 2. Root path redirection (/ → /fr/ or /en/)
+ * 3. Cookie persistence with secure flags
+ * 4. i18n context initialization for components
  *
- * Implements (Commit 4):
- * - Full language detection with priority hierarchy
- * - Redirect logic for unsupported language prefixes
- * - Public route exclusion for performance
- * - Fallback to French as default language
+ * Execution flow:
+ * 1. Detect locale from all sources (URL → cookie → header → default)
+ * 2. Handle root path redirection early (before next-intl)
+ * 3. Call next-intl middleware to initialize i18n context
+ * 4. Set NEXT_LOCALE cookie in response headers with secure flags
+ * 5. Return response with i18n context available to components
  *
- * Detection process (in priority order):
+ * Detection priority (highest to lowest):
  * 1. URL path prefix (e.g., /fr/*, /en/*)
  * 2. NEXT_LOCALE cookie
  * 3. Accept-Language header
  * 4. Default to French
  *
- * Redirect behavior:
- * - Only redirects if URL has invalid language prefix
- * - Uses HTTP 307 (Temporary Redirect) for protocol safety
- * - Preserves path and query parameters during redirect
- * - Avoids infinite redirects (checks if URL already correct)
+ * Cookie management:
+ * - Cookie name: NEXT_LOCALE
+ * - Cookie value: detected locale ('fr' or 'en')
+ * - Secure flags: HttpOnly, SameSite=Lax, Secure (production only)
+ * - TTL: 1 year (31536000 seconds)
  *
  * @param request - The incoming HTTP request
- * @returns NextResponse.next() to continue, or redirect response
+ * @returns NextResponse with i18n context initialized
  *
  * @remarks
  * Public routes are excluded by the matcher config, so this middleware
@@ -433,37 +417,51 @@ function shouldRedirect(pathname: string, detectedLocale: Locale): boolean {
  *
  * @see matcher configuration below for excluded routes
  */
-export function middleware(request: NextRequest): NextResponse | undefined {
+export function middleware(request: NextRequest): NextResponse {
   const { pathname } = request.nextUrl;
 
-  // Detect the appropriate locale from all sources
+  // Step 1: Detect the appropriate locale from all sources
+  // This uses our custom detection hierarchy: URL → cookie → header → default
   const detectedLocale = detectLocale(request);
 
-  // Early check: Handle root path redirection
+  // Step 2: Early check - Handle root path redirection
   // Redirect `/` to `/fr/` or `/en/` based on detected language
+  // This must happen BEFORE next-intl middleware to avoid conflicts
   const rootPathRedirect = handleRootPathRedirect(request, detectedLocale);
   if (rootPathRedirect) {
+    // Set cookie in the redirect response
+    const cookieHeader = setCookie('NEXT_LOCALE', detectedLocale, {
+      maxAge: 31536000, // 1 year
+      sameSite: 'lax',
+      httpOnly: true,
+    });
+    rootPathRedirect.headers.set('Set-Cookie', cookieHeader);
     return rootPathRedirect;
   }
 
-  // Check if redirect is needed (unsupported language in URL)
-  if (shouldRedirect(pathname, detectedLocale)) {
-    // Build the redirect URL with the correct locale
-    const segments = pathname.split('/');
-    // Replace the invalid locale prefix with the detected one
-    segments[1] = detectedLocale;
-    const newPathname = segments.join('/');
+  // Step 3: Call next-intl middleware to initialize i18n context
+  // This makes the locale available to components via useTranslations()
+  // next-intl handles locale detection and routing automatically
+  const response = intlMiddleware(request);
 
-    // Create new URL and preserve query parameters
-    const url = new URL(request.nextUrl);
-    url.pathname = newPathname;
+  // Step 4: Set NEXT_LOCALE cookie in response headers
+  // This persists the user's language preference across sessions
+  // Only set cookie if we have a valid locale from URL or detection
+  const localeFromURL = detectLocaleFromURL(pathname);
+  const cookieLocale = localeFromURL || detectedLocale;
 
-    // Return 307 Temporary Redirect for protocol safety
-    return NextResponse.redirect(url, { status: 307 });
-  }
+  const cookieHeader = setCookie('NEXT_LOCALE', cookieLocale, {
+    maxAge: 31536000, // 1 year
+    sameSite: 'lax',
+    httpOnly: true,
+  });
 
-  // No redirect needed, continue to next handler
-  return NextResponse.next();
+  // Add the cookie to the response headers
+  response.headers.set('Set-Cookie', cookieHeader);
+
+  // Step 5: Return response with i18n context initialized
+  // Components can now use useTranslations() to access messages
+  return response;
 }
 
 /**
