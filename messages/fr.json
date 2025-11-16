@@ -1,10 +1,30 @@
 {
   "article": {},
-  "common": {},
+  "common": {
+    "appName": "sebc.dev",
+    "close": "Fermer",
+    "error": "Une erreur s'est produite",
+    "loading": "Chargement...",
+    "noData": "Aucune donnée disponible",
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "retry": "Réessayer",
+    "success": "Succès",
+    "warning": "Attention"
+  },
   "complexity": {},
   "error": {},
-  "footer": {},
+  "footer": {
+    "copyright": "© 2025 sebc.dev. Tous droits réservés.",
+    "privacy": "Politique de confidentialité",
+    "terms": "Conditions d'utilisation"
+  },
   "form": {},
-  "nav": {},
+  "nav": {
+    "home": "Accueil",
+    "articles": "Articles",
+    "search": "Rechercher",
+    "about": "À propos"
+  },
   "search": {}
 }
