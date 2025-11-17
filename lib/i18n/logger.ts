@@ -156,7 +156,11 @@ function formatLogEntry(entry: LogEntry): string {
  * @param message - The log message
  * @param data - Optional structured data (no PII)
  */
-function log(level: LogLevel, message: string, data?: Record<string, unknown>): void {
+function log(
+  level: LogLevel,
+  message: string,
+  data?: Record<string, unknown>,
+): void {
   if (!shouldLog(level)) {
     return;
   }
@@ -173,19 +177,15 @@ function log(level: LogLevel, message: string, data?: Record<string, unknown>): 
   // Output to appropriate console method based on level
   switch (level) {
     case LogLevel.DEBUG:
-       
       console.debug(formatted);
       break;
     case LogLevel.INFO:
-       
       console.info(formatted);
       break;
     case LogLevel.WARN:
-       
       console.warn(formatted);
       break;
     case LogLevel.ERROR:
-       
       console.error(formatted);
       break;
   }

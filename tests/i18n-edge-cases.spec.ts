@@ -154,7 +154,9 @@ test.describe('i18n Middleware - Edge Cases & Mobile', () => {
 
       // Test dynamic route pattern (even if route doesn't exist yet)
       // Middleware should preserve the language prefix
-      await page.goto('/fr/articles/post-123', { waitUntil: 'domcontentloaded' });
+      await page.goto('/fr/articles/post-123', {
+        waitUntil: 'domcontentloaded',
+      });
 
       // URL should maintain French prefix
       const url = page.url();
@@ -265,7 +267,9 @@ test.describe('i18n Middleware - Edge Cases & Mobile', () => {
       expect(status).toBeLessThan(300); // Not a redirect
     });
 
-    test('should not create redirect loop for valid paths', async ({ page }) => {
+    test('should not create redirect loop for valid paths', async ({
+      page,
+    }) => {
       let redirectCount = 0;
 
       page.on('response', (response) => {
@@ -325,7 +329,9 @@ test.describe('i18n Middleware - Edge Cases & Mobile', () => {
 
       // Cookie should be updated to valid value
       const cookies = await context.cookies();
-      const localeCookie = cookies.find((c: Cookie) => c.name === 'NEXT_LOCALE');
+      const localeCookie = cookies.find(
+        (c: Cookie) => c.name === 'NEXT_LOCALE',
+      );
       expect(localeCookie?.value).toMatch(/^(fr|en)$/);
 
       await context.close();
@@ -508,7 +514,9 @@ test.describe('i18n Middleware - Edge Cases & Mobile', () => {
 
       // Cookie should be updated to match URL
       const cookies = await context.cookies();
-      const localeCookie = cookies.find((c: Cookie) => c.name === 'NEXT_LOCALE');
+      const localeCookie = cookies.find(
+        (c: Cookie) => c.name === 'NEXT_LOCALE',
+      );
       expect(localeCookie?.value).toBe('en');
 
       await context.close();

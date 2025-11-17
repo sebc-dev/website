@@ -627,6 +627,7 @@ The middleware (`middleware.ts`) intercepts all incoming requests and:
 ### Comprehensive Documentation
 
 For detailed information about:
+
 - Language detection flow and priority
 - Configuration options
 - Cookie management and security

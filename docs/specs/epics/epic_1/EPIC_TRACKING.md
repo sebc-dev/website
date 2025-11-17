@@ -31,15 +31,15 @@ Users can access the entire website in their preferred language, with the system
 
 This epic contains **7 stories** as defined in the PRD:
 
-| Story | Title                           | Description                                                        | Status         | Phases | Progress          |
-| ----- | ------------------------------- | ------------------------------------------------------------------ | -------------- | ------ | ----------------- |
-| 1.1   | Install and configure next-intl | Set up next-intl library and basic configuration                   | 🚧 IN PROGRESS | 3      | 1/3               |
-| 1.2   | Create message files            | Create `messages/fr.json` and `messages/en.json` translation files | 📋 PLANNING    | 2      | 1/2               |
+| Story | Title                           | Description                                                        | Status         | Phases | Progress             |
+| ----- | ------------------------------- | ------------------------------------------------------------------ | -------------- | ------ | -------------------- |
+| 1.1   | Install and configure next-intl | Set up next-intl library and basic configuration                   | 🚧 IN PROGRESS | 3      | 1/3                  |
+| 1.2   | Create message files            | Create `messages/fr.json` and `messages/en.json` translation files | 📋 PLANNING    | 2      | 1/2                  |
 | 1.3   | Create Next.js middleware       | Implement middleware with next-intl for routing                    | 🚧 IN PROGRESS | 3      | 2/3 (P3: Commit 1/4) |
-| 1.4   | Bilingual URL structure         | Implement route groups with language detection and cookie support  | 📋 NOT STARTED | -      | 0/0               |
-| 1.5   | Content fallback                | Add language badges and FR/EN toggle for missing translations      | 📋 NOT STARTED | -      | 0/0               |
-| 1.6   | SEO hreflang + canonical        | Implement SEO metadata via Next.js Metadata API                    | 📋 NOT STARTED | -      | 0/0               |
-| 1.7   | Language selector in header     | Create header component with cookie persistence                    | 📋 NOT STARTED | -      | 0/0               |
+| 1.4   | Bilingual URL structure         | Implement route groups with language detection and cookie support  | 📋 NOT STARTED | -      | 0/0                  |
+| 1.5   | Content fallback                | Add language badges and FR/EN toggle for missing translations      | 📋 NOT STARTED | -      | 0/0                  |
+| 1.6   | SEO hreflang + canonical        | Implement SEO metadata via Next.js Metadata API                    | 📋 NOT STARTED | -      | 0/0                  |
+| 1.7   | Language selector in header     | Create header component with cookie persistence                    | 📋 NOT STARTED | -      | 0/0                  |
 
 **Columns Explained**:
 
