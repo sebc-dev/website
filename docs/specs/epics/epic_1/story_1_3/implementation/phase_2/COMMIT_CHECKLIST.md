@@ -60,6 +60,7 @@ pnpm test:coverage -- src/lib/i18n/cookie.ts
 ```
 
 **Expected Result**:
+
 - All unit tests passing
 - Coverage >80% for cookie.ts
 - Zero TypeScript errors
@@ -160,6 +161,7 @@ pnpm test:coverage -- src/lib/i18n/redirect.ts
 ```
 
 **Expected Result**:
+
 - All unit tests passing
 - Coverage >80% for redirect.ts
 - Zero TypeScript errors
@@ -237,7 +239,7 @@ EOF
       locales: ['fr', 'en'],
       defaultLocale: 'fr',
       localePrefix: 'always' as const, // Always require /fr/ or /en/ prefix
-    }
+    };
     ```
   - [ ] Wrap detection + redirect logic with next-intl middleware
   - [ ] Call `intlMiddleware(request, intlConfig)` after language detection
@@ -275,6 +277,7 @@ pnpm build
 ```
 
 **Expected Result**:
+
 - Build succeeds without errors or warnings
 - TypeScript errors: zero
 - Lint errors: zero
@@ -301,7 +304,7 @@ pnpm build
 #### Middleware Configuration
 
 - [ ] Middleware matcher configured correctly
-- [ ] Public routes excluded (static, API, _next)
+- [ ] Public routes excluded (static, API, \_next)
 - [ ] Returns `NextResponse` with correct type
 - [ ] Handles `NextRequest` parameter
 
@@ -434,6 +437,7 @@ pnpm build
 ```
 
 **Expected Result**:
+
 - All unit tests passing
 - All integration tests passing
 - Coverage >80% for Phase 2 code
@@ -530,13 +534,13 @@ After all 4 commits:
 
 ### Phase 2 Success Metrics
 
-| Metric               | Target | Actual |
-| -------------------- | ------ | ------ |
-| Commits              | 4      | -      |
-| Implementation time  | 6-8h   | -      |
-| Code coverage        | >80%   | -      |
-| TypeScript errors    | 0      | -      |
-| Lint errors          | 0      | -      |
-| Build successful     | Yes    | -      |
+| Metric              | Target | Actual |
+| ------------------- | ------ | ------ |
+| Commits             | 4      | -      |
+| Implementation time | 6-8h   | -      |
+| Code coverage       | >80%   | -      |
+| TypeScript errors   | 0      | -      |
+| Lint errors         | 0      | -      |
+| Build successful    | Yes    | -      |
 
 **Phase 2 is complete when all checkboxes are checked! 🎉**

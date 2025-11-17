@@ -9,6 +9,7 @@
  */
 
 import type { NextRequest } from 'next/server';
+
 import { locales } from '@/i18n/config';
 
 /**
@@ -71,7 +72,6 @@ export interface CookieOptions {
    */
   path?: string;
 }
-
 
 /**
  * Reads a cookie value from the request
@@ -143,7 +143,9 @@ export function setCookie(
   parts.push(`Max-Age=${maxAge}`);
 
   // Add SameSite (CSRF protection)
-  parts.push(`SameSite=${sameSite.charAt(0).toUpperCase()}${sameSite.slice(1)}`);
+  parts.push(
+    `SameSite=${sameSite.charAt(0).toUpperCase()}${sameSite.slice(1)}`,
+  );
 
   // Add HttpOnly (XSS protection)
   if (httpOnly) {

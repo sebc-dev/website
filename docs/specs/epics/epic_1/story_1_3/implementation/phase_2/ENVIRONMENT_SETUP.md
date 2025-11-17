@@ -65,10 +65,10 @@ NEXT_PUBLIC_SUPPORTED_LOCALES=fr,en
 
 ### Variable Descriptions
 
-| Variable                      | Description                    | Example    | Required |
-| ----------------------------- | ------------------------------ | ---------- | -------- |
-| `NEXT_PUBLIC_DEFAULT_LOCALE`  | Default language when none detected | `fr`    | Yes      |
-| `NEXT_PUBLIC_SUPPORTED_LOCALES` | Comma-separated list of locales | `fr,en` | Yes      |
+| Variable                        | Description                         | Example | Required |
+| ------------------------------- | ----------------------------------- | ------- | -------- |
+| `NEXT_PUBLIC_DEFAULT_LOCALE`    | Default language when none detected | `fr`    | Yes      |
+| `NEXT_PUBLIC_SUPPORTED_LOCALES` | Comma-separated list of locales     | `fr,en` | Yes      |
 
 ### Verify Configuration
 
@@ -106,16 +106,16 @@ Phase 2 uses only in-memory operations:
 const cookieOptions = {
   httpOnly: true,
   sameSite: 'lax' as const,
-  secure: false,  // HTTP only in dev
-  maxAge: 31536000 // 1 year
+  secure: false, // HTTP only in dev
+  maxAge: 31536000, // 1 year
 };
 
 // Production (HTTPS)
 const cookieOptions = {
   httpOnly: true,
   sameSite: 'lax' as const,
-  secure: true,   // HTTPS required in prod
-  maxAge: 31536000 // 1 year
+  secure: true, // HTTPS required in prod
+  maxAge: 31536000, // 1 year
 };
 ```
 
@@ -184,6 +184,7 @@ pnpm test -- --run --passWithNoTests
 **Solutions**:
 
 1. Install next-intl (Story 1.1 task):
+
    ```bash
    pnpm add next-intl
    ```
@@ -194,6 +195,7 @@ pnpm test -- --run --passWithNoTests
    ```
 
 **Verify Fix**:
+
 ```bash
 node -e "console.log(require.resolve('next-intl'))"
 ```
@@ -212,11 +214,13 @@ Expected: Path to next-intl module
 **Solutions**:
 
 1. Ensure `next` is installed:
+
    ```bash
    pnpm list next
    ```
 
 2. Update `tsconfig.json` middleware path:
+
    ```json
    {
      "compilerOptions": {
@@ -235,6 +239,7 @@ Expected: Path to next-intl module
    ```
 
 **Verify Fix**:
+
 ```bash
 pnpm tsc --noEmit
 ```
@@ -253,11 +258,13 @@ Expected: Zero errors
 **Solutions**:
 
 1. Check Vitest configuration:
+
    ```bash
    ls -la vitest.config.ts
    ```
 
 2. If missing, ensure it's in package.json scripts:
+
    ```json
    {
      "scripts": {
@@ -272,6 +279,7 @@ Expected: Zero errors
    ```
 
 **Verify Fix**:
+
 ```bash
 pnpm test -- --help
 ```
@@ -290,12 +298,14 @@ Expected: Shows Vitest options
 **Solutions**:
 
 1. Ensure cookie tests mock Cloudflare APIs:
+
    ```typescript
    // Don't import Cloudflare-specific code in unit tests
    // Use NextRequest/NextResponse from 'next/server' instead
    ```
 
 2. Use conditional imports:
+
    ```typescript
    // In middleware.ts (runs on Cloudflare)
    import { getCloudflareContext } from '@opennextjs/cloudflare';
@@ -307,10 +317,13 @@ Expected: Shows Vitest options
 3. Mock fetch/crypto if needed:
    ```typescript
    // Tests mock what Cloudflare provides
-   global.crypto = { /* mock crypto */ };
+   global.crypto = {
+     /* mock crypto */
+   };
    ```
 
 **Verify Fix**:
+
 ```bash
 pnpm test src/lib/i18n/cookie.test.ts
 ```
@@ -329,20 +342,22 @@ Expected: Tests pass without Cloudflare references
 **Solutions**:
 
 1. Create `.env.test.local` with test variables:
+
    ```env
    NEXT_PUBLIC_DEFAULT_LOCALE=fr
    NEXT_PUBLIC_SUPPORTED_LOCALES=fr,en
    ```
 
 2. Or set in `vitest.config.ts`:
+
    ```typescript
    export default defineConfig({
      test: {
        env: {
          NEXT_PUBLIC_DEFAULT_LOCALE: 'fr',
          NEXT_PUBLIC_SUPPORTED_LOCALES: 'fr,en',
-       }
-     }
+       },
+     },
    });
    ```
 
@@ -354,6 +369,7 @@ Expected: Tests pass without Cloudflare references
    ```
 
 **Verify Fix**:
+
 ```bash
 pnpm test -- --run --passWithNoTests
 ```
