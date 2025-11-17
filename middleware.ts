@@ -82,8 +82,8 @@ export function detectLocaleFromURL(pathname: string): Locale | undefined {
   }
 
   // Check if the extracted locale is in the supported locales list
-  if (locales.includes(potentialLocale as Locale)) {
-    return potentialLocale as Locale;
+  if (validateLocale(potentialLocale)) {
+    return potentialLocale;
   }
 
   // Return undefined if locale is not supported
@@ -297,8 +297,8 @@ export function getLocaleFromHeader(headerValue: string): Locale | undefined {
 
   // Find the first supported locale
   for (const lang of parsedLanguages) {
-    if (locales.includes(lang as Locale)) {
-      return lang as Locale;
+    if (validateLocale(lang)) {
+      return lang;
     }
   }
 
@@ -463,10 +463,13 @@ export function middleware(request: NextRequest): NextResponse {
   // next-intl handles locale detection and routing automatically
   const response = intlMiddleware(request);
 
-  // Step 4: Set NEXT_LOCALE cookie in response headers
+  // Step 4: Set NEXT_LOCALE cookie only if missing or different
   // This persists the user's language preference across sessions
-  // Use the already-resolved locale from detection hierarchy
-  response.cookies.set('NEXT_LOCALE', detectedLocale, LOCALE_COOKIE_OPTIONS);
+  // Only set cookie when necessary to avoid redundant Set-Cookie headers
+  const existingCookie = request.cookies.get('NEXT_LOCALE')?.value;
+  if (existingCookie !== detectedLocale) {
+    response.cookies.set('NEXT_LOCALE', detectedLocale, LOCALE_COOKIE_OPTIONS);
+  }
 
   // Step 5: Return response with i18n context initialized
   // Components can now use useTranslations() to access messages
@@ -482,22 +485,26 @@ export function middleware(request: NextRequest): NextResponse {
  * Current pattern processes:
  * - All app routes under [locale]/ (e.g., /fr/*, /en/*)
  * - Root path (/)
+ * - Routes with dots in segments (e.g., /fr/version-2.0/features)
  *
  * Explicitly excluded:
  * - /_next/* (Next.js internal routes)
  * - /api/* (API routes)
  * - /public/* (Static public files)
  * - /images/* (Images)
- * - Static assets like .png, .svg, .jpg, .jpeg, .gif, .ico, .webp, .avif, .ttf, .otf, .woff, .woff2
+ * - Static files with common extensions in the final path segment
+ *   (.png, .svg, .jpg, .jpeg, .gif, .ico, .webp, .avif, .ttf, .otf, .woff, .woff2,
+ *    .js, .css, .json, .xml, .txt, .pdf, .zip)
  *
  * This matcher ensures the middleware runs only on user-facing routes,
- * avoiding unnecessary processing of static assets and API routes.
+ * avoiding unnecessary processing of static assets and API routes while
+ * allowing dotted route segments like version numbers.
  *
  * @see https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
  */
 export const config = {
   matcher: [
-    // Match all routes except the ones starting with the following
-    '/((?!_next|api|public|images|.*\\..*|favicon\\.ico).*)',
+    // Match all routes except those starting with excluded prefixes or ending with static file extensions
+    '/((?!_next|api|public|images|.*\\.(png|svg|jpg|jpeg|gif|ico|webp|avif|ttf|otf|woff|woff2|js|css|json|xml|txt|pdf|zip)$|favicon\\.ico).*)',
   ],
 };
