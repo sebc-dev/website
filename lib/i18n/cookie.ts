@@ -173,13 +173,24 @@ export function setCookie(
  * @returns The Set-Cookie header value for deletion
  *
  * @example
+ * ```ts
  * // Delete the language preference cookie
  * const deleteCookieHeader = deleteCookie('NEXT_LOCALE');
- * // Returns: 'NEXT_LOCALE=; Max-Age=0; SameSite=Lax; HttpOnly; Path=/; Secure'
+ *
+ * // Production output (NODE_ENV=production):
+ * // 'NEXT_LOCALE=; Max-Age=0; SameSite=Lax; HttpOnly; Path=/; Secure'
+ *
+ * // Development output (NODE_ENV=development):
+ * // 'NEXT_LOCALE=; Max-Age=0; SameSite=Lax; HttpOnly; Path=/'
+ * ```
  *
  * @remarks
  * This function uses Set-Cookie with Max-Age=0, which is the standard way to delete cookies.
  * The cookie will be immediately removed from the client's browser.
+ *
+ * **Note**: The `Secure` flag is only included in production (`NODE_ENV === 'production'`)
+ * or when explicitly passed via `setCookie` defaults. In development, cookies are deleted
+ * without the `Secure` flag to allow testing over HTTP.
  */
 export function deleteCookie(name: string): string {
   return setCookie(name, '', { maxAge: 0 });
