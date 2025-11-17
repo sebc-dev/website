@@ -27,6 +27,8 @@ import createMiddleware from 'next-intl/middleware';
 import type { Locale } from '@/i18n';
 import { defaultLocale, locales, routingConfig } from '@/i18n/config';
 import { validateLocale } from '@/lib/i18n/cookie';
+import { logger } from '@/lib/i18n/logger';
+import { checkPerformance,endTimer, PERFORMANCE_TARGETS, startTimer } from '@/lib/i18n/performance';
 import { handleRootPathRedirect } from '@/lib/i18n/redirect';
 
 /**
@@ -337,11 +339,19 @@ export function getLocaleFromHeader(headerValue: string): Locale | undefined {
  * detectLocale(request) // Returns: 'fr' (configured default)
  */
 function detectLocale(request: NextRequest): Locale {
+  const detectionTimer = startTimer('locale-detection');
   const { pathname } = request.nextUrl;
 
   // Priority 1: URL path prefix (highest)
   const localeFromURL = detectLocaleFromURL(pathname);
   if (localeFromURL) {
+    const duration = endTimer(detectionTimer);
+    logger.debug('Locale detected from URL', {
+      locale: localeFromURL,
+      source: 'url',
+      pathname,
+      duration,
+    });
     return localeFromURL;
   }
 
@@ -349,6 +359,12 @@ function detectLocale(request: NextRequest): Locale {
   const cookieValue = request.cookies.get('NEXT_LOCALE')?.value;
   const localeFromCookie = getLocaleFromCookie(cookieValue);
   if (localeFromCookie) {
+    const duration = endTimer(detectionTimer);
+    logger.debug('Locale detected from cookie', {
+      locale: localeFromCookie,
+      source: 'cookie',
+      duration,
+    });
     return localeFromCookie;
   }
 
@@ -356,10 +372,22 @@ function detectLocale(request: NextRequest): Locale {
   const acceptLanguageHeader = request.headers.get('Accept-Language') || '';
   const localeFromHeader = getLocaleFromHeader(acceptLanguageHeader);
   if (localeFromHeader) {
+    const duration = endTimer(detectionTimer);
+    logger.debug('Locale detected from Accept-Language header', {
+      locale: localeFromHeader,
+      source: 'header',
+      duration,
+    });
     return localeFromHeader;
   }
 
   // Priority 4: Default locale from config
+  const duration = endTimer(detectionTimer);
+  logger.debug('Using default locale', {
+    locale: defaultLocale,
+    source: 'default',
+    duration,
+  });
   return defaultLocale;
 }
 
@@ -440,6 +468,16 @@ const LOCALE_COOKIE_OPTIONS = {
  * @see matcher configuration below for excluded routes
  */
 export function middleware(request: NextRequest): NextResponse {
+  // Start performance monitoring for entire middleware execution
+  const middlewareTimer = startTimer('middleware-execution');
+
+  const { pathname } = request.nextUrl;
+
+  logger.debug('Middleware invoked', {
+    pathname,
+    method: request.method,
+  });
+
   // Step 1: Detect the appropriate locale from all sources
   // This uses our custom detection hierarchy: URL → cookie → header → default
   const detectedLocale = detectLocale(request);
@@ -449,6 +487,24 @@ export function middleware(request: NextRequest): NextResponse {
   // This must happen BEFORE next-intl middleware to avoid conflicts
   const rootPathRedirect = handleRootPathRedirect(request, detectedLocale);
   if (rootPathRedirect) {
+    const redirectDuration = endTimer(middlewareTimer);
+
+    logger.info('Root path redirect', {
+      locale: detectedLocale,
+      from: pathname,
+      to: `/${detectedLocale}/`,
+      duration: redirectDuration,
+    });
+
+    // Log performance warning if middleware is slow
+    if (!checkPerformance(redirectDuration, PERFORMANCE_TARGETS.MIDDLEWARE_EXECUTION)) {
+      logger.warn('Slow middleware execution detected', {
+        duration: redirectDuration,
+        target: PERFORMANCE_TARGETS.MIDDLEWARE_EXECUTION,
+        operation: 'root-redirect',
+      });
+    }
+
     // Set cookie only if missing or different to avoid redundant Set-Cookie headers
     const existingCookie = request.cookies.get('NEXT_LOCALE')?.value;
     if (existingCookie !== detectedLocale) {
@@ -472,9 +528,32 @@ export function middleware(request: NextRequest): NextResponse {
   const existingCookie = request.cookies.get('NEXT_LOCALE')?.value;
   if (existingCookie !== detectedLocale) {
     response.cookies.set('NEXT_LOCALE', detectedLocale, LOCALE_COOKIE_OPTIONS);
+    logger.debug('Cookie set', {
+      locale: detectedLocale,
+      reason: existingCookie ? 'cookie-update' : 'cookie-create',
+    });
   }
 
-  // Step 5: Return response with i18n context initialized
+  // Step 5: End performance monitoring and log results
+  const totalDuration = endTimer(middlewareTimer);
+
+  logger.debug('Middleware completed', {
+    locale: detectedLocale,
+    pathname,
+    duration: totalDuration,
+  });
+
+  // Log performance warning if middleware is slow
+  if (!checkPerformance(totalDuration, PERFORMANCE_TARGETS.MIDDLEWARE_EXECUTION)) {
+    logger.warn('Slow middleware execution detected', {
+      duration: totalDuration,
+      target: PERFORMANCE_TARGETS.MIDDLEWARE_EXECUTION,
+      pathname,
+      locale: detectedLocale,
+    });
+  }
+
+  // Step 6: Return response with i18n context initialized
   // Components can now use useTranslations() to access messages
   return response;
 }
