@@ -80,6 +80,55 @@ Chaque niveau dispose de templates, commandes Claude personnalisées et validati
 - **Validation Framework** : Système de validation de documents avec règles YAML
 - **Gitmoji Convention** : Commits sémantiques avec emojis standardisés
 
+### Internationalisation (i18n)
+
+Le site est **entièrement bilingue** (Français/Anglais) avec une implémentation avancée :
+
+- **next-intl v4.5.3** : Intégration middleware pour détection automatique de langue
+- **Détection intelligente** : URL → Cookie → Accept-Language → Défaut (Français)
+- **Routes préfixées** : `/fr/*` et `/en/*` avec support complet SSR/RSC
+- **Persistence** : Cookie `NEXT_LOCALE` avec flags sécurisés (HttpOnly, SameSite)
+- **Performance** : Middleware optimisé < 50ms, compatible Cloudflare Workers edge
+- **73 clés de traduction** : 8 namespaces (common, nav, footer, form, etc.)
+- **Parité 100%** : Tests automatisés garantissant la complétude des traductions
+
+#### Utilisation Rapide
+
+```typescript
+// Server Component
+import { getTranslations } from 'next-intl/server';
+
+export default async function Page() {
+  const t = await getTranslations('common');
+  return <h1>{t('appName')}</h1>;
+}
+
+// Client Component
+'use client';
+import { useTranslations } from 'next-intl';
+
+export function Nav() {
+  const t = useTranslations('nav');
+  return <a href="/fr/">{t('home')}</a>;
+}
+```
+
+#### Changement de Langue
+
+Le basculement se fait automatiquement via la navigation :
+
+```typescript
+// Redirection vers la version anglaise
+router.push('/en/articles');
+
+// Le middleware gère :
+// - Mise à jour du cookie NEXT_LOCALE
+// - Initialisation du contexte i18n
+// - Chargement des traductions appropriées
+```
+
+**Documentation complète** : [docs/i18n/MIDDLEWARE.md](docs/i18n/MIDDLEWARE.md)
+
 ## 📊 Pipeline CI/CD
 
 Pipeline GitHub Actions exécuté sur chaque PR et push vers `main`/`develop` :
