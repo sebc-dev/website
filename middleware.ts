@@ -303,10 +303,10 @@ export function getLocaleFromHeader(headerValue: string): Locale | undefined {
  * 1. URL path prefix (highest priority)
  * 2. NEXT_LOCALE cookie
  * 3. Accept-Language header
- * 4. Default to French (lowest priority)
+ * 4. Default locale from config (lowest priority)
  *
  * This function always returns a valid `Locale` (never undefined).
- * If none of the detection sources provide a valid locale, defaults to French.
+ * If none of the detection sources provide a valid locale, uses the configured default.
  *
  * @param request - The incoming HTTP request
  * @returns The detected locale (always valid, never undefined)
@@ -325,7 +325,7 @@ export function getLocaleFromHeader(headerValue: string): Locale | undefined {
  *
  * @example
  * // No detection sources
- * detectLocale(request) // Returns: 'fr' (default)
+ * detectLocale(request) // Returns: 'fr' (configured default)
  */
 function detectLocale(request: NextRequest): Locale {
   const { pathname } = request.nextUrl;
@@ -350,8 +350,8 @@ function detectLocale(request: NextRequest): Locale {
     return localeFromHeader;
   }
 
-  // Priority 4: Default to French
-  return 'fr';
+  // Priority 4: Default locale from config
+  return defaultLocale;
 }
 
 /**
@@ -433,7 +433,7 @@ export function middleware(request: NextRequest): NextResponse {
       sameSite: 'lax',
       httpOnly: true,
     });
-    rootPathRedirect.headers.set('Set-Cookie', cookieHeader);
+    rootPathRedirect.headers.append('Set-Cookie', cookieHeader);
     return rootPathRedirect;
   }
 
@@ -452,7 +452,7 @@ export function middleware(request: NextRequest): NextResponse {
   });
 
   // Add the cookie to the response headers
-  response.headers.set('Set-Cookie', cookieHeader);
+  response.headers.append('Set-Cookie', cookieHeader);
 
   // Step 5: Return response with i18n context initialized
   // Components can now use useTranslations() to access messages
