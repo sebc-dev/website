@@ -9,6 +9,7 @@
  */
 
 import type { NextRequest } from 'next/server';
+import { locales } from '@/i18n/config';
 
 /**
  * Configuration options for cookie creation
@@ -71,14 +72,6 @@ export interface CookieOptions {
   path?: string;
 }
 
-/**
- * Allowed locale values for cookie validation
- *
- * Only these values are accepted in the NEXT_LOCALE cookie.
- *
- * @internal
- */
-const ALLOWED_LOCALES = ['fr', 'en'] as const;
 
 /**
  * Reads a cookie value from the request
@@ -211,5 +204,5 @@ export function deleteCookie(name: string): string {
  * Validation is case-sensitive - only lowercase codes are accepted.
  */
 export function validateLocale(value: unknown): value is 'fr' | 'en' {
-  return typeof value === 'string' && ALLOWED_LOCALES.includes(value as 'fr' | 'en');
+  return typeof value === 'string' && locales.includes(value as 'fr' | 'en');
 }
