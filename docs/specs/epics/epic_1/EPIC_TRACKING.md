@@ -31,15 +31,15 @@ Users can access the entire website in their preferred language, with the system
 
 This epic contains **7 stories** as defined in the PRD:
 
-| Story | Title                           | Description                                                        | Status         | Phases | Progress |
-| ----- | ------------------------------- | ------------------------------------------------------------------ | -------------- | ------ | -------- |
-| 1.1   | Install and configure next-intl | Set up next-intl library and basic configuration                   | 🚧 IN PROGRESS | 3      | 1/3      |
-| 1.2   | Create message files            | Create `messages/fr.json` and `messages/en.json` translation files | 📋 PLANNING    | 2      | 1/2      |
-| 1.3   | Create Next.js middleware       | Implement middleware with next-intl for routing                    | 🚧 IN PROGRESS | 3      | 2/3      |
-| 1.4   | Bilingual URL structure         | Implement route groups with language detection and cookie support  | 📋 NOT STARTED | -      | 0/0      |
-| 1.5   | Content fallback                | Add language badges and FR/EN toggle for missing translations      | 📋 NOT STARTED | -      | 0/0      |
-| 1.6   | SEO hreflang + canonical        | Implement SEO metadata via Next.js Metadata API                    | 📋 NOT STARTED | -      | 0/0      |
-| 1.7   | Language selector in header     | Create header component with cookie persistence                    | 📋 NOT STARTED | -      | 0/0      |
+| Story | Title                           | Description                                                        | Status         | Phases | Progress          |
+| ----- | ------------------------------- | ------------------------------------------------------------------ | -------------- | ------ | ----------------- |
+| 1.1   | Install and configure next-intl | Set up next-intl library and basic configuration                   | 🚧 IN PROGRESS | 3      | 1/3               |
+| 1.2   | Create message files            | Create `messages/fr.json` and `messages/en.json` translation files | 📋 PLANNING    | 2      | 1/2               |
+| 1.3   | Create Next.js middleware       | Implement middleware with next-intl for routing                    | 🚧 IN PROGRESS | 3      | 2/3 (P3: Commit 1/4) |
+| 1.4   | Bilingual URL structure         | Implement route groups with language detection and cookie support  | 📋 NOT STARTED | -      | 0/0               |
+| 1.5   | Content fallback                | Add language badges and FR/EN toggle for missing translations      | 📋 NOT STARTED | -      | 0/0               |
+| 1.6   | SEO hreflang + canonical        | Implement SEO metadata via Next.js Metadata API                    | 📋 NOT STARTED | -      | 0/0               |
+| 1.7   | Language selector in header     | Create header component with cookie persistence                    | 📋 NOT STARTED | -      | 0/0               |
 
 **Columns Explained**:
 
@@ -96,9 +96,9 @@ cat docs/specs/epics/epic_1/EPIC_TRACKING.md
 - **Stories Started**: 2 / 7 (Stories 1.1, 1.2 in progress; 1.3 in progress)
 - **Stories Completed**: 0 / 7
 - **Total Phases**: 8 (Story 1.1: 3, Story 1.2: 2, Story 1.3: 3)
-- **Phases Completed**: 3 / 8
+- **Phases Completed**: 2 / 8 (Phase 3 in progress: Commit 1/4 done)
 
-**Completion**: 37% (Story 1.1: 1/3, Story 1.3: 2/3 phases complete)
+**Completion**: 31% (Story 1.1: 1/3, Story 1.3: 2/3 phases complete, Phase 3 at 25%)
 
 ### Timeline
 
@@ -229,6 +229,16 @@ Phase plans will be linked here as stories are planned:
 
 ## 📝 Recent Updates
 
+- **2025-11-17**: Story 1.3 Phase 3 - Commit 1/4 completed ✅
+  - E2E Test Suite - Core Scenarios implemented
+  - Files created: `tests/middleware.spec.ts` (23+ test cases), `tests/fixtures/i18n.ts` (Playwright fixtures)
+  - Updated `playwright.config.ts` for production build testing
+  - Test coverage: All AC 1-8 verified with 15+ test scenarios
+  - Tests cover: URL detection, Accept-Language header, cookie detection, unsupported language redirects, root path redirection, next-intl context, public route exclusion, language validation
+  - Validation: TypeScript ✅, Prettier ✅, ESLint ✅
+  - Commit: `0d87833` + formatting commit `9474203`
+  - Story 1.3 Phase 3 progress: Commit 1/4 (25% of Phase 3)
+  - Next: Commit 2/4 - Edge Cases & Mobile Testing
 - **2025-11-17**: Story 1.3 Phases 1 & 2 completed ✅
   - Phase 1 (Language Detection Foundation): COMPLETED
     - 5 commits implemented: middleware structure & types → URL detection → cookie & header detection → redirect logic → unit tests
