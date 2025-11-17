@@ -449,12 +449,15 @@ export function middleware(request: NextRequest): NextResponse {
   // This must happen BEFORE next-intl middleware to avoid conflicts
   const rootPathRedirect = handleRootPathRedirect(request, detectedLocale);
   if (rootPathRedirect) {
-    // Set cookie in the redirect response using Next.js cookies API
-    rootPathRedirect.cookies.set(
-      'NEXT_LOCALE',
-      detectedLocale,
-      LOCALE_COOKIE_OPTIONS,
-    );
+    // Set cookie only if missing or different to avoid redundant Set-Cookie headers
+    const existingCookie = request.cookies.get('NEXT_LOCALE')?.value;
+    if (existingCookie !== detectedLocale) {
+      rootPathRedirect.cookies.set(
+        'NEXT_LOCALE',
+        detectedLocale,
+        LOCALE_COOKIE_OPTIONS,
+      );
+    }
     return rootPathRedirect;
   }
 
