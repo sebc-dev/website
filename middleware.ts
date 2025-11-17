@@ -26,7 +26,7 @@ import createMiddleware from 'next-intl/middleware';
 
 import type { Locale } from '@/i18n';
 import { defaultLocale, locales, routingConfig } from '@/i18n/config';
-import { setCookie } from '@/lib/i18n/cookie';
+import { setCookie, validateLocale } from '@/lib/i18n/cookie';
 import { handleRootPathRedirect } from '@/lib/i18n/redirect';
 
 /**
@@ -231,11 +231,11 @@ export function getLocaleFromCookie(cookieValue?: string): Locale | undefined {
     return undefined;
   }
 
-  // Trim and validate against supported locales
+  // Trim and validate against supported locales using centralized validation
   const trimmedValue = cookieValue.trim();
 
-  if (locales.includes(trimmedValue as Locale)) {
-    return trimmedValue as Locale;
+  if (validateLocale(trimmedValue)) {
+    return trimmedValue;
   }
 
   return undefined;
@@ -446,11 +446,8 @@ export function middleware(request: NextRequest): NextResponse {
 
   // Step 4: Set NEXT_LOCALE cookie in response headers
   // This persists the user's language preference across sessions
-  // Only set cookie if we have a valid locale from URL or detection
-  const localeFromURL = detectLocaleFromURL(pathname);
-  const cookieLocale = localeFromURL || detectedLocale;
-
-  const cookieHeader = setCookie('NEXT_LOCALE', cookieLocale, {
+  // Use the already-resolved locale from detection hierarchy
+  const cookieHeader = setCookie('NEXT_LOCALE', detectedLocale, {
     maxAge: 31536000, // 1 year
     sameSite: 'lax',
     httpOnly: true,
