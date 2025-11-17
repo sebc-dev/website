@@ -55,6 +55,7 @@ pnpm playwright install --dry-run
 ```
 
 **Browsers installed**:
+
 - `chromium` - For desktop testing (Chrome-like)
 - `firefox` - For Firefox testing
 - `webkit` - For Safari-like testing (macOS/iOS)
@@ -93,10 +94,10 @@ NODE_ENV=development
 
 ### Variable Descriptions
 
-| Variable     | Description                       | Example         | Required |
-| ------------ | --------------------------------- | --------------- | -------- |
-| `DEBUG`      | Debug logging pattern             | `i18n:*`        | No       |
-| `NODE_ENV`   | Node environment                  | `development`   | Yes      |
+| Variable   | Description           | Example       | Required |
+| ---------- | --------------------- | ------------- | -------- |
+| `DEBUG`    | Debug logging pattern | `i18n:*`      | No       |
+| `NODE_ENV` | Node environment      | `development` | Yes      |
 
 ---
 
@@ -167,6 +168,7 @@ export default defineConfig({
 ```
 
 **Key Configuration**:
+
 - `testDir: './tests'` - E2E tests in `/tests` directory
 - `baseURL: 'http://localhost:3000'` - Next.js dev server
 - `webServer` - Auto-starts dev server before tests
@@ -188,6 +190,7 @@ pnpm dev
 ```
 
 **Verification**:
+
 ```bash
 # Visit in browser
 open http://localhost:3000
@@ -216,6 +219,7 @@ pnpm preview
 ```
 
 **Verification**:
+
 ```bash
 # Visit in browser
 open http://localhost:8787
@@ -246,6 +250,7 @@ curl -I http://localhost:3000/
 ```
 
 **Expected Result**:
+
 ```
 HTTP/1.1 307 Temporary Redirect
 Location: /fr/
@@ -299,15 +304,18 @@ curl http://localhost:3000/
 ### Issue: Playwright browsers not installed
 
 **Symptoms**:
+
 - Error: "Executable doesn't exist at ..."
 - Tests fail with "Browser not found"
 
 **Solutions**:
+
 1. Install browsers: `pnpm playwright install`
 2. Install with dependencies: `pnpm playwright install --with-deps`
 3. Install specific browser: `pnpm playwright install chromium`
 
 **Verify Fix**:
+
 ```bash
 pnpm playwright install --dry-run
 ```
@@ -317,15 +325,18 @@ pnpm playwright install --dry-run
 ### Issue: Dev server not starting
 
 **Symptoms**:
+
 - Error: "Port 3000 is already in use"
 - Tests fail with "Connection refused"
 
 **Solutions**:
+
 1. Kill existing process: `lsof -ti:3000 | xargs kill -9`
 2. Use different port: `PORT=3001 pnpm dev`
 3. Restart terminal/IDE
 
 **Verify Fix**:
+
 ```bash
 curl http://localhost:3000
 ```
@@ -335,15 +346,18 @@ curl http://localhost:3000
 ### Issue: E2E tests timeout
 
 **Symptoms**:
+
 - Tests fail with "Timeout 30000ms exceeded"
 - Slow page loads
 
 **Solutions**:
+
 1. Increase timeout in `playwright.config.ts`: `timeout: 60000`
 2. Use explicit waits: `await page.waitForURL('/fr/')`
 3. Check network issues (VPN, firewall)
 
 **Verify Fix**:
+
 ```bash
 pnpm test:e2e --timeout=60000
 ```
@@ -353,15 +367,18 @@ pnpm test:e2e --timeout=60000
 ### Issue: Middleware not running in tests
 
 **Symptoms**:
+
 - Tests fail: "Expected redirect, got 200"
 - Language detection not working
 
 **Solutions**:
+
 1. Verify middleware exists: `ls src/middleware.ts`
 2. Check Next.js config: `next.config.js` doesn't disable middleware
 3. Restart dev server: `pnpm dev`
 
 **Verify Fix**:
+
 ```bash
 # Check middleware logs
 DEBUG=i18n:* pnpm dev
@@ -373,15 +390,18 @@ curl http://localhost:3000/
 ### Issue: Debug logs not showing
 
 **Symptoms**:
+
 - No logs in console
 - `DEBUG=i18n:*` has no effect
 
 **Solutions**:
+
 1. Verify environment variable: `echo $DEBUG`
 2. Use correct format: `DEBUG=i18n:* pnpm dev` (not `pnpm dev DEBUG=i18n:*`)
 3. Check logger implementation in `src/lib/i18n/logger.ts`
 
 **Verify Fix**:
+
 ```bash
 DEBUG=i18n:* pnpm dev
 # Visit http://localhost:3000 and check console
@@ -392,15 +412,18 @@ DEBUG=i18n:* pnpm dev
 ### Issue: Performance tests fail (<50ms target)
 
 **Symptoms**:
+
 - Performance benchmark tests fail
 - Middleware execution > 50ms
 
 **Solutions**:
+
 1. Test on Cloudflare Workers: `pnpm preview` (not `pnpm dev`)
 2. Optimize detection logic (cache parsed headers)
 3. Profile middleware: Add more timing logs
 
 **Verify Fix**:
+
 ```bash
 pnpm preview
 # Measure performance in tests

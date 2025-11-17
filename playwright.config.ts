@@ -80,9 +80,9 @@ export default defineConfig({
      * are not supported by wrangler dev (they work in production)
      * See: https://opennext.js.org/cloudflare/known-issues
      */
-    command: process.env.CI ? 'pnpm start' : 'bash scripts/dev-quiet.sh',
+    command: 'pnpm start',
     url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
-    timeout: 60000, // 1 minute (production server starts faster)
+    reuseExistingServer: false,
+    timeout: 120000, // 2 minutes (production server can take longer)
   },
 });
