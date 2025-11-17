@@ -10,7 +10,7 @@
 
 import type { NextRequest } from 'next/server';
 
-import { locales } from '@/i18n/config';
+import { type Locale, locales } from '@/i18n/config';
 
 /**
  * Configuration options for cookie creation
@@ -99,7 +99,8 @@ export function getCookie(
  * Creates a Set-Cookie header value with secure flags
  *
  * Generates an HTTP Set-Cookie header string with all security flags applied.
- * The secure flag is conditionally set based on the environment.
+ * The secure flag is conditionally set based on the environment, except when
+ * SameSite=None is used (which always requires Secure per browser requirements).
  *
  * @param name - The cookie name (e.g., 'NEXT_LOCALE')
  * @param value - The cookie value (e.g., 'fr' or 'en')
@@ -114,14 +115,26 @@ export function getCookie(
  *   sameSite: 'lax',
  * });
  * // Returns: 'NEXT_LOCALE=en; Max-Age=31536000; SameSite=Lax; HttpOnly; Path=/; Secure' (in prod)
+ *
+ * // SameSite=None always includes Secure, regardless of environment or options
+ * const crossSiteCookie = setCookie('NEXT_LOCALE', 'fr', {
+ *   sameSite: 'none',
+ *   secure: false, // Overridden to true automatically
+ * });
+ * // Returns: 'NEXT_LOCALE=fr; Max-Age=31536000; SameSite=None; HttpOnly; Path=/; Secure'
  * ```
  *
  * @remarks
  * The cookie includes these default security flags:
  * - **HttpOnly**: Prevents JavaScript access, mitigates XSS attacks
  * - **SameSite=Lax**: Prevents CSRF attacks while allowing cross-site navigation
- * - **Secure**: Only sent over HTTPS (in production)
+ * - **Secure**: Only sent over HTTPS (in production, or always when SameSite=None)
  * - **Max-Age**: Sets expiration time (default: 1 year)
+ *
+ * **Important**: When `sameSite` is set to `'none'` (case-insensitive), the `Secure`
+ * flag is automatically forced to `true`, overriding any explicit `secure: false` option.
+ * This ensures compliance with modern browser requirements that reject SameSite=None
+ * cookies without the Secure flag.
  */
 export function setCookie(
   name: string,
@@ -136,15 +149,22 @@ export function setCookie(
     path = '/',
   } = options;
 
+  // Normalize sameSite to lowercase for comparison
+  const normalizedSameSite = sameSite.toLowerCase();
+
+  // SameSite=None requires Secure flag per modern browser requirements
+  // Force secure=true when SameSite=None to prevent invalid cookies
+  const finalSecure = normalizedSameSite === 'none' ? true : secure;
+
   // Start with name=value
   const parts: string[] = [`${name}=${value}`];
 
   // Add Max-Age (controls expiration)
   parts.push(`Max-Age=${maxAge}`);
 
-  // Add SameSite (CSRF protection)
+  // Add SameSite (CSRF protection) with proper capitalization
   parts.push(
-    `SameSite=${sameSite.charAt(0).toUpperCase()}${sameSite.slice(1)}`,
+    `SameSite=${normalizedSameSite.charAt(0).toUpperCase()}${normalizedSameSite.slice(1)}`,
   );
 
   // Add HttpOnly (XSS protection)
@@ -155,8 +175,9 @@ export function setCookie(
   // Add Path (scope restriction)
   parts.push(`Path=${path}`);
 
-  // Add Secure (HTTPS-only transmission) - conditionally in production
-  if (secure) {
+  // Add Secure (HTTPS-only transmission)
+  // Always included when SameSite=None, conditionally in production otherwise
+  if (finalSecure) {
     parts.push('Secure');
   }
 
@@ -199,7 +220,8 @@ export function deleteCookie(name: string): string {
 /**
  * Validates if a value is an allowed locale
  *
- * Checks if the provided value is one of the supported language codes.
+ * Checks if the provided value is one of the supported language codes
+ * defined in the centralized i18n configuration.
  *
  * @param value - The value to validate
  * @returns true if the value is an allowed locale, false otherwise
@@ -213,9 +235,10 @@ export function deleteCookie(name: string): string {
  * validateLocale(null);  // false
  *
  * @remarks
- * Currently supported locales: 'fr', 'en'
+ * Supported locales are defined in `@/i18n/config` as the `Locale` type.
  * Validation is case-sensitive - only lowercase codes are accepted.
+ * Adding new locales to the config will automatically update this validation.
  */
-export function validateLocale(value: unknown): value is 'fr' | 'en' {
-  return typeof value === 'string' && locales.includes(value as 'fr' | 'en');
+export function validateLocale(value: unknown): value is Locale {
+  return typeof value === 'string' && locales.includes(value as Locale);
 }
