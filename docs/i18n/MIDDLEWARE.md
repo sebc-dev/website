@@ -260,15 +260,15 @@ The middleware sets and reads a cookie named `NEXT_LOCALE` to persist language p
 
 #### Cookie Properties
 
-| Property   | Value              | Purpose                                    |
-|------------|--------------------|--------------------------------------------|
-| Name       | `NEXT_LOCALE`      | next-intl convention                       |
-| Value      | `fr` or `en`       | Selected language code                     |
-| Max-Age    | `31536000` (1 yr)  | Long-term persistence                      |
-| SameSite   | `Lax`              | Allow cross-site navigation                |
-| HttpOnly   | `true`             | Prevent JavaScript access (security)       |
-| Secure     | `true` (prod only) | HTTPS-only in production                   |
-| Path       | `/`                | Available site-wide                        |
+| Property | Value              | Purpose                              |
+| -------- | ------------------ | ------------------------------------ |
+| Name     | `NEXT_LOCALE`      | next-intl convention                 |
+| Value    | `fr` or `en`       | Selected language code               |
+| Max-Age  | `31536000` (1 yr)  | Long-term persistence                |
+| SameSite | `Lax`              | Allow cross-site navigation          |
+| HttpOnly | `true`             | Prevent JavaScript access (security) |
+| Secure   | `true` (prod only) | HTTPS-only in production             |
+| Path     | `/`                | Available site-wide                  |
 
 #### Example Set-Cookie Header
 
@@ -279,6 +279,7 @@ Set-Cookie: NEXT_LOCALE=fr; Max-Age=31536000; Path=/; HttpOnly; SameSite=Lax; Se
 #### Cookie Optimization
 
 The middleware only sets the cookie when:
+
 - It doesn't exist yet, OR
 - The detected language differs from the cookie value
 
@@ -290,11 +291,11 @@ This avoids redundant `Set-Cookie` headers on every request.
 
 ### Performance Targets
 
-| Operation             | Target  | Actual (avg) |
-|-----------------------|---------|--------------|
-| Middleware execution  | < 50ms  | ~5-10ms      |
-| Locale detection      | < 10ms  | ~1-2ms       |
-| Cookie parsing        | < 5ms   | < 1ms        |
+| Operation            | Target | Actual (avg) |
+| -------------------- | ------ | ------------ |
+| Middleware execution | < 50ms | ~5-10ms      |
+| Locale detection     | < 10ms | ~1-2ms       |
+| Cookie parsing       | < 5ms  | < 1ms        |
 
 ### Performance Monitoring
 
@@ -356,6 +357,7 @@ Cookies use security flags to prevent common attacks:
 #### 3. No PII in Logs
 
 Debug logs never include:
+
 - IP addresses
 - User IDs
 - Email addresses
@@ -365,10 +367,10 @@ Only safe metadata is logged:
 
 ```typescript
 logger.debug('Locale detected', {
-  locale: 'fr',           // ✅ Safe
-  source: 'cookie',       // ✅ Safe
-  pathname: '/articles',  // ✅ Safe
-  duration: 5.2,          // ✅ Safe
+  locale: 'fr', // ✅ Safe
+  source: 'cookie', // ✅ Safe
+  pathname: '/articles', // ✅ Safe
+  duration: 5.2, // ✅ Safe
   // ❌ Never: ip, userId, email, etc.
 });
 ```
@@ -404,6 +406,7 @@ Running on Cloudflare Workers provides additional security:
 **Symptoms**: Website always defaults to French, even with English cookie/header
 
 **Causes**:
+
 - Cookie name mismatch
 - Cookie not readable (wrong domain/path)
 - Middleware not running on route
@@ -411,6 +414,7 @@ Running on Cloudflare Workers provides additional security:
 **Solutions**:
 
 1. Check cookie in browser DevTools:
+
    ```
    Application > Cookies > localhost
    Name: NEXT_LOCALE
@@ -418,6 +422,7 @@ Running on Cloudflare Workers provides additional security:
    ```
 
 2. Verify middleware runs on route:
+
    ```bash
    DEBUG=i18n:* pnpm dev
    # Visit route and check logs
@@ -436,6 +441,7 @@ Running on Cloudflare Workers provides additional security:
 **Symptoms**: Browser shows "Too many redirects" error
 
 **Causes**:
+
 - Middleware redirecting on every request
 - Missing locale prefix in redirect URL
 - Incorrect localePrefix configuration
@@ -443,6 +449,7 @@ Running on Cloudflare Workers provides additional security:
 **Solutions**:
 
 1. Check `localePrefix` setting:
+
    ```typescript
    // i18n/config.ts
    export const routingConfig = {
@@ -451,6 +458,7 @@ Running on Cloudflare Workers provides additional security:
    ```
 
 2. Verify root path redirect logic:
+
    ```typescript
    // Should only redirect if pathname === '/'
    if (pathname === '/') {
@@ -469,6 +477,7 @@ Running on Cloudflare Workers provides additional security:
 **Symptoms**: Language resets to default on page reload
 
 **Causes**:
+
 - Cookie flags preventing save (e.g., Secure flag in dev without HTTPS)
 - Browser blocking cookies
 - Incorrect Max-Age/Expires
@@ -476,6 +485,7 @@ Running on Cloudflare Workers provides additional security:
 **Solutions**:
 
 1. Check cookie flags in development:
+
    ```typescript
    // middleware.ts
    const LOCALE_COOKIE_OPTIONS = {
@@ -493,7 +503,7 @@ Running on Cloudflare Workers provides additional security:
 3. Check cookie expiration:
    ```javascript
    // Browser console
-   document.cookie.split(';').find(c => c.includes('NEXT_LOCALE'))
+   document.cookie.split(';').find((c) => c.includes('NEXT_LOCALE'));
    ```
 
 #### Issue 4: Translations Not Loading
@@ -501,6 +511,7 @@ Running on Cloudflare Workers provides additional security:
 **Symptoms**: Keys like `common.appName` displayed instead of translated text
 
 **Causes**:
+
 - Message files missing or malformed
 - Incorrect namespace or key
 - Locale not initialized
@@ -508,12 +519,14 @@ Running on Cloudflare Workers provides additional security:
 **Solutions**:
 
 1. Verify message files exist:
+
    ```bash
    ls messages/
    # Should show: fr.json, en.json
    ```
 
 2. Check message file structure:
+
    ```json
    {
      "common": {
@@ -523,6 +536,7 @@ Running on Cloudflare Workers provides additional security:
    ```
 
 3. Use correct namespace in component:
+
    ```typescript
    const t = useTranslations('common'); // ✅ Match namespace
    t('appName'); // ✅ Match key
@@ -548,6 +562,7 @@ DEBUG=i18n:cookie pnpm dev
 ```
 
 Log output includes:
+
 - Language detection source
 - Redirect operations
 - Cookie operations
@@ -564,17 +579,20 @@ Log output includes:
 Detects locale from URL path prefix.
 
 **Parameters**:
+
 - `pathname` - URL pathname (e.g., `/fr/articles`)
 
 **Returns**:
+
 - `Locale` if valid prefix found
 - `undefined` if no prefix or invalid locale
 
 **Example**:
+
 ```typescript
 detectLocaleFromURL('/fr/articles'); // 'fr'
-detectLocaleFromURL('/en/search');   // 'en'
-detectLocaleFromURL('/articles');    // undefined
+detectLocaleFromURL('/en/search'); // 'en'
+detectLocaleFromURL('/articles'); // undefined
 ```
 
 #### `parseAcceptLanguage(headerValue: string): string[]`
@@ -582,12 +600,15 @@ detectLocaleFromURL('/articles');    // undefined
 Parses `Accept-Language` header with quality values.
 
 **Parameters**:
+
 - `headerValue` - Accept-Language header value
 
 **Returns**:
+
 - Array of language codes in priority order
 
 **Example**:
+
 ```typescript
 parseAcceptLanguage('fr,en;q=0.9');
 // Returns: ['fr', 'en']
@@ -601,16 +622,19 @@ parseAcceptLanguage('en;q=0.8,fr;q=0.9');
 Validates and returns locale from cookie value.
 
 **Parameters**:
+
 - `cookieValue` - NEXT_LOCALE cookie value
 
 **Returns**:
+
 - `Locale` if valid
 - `undefined` if invalid or missing
 
 **Example**:
+
 ```typescript
-getLocaleFromCookie('fr');      // 'fr'
-getLocaleFromCookie('de');      // undefined (not supported)
+getLocaleFromCookie('fr'); // 'fr'
+getLocaleFromCookie('de'); // undefined (not supported)
 getLocaleFromCookie(undefined); // undefined
 ```
 
@@ -619,13 +643,16 @@ getLocaleFromCookie(undefined); // undefined
 Detects locale from Accept-Language header.
 
 **Parameters**:
+
 - `headerValue` - Accept-Language header value
 
 **Returns**:
+
 - `Locale` if supported language found
 - `undefined` if no supported language
 
 **Example**:
+
 ```typescript
 getLocaleFromHeader('fr,en;q=0.9'); // 'fr'
 getLocaleFromHeader('de,it;q=0.9'); // undefined (no supported lang)
@@ -683,7 +710,7 @@ Cookie configuration for NEXT_LOCALE.
 
 ```typescript
 const LOCALE_COOKIE_OPTIONS = {
-  maxAge: 31536000,      // 1 year
+  maxAge: 31536000, // 1 year
   sameSite: 'lax' as const,
   httpOnly: true,
   secure: process.env.NODE_ENV === 'production',
@@ -758,13 +785,13 @@ function MyComponent() {
 
 #### Key Differences
 
-| react-i18next              | next-intl                        |
-|----------------------------|----------------------------------|
-| `useTranslation()`         | `useTranslations(namespace)`     |
-| `t('common:key')`          | `t('key')` (namespace in hook)   |
-| `i18n.changeLanguage()`    | Navigate to `/{locale}/path`     |
-| Client-side detection      | Middleware-based detection       |
-| localStorage persistence   | Cookie persistence               |
+| react-i18next            | next-intl                      |
+| ------------------------ | ------------------------------ |
+| `useTranslation()`       | `useTranslations(namespace)`   |
+| `t('common:key')`        | `t('key')` (namespace in hook) |
+| `i18n.changeLanguage()`  | Navigate to `/{locale}/path`   |
+| Client-side detection    | Middleware-based detection     |
+| localStorage persistence | Cookie persistence             |
 
 ### From next-i18next
 
@@ -803,11 +830,13 @@ export default function Page() {
 #### Migration Steps
 
 1. **Remove next-i18next**:
+
    ```bash
    pnpm remove next-i18next
    ```
 
 2. **Install next-intl**:
+
    ```bash
    pnpm add next-intl@4.5.3
    ```

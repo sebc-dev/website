@@ -79,8 +79,12 @@ describe('i18n performance monitoring', () => {
       expect(measurement.name).toBe('middleware');
       expect(measurement.duration).toBeTypeOf('number');
       expect(measurement.duration).toBeGreaterThanOrEqual(5);
-      expect(measurement.startedAt).toMatch(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z/);
-      expect(measurement.endedAt).toMatch(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z/);
+      expect(measurement.startedAt).toMatch(
+        /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z/,
+      );
+      expect(measurement.endedAt).toMatch(
+        /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z/,
+      );
     });
 
     it('should have consistent timestamps', () => {
@@ -111,7 +115,9 @@ describe('i18n performance monitoring', () => {
     it('should throw if performance exceeds target', () => {
       expect(() => {
         assertPerformance(100, 50, 'Test operation');
-      }).toThrow('Performance assertion failed: Test operation took 100ms, expected < 50ms');
+      }).toThrow(
+        'Performance assertion failed: Test operation took 100ms, expected < 50ms',
+      );
     });
 
     it('should include operation name in error message', () => {
@@ -264,15 +270,21 @@ describe('i18n performance monitoring', () => {
     it('should calculate summary statistics', () => {
       // Mock measurements with known durations
       monitor.start('op-1');
-      vi.spyOn(performance, 'now').mockReturnValueOnce(100).mockReturnValueOnce(120); // 20ms
+      vi.spyOn(performance, 'now')
+        .mockReturnValueOnce(100)
+        .mockReturnValueOnce(120); // 20ms
       monitor.end('op-1');
 
       monitor.start('op-2');
-      vi.spyOn(performance, 'now').mockReturnValueOnce(200).mockReturnValueOnce(230); // 30ms
+      vi.spyOn(performance, 'now')
+        .mockReturnValueOnce(200)
+        .mockReturnValueOnce(230); // 30ms
       monitor.end('op-2');
 
       monitor.start('op-3');
-      vi.spyOn(performance, 'now').mockReturnValueOnce(300).mockReturnValueOnce(350); // 50ms
+      vi.spyOn(performance, 'now')
+        .mockReturnValueOnce(300)
+        .mockReturnValueOnce(350); // 50ms
       monitor.end('op-3');
 
       const summary = monitor.getSummary();
@@ -298,16 +310,26 @@ describe('i18n performance monitoring', () => {
 
     it('should round summary values to 2 decimal places', () => {
       monitor.start('op-1');
-      vi.spyOn(performance, 'now').mockReturnValueOnce(0).mockReturnValueOnce(33.333); // 33.333ms
+      vi.spyOn(performance, 'now')
+        .mockReturnValueOnce(0)
+        .mockReturnValueOnce(33.333); // 33.333ms
       monitor.end('op-1');
 
       const summary = monitor.getSummary();
 
       // Check that values are rounded to 2 decimal places
-      expect(summary.total.toString().split('.')[1]?.length || 0).toBeLessThanOrEqual(2);
-      expect(summary.min.toString().split('.')[1]?.length || 0).toBeLessThanOrEqual(2);
-      expect(summary.max.toString().split('.')[1]?.length || 0).toBeLessThanOrEqual(2);
-      expect(summary.average.toString().split('.')[1]?.length || 0).toBeLessThanOrEqual(2);
+      expect(
+        summary.total.toString().split('.')[1]?.length || 0,
+      ).toBeLessThanOrEqual(2);
+      expect(
+        summary.min.toString().split('.')[1]?.length || 0,
+      ).toBeLessThanOrEqual(2);
+      expect(
+        summary.max.toString().split('.')[1]?.length || 0,
+      ).toBeLessThanOrEqual(2);
+      expect(
+        summary.average.toString().split('.')[1]?.length || 0,
+      ).toBeLessThanOrEqual(2);
     });
   });
 

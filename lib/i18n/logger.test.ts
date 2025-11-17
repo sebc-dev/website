@@ -20,10 +20,14 @@ describe('i18n logger', () => {
   const originalDebug = process.env.DEBUG;
 
   // Mock console methods
-  const consoleDebugSpy = vi.spyOn(console, 'debug').mockImplementation(() => {});
+  const consoleDebugSpy = vi
+    .spyOn(console, 'debug')
+    .mockImplementation(() => {});
   const consoleInfoSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
   const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-  const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+  const consoleErrorSpy = vi
+    .spyOn(console, 'error')
+    .mockImplementation(() => {});
 
   beforeEach(() => {
     // Clear all mocks before each test
@@ -120,7 +124,9 @@ describe('i18n logger', () => {
       const logOutput = consoleInfoSpy.mock.calls[0][0];
 
       // Check for ISO timestamp format (YYYY-MM-DDTHH:mm:ss.sssZ)
-      expect(logOutput).toMatch(/\[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z\]/);
+      expect(logOutput).toMatch(
+        /\[\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z\]/,
+      );
     });
 
     it('should handle messages without data', () => {
@@ -142,7 +148,11 @@ describe('i18n logger', () => {
     });
 
     it('should format data as JSON', () => {
-      logger.info('Test', { locale: 'en', source: 'url', nested: { key: 'value' } });
+      logger.info('Test', {
+        locale: 'en',
+        source: 'url',
+        nested: { key: 'value' },
+      });
 
       expect(consoleInfoSpy).toHaveBeenCalledTimes(1);
       const logOutput = consoleInfoSpy.mock.calls[0][0];

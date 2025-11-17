@@ -28,7 +28,12 @@ import type { Locale } from '@/i18n';
 import { defaultLocale, locales, routingConfig } from '@/i18n/config';
 import { validateLocale } from '@/lib/i18n/cookie';
 import { logger } from '@/lib/i18n/logger';
-import { checkPerformance,endTimer, PERFORMANCE_TARGETS, startTimer } from '@/lib/i18n/performance';
+import {
+  checkPerformance,
+  endTimer,
+  PERFORMANCE_TARGETS,
+  startTimer,
+} from '@/lib/i18n/performance';
 import { handleRootPathRedirect } from '@/lib/i18n/redirect';
 
 /**
@@ -497,7 +502,12 @@ export function middleware(request: NextRequest): NextResponse {
     });
 
     // Log performance warning if middleware is slow
-    if (!checkPerformance(redirectDuration, PERFORMANCE_TARGETS.MIDDLEWARE_EXECUTION)) {
+    if (
+      !checkPerformance(
+        redirectDuration,
+        PERFORMANCE_TARGETS.MIDDLEWARE_EXECUTION,
+      )
+    ) {
       logger.warn('Slow middleware execution detected', {
         duration: redirectDuration,
         target: PERFORMANCE_TARGETS.MIDDLEWARE_EXECUTION,
@@ -544,7 +554,9 @@ export function middleware(request: NextRequest): NextResponse {
   });
 
   // Log performance warning if middleware is slow
-  if (!checkPerformance(totalDuration, PERFORMANCE_TARGETS.MIDDLEWARE_EXECUTION)) {
+  if (
+    !checkPerformance(totalDuration, PERFORMANCE_TARGETS.MIDDLEWARE_EXECUTION)
+  ) {
     logger.warn('Slow middleware execution detected', {
       duration: totalDuration,
       target: PERFORMANCE_TARGETS.MIDDLEWARE_EXECUTION,

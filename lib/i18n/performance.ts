@@ -131,7 +131,9 @@ export function endTimer(timer: PerformanceTimer): number {
  * const measurement = measurePerformance(timer);
  * logger.debug('Performance', { measurement });
  */
-export function measurePerformance(timer: PerformanceTimer): PerformanceMeasurement {
+export function measurePerformance(
+  timer: PerformanceTimer,
+): PerformanceMeasurement {
   const endTime = Date.now();
   const duration = endTimer(timer);
   const startTime = endTime - duration;
