@@ -35,7 +35,7 @@ This epic contains **7 stories** as defined in the PRD:
 | ----- | ------------------------------- | ------------------------------------------------------------------ | -------------- | ------ | -------- |
 | 1.1   | Install and configure next-intl | Set up next-intl library and basic configuration                   | 🚧 IN PROGRESS | 3      | 1/3      |
 | 1.2   | Create message files            | Create `messages/fr.json` and `messages/en.json` translation files | 📋 PLANNING    | 2      | 1/2      |
-| 1.3   | Create Next.js middleware       | Implement middleware with next-intl for routing                    | 📋 PLANNING    | 3      | 0/3      |
+| 1.3   | Create Next.js middleware       | Implement middleware with next-intl for routing                    | 🚧 IN PROGRESS | 3      | 2/3      |
 | 1.4   | Bilingual URL structure         | Implement route groups with language detection and cookie support  | 📋 NOT STARTED | -      | 0/0      |
 | 1.5   | Content fallback                | Add language badges and FR/EN toggle for missing translations      | 📋 NOT STARTED | -      | 0/0      |
 | 1.6   | SEO hreflang + canonical        | Implement SEO metadata via Next.js Metadata API                    | 📋 NOT STARTED | -      | 0/0      |
@@ -93,12 +93,12 @@ cat docs/specs/epics/epic_1/EPIC_TRACKING.md
 
 ### Progress Summary
 
-- **Stories Started**: 2 / 7 (Stories 1.1, 1.2 planned; 1.3 planned)
+- **Stories Started**: 2 / 7 (Stories 1.1, 1.2 in progress; 1.3 in progress)
 - **Stories Completed**: 0 / 7
 - **Total Phases**: 8 (Story 1.1: 3, Story 1.2: 2, Story 1.3: 3)
-- **Phases Completed**: 1 / 8
+- **Phases Completed**: 3 / 8
 
-**Completion**: 12% (Story 1.1: 1/3 phases complete)
+**Completion**: 37% (Story 1.1: 1/3, Story 1.3: 2/3 phases complete)
 
 ### Timeline
 
@@ -229,6 +229,23 @@ Phase plans will be linked here as stories are planned:
 
 ## 📝 Recent Updates
 
+- **2025-11-17**: Story 1.3 Phases 1 & 2 completed ✅
+  - Phase 1 (Language Detection Foundation): COMPLETED
+    - 5 commits implemented: middleware structure & types → URL detection → cookie & header detection → redirect logic → unit tests
+    - Language detection working from URL, cookie, browser header with fallback to default
+    - Redirect logic handling unsupported languages (307 status)
+    - Public route exclusion configured
+    - Unit tests passing with >80% coverage
+    - All AC 1-8 satisfied
+  - Phase 2 (Cookie Persistence & i18n Context): COMPLETED
+    - Cookie creation with secure flags (HttpOnly, SameSite=Lax, Secure in production, 1yr TTL)
+    - Root path redirection logic (`/` → `/fr/` or `/en/`)
+    - next-intl middleware integration for i18n context
+    - Components can now use `useTranslations()` and `getTranslations()`
+    - Integration tests passing
+    - All AC 5-6, 9 satisfied
+  - Story 1.3 progress: 2/3 phases complete (67% done)
+  - Ready for Phase 3: E2E testing, edge cases, debug logging, documentation
 - **2025-11-17**: Story 1.3 Phase 3 documentation generated (7 comprehensive documents)
   - Generated complete implementation documentation for Testing, Edge Cases & Documentation phase
   - 4 atomic commits planned: E2E core tests → edge cases & mobile → debug logging & performance → documentation
