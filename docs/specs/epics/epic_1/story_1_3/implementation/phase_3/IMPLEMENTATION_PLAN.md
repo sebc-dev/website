@@ -32,6 +32,7 @@ AC 1-8 verified   AC 9-12 verified Performance <50ms   Production-ready
 ### Commit 1: E2E Test Suite - Core Scenarios
 
 **Files**:
+
 - `tests/middleware.spec.ts` (new, ~300 lines)
 - `tests/fixtures/i18n.ts` (new, ~80 lines - Playwright fixtures)
 
@@ -39,6 +40,7 @@ AC 1-8 verified   AC 9-12 verified Performance <50ms   Production-ready
 **Duration**: 1-1.5h (implementation) + 30-45 min (review)
 
 **Content**:
+
 - Playwright test suite for middleware
 - Tests for AC1: Language detection from URL (`/fr/`, `/en/`)
 - Tests for AC2: Browser Accept-Language header detection
@@ -51,11 +53,13 @@ AC 1-8 verified   AC 9-12 verified Performance <50ms   Production-ready
 - Playwright fixtures for language/cookie setup
 
 **Why it's atomic**:
+
 - Single responsibility: Core E2E testing scenarios
 - Independent: Tests middleware from Phases 1-2 without modifying it
 - Validates core functionality: 8 of 12 acceptance criteria covered
 
 **Technical Validation**:
+
 ```bash
 # Run E2E tests
 pnpm test:e2e tests/middleware.spec.ts
@@ -66,6 +70,7 @@ pnpm test:e2e tests/middleware.spec.ts
 **Expected Result**: E2E tests verify AC 1-8, all tests pass
 
 **Review Criteria**:
+
 - [ ] Tests cover all core scenarios (AC 1-8)
 - [ ] Test names are descriptive
 - [ ] Playwright best practices followed (explicit waits, fixtures)
@@ -78,12 +83,14 @@ pnpm test:e2e tests/middleware.spec.ts
 ### Commit 2: E2E Tests - Edge Cases & Mobile
 
 **Files**:
+
 - `tests/i18n-edge-cases.spec.ts` (new, ~200 lines)
 
 **Size**: ~200 lines
 **Duration**: 45min-1h (implementation) + 30-45 min (review)
 
 **Content**:
+
 - Tests for AC9: Cookie setting with secure flags
 - Tests for AC10: Mobile deep links and dynamic routes
 - Tests for AC11: Debug logging verification
@@ -93,11 +100,13 @@ pnpm test:e2e tests/middleware.spec.ts
 - Deep link preservation tests
 
 **Why it's atomic**:
+
 - Single responsibility: Edge case and mobile testing
 - Independent: New test file, doesn't modify existing tests
 - Completes AC coverage: 4 remaining acceptance criteria (AC 9-12)
 
 **Technical Validation**:
+
 ```bash
 # Run edge case tests
 pnpm test:e2e tests/i18n-edge-cases.spec.ts
@@ -111,6 +120,7 @@ pnpm test:e2e tests/i18n-edge-cases.spec.ts --project=mobile
 **Expected Result**: All AC 1-12 verified, edge cases handled
 
 **Review Criteria**:
+
 - [ ] Cookie security flags tested (HttpOnly, SameSite, Secure)
 - [ ] Mobile viewports tested (iPhone 13, Pixel 5)
 - [ ] Deep link scenarios covered
@@ -123,6 +133,7 @@ pnpm test:e2e tests/i18n-edge-cases.spec.ts --project=mobile
 ### Commit 3: Debug Logging & Performance Monitoring
 
 **Files**:
+
 - `src/lib/i18n/logger.ts` (new, ~80 lines)
 - `src/middleware.ts` (modified, add debug logging, ~280 lines total)
 - `src/lib/i18n/performance.ts` (new, ~70 lines - performance utils)
@@ -131,6 +142,7 @@ pnpm test:e2e tests/i18n-edge-cases.spec.ts --project=mobile
 **Duration**: 45min-1h (implementation) + 30 min (review)
 
 **Content**:
+
 - Debug logging utility with environment flag control
 - Middleware logging: language source (URL, cookie, header, default)
 - Performance monitoring: `performance.now()` timing
@@ -139,11 +151,13 @@ pnpm test:e2e tests/i18n-edge-cases.spec.ts --project=mobile
 - Log format: structured, production-safe (no PII)
 
 **Why it's atomic**:
+
 - Single responsibility: Observability (logging + performance)
 - Independent: Logging doesn't change middleware logic, only adds instrumentation
 - Testable: Performance benchmarks can be verified independently
 
 **Technical Validation**:
+
 ```bash
 # Run middleware with debug logging
 DEBUG=i18n:* pnpm dev
@@ -157,6 +171,7 @@ pnpm test src/lib/i18n/performance.test.ts
 **Expected Result**: Debug logs working, performance < 50ms verified
 
 **Review Criteria**:
+
 - [ ] Logging is conditional (environment flag)
 - [ ] No PII (Personally Identifiable Information) in logs
 - [ ] Performance timing is accurate
@@ -169,6 +184,7 @@ pnpm test src/lib/i18n/performance.test.ts
 ### Commit 4: Documentation & Middleware Guide
 
 **Files**:
+
 - `docs/i18n/MIDDLEWARE.md` (new, ~500 lines)
 - `README.md` (modified, add i18n section, +50 lines)
 - `i18n/README.md` (modified, link to middleware docs, +20 lines)
@@ -177,6 +193,7 @@ pnpm test src/lib/i18n/performance.test.ts
 **Duration**: 1-1.5h (implementation) + 45min-1h (review)
 
 **Content**:
+
 - Complete middleware architecture guide
 - How language detection works (priority: URL → Cookie → Header → Default)
 - Configuration guide (locales, routing, cookies)
@@ -188,11 +205,13 @@ pnpm test src/lib/i18n/performance.test.ts
 - API reference for middleware functions
 
 **Why it's atomic**:
+
 - Single responsibility: Documentation
 - Independent: Doesn't modify middleware code
 - Deliverable: Production-ready docs for developers
 
 **Technical Validation**:
+
 ```bash
 # Validate documentation links
 npx markdown-link-check docs/i18n/MIDDLEWARE.md
@@ -206,6 +225,7 @@ pnpm tsc --noEmit
 **Expected Result**: Complete, accurate documentation ready for production
 
 **Review Criteria**:
+
 - [ ] All sections complete (architecture, usage, troubleshooting, API)
 - [ ] Code examples are accurate and tested
 - [ ] Troubleshooting covers common scenarios
@@ -232,6 +252,7 @@ pnpm tsc --noEmit
 ### Validation at Each Step
 
 After each commit:
+
 ```bash
 # Run E2E tests (commits 1-2)
 pnpm test:e2e
@@ -255,13 +276,13 @@ All must pass before moving to next commit.
 
 ## 📊 Commit Metrics
 
-| Commit                          | Files | Lines  | Implementation | Review  | Total   |
-| ------------------------------- | ----- | ------ | -------------- | ------- | ------- |
-| 1. E2E Core Tests               | 2     | ~380   | 1-1.5h         | 30-45min| 1.5-2h  |
-| 2. Edge Cases & Mobile          | 1     | ~200   | 45min-1h       | 30-45min| 1-1.5h  |
-| 3. Debug Logging & Performance  | 3     | ~150   | 45min-1h       | 30min   | 1-1.5h  |
-| 4. Documentation                | 3     | ~570   | 1-1.5h         | 45min-1h| 2-2.5h  |
-| **TOTAL**                       | **9** | **~1300** | **3.5-5h**  | **2-3h**| **6-7.5h** |
+| Commit                         | Files | Lines     | Implementation | Review   | Total      |
+| ------------------------------ | ----- | --------- | -------------- | -------- | ---------- |
+| 1. E2E Core Tests              | 2     | ~380      | 1-1.5h         | 30-45min | 1.5-2h     |
+| 2. Edge Cases & Mobile         | 1     | ~200      | 45min-1h       | 30-45min | 1-1.5h     |
+| 3. Debug Logging & Performance | 3     | ~150      | 45min-1h       | 30min    | 1-1.5h     |
+| 4. Documentation               | 3     | ~570      | 1-1.5h         | 45min-1h | 2-2.5h     |
+| **TOTAL**                      | **9** | **~1300** | **3.5-5h**     | **2-3h** | **6-7.5h** |
 
 ---
 
@@ -292,6 +313,7 @@ All must pass before moving to next commit.
 ### Commit Messages
 
 Format:
+
 ```
 type(scope): short description (max 50 chars)
 

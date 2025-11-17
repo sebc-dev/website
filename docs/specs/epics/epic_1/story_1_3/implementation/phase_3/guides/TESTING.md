@@ -9,6 +9,7 @@ Complete E2E testing strategy for Phase 3 (middleware validation with Playwright
 Phase 3 focuses exclusively on **E2E testing** to verify all 12 acceptance criteria with real browser interactions.
 
 **Test Layers**:
+
 1. **E2E Tests (Playwright)**: Full user flows with real browser (primary focus)
 2. **Performance Tests**: Middleware execution timing (<50ms target)
 
@@ -22,6 +23,7 @@ Phase 3 focuses exclusively on **E2E testing** to verify all 12 acceptance crite
 ### Purpose
 
 Verify middleware behavior with real browser interactions, including:
+
 - Language detection (URL, cookie, header)
 - Redirects with correct status codes
 - Cookie persistence
@@ -90,6 +92,7 @@ tests/
 ### What are Fixtures?
 
 Fixtures provide reusable setup/teardown logic for tests. They ensure:
+
 - Consistent test environment
 - Isolated test state
 - Clean setup and cleanup
@@ -123,12 +126,14 @@ export const test = base.extend<I18nFixtures>({
   // Fixture: Page with language cookie
   withCookie: async ({ context }, use) => {
     const helper = async (locale: 'fr' | 'en') => {
-      await context.addCookies([{
-        name: 'NEXT_LOCALE',
-        value: locale,
-        domain: 'localhost',
-        path: '/',
-      }]);
+      await context.addCookies([
+        {
+          name: 'NEXT_LOCALE',
+          value: locale,
+          domain: 'localhost',
+          path: '/',
+        },
+      ]);
       const page = await context.newPage();
       return page;
     };
@@ -138,6 +143,7 @@ export const test = base.extend<I18nFixtures>({
 ```
 
 **Usage**:
+
 ```typescript
 import { test } from './fixtures/i18n';
 
@@ -186,6 +192,7 @@ test.describe('AC1: Language detection from URL', () => {
 ### Best Practices
 
 ✅ **Do**:
+
 - Use descriptive test names (`should redirect to /fr/ when...`)
 - Use explicit waits (`waitForURL`, `waitForSelector`)
 - Group related tests with `test.describe()`
@@ -194,6 +201,7 @@ test.describe('AC1: Language detection from URL', () => {
 - Clean up after tests (Playwright does this automatically)
 
 ❌ **Don't**:
+
 - Use arbitrary timeouts (`page.waitForTimeout(1000)`)
 - Share state between tests
 - Hardcode URLs (use `baseURL` from config)
@@ -225,7 +233,7 @@ test('should set NEXT_LOCALE cookie', async ({ page, context }) => {
 
   // Get cookies
   const cookies = await context.cookies();
-  const localeCookie = cookies.find(c => c.name === 'NEXT_LOCALE');
+  const localeCookie = cookies.find((c) => c.name === 'NEXT_LOCALE');
 
   // Assert cookie
   expect(localeCookie).toBeDefined();
@@ -281,12 +289,14 @@ test('should work on iPhone 13', async ({ browser }) => {
 ```typescript
 test('should handle invalid cookie', async ({ page, context }) => {
   // Set invalid cookie
-  await context.addCookies([{
-    name: 'NEXT_LOCALE',
-    value: 'invalid',
-    domain: 'localhost',
-    path: '/',
-  }]);
+  await context.addCookies([
+    {
+      name: 'NEXT_LOCALE',
+      value: 'invalid',
+      domain: 'localhost',
+      path: '/',
+    },
+  ]);
 
   await page.goto('/');
 
@@ -295,7 +305,7 @@ test('should handle invalid cookie', async ({ page, context }) => {
 
   // Cookie should be reset
   const cookies = await context.cookies();
-  const localeCookie = cookies.find(c => c.name === 'NEXT_LOCALE');
+  const localeCookie = cookies.find((c) => c.name === 'NEXT_LOCALE');
   expect(localeCookie?.value).toBe('fr');
 });
 ```
@@ -311,7 +321,9 @@ test('should handle invalid cookie', async ({ page, context }) => {
 **Cause**: Page takes too long to load or element not found
 
 **Solutions**:
+
 1. Increase timeout in test:
+
    ```typescript
    test('slow test', async ({ page }) => {
      test.setTimeout(60000); // 60 seconds
@@ -320,6 +332,7 @@ test('should handle invalid cookie', async ({ page, context }) => {
    ```
 
 2. Use explicit waits:
+
    ```typescript
    await page.waitForURL('/fr/', { timeout: 10000 });
    ```
@@ -333,7 +346,9 @@ test('should handle invalid cookie', async ({ page, context }) => {
 **Cause**: Race conditions, timing issues
 
 **Solutions**:
+
 1. Use explicit waits (not arbitrary timeouts):
+
    ```typescript
    // Bad
    await page.waitForTimeout(1000);
@@ -344,6 +359,7 @@ test('should handle invalid cookie', async ({ page, context }) => {
    ```
 
 2. Use Playwright's auto-waiting (built-in):
+
    ```typescript
    // Playwright automatically waits for element
    await page.click('button');
@@ -358,6 +374,7 @@ test('should handle invalid cookie', async ({ page, context }) => {
 **Cause**: Dev server not running
 
 **Solutions**:
+
 1. Start dev server: `pnpm dev`
 2. Verify server running: `curl http://localhost:3000`
 3. Check `playwright.config.ts` has `webServer` configured
@@ -403,12 +420,12 @@ pnpm test:e2e
 
 ### Coverage Goals
 
-| Area                  | Target | Current |
-| --------------------- | ------ | ------- |
-| AC Coverage (1-12)    | 100%   | -       |
-| Browser Coverage      | Chrome | -       |
-| Mobile Coverage       | iOS+An | -       |
-| Edge Case Coverage    | >80%   | -       |
+| Area               | Target | Current |
+| ------------------ | ------ | ------- |
+| AC Coverage (1-12) | 100%   | -       |
+| Browser Coverage   | Chrome | -       |
+| Mobile Coverage    | iOS+An | -       |
+| Edge Case Coverage | >80%   | -       |
 
 ---
 
@@ -417,6 +434,7 @@ pnpm test:e2e
 ### GitHub Actions (or other CI)
 
 E2E tests run automatically on:
+
 - [ ] Pull requests
 - [ ] Push to main branch
 - [ ] Nightly builds (optional)
@@ -462,6 +480,7 @@ jobs:
 ### Required Checks
 
 All PRs must:
+
 - [ ] Pass all E2E tests (25+ tests)
 - [ ] No flaky tests (run 3 times successfully)
 - [ ] Pass on Chromium (minimum)

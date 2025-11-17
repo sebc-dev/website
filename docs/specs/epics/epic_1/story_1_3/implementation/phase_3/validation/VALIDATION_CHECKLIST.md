@@ -39,6 +39,7 @@ Complete validation checklist before marking Phase 3 as complete and Story 1.3 a
 - [ ] Test coverage >80% (scenario coverage)
 
 **Validation**:
+
 ```bash
 # Run E2E tests 3 times to check for flakiness
 for i in {1..3}; do echo "Run $i:"; pnpm test:e2e; done
@@ -56,6 +57,7 @@ for i in {1..3}; do echo "Run $i:"; pnpm test:e2e; done
 - [ ] Performance monitoring types correct
 
 **Validation**:
+
 ```bash
 pnpm tsc
 
@@ -75,6 +77,7 @@ pnpm tsc
 - [ ] Error handling is robust
 
 **Validation**:
+
 ```bash
 pnpm lint
 
@@ -107,6 +110,7 @@ pnpm lint
 - [ ] All browsers tested (Chromium minimum, Firefox/WebKit optional)
 
 **Validation**:
+
 ```bash
 # Run on all browsers
 pnpm test:e2e --project=chromium
@@ -139,6 +143,7 @@ pnpm test:e2e --project=mobile
 - [ ] Logs work in development and production
 
 **Validation**:
+
 ```bash
 # Test with debug logging enabled
 DEBUG=i18n:* pnpm dev
@@ -171,6 +176,7 @@ pnpm dev
 - [ ] Performance tests pass
 
 **Validation**:
+
 ```bash
 # Run performance benchmark
 pnpm test src/lib/i18n/performance.test.ts
@@ -219,6 +225,7 @@ pnpm preview
 - [ ] Common errors documented with solutions
 
 **Validation**:
+
 ```bash
 # Validate documentation links
 npx markdown-link-check docs/i18n/MIDDLEWARE.md
@@ -251,6 +258,7 @@ pnpm tsc --noEmit
 - [ ] Public routes excluded
 
 **Integration Tests**:
+
 ```bash
 # Run all tests (unit + integration + E2E)
 pnpm test && pnpm test:e2e
@@ -288,6 +296,7 @@ pnpm test && pnpm test:e2e
 - [ ] Debug logging compatible with Cloudflare
 
 **Validation**:
+
 ```bash
 # Build for Cloudflare
 pnpm build
@@ -366,18 +375,18 @@ npx markdown-link-check docs/i18n/MIDDLEWARE.md
 
 ## 📊 Success Metrics
 
-| Metric                | Target | Actual | Status |
-| --------------------- | ------ | ------ | ------ |
-| Commits               | 4      | -      | ⏳     |
-| AC Coverage (1-12)    | 100%   | -      | ⏳     |
-| E2E Test Count        | 25+    | -      | ⏳     |
-| Test Pass Rate        | 100%   | -      | ⏳     |
-| Flakiness Rate        | 0%     | -      | ⏳     |
-| Performance (P50)     | <30ms  | -      | ⏳     |
-| Performance (P95)     | <50ms  | -      | ⏳     |
-| TypeScript Errors     | 0      | -      | ⏳     |
-| Linter Errors         | 0      | -      | ⏳     |
-| Documentation Lines   | ~570   | -      | ⏳     |
+| Metric              | Target | Actual | Status |
+| ------------------- | ------ | ------ | ------ |
+| Commits             | 4      | -      | ⏳     |
+| AC Coverage (1-12)  | 100%   | -      | ⏳     |
+| E2E Test Count      | 25+    | -      | ⏳     |
+| Test Pass Rate      | 100%   | -      | ⏳     |
+| Flakiness Rate      | 0%     | -      | ⏳     |
+| Performance (P50)   | <30ms  | -      | ⏳     |
+| Performance (P95)   | <50ms  | -      | ⏳     |
+| TypeScript Errors   | 0      | -      | ⏳     |
+| Linter Errors       | 0      | -      | ⏳     |
+| Documentation Lines | ~570   | -      | ⏳     |
 
 ---
 

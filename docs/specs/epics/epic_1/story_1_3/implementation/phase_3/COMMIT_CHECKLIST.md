@@ -11,34 +11,34 @@ This document provides a detailed checklist for each atomic commit of Phase 3.
 
 ### Implementation Tasks
 
-- [ ] Create `tests/middleware.spec.ts` with Playwright test structure
-- [ ] Create `tests/fixtures/i18n.ts` for language/cookie setup fixtures
-- [ ] Test AC1: Language detection from URL (`/fr/`, `/en/`)
-  - [ ] Test: `/fr/articles` → French page loads
-  - [ ] Test: `/en/search` → English page loads
-- [ ] Test AC2: Browser Accept-Language header detection
-  - [ ] Test: Header `fr,en;q=0.9` → `/fr/` redirect
-  - [ ] Test: Header `en,fr;q=0.5` → `/en/` redirect
-  - [ ] Test: Header `de,es` → `/fr/` redirect (default)
-- [ ] Test AC3: Cookie-based language detection
-  - [ ] Test: Cookie `NEXT_LOCALE=en` → `/en/` redirect
-  - [ ] Test: Cookie precedence over header
-- [ ] Test AC4: Unsupported language redirects
-  - [ ] Test: `/de/articles` → redirect to `/fr/articles` (307)
-  - [ ] Test: Path and query params preserved
-- [ ] Test AC5: Root path redirection
-  - [ ] Test: `/` with French cookie → `/fr/` redirect
-  - [ ] Test: `/` with English header → `/en/` redirect
-  - [ ] Test: `/` with no cookie/header → `/fr/` redirect (default)
-- [ ] Test AC6: next-intl context initialization
-  - [ ] Test: Component can use `useTranslations()`
-  - [ ] Test: Language available in Server Components
-- [ ] Test AC7: Public route exclusion
-  - [ ] Test: `/_next/static/...` bypasses middleware
-  - [ ] Test: `/favicon.ico` bypasses middleware
-- [ ] Test AC8: Language validation
-  - [ ] Test: Only `fr` and `en` allowed
-  - [ ] Test: `/it/articles` redirects to `/fr/`
+- [x] Create `tests/middleware.spec.ts` with Playwright test structure
+- [x] Create `tests/fixtures/i18n.ts` for language/cookie setup fixtures
+- [x] Test AC1: Language detection from URL (`/fr/`, `/en/`)
+  - [x] Test: `/fr/articles` → French page loads
+  - [x] Test: `/en/search` → English page loads
+- [x] Test AC2: Browser Accept-Language header detection
+  - [x] Test: Header `fr,en;q=0.9` → `/fr/` redirect
+  - [x] Test: Header `en,fr;q=0.5` → `/en/` redirect
+  - [x] Test: Header `de,es` → `/fr/` redirect (default)
+- [x] Test AC3: Cookie-based language detection
+  - [x] Test: Cookie `NEXT_LOCALE=en` → `/en/` redirect
+  - [x] Test: Cookie precedence over header
+- [x] Test AC4: Unsupported language redirects
+  - [x] Test: `/de/articles` → redirect to `/fr/articles` (307)
+  - [x] Test: Path and query params preserved
+- [x] Test AC5: Root path redirection
+  - [x] Test: `/` with French cookie → `/fr/` redirect
+  - [x] Test: `/` with English header → `/en/` redirect
+  - [x] Test: `/` with no cookie/header → `/fr/` redirect (default)
+- [x] Test AC6: next-intl context initialization
+  - [x] Test: Component can use `useTranslations()`
+  - [x] Test: Language available in Server Components
+- [x] Test AC7: Public route exclusion
+  - [x] Test: `/_next/static/...` bypasses middleware
+  - [x] Test: `/favicon.ico` bypasses middleware
+- [x] Test AC8: Language validation
+  - [x] Test: Only `fr` and `en` allowed
+  - [x] Test: `/it/articles` redirects to `/fr/`
 
 ### Validation
 
