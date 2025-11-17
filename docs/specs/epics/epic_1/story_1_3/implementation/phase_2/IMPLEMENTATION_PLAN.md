@@ -35,6 +35,7 @@ complete      complete      complete       coverage
 ### Commit 1: Implement cookie utility functions
 
 **Files**:
+
 - `src/lib/i18n/cookie.ts` (new, ~100 lines)
 - `src/lib/i18n/cookie.test.ts` (new, ~150 lines)
 
@@ -60,12 +61,14 @@ complete      complete      complete       coverage
 - Fully testable without middleware integration
 
 **Technical Validation**:
+
 ```bash
 pnpm tsc src/lib/i18n/cookie.ts
 pnpm test src/lib/i18n/cookie.test.ts
 ```
 
 **Expected Result**:
+
 - Cookie creation/reading working correctly
 - All secure flags properly set
 - Unit tests passing with >80% coverage
@@ -86,6 +89,7 @@ pnpm test src/lib/i18n/cookie.test.ts
 ### Commit 2: Implement root path redirection logic
 
 **Files**:
+
 - `src/middleware.ts` (modified, add ~60 lines)
 - `src/lib/i18n/redirect.ts` (new, ~80 lines)
 - `src/lib/i18n/redirect.test.ts` (new, ~120 lines)
@@ -112,12 +116,14 @@ pnpm test src/lib/i18n/cookie.test.ts
 - No coupling to next-intl middleware yet
 
 **Technical Validation**:
+
 ```bash
 pnpm tsc src/middleware.ts src/lib/i18n/redirect.ts
 pnpm test src/lib/i18n/redirect.test.ts
 ```
 
 **Expected Result**:
+
 - Root path `/` correctly redirected to `/fr/` or `/en/`
 - Query parameters preserved
 - Redirect status code 307 (Temporary)
@@ -139,6 +145,7 @@ pnpm test src/lib/i18n/redirect.test.ts
 ### Commit 3: Integrate next-intl middleware function
 
 **Files**:
+
 - `src/middleware.ts` (modified, add ~120 lines)
 - `i18n/config.ts` (modified, update routing config)
 
@@ -165,12 +172,14 @@ pnpm test src/lib/i18n/redirect.test.ts
 - Final piece before testing
 
 **Technical Validation**:
+
 ```bash
 pnpm tsc
 pnpm build
 ```
 
 **Expected Result**:
+
 - next-intl middleware properly integrated
 - i18n context available to components
 - Components can use `useTranslations()` without errors
@@ -192,6 +201,7 @@ pnpm build
 ### Commit 4: Add unit + integration tests
 
 **Files**:
+
 - `src/lib/i18n/cookie.test.ts` (extended with integration scenarios)
 - `src/lib/i18n/context.integration.test.ts` (new, ~180 lines)
 - `src/middleware.test.ts` (new, ~200 lines)
@@ -220,12 +230,14 @@ pnpm build
 - Final gate before moving to Phase 3
 
 **Technical Validation**:
+
 ```bash
 pnpm test src/lib/i18n/ src/middleware.test.ts
 pnpm test:coverage
 ```
 
 **Expected Result**:
+
 - All unit tests passing
 - All integration tests passing
 - Code coverage >80%
@@ -271,6 +283,7 @@ pnpm test:coverage
 ### Validation at Each Step
 
 After each commit:
+
 ```bash
 # Type-checking
 pnpm tsc
@@ -291,13 +304,13 @@ All must pass before moving to next commit.
 
 ## 📊 Commit Metrics
 
-| Commit     | Files  | Lines     | Implementation | Review   | Total    |
-| ---------- | ------ | --------- | -------------- | -------- | -------- |
-| 1. Cookie  | 2      | ~250      | 45-60 min      | 30-45 m  | 75-105 m |
-| 2. Redirect| 3      | ~260      | 45-60 min      | 30-45 m  | 75-105 m |
-| 3. Middleware | 2   | ~120      | 60-75 min      | 45-60 m  | 105-135m |
-| 4. Tests   | 3      | ~380      | 60-90 min      | 30-45 m  | 90-135 m |
-| **TOTAL**  | **10** | **~1010** | **210-285 min**| **135-195m** | **345-480m** |
+| Commit        | Files  | Lines     | Implementation  | Review       | Total        |
+| ------------- | ------ | --------- | --------------- | ------------ | ------------ |
+| 1. Cookie     | 2      | ~250      | 45-60 min       | 30-45 m      | 75-105 m     |
+| 2. Redirect   | 3      | ~260      | 45-60 min       | 30-45 m      | 75-105 m     |
+| 3. Middleware | 2      | ~120      | 60-75 min       | 45-60 m      | 105-135m     |
+| 4. Tests      | 3      | ~380      | 60-90 min       | 30-45 m      | 90-135 m     |
+| **TOTAL**     | **10** | **~1010** | **210-285 min** | **135-195m** | **345-480m** |
 
 **Total Time Estimate**: 5.75-8 hours (implementation + review + validation)
 
@@ -330,6 +343,7 @@ All must pass before moving to next commit.
 ### Commit Messages
 
 Format:
+
 ```
 type(scope): short description (max 50 chars)
 
@@ -343,6 +357,7 @@ Part of Phase 2 - Commit X/4
 Types: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`
 
 Examples:
+
 ```
 ✨ feat(i18n): implement cookie utility functions with secure flags
 

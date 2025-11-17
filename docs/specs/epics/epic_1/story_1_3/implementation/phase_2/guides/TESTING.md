@@ -83,9 +83,9 @@ describe('Cookie Utilities', () => {
         cookies: {
           get: (name: string) => ({
             name,
-            value: 'fr'
-          })
-        }
+            value: 'fr',
+          }),
+        },
       } as unknown as NextRequest;
 
       const result = getCookie(mockRequest, 'NEXT_LOCALE');
@@ -95,8 +95,8 @@ describe('Cookie Utilities', () => {
     it('should return undefined when cookie missing', () => {
       const mockRequest = {
         cookies: {
-          get: (name: string) => undefined
-        }
+          get: (name: string) => undefined,
+        },
       } as unknown as NextRequest;
 
       const result = getCookie(mockRequest, 'NEXT_LOCALE');
@@ -157,8 +157,10 @@ describe('Root Path Redirect', () => {
     const mockRequest = {
       nextUrl: {
         pathname: '/',
-        clone: function() { return this; }
-      }
+        clone: function () {
+          return this;
+        },
+      },
     } as unknown as NextRequest;
 
     const response = handleRootPathRedirect(mockRequest, 'fr');
@@ -173,8 +175,10 @@ describe('Root Path Redirect', () => {
       nextUrl: {
         pathname: '/',
         search: '?foo=bar',
-        clone: function() { return this; }
-      }
+        clone: function () {
+          return this;
+        },
+      },
     } as unknown as NextRequest;
 
     const response = handleRootPathRedirect(mockRequest, 'fr');
@@ -186,8 +190,10 @@ describe('Root Path Redirect', () => {
     const mockRequest = {
       nextUrl: {
         pathname: '/fr/about',
-        clone: function() { return this; }
-      }
+        clone: function () {
+          return this;
+        },
+      },
     } as unknown as NextRequest;
 
     const response = handleRootPathRedirect(mockRequest, 'fr');
@@ -233,8 +239,8 @@ describe('Middleware Integration: Cookie → Context Flow', () => {
     // Create request for root path
     const request = new NextRequest(new URL('http://localhost:3000/'), {
       headers: {
-        'accept-language': 'en-US,en;q=0.9'
-      }
+        'accept-language': 'en-US,en;q=0.9',
+      },
     });
 
     // Mock next-intl middleware
@@ -243,7 +249,7 @@ describe('Middleware Integration: Cookie → Context Flow', () => {
         const response = NextResponse.next();
         response.headers.set('x-intl-context', 'initialized');
         return response;
-      })
+      }),
     }));
 
     // Call middleware
@@ -257,7 +263,7 @@ describe('Middleware Integration: Cookie → Context Flow', () => {
 
   it('should initialize context for language path without redirect', async () => {
     const request = new NextRequest(new URL('http://localhost:3000/fr/'), {
-      headers: {}
+      headers: {},
     });
 
     // Mock next-intl middleware
@@ -266,7 +272,7 @@ describe('Middleware Integration: Cookie → Context Flow', () => {
         const response = NextResponse.next();
         response.headers.set('x-intl-context', 'initialized');
         return response;
-      })
+      }),
     }));
 
     const response = await middleware(request);
@@ -280,8 +286,8 @@ describe('Middleware Integration: Cookie → Context Flow', () => {
   it('should set NEXT_LOCALE cookie with detected language', async () => {
     const request = new NextRequest(new URL('http://localhost:3000/'), {
       headers: {
-        'accept-language': 'en-US,en;q=0.9'
-      }
+        'accept-language': 'en-US,en;q=0.9',
+      },
     });
 
     const response = await middleware(request);
@@ -346,12 +352,12 @@ pnpm test:coverage
 
 ### Coverage Goals by File
 
-| File                        | Target | Description                  |
-| --------------------------- | ------ | ----------------------------- |
-| `src/lib/i18n/cookie.ts`    | >80%   | Cookie utilities              |
-| `src/lib/i18n/redirect.ts`  | >80%   | Redirect logic                |
-| `src/middleware.ts`         | >80%   | Middleware integration        |
-| **Overall Phase 2**         | >80%   | All new/modified code         |
+| File                       | Target | Description            |
+| -------------------------- | ------ | ---------------------- |
+| `src/lib/i18n/cookie.ts`   | >80%   | Cookie utilities       |
+| `src/lib/i18n/redirect.ts` | >80%   | Redirect logic         |
+| `src/middleware.ts`        | >80%   | Middleware integration |
+| **Overall Phase 2**        | >80%   | All new/modified code  |
 
 ### Sample Coverage Report
 
@@ -375,11 +381,13 @@ src/middleware.ts         |   78.4  |   75.0   |   80.0  |   78.4
 **Solutions**:
 
 1. Ensure environment variables set:
+
    ```bash
    NEXT_PUBLIC_DEFAULT_LOCALE=fr NEXT_PUBLIC_SUPPORTED_LOCALES=fr,en pnpm test
    ```
 
 2. Clear cache and reinstall:
+
    ```bash
    rm -rf node_modules .next
    pnpm install
@@ -396,13 +404,19 @@ src/middleware.ts         |   78.4  |   75.0   |   80.0  |   78.4
 **Solutions**:
 
 1. Increase timeouts:
+
    ```typescript
-   it('should work', async () => {
-     // test code
-   }, { timeout: 10000 }); // 10 second timeout
+   it(
+     'should work',
+     async () => {
+       // test code
+     },
+     { timeout: 10000 },
+   ); // 10 second timeout
    ```
 
 2. Remove timing dependencies:
+
    ```typescript
    // Bad: relies on timing
    it('should update', () => {
@@ -419,6 +433,7 @@ src/middleware.ts         |   78.4  |   75.0   |   80.0  |   78.4
    ```
 
 3. Mock time if using timers:
+
    ```typescript
    import { vi } from 'vitest';
 
@@ -487,14 +502,14 @@ Good test names:
 
 ```typescript
 // Good: describes behavior
-it('should redirect root path to detected language', () => { });
-it('should preserve query parameters during redirect', () => { });
-it('should set secure flags on production cookies', () => { });
+it('should redirect root path to detected language', () => {});
+it('should preserve query parameters during redirect', () => {});
+it('should set secure flags on production cookies', () => {});
 
 // Bad: too vague
-it('should work', () => { });
-it('tests redirect logic', () => { });
-it('tests cookies', () => { });
+it('should work', () => {});
+it('tests redirect logic', () => {});
+it('tests cookies', () => {});
 ```
 
 ### Test Organization
@@ -502,13 +517,13 @@ it('tests cookies', () => { });
 ```typescript
 describe('Cookie Utilities', () => {
   describe('getCookie', () => {
-    it('should get value when present', () => { });
-    it('should return undefined when missing', () => { });
+    it('should get value when present', () => {});
+    it('should return undefined when missing', () => {});
   });
 
   describe('setCookie', () => {
-    it('should set secure flags', () => { });
-    it('should include Secure in production', () => { });
+    it('should set secure flags', () => {});
+    it('should include Secure in production', () => {});
   });
 });
 ```

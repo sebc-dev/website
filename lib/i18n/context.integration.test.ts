@@ -94,7 +94,7 @@ describe('Integration Flow Validation', () => {
 
   it('should have consistent locale types across modules', async () => {
     const configModule = await import('@/i18n/config');
-    
+
     // Verify locales are consistent
     expect(configModule.locales).toEqual(['fr', 'en']);
     expect(configModule.defaultLocale).toBe('fr');
@@ -107,9 +107,9 @@ describe('Integration Flow Validation', () => {
 describe('Secure Cookie Flags', () => {
   it('should create cookies with all required security flags', async () => {
     const { setCookie } = await import('./cookie');
-    
+
     const cookie = setCookie('NEXT_LOCALE', 'fr');
-    
+
     // Verify all security flags are present
     expect(cookie).toContain('HttpOnly');
     expect(cookie).toContain('SameSite=Lax');
@@ -119,7 +119,7 @@ describe('Secure Cookie Flags', () => {
 
   it('should validate locales before accepting cookie values', async () => {
     const { validateLocale } = await import('./cookie');
-    
+
     expect(validateLocale('fr')).toBe(true);
     expect(validateLocale('en')).toBe(true);
     expect(validateLocale('de')).toBe(false);
@@ -133,7 +133,7 @@ describe('Secure Cookie Flags', () => {
 describe('URL Redirection Behavior', () => {
   it('should correctly identify root paths for redirection', async () => {
     const { isRootPath } = await import('./redirect');
-    
+
     expect(isRootPath('/')).toBe(true);
     expect(isRootPath('//')).toBe(true);
     expect(isRootPath('/fr/')).toBe(false);
@@ -147,8 +147,10 @@ describe('URL Redirection Behavior', () => {
  */
 describe('Phase 2 Implementation Completeness', () => {
   it('should have cookie management system ready', async () => {
-    const { getCookie, setCookie, deleteCookie, validateLocale } = await import('./cookie');
-    
+    const { getCookie, setCookie, deleteCookie, validateLocale } = await import(
+      './cookie'
+    );
+
     expect(typeof getCookie).toBe('function');
     expect(typeof setCookie).toBe('function');
     expect(typeof deleteCookie).toBe('function');
@@ -157,14 +159,16 @@ describe('Phase 2 Implementation Completeness', () => {
 
   it('should have redirect system ready', async () => {
     const { handleRootPathRedirect, isRootPath } = await import('./redirect');
-    
+
     expect(typeof handleRootPathRedirect).toBe('function');
     expect(typeof isRootPath).toBe('function');
   });
 
   it('should have routing configuration ready', async () => {
-    const { routingConfig, locales, defaultLocale } = await import('@/i18n/config');
-    
+    const { routingConfig, locales, defaultLocale } = await import(
+      '@/i18n/config'
+    );
+
     expect(routingConfig.localePrefix).toBe('always');
     expect(locales.length).toBe(2);
     expect(defaultLocale).toBe('fr');

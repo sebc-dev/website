@@ -62,7 +62,10 @@ describe('handleRootPathRedirect', () => {
   /**
    * Helper to create a NextRequest mock
    */
-  function createRequest(pathname: string, searchParams?: Record<string, string>): NextRequest {
+  function createRequest(
+    pathname: string,
+    searchParams?: Record<string, string>,
+  ): NextRequest {
     const url = new URL(`http://localhost${pathname}`);
     if (searchParams) {
       Object.entries(searchParams).forEach(([key, value]) => {
@@ -129,7 +132,7 @@ describe('handleRootPathRedirect', () => {
       const request = createRequest('/', {
         utm_source: 'google',
         utm_medium: 'cpc',
-        utm_campaign: 'test'
+        utm_campaign: 'test',
       });
       const response = handleRootPathRedirect(request, 'en');
 
@@ -145,7 +148,7 @@ describe('handleRootPathRedirect', () => {
     it('should preserve query parameters with special characters', () => {
       const request = createRequest('/', {
         search: 'hello world',
-        category: 'tech&science'
+        category: 'tech&science',
       });
       const response = handleRootPathRedirect(request, 'fr');
 

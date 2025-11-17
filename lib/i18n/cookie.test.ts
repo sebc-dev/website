@@ -101,7 +101,9 @@ describe('Cookie Utilities', () => {
     });
 
     it('should respect custom sameSite option', () => {
-      const resultStrict = setCookie('NEXT_LOCALE', 'fr', { sameSite: 'strict' });
+      const resultStrict = setCookie('NEXT_LOCALE', 'fr', {
+        sameSite: 'strict',
+      });
       expect(resultStrict).toContain('SameSite=Strict');
 
       const resultNone = setCookie('NEXT_LOCALE', 'en', { sameSite: 'none' });

@@ -498,13 +498,13 @@ Use this template when providing review feedback:
 
 ## ⏱️ Review Time Estimate
 
-| Commit | Time  | Focus                      |
-| ------ | ----- | -------------------------- |
-| 1      | 30m   | Cookie utilities + tests   |
-| 2      | 30m   | Redirect logic + tests     |
-| 3      | 45m   | next-intl integration      |
-| 4      | 30m   | Test coverage + quality    |
-| **Total** | **2.5h** | Full Phase 2 review    |
+| Commit    | Time     | Focus                    |
+| --------- | -------- | ------------------------ |
+| 1         | 30m      | Cookie utilities + tests |
+| 2         | 30m      | Redirect logic + tests   |
+| 3         | 45m      | next-intl integration    |
+| 4         | 30m      | Test coverage + quality  |
+| **Total** | **2.5h** | Full Phase 2 review      |
 
 ---
 
