@@ -507,7 +507,8 @@ export function middleware(request: NextRequest): NextResponse {
  */
 export const config = {
   matcher: [
-    // Match all routes except those starting with excluded prefixes or ending with static file extensions
-    '/((?!_next|api|public|images|.*\\.(png|svg|jpg|jpeg|gif|ico|webp|avif|ttf|otf|woff|woff2|js|css|json|xml|txt|pdf|zip)$|favicon\\.ico).*)',
+    // Match all pathnames except those starting with specific prefixes or containing a dot (static files)
+    // Pattern from next-intl documentation: https://next-intl.dev/docs/routing/middleware
+    '/((?!api|_next|_vercel|.*\\..*).*)',
   ],
 };
