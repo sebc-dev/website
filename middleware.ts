@@ -102,13 +102,15 @@ export function detectLocaleFromURL(pathname: string): Locale | undefined {
  * 1. Split by comma to get individual language entries
  * 2. For each entry, extract language code and quality value (q=X.X)
  * 3. Default quality value is 1.0 if not specified
- * 4. For language variants (e.g., fr-FR), extract just the language code (fr)
- * 5. Sort by quality value (descending)
- * 6. Return array of unique language codes in priority order
+ * 4. Skip languages with q=0 (explicitly refused by client)
+ * 5. For language variants (e.g., fr-FR), extract just the language code (fr)
+ * 6. Sort by quality value (descending)
+ * 7. Return array of unique language codes in priority order
  *
  * Edge cases handled:
  * - Language variants: `fr-FR` → `fr`, `en-US` → `en`
  * - Missing quality values: treated as q=1.0 (highest priority)
+ * - Quality value of 0: language is ignored (explicitly refused)
  * - Multiple quality values: properly sorted in order
  * - Malformed quality values: skipped gracefully
  * - Empty header: returns empty array
@@ -128,6 +130,10 @@ export function detectLocaleFromURL(pathname: string): Locale | undefined {
  * @example
  * parseAcceptLanguage('fr-FR,fr;q=0.9,en-US;q=0.8')
  * // Returns: ['fr', 'en'] (language variants extracted)
+ *
+ * @example
+ * parseAcceptLanguage('fr,en;q=0')
+ * // Returns: ['fr'] (en with q=0 is ignored)
  */
 export function parseAcceptLanguage(headerValue: string): string[] {
   if (!headerValue || typeof headerValue !== 'string') {
@@ -165,6 +171,9 @@ export function parseAcceptLanguage(headerValue: string): string[] {
         }
       }
     }
+
+    // Skip languages with quality=0 (explicitly refused)
+    if (quality === 0) continue;
 
     parsedEntries.push({ lang: languageCode, quality });
   }
