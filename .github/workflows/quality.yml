@@ -131,12 +131,8 @@ jobs:
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps
 
-      - name: Create .dev.vars for local development
-        run: |
-          cat > .dev.vars << 'EOF'
-          # Load .env.development* files when running `wrangler dev`
-          NEXTJS_ENV=development
-          EOF
+      - name: Build Next.js for production
+        run: pnpm build
 
       - name: Run E2E tests
         run: pnpm test:e2e
