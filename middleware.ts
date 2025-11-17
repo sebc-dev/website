@@ -418,8 +418,6 @@ const intlMiddleware = createMiddleware({
  * @see matcher configuration below for excluded routes
  */
 export function middleware(request: NextRequest): NextResponse {
-  const { pathname } = request.nextUrl;
-
   // Step 1: Detect the appropriate locale from all sources
   // This uses our custom detection hierarchy: URL → cookie → header → default
   const detectedLocale = detectLocale(request);
