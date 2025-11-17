@@ -138,7 +138,7 @@ jobs:
       #   - pnpm dev: Timeout after 120s
       #   - pnpm start: Timeout after 60s (same wrangler dev initialization issue)
       # TODO: Re-enable once OpenNext/Cloudflare startup time is optimized
-      # Tracking: Tests work fine locally, issue is CI-specific
+      # Tracking: https://github.com/sebc-dev/website/issues/35
       - name: E2E Tests (Temporarily Disabled)
         run: |
           echo "⚠️ E2E tests temporarily disabled due to CI timeout issues"
