@@ -5,6 +5,7 @@ This directory contains Architecture Decision Records (ADRs) for significant tec
 ## What is an ADR?
 
 An ADR documents an important architectural decision along with its context and consequences. It helps teams:
+
 - Understand why decisions were made
 - Track evolution of the architecture
 - Onboard new team members
@@ -13,6 +14,7 @@ An ADR documents an important architectural decision along with its context and 
 ## Format
 
 Each ADR follows this structure:
+
 - **Status**: Proposed, Accepted, Deprecated, Superseded
 - **Date**: When the decision was made
 - **Context**: What led to this decision

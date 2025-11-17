@@ -9,12 +9,14 @@
 E2E tests are currently disabled in CI due to server initialization timeout when using the OpenNext Cloudflare adapter with `wrangler dev`. The server takes >60 seconds to initialize in GitHub Actions, causing tests to timeout.
 
 ### Current Situation
+
 - ❌ E2E tests disabled in `.github/workflows/quality.yml`
 - ✅ Tests work perfectly in local development (~5-10s startup)
 - ✅ All other CI checks pass (unit tests, lint, build)
 - ⚠️ Risk of regression without E2E tests in CI
 
 ### Problem Statement
+
 How can we run E2E tests in CI without being blocked by slow `wrangler dev` initialization?
 
 ## Decision
@@ -22,6 +24,7 @@ How can we run E2E tests in CI without being blocked by slow `wrangler dev` init
 We will use **Cloudflare preview deployments** for E2E testing instead of running a local development server in CI.
 
 ### Approach
+
 1. Deploy application to Cloudflare Workers (preview environment)
 2. Wait for deployment to be ready
 3. Run Playwright tests against the preview URL
@@ -32,16 +35,19 @@ We will use **Cloudflare preview deployments** for E2E testing instead of runnin
 ### Why Preview Deployments?
 
 **Eliminates Root Cause**
+
 - No need to run `wrangler dev` in CI
 - Tests run against actual Cloudflare Workers environment
 - No startup timeout issues
 
 **Better Testing Environment**
+
 - Tests the real OpenNext + Cloudflare stack
 - More representative of production
 - Catches deployment-specific issues
 
 **Aligns with Industry Best Practices**
+
 - Vercel, Netlify, and other edge platforms use this pattern
 - Preview environments are a standard CI/CD practice
 - Well-documented and battle-tested approach
@@ -49,32 +55,38 @@ We will use **Cloudflare preview deployments** for E2E testing instead of runnin
 ### Alternatives Considered
 
 #### ❌ Option 1: Increase Timeout
+
 **Pros**: Simple, quick fix
 **Cons**: Doesn't solve root cause, wastes CI minutes, may still fail intermittently
 
 #### ❌ Option 2: Optimize wrangler dev
+
 **Pros**: Would fix the issue at the source
 **Cons**: Complex, may not be solvable, maintenance burden, CI-specific problem
 
 #### ✅ Option 3: Preview Deployments (Selected)
+
 **Pros**: Permanent solution, better environment, industry standard
 **Cons**: Initial setup time (~3-4h), uses Cloudflare deployment quota
 
 ## Implementation Plan
 
 ### Phase 1: Setup Preview Deployments (1-2h)
+
 - Create `.github/workflows/e2e.yml` workflow
 - Configure Wrangler deploy with `--env preview`
 - Set up environment-specific configuration
 - Test deployment process
 
 ### Phase 2: Configure E2E Tests (1h)
+
 - Update Playwright config to use dynamic base URL
 - Add wait-for-deployment script
 - Configure test retries for network issues
 - Update test scripts
 
 ### Phase 3: Integration & Cleanup (30min)
+
 - Add cleanup step to remove preview deployments
 - Update PR template to mention E2E tests
 - Document new workflow in README
@@ -83,6 +95,7 @@ We will use **Cloudflare preview deployments** for E2E testing instead of runnin
 ## Consequences
 
 ### Positive
+
 - ✅ E2E tests will run reliably in CI
 - ✅ Tests will be more representative of production
 - ✅ No more timeout issues
@@ -90,12 +103,14 @@ We will use **Cloudflare preview deployments** for E2E testing instead of runnin
 - ✅ Follows industry best practices
 
 ### Negative
+
 - ⚠️ Requires initial setup time (3-4 hours)
 - ⚠️ Uses Cloudflare deployment quota (monitor usage)
 - ⚠️ Slightly longer test execution time (includes deployment)
 - ⚠️ Need to ensure cleanup to avoid orphaned deployments
 
 ### Neutral
+
 - 🔄 Preview deployments add complexity but improve reliability
 - 🔄 CI workflow split into quality.yml (fast checks) and e2e.yml (preview tests)
 
