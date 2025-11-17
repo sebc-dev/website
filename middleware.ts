@@ -26,7 +26,7 @@ import createMiddleware from 'next-intl/middleware';
 
 import type { Locale } from '@/i18n';
 import { defaultLocale, locales, routingConfig } from '@/i18n/config';
-import { setCookie, validateLocale } from '@/lib/i18n/cookie';
+import { validateLocale } from '@/lib/i18n/cookie';
 import { handleRootPathRedirect } from '@/lib/i18n/redirect';
 
 /**
@@ -390,6 +390,19 @@ const intlMiddleware = createMiddleware({
 });
 
 /**
+ * Cookie options for NEXT_LOCALE cookie
+ *
+ * Consistent configuration used across all locale cookie operations.
+ */
+const LOCALE_COOKIE_OPTIONS = {
+  maxAge: 31536000, // 1 year in seconds
+  sameSite: 'lax' as const,
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  path: '/',
+};
+
+/**
  * Middleware function entry point
  *
  * This function wraps next-intl middleware with custom logic for:
@@ -436,13 +449,12 @@ export function middleware(request: NextRequest): NextResponse {
   // This must happen BEFORE next-intl middleware to avoid conflicts
   const rootPathRedirect = handleRootPathRedirect(request, detectedLocale);
   if (rootPathRedirect) {
-    // Set cookie in the redirect response
-    const cookieHeader = setCookie('NEXT_LOCALE', detectedLocale, {
-      maxAge: 31536000, // 1 year
-      sameSite: 'lax',
-      httpOnly: true,
-    });
-    rootPathRedirect.headers.append('Set-Cookie', cookieHeader);
+    // Set cookie in the redirect response using Next.js cookies API
+    rootPathRedirect.cookies.set(
+      'NEXT_LOCALE',
+      detectedLocale,
+      LOCALE_COOKIE_OPTIONS,
+    );
     return rootPathRedirect;
   }
 
@@ -454,14 +466,7 @@ export function middleware(request: NextRequest): NextResponse {
   // Step 4: Set NEXT_LOCALE cookie in response headers
   // This persists the user's language preference across sessions
   // Use the already-resolved locale from detection hierarchy
-  const cookieHeader = setCookie('NEXT_LOCALE', detectedLocale, {
-    maxAge: 31536000, // 1 year
-    sameSite: 'lax',
-    httpOnly: true,
-  });
-
-  // Add the cookie to the response headers
-  response.headers.append('Set-Cookie', cookieHeader);
+  response.cookies.set('NEXT_LOCALE', detectedLocale, LOCALE_COOKIE_OPTIONS);
 
   // Step 5: Return response with i18n context initialized
   // Components can now use useTranslations() to access messages
