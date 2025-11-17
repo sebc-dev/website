@@ -50,7 +50,7 @@ describe('isRootPath', () => {
     expect(isRootPath('/fr/articles')).toBe(false);
   });
 
-  it('should return false for empty string', () => {
+  it('should return true for empty string', () => {
     expect(isRootPath('')).toBe(true); // Empty string is considered root after normalization
   });
 });
