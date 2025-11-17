@@ -1,8 +1,9 @@
 # Phase 1 — Language Detection Foundation
 
-**Status**: 🚧 NOT STARTED
-**Started**: TBD
-**Target Completion**: 1.5–2 days
+**Status**: ✅ COMPLETED
+**Started**: 2025-11-16
+**Completed**: 2025-11-17
+**Actual Duration**: ~2 days
 **Epic**: Epic 1 — Internationalisation (i18n)
 **Story**: Story 1.3 — Create Next.js Middleware with next-intl
 **Phase Progress**: 1/3
