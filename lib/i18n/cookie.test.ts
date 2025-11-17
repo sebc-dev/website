@@ -12,7 +12,7 @@
  */
 
 import { NextRequest } from 'next/server';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
   type CookieOptions,
@@ -27,15 +27,9 @@ describe('Cookie Utilities', () => {
   function createRequestWithCookie(name: string, value: string): NextRequest {
     const url = new URL('http://localhost:3000/');
     const request = new NextRequest(url);
-    // Set cookie directly on the request object
-    Object.defineProperty(request.cookies, 'get', {
-      value: (cookieName: string) => {
-        if (cookieName === name) {
-          return { value };
-        }
-        return undefined;
-      },
-    });
+    // Use the cookies API to set the cookie value
+    // This avoids Object.defineProperty and uses NextRequest's natural cookie handling
+    request.cookies.set(name, value);
     return request;
   }
 
@@ -67,6 +61,11 @@ describe('Cookie Utilities', () => {
   });
 
   describe('setCookie', () => {
+    // Cleanup environment stubs after each test to avoid pollution
+    afterEach(() => {
+      vi.unstubAllEnvs();
+    });
+
     it('should create a Set-Cookie header with default options', () => {
       const result = setCookie('NEXT_LOCALE', 'fr');
       expect(result).toContain('NEXT_LOCALE=fr');
@@ -81,8 +80,6 @@ describe('Cookie Utilities', () => {
 
       const result = setCookie('NEXT_LOCALE', 'en');
       expect(result).toContain('Secure');
-
-      vi.unstubAllEnvs();
     });
 
     it('should not include Secure flag in development', () => {
@@ -90,8 +87,6 @@ describe('Cookie Utilities', () => {
 
       const result = setCookie('NEXT_LOCALE', 'fr');
       expect(result).not.toContain('Secure');
-
-      vi.unstubAllEnvs();
     });
 
     it('should respect custom maxAge option', () => {
@@ -108,6 +103,53 @@ describe('Cookie Utilities', () => {
 
       const resultNone = setCookie('NEXT_LOCALE', 'en', { sameSite: 'none' });
       expect(resultNone).toContain('SameSite=None');
+    });
+
+    it('should force Secure flag when SameSite=None', () => {
+      // SameSite=None requires Secure per modern browser requirements
+      const result = setCookie('NEXT_LOCALE', 'en', {
+        sameSite: 'none',
+        secure: false, // Explicitly set to false, should be overridden
+      });
+
+      expect(result).toContain('SameSite=None');
+      expect(result).toContain('Secure'); // Must be present even though secure: false
+    });
+
+    it('should force Secure flag when SameSite=None in development', () => {
+      vi.stubEnv('NODE_ENV', 'development');
+
+      // Even in development where Secure is normally false, SameSite=None forces it
+      const result = setCookie('NEXT_LOCALE', 'fr', { sameSite: 'none' });
+
+      expect(result).toContain('SameSite=None');
+      expect(result).toContain('Secure'); // Must be present even in development
+    });
+
+    it('should handle case-insensitive SameSite=None and force Secure', () => {
+      // Test that normalization works for different cases
+      const resultLower = setCookie('NEXT_LOCALE', 'en', {
+        sameSite: 'none',
+        secure: false,
+      });
+      const resultUpper = setCookie('NEXT_LOCALE', 'fr', {
+        sameSite: 'NONE' as 'none', // Type cast for test
+        secure: false,
+      });
+      const resultMixed = setCookie('NEXT_LOCALE', 'en', {
+        sameSite: 'None' as 'none', // Type cast for test
+        secure: false,
+      });
+
+      // All should have properly formatted SameSite=None with capital N
+      expect(resultLower).toContain('SameSite=None');
+      expect(resultUpper).toContain('SameSite=None');
+      expect(resultMixed).toContain('SameSite=None');
+
+      // All must have Secure flag
+      expect(resultLower).toContain('Secure');
+      expect(resultUpper).toContain('Secure');
+      expect(resultMixed).toContain('Secure');
     });
 
     it('should respect custom secure option', () => {
@@ -167,6 +209,11 @@ describe('Cookie Utilities', () => {
   });
 
   describe('deleteCookie', () => {
+    // Cleanup environment stubs after each test to avoid pollution
+    afterEach(() => {
+      vi.unstubAllEnvs();
+    });
+
     it('should create a Set-Cookie header with Max-Age=0', () => {
       const result = deleteCookie('NEXT_LOCALE');
       expect(result).toContain('NEXT_LOCALE=');
@@ -185,8 +232,6 @@ describe('Cookie Utilities', () => {
 
       const result = deleteCookie('NEXT_LOCALE');
       expect(result).toContain('Secure');
-
-      vi.unstubAllEnvs();
     });
 
     it('should work for any cookie name', () => {
