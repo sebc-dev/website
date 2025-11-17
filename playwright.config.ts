@@ -74,15 +74,15 @@ export default defineConfig({
   /* Run your local dev server before starting the tests */
   webServer: {
     /**
-     * In CI: use pnpm dev directly (warnings are acceptable in test environment)
+     * In CI: use production build (faster and more stable than dev server)
      * Locally: use filtered dev command to suppress Durable Objects warnings
      * These warnings are expected in local development as Durable Objects
      * are not supported by wrangler dev (they work in production)
      * See: https://opennext.js.org/cloudflare/known-issues
      */
-    command: process.env.CI ? 'pnpm dev' : 'bash scripts/dev-quiet.sh',
+    command: process.env.CI ? 'pnpm start' : 'bash scripts/dev-quiet.sh',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
-    timeout: 120000, // 2 minutes to start in CI
+    timeout: 60000, // 1 minute (production server starts faster)
   },
 });
