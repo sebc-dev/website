@@ -349,7 +349,7 @@ describe('i18n logger', () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       delete (globalThis as any).process;
 
-      // Re-import logger to get fresh instance with edge detection
+      // Use existing logger instance to verify runtime-safe behavior
       // Note: This is a limitation - we can't fully test dynamic re-evaluation
       // but we verify the code doesn't throw
       expect(() => {
