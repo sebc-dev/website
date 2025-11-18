@@ -32,9 +32,9 @@ export enum LogLevel {
  * Logger configuration
  */
 interface LoggerConfig {
-  enabled: boolean;
-  level: LogLevel;
   prefix: string;
+  enabled?: boolean;
+  level?: LogLevel;
 }
 
 /**
@@ -48,24 +48,22 @@ interface LogEntry {
 }
 
 /**
- * Determines if logging is enabled based on environment variables
+ * Determines if logging is enabled based on configuration
  *
- * Logging is always enabled, but the log level varies by environment:
- * - Development or DEBUG=i18n:*: Full logging (DEBUG/INFO level)
- * - Production or edge runtime: Error-only logging (ERROR level)
+ * Checks the config.enabled flag with a fallback to true.
+ * When enabled, the log level controls what gets output (see getLogLevel()).
  *
- * The log level filtering happens in getLogLevel(), not here.
- *
- * @returns true (logging is always enabled)
+ * @returns true if logging is enabled
  */
 function isLoggingEnabled(): boolean {
-  // Logging is always enabled; log level controls what gets output
-  return true;
+  // Read from config with fallback to true (enabled by default)
+  return activeConfig.enabled ?? true;
 }
 
 /**
- * Gets the minimum log level based on environment
+ * Gets the minimum log level based on configuration and environment
  *
+ * Prefers config.level if set, otherwise uses environment-based logic:
  * - Production: ERROR only (minimal logging)
  * - Development with DEBUG=i18n:*: DEBUG (verbose)
  * - Development without DEBUG: INFO (moderate)
@@ -73,6 +71,12 @@ function isLoggingEnabled(): boolean {
  * @returns The minimum log level
  */
 function getLogLevel(): LogLevel {
+  // Prefer explicit config level if set
+  if (activeConfig.level !== undefined) {
+    return activeConfig.level;
+  }
+
+  // Fall back to environment-based logic
   // Detect edge runtime where process/process.env may be unavailable
   const isEdge = typeof process === 'undefined' || !process.env;
 
@@ -98,15 +102,20 @@ function getLogLevel(): LogLevel {
  * Default logger configuration
  */
 const defaultLoggerConfig: LoggerConfig = {
-  enabled: true,
-  level: LogLevel.DEBUG,
   prefix: 'i18n',
+  enabled: true,
+  level: undefined, // Let environment-based logic determine level by default
 };
+
+/**
+ * Active logger configuration
+ */
+const activeConfig: LoggerConfig = defaultLoggerConfig;
 
 /**
  * Logger configuration prefix
  */
-const LOG_PREFIX = defaultLoggerConfig.prefix;
+const LOG_PREFIX = activeConfig.prefix;
 
 /**
  * Log level priority for filtering

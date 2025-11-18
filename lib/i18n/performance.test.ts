@@ -189,13 +189,10 @@ describe('i18n performance monitoring', () => {
       expect(PERFORMANCE_TARGETS.COOKIE_PARSING).toBe(5);
     });
 
-    it('should be immutable (type-level)', () => {
+    it('should be immutable (runtime-frozen)', () => {
       // PERFORMANCE_TARGETS is frozen via Object.freeze() in implementation
-      // TypeScript enforces immutability at compile-time via 'as const'
-
-      // TypeScript prevents modification at compile-time:
-      // @ts-expect-error - TypeScript prevents modification
-      // PERFORMANCE_TARGETS.MIDDLEWARE_EXECUTION = 100;
+      // Verify the object is truly frozen at runtime
+      expect(Object.isFrozen(PERFORMANCE_TARGETS)).toBe(true);
 
       // Verify values are correct
       expect(PERFORMANCE_TARGETS.MIDDLEWARE_EXECUTION).toBe(50);
