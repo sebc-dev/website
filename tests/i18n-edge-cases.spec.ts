@@ -104,17 +104,38 @@ test.describe('i18n Middleware - Edge Cases & Mobile', () => {
       }
     });
 
-    test('should set Secure flag in production mode', async ({ page }) => {
+    test('should set Secure flag based on environment', async ({ page }) => {
       await page.goto('/fr/');
 
       const cookies = await page.context().cookies();
       const localeCookie = cookies.find((c) => c.name === 'NEXT_LOCALE');
 
+      expect(localeCookie).toBeDefined();
+
       if (localeCookie) {
-        // In development (localhost), Secure flag is typically false
-        // In production (HTTPS), it should be true
-        // This test validates the cookie structure exists
-        expect(localeCookie.secure).toBeDefined();
+        // Determine environment based on URL protocol
+        const url = new URL(page.url());
+        const isHttps = url.protocol === 'https:';
+        const isLocalhost =
+          url.hostname === 'localhost' || url.hostname === '127.0.0.1';
+
+        // In production (HTTPS), Secure flag should be true
+        // In development (localhost/HTTP), Secure flag should be false
+        if (isHttps) {
+          expect(localeCookie.secure, 'Expected secure=true for HTTPS').toBe(
+            true,
+          );
+        } else if (isLocalhost) {
+          expect(
+            localeCookie.secure,
+            'Expected secure=false for localhost/HTTP',
+          ).toBe(false);
+        } else {
+          // HTTP but not localhost - still expect secure=false
+          expect(localeCookie.secure, 'Expected secure=false for HTTP').toBe(
+            false,
+          );
+        }
       }
     });
 
