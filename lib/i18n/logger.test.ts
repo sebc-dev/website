@@ -61,8 +61,8 @@ describe('i18n logger', () => {
       (process.env as { NODE_ENV: string }).NODE_ENV = 'production';
       (process.env as { DEBUG?: string }).DEBUG = undefined;
 
-      // Production mode should still be "enabled" but only log errors
-      // The logger.isEnabled() returns false, but errors should still work
+      // In production, the logger remains enabled (isEnabled() returns true)
+      // but filters to ERROR level via getLevel()/getLogLevel()
       expect(logger.getLevel()).toBe(LogLevel.ERROR);
     });
   });
@@ -279,8 +279,8 @@ describe('i18n logger', () => {
       (process.env as { NODE_ENV: string }).NODE_ENV = 'production';
       (process.env as { DEBUG?: string }).DEBUG = undefined;
 
-      // Need to re-import to get updated config
-      // In actual implementation, level is determined at module load time
+      // getLogLevel() reads process.env dynamically on each call,
+      // not fixed at module load—reflects runtime environment state
       expect(logger.getLevel()).toBe(LogLevel.ERROR);
     });
   });
