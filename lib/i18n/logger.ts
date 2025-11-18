@@ -10,12 +10,12 @@
  * No Personally Identifiable Information (PII) is logged.
  *
  * @example
- * import { logger } from '@/lib/i18n/logger';
+ * import \{ logger \} from '\@/lib/i18n/logger';
  *
- * logger.debug('Language detected', { locale: 'fr', source: 'cookie' });
- * logger.info('Redirect performed', { from: '/de/', to: '/fr/' });
- * logger.warn('Invalid cookie value', { value: 'invalid' });
- * logger.error('Middleware error', { error: err.message });
+ * logger.debug('Language detected', \{ locale: 'fr', source: 'cookie' \});
+ * logger.info('Redirect performed', \{ from: '/de/', to: '/fr/' \});
+ * logger.warn('Invalid cookie value', \{ value: 'invalid' \});
+ * logger.error('Middleware error', \{ error: err.message \});
  */
 
 /**
