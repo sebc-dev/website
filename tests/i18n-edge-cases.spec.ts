@@ -17,7 +17,52 @@
  * @see https://playwright.dev/docs/test-intro
  */
 
-import { type Cookie, devices, expect, test } from '@playwright/test';
+import type { Browser, BrowserContext, Cookie } from '@playwright/test';
+import { devices, expect, test } from '@playwright/test';
+
+/**
+ * Helper function to test invalid locale cookie scenarios
+ *
+ * Sets up a browser context with an invalid NEXT_LOCALE cookie,
+ * navigates to '/', and validates fallback behavior.
+ *
+ * @param browser - Playwright Browser instance
+ * @param cookieValue - The invalid cookie value to test
+ * @param options - Optional configuration
+ * @param options.assertCookie - Whether to assert the cookie was updated to a valid value
+ * @returns The browser context (caller must close it)
+ */
+async function testInvalidLocaleCookie(
+  browser: Browser,
+  cookieValue: string,
+  options: { assertCookie?: boolean } = {},
+): Promise<BrowserContext> {
+  const context = await browser.newContext();
+
+  // Set invalid cookie value
+  await context.addCookies([
+    {
+      name: 'NEXT_LOCALE',
+      value: cookieValue,
+      url: 'http://localhost:3000',
+    },
+  ]);
+
+  const page = await context.newPage();
+  await page.goto('/');
+
+  // Should default to French (default language)
+  await expect(page).toHaveURL(/\/fr\//);
+
+  // Optionally verify cookie was updated to valid value
+  if (options.assertCookie) {
+    const cookies = await context.cookies();
+    const localeCookie = cookies.find((c: Cookie) => c.name === 'NEXT_LOCALE');
+    expect(localeCookie?.value).toMatch(/^(fr|en)$/);
+  }
+
+  return context;
+}
 
 test.describe('i18n Middleware - Edge Cases & Mobile', () => {
   // AC9: Cookie setting with secure flags
@@ -289,93 +334,24 @@ test.describe('i18n Middleware - Edge Cases & Mobile', () => {
     test('should handle invalid cookie value gracefully', async ({
       browser,
     }) => {
-      const context = await browser.newContext();
-
-      // Set invalid cookie value
-      await context.addCookies([
-        {
-          name: 'NEXT_LOCALE',
-          value: 'invalid',
-          url: 'http://localhost:3000',
-        },
-      ]);
-
-      const page = await context.newPage();
-      await page.goto('/');
-
-      // Should default to French (default language)
-      await expect(page).toHaveURL(/\/fr\//);
-
-      // Cookie should be updated to valid value
-      const cookies = await context.cookies();
-      const localeCookie = cookies.find(
-        (c: Cookie) => c.name === 'NEXT_LOCALE',
-      );
-      expect(localeCookie?.value).toMatch(/^(fr|en)$/);
-
+      const context = await testInvalidLocaleCookie(browser, 'invalid', {
+        assertCookie: true,
+      });
       await context.close();
     });
 
     test('should handle empty cookie value', async ({ browser }) => {
-      const context = await browser.newContext();
-
-      // Set empty cookie value
-      await context.addCookies([
-        {
-          name: 'NEXT_LOCALE',
-          value: '',
-          url: 'http://localhost:3000',
-        },
-      ]);
-
-      const page = await context.newPage();
-      await page.goto('/');
-
-      // Should default to French
-      await expect(page).toHaveURL(/\/fr\//);
-
+      const context = await testInvalidLocaleCookie(browser, '');
       await context.close();
     });
 
     test('should handle uppercase cookie value', async ({ browser }) => {
-      const context = await browser.newContext();
-
-      // Set uppercase cookie value (not valid)
-      await context.addCookies([
-        {
-          name: 'NEXT_LOCALE',
-          value: 'FR',
-          url: 'http://localhost:3000',
-        },
-      ]);
-
-      const page = await context.newPage();
-      await page.goto('/');
-
-      // Should treat as invalid and default to French (lowercase)
-      await expect(page).toHaveURL(/\/fr\//);
-
+      const context = await testInvalidLocaleCookie(browser, 'FR');
       await context.close();
     });
 
     test('should handle numeric cookie value', async ({ browser }) => {
-      const context = await browser.newContext();
-
-      // Set numeric cookie value
-      await context.addCookies([
-        {
-          name: 'NEXT_LOCALE',
-          value: '123',
-          url: 'http://localhost:3000',
-        },
-      ]);
-
-      const page = await context.newPage();
-      await page.goto('/');
-
-      // Should treat as invalid and default to French
-      await expect(page).toHaveURL(/\/fr\//);
-
+      const context = await testInvalidLocaleCookie(browser, '123');
       await context.close();
     });
   });
