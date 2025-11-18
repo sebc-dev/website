@@ -80,6 +80,41 @@ function extractWorkflowSecrets(workflowDir) {
 }
 
 /**
+ * Extracts environment variables from file content using common patterns
+ *
+ * @param {string} content - File content to scan
+ * @param {boolean} includeGetRequiredEnv - Whether to include getRequiredEnv() pattern
+ * @returns {Set<string>} Set of environment variable names
+ */
+function extractEnvVarsFromContent(content, includeGetRequiredEnv = false) {
+  const envVars = new Set();
+
+  // Match process.env.VARIABLE_NAME
+  const processEnvMatches = content.matchAll(/process\.env\.([A-Z_][A-Z0-9_]*)/g);
+  for (const match of processEnvMatches) {
+    envVars.add(match[1]);
+  }
+
+  // Match import.meta.env.VARIABLE_NAME (Vite pattern)
+  const viteMatches = content.matchAll(/import\.meta\.env\.([A-Z_][A-Z0-9_]*)/g);
+  for (const match of viteMatches) {
+    envVars.add(match[1]);
+  }
+
+  // Match getRequiredEnv('VARIABLE_NAME') pattern (drizzle.config.ts)
+  if (includeGetRequiredEnv) {
+    const getEnvMatches = content.matchAll(
+      /getRequiredEnv\(['"]([A-Z_][A-Z0-9_]*)["']\)/g,
+    );
+    for (const match of getEnvMatches) {
+      envVars.add(match[1]);
+    }
+  }
+
+  return envVars;
+}
+
+/**
  * Extracts environment variables referenced in code
  */
 function extractCodeEnvVars(srcDirs) {
@@ -115,19 +150,9 @@ function extractCodeEnvVars(srcDirs) {
 
       const content = fs.readFileSync(fullPath, 'utf-8');
 
-      // Match process.env.VARIABLE_NAME
-      const matches = content.matchAll(/process\.env\.([A-Z_][A-Z0-9_]*)/g);
-      for (const match of matches) {
-        envVars.add(match[1]);
-      }
-
-      // Match import.meta.env.VARIABLE_NAME (Vite pattern)
-      const viteMatches = content.matchAll(
-        /import\.meta\.env\.([A-Z_][A-Z0-9_]*)/g,
-      );
-      for (const match of viteMatches) {
-        envVars.add(match[1]);
-      }
+      // Extract environment variables from file content
+      const fileEnvVars = extractEnvVarsFromContent(content);
+      fileEnvVars.forEach((v) => envVars.add(v));
     });
   }
 
@@ -195,21 +220,9 @@ function main() {
   rootConfigFiles.forEach((filePath) => {
     const content = fs.readFileSync(filePath, 'utf-8');
 
-    // Match process.env.VARIABLE_NAME
-    const processEnvMatches = content.matchAll(
-      /process\.env\.([A-Z_][A-Z0-9_]*)/g,
-    );
-    for (const match of processEnvMatches) {
-      codeEnvVars.add(match[1]);
-    }
-
-    // Match getRequiredEnv('VARIABLE_NAME') pattern (drizzle.config.ts)
-    const getEnvMatches = content.matchAll(
-      /getRequiredEnv\(['"]([A-Z_][A-Z0-9_]*)["']\)/g,
-    );
-    for (const match of getEnvMatches) {
-      codeEnvVars.add(match[1]);
-    }
+    // Extract environment variables (including getRequiredEnv pattern)
+    const fileEnvVars = extractEnvVarsFromContent(content, true);
+    fileEnvVars.forEach((v) => codeEnvVars.add(v));
   });
 
   console.log(
