@@ -50,29 +50,17 @@ interface LogEntry {
 /**
  * Determines if logging is enabled based on environment variables
  *
- * Logging is enabled if:
- * - DEBUG environment variable contains 'i18n' (e.g., DEBUG=i18n:* or DEBUG=i18n:middleware)
- * - NODE_ENV is not 'production'
+ * Logging is always enabled, but the log level varies by environment:
+ * - Development or DEBUG=i18n:*: Full logging (DEBUG/INFO level)
+ * - Production or edge runtime: Error-only logging (ERROR level)
  *
- * In production, only error logs are shown (controlled by level check).
+ * The log level filtering happens in getLogLevel(), not here.
  *
- * @returns true if logging should be enabled
+ * @returns true (logging is always enabled)
  */
 function isLoggingEnabled(): boolean {
-  // Check DEBUG environment variable
-  const debugEnv = process.env.DEBUG || '';
-  if (debugEnv.includes('i18n')) {
-    return true;
-  }
-
-  // Enable logging in development mode
-  const nodeEnv = process.env.NODE_ENV || 'development';
-  if (nodeEnv !== 'production') {
-    return true;
-  }
-
-  // Disable logging in production by default
-  return false;
+  // Logging is always enabled; log level controls what gets output
+  return true;
 }
 
 /**
@@ -85,17 +73,21 @@ function isLoggingEnabled(): boolean {
  * @returns The minimum log level
  */
 function getLogLevel(): LogLevel {
-  const nodeEnv = process.env.NODE_ENV || 'development';
-  const debugEnv = process.env.DEBUG || '';
+  // Detect edge runtime where process/process.env may be unavailable
+  const isEdge = typeof process === 'undefined' || !process.env;
+
+  // Safely read environment variables with fallbacks for edge runtime
+  const nodeEnv = isEdge ? 'production' : process.env.NODE_ENV || 'development';
+  const debugEnv = isEdge ? '' : process.env.DEBUG || '';
+
+  // DEBUG flag overrides environment: full debugging
+  if (debugEnv.includes('i18n')) {
+    return LogLevel.DEBUG;
+  }
 
   // Production: errors only
   if (nodeEnv === 'production') {
     return LogLevel.ERROR;
-  }
-
-  // Development with DEBUG flag: full debugging
-  if (debugEnv.includes('i18n')) {
-    return LogLevel.DEBUG;
   }
 
   // Development without DEBUG: info and above
@@ -103,13 +95,9 @@ function getLogLevel(): LogLevel {
 }
 
 /**
- * Logger configuration singleton
+ * Logger configuration prefix
  */
-const config: LoggerConfig = {
-  enabled: isLoggingEnabled(),
-  level: getLogLevel(),
-  prefix: 'i18n',
-};
+const LOG_PREFIX = 'i18n';
 
 /**
  * Log level priority for filtering
@@ -128,11 +116,14 @@ const LOG_LEVEL_PRIORITY: Record<LogLevel, number> = {
  * @returns true if the log should be output
  */
 function shouldLog(level: LogLevel): boolean {
-  if (!config.enabled) {
+  // Check logging enabled dynamically (important for tests and runtime env changes)
+  if (!isLoggingEnabled()) {
     return false;
   }
 
-  return LOG_LEVEL_PRIORITY[level] >= LOG_LEVEL_PRIORITY[config.level];
+  // Get current log level dynamically
+  const currentLevel = getLogLevel();
+  return LOG_LEVEL_PRIORITY[level] >= LOG_LEVEL_PRIORITY[currentLevel];
 }
 
 /**
@@ -146,7 +137,7 @@ function shouldLog(level: LogLevel): boolean {
 function formatLogEntry(entry: LogEntry): string {
   const { timestamp, level, message, data } = entry;
   const dataStr = data ? ` ${JSON.stringify(data)}` : '';
-  return `[${timestamp}] [${level.toUpperCase()}] [${config.prefix}] ${message}${dataStr}`;
+  return `[${timestamp}] [${level.toUpperCase()}] [${LOG_PREFIX}] ${message}${dataStr}`;
 }
 
 /**
@@ -262,7 +253,7 @@ export const logger = {
    * @returns true if logging is enabled
    */
   isEnabled(): boolean {
-    return config.enabled;
+    return isLoggingEnabled();
   },
 
   /**
@@ -271,6 +262,6 @@ export const logger = {
    * @returns The current minimum log level
    */
   getLevel(): LogLevel {
-    return config.level;
+    return getLogLevel();
   },
 };

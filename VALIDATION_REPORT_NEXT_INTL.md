@@ -92,14 +92,17 @@ export const defaultLocale: Locale = 'fr';
 
 ```typescript
 export const routingConfig = {
-  localePrefix: 'as-needed' as const,
-  prefixMode: 'default' as const,
+  localePrefix: 'always' as const,
 };
 ```
 
 **Status**: **COMPLIANT** ✅
 
-- Uses `as-needed` for cleaner URLs (default language optional) ✓
+- Uses `always` to require language prefix for all routes ✓
+- Enforces consistent URL structure:
+  - `/fr/articles` (French - prefix always required)
+  - `/en/articles` (English - prefix always required)
+- Default language (French) no longer omits the prefix ✓
 - Proper TypeScript `as const` assertion ✓
 - Configuration exported for middleware consumption ✓
 

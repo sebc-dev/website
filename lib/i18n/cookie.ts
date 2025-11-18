@@ -156,6 +156,10 @@ export function setCookie(
   // Force secure=true when SameSite=None to prevent invalid cookies
   const finalSecure = normalizedSameSite === 'none' ? true : secure;
 
+  // Capitalize SameSite for cookie header (e.g., "lax" -> "Lax")
+  const capitalizedSameSite =
+    normalizedSameSite.charAt(0).toUpperCase() + normalizedSameSite.slice(1);
+
   // Start with name=value
   const parts: string[] = [`${name}=${value}`];
 
@@ -163,9 +167,7 @@ export function setCookie(
   parts.push(`Max-Age=${maxAge}`);
 
   // Add SameSite (CSRF protection) with proper capitalization
-  parts.push(
-    `SameSite=${normalizedSameSite.charAt(0).toUpperCase()}${normalizedSameSite.slice(1)}`,
-  );
+  parts.push(`SameSite=${capitalizedSameSite}`);
 
   // Add HttpOnly (XSS protection)
   if (httpOnly) {
