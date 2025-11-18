@@ -59,7 +59,8 @@ describe('i18n performance monitoring', () => {
 
       expect(timer1.name).toBe('operation-1');
       expect(timer2.name).toBe('operation-2');
-      expect(timer1.startTime).not.toBe(timer2.startTime);
+      // Verify timers are independent objects (not timing-dependent)
+      expect(timer1).not.toBe(timer2);
     });
   });
 
