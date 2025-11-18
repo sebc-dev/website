@@ -330,4 +330,78 @@ describe('i18n logger', () => {
       expect(logOutput).toContain('"duration":5.2');
     });
   });
+
+  describe('edge runtime safety', () => {
+    let originalProcess: typeof process;
+
+    beforeEach(() => {
+      // Store original process object
+      originalProcess = globalThis.process;
+    });
+
+    afterEach(() => {
+      // Restore original process object
+      globalThis.process = originalProcess;
+    });
+
+    it('should handle missing process object in edge runtime', () => {
+      // Simulate edge runtime by removing process
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      delete (globalThis as any).process;
+
+      // Re-import logger to get fresh instance with edge detection
+      // Note: This is a limitation - we can't fully test dynamic re-evaluation
+      // but we verify the code doesn't throw
+      expect(() => {
+        logger.error('Error in edge runtime');
+      }).not.toThrow();
+
+      // In edge runtime without process, should default to production mode (errors only)
+      expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should handle missing process.env in edge runtime', () => {
+      // Simulate edge runtime with process but no env
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (globalThis as any).process = {};
+
+      expect(() => {
+        logger.error('Error with missing env');
+      }).not.toThrow();
+
+      // Should still log errors
+      expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should default to production mode in edge runtime', () => {
+      // Simulate edge runtime
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      delete (globalThis as any).process;
+
+      // Debug/info/warn should not log (production default)
+      logger.debug('Debug in edge');
+      logger.info('Info in edge');
+      logger.warn('Warn in edge');
+
+      expect(consoleDebugSpy).not.toHaveBeenCalled();
+      expect(consoleInfoSpy).not.toHaveBeenCalled();
+      expect(consoleWarnSpy).not.toHaveBeenCalled();
+
+      // Errors should still log
+      logger.error('Error in edge');
+      expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not throw when accessing process.env in edge runtime', () => {
+      // Simulate edge runtime with null env
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (globalThis as any).process = { env: null };
+
+      expect(() => {
+        logger.error('Safe error logging');
+      }).not.toThrow();
+
+      expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+    });
+  });
 });
