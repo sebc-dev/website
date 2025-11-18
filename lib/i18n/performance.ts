@@ -4,10 +4,10 @@
  * Provides timing measurements and performance assertions for middleware execution.
  * Uses `performance.now()` for high-resolution timing.
  *
- * Target: Middleware execution should be < 50ms
+ * Target: Middleware execution should be \< 50ms
  *
  * @example
- * import { startTimer, endTimer, assertPerformance } from '@/lib/i18n/performance';
+ * import \{ startTimer, endTimer, assertPerformance \} from '\@/lib/i18n/performance';
  *
  * const timer = startTimer('middleware');
  * // ... middleware logic ...
@@ -129,7 +129,7 @@ export function endTimer(timer: PerformanceTimer): number {
  * const timer = startTimer('middleware');
  * // ... middleware logic ...
  * const measurement = measurePerformance(timer);
- * logger.debug('Performance', { measurement });
+ * logger.debug('Performance', \{ measurement \});
  */
 export function measurePerformance(
   timer: PerformanceTimer,
@@ -172,7 +172,7 @@ export function measurePerformance(
  * @example
  * const duration = endTimer(timer);
  * assertPerformance(duration, 50, 'Middleware execution');
- * // Throws if duration > 50ms
+ * // Throws if duration \> 50ms
  */
 export function assertPerformance(
   duration: number,
@@ -198,9 +198,9 @@ export function assertPerformance(
  *
  * @example
  * const duration = endTimer(timer);
- * if (!checkPerformance(duration, 50)) {
- *   logger.warn('Slow middleware execution', { duration });
- * }
+ * if (!checkPerformance(duration, 50)) \{
+ *   logger.warn('Slow middleware execution', \{ duration \});
+ * \}
  */
 export function checkPerformance(duration: number, targetMs: number): boolean {
   return duration <= targetMs;
