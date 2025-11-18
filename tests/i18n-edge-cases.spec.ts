@@ -465,7 +465,13 @@ test.describe('i18n Middleware - Edge Cases & Mobile', () => {
 
       const url = page.url();
       expect(url).toMatch(/\/fr\/messages-test/);
-      expect(url).toContain('search=hello');
+
+      // Verify the complete encoded query string is preserved
+      expect(url).toContain('search=hello%20world');
+
+      // Alternatively, verify the decoded parameter value
+      const urlObj = new URL(url);
+      expect(urlObj.searchParams.get('search')).toBe('hello world');
     });
   });
 
