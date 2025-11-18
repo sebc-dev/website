@@ -259,7 +259,6 @@ describe('i18n performance monitoring', () => {
     });
 
     it('should return undefined for missing result', () => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const result = monitor.getResult('missing');
 
       expect(result).toBeUndefined();
