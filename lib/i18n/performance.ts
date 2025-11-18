@@ -58,7 +58,7 @@ export interface PerformanceMeasurement {
 /**
  * Target performance thresholds (in milliseconds)
  */
-export const PERFORMANCE_TARGETS = {
+export const PERFORMANCE_TARGETS = Object.freeze({
   /**
    * Maximum acceptable middleware execution time
    */
@@ -73,7 +73,7 @@ export const PERFORMANCE_TARGETS = {
    * Maximum acceptable cookie parsing time
    */
   COOKIE_PARSING: 5,
-} as const;
+} as const);
 
 /**
  * Starts a performance timer
