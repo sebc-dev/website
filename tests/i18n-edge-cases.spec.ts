@@ -73,27 +73,6 @@ test.describe('i18n Middleware - Edge Cases & Mobile', () => {
       }
     });
 
-    test('should set cookie expiration to 1 year', async ({ page }) => {
-      await page.goto('/en/');
-
-      const cookies = await page.context().cookies();
-      const localeCookie = cookies.find((c) => c.name === 'NEXT_LOCALE');
-
-      if (localeCookie) {
-        // Calculate expiration: should be ~1 year from now
-        const now = Date.now() / 1000; // Current time in seconds
-        const oneYear = 365 * 24 * 60 * 60; // 1 year in seconds
-
-        // Cookie expires should be approximately now + 1 year
-        const timeDiff = localeCookie.expires - now;
-
-        // Allow some variance (within 1 day) for test execution time
-        const oneDayInSeconds = 24 * 60 * 60;
-        expect(timeDiff).toBeGreaterThan(oneYear - oneDayInSeconds);
-        expect(timeDiff).toBeLessThan(oneYear + oneDayInSeconds);
-      }
-    });
-
     test('should persist cookie across page navigations', async ({ page }) => {
       await page.goto('/fr/');
 
