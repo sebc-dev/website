@@ -95,9 +95,18 @@ function getLogLevel(): LogLevel {
 }
 
 /**
+ * Default logger configuration
+ */
+const defaultLoggerConfig: LoggerConfig = {
+  enabled: true,
+  level: LogLevel.DEBUG,
+  prefix: 'i18n',
+};
+
+/**
  * Logger configuration prefix
  */
-const LOG_PREFIX = 'i18n';
+const LOG_PREFIX = defaultLoggerConfig.prefix;
 
 /**
  * Log level priority for filtering
