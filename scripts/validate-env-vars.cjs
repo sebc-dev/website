@@ -154,10 +154,11 @@ function main() {
   ];
 
   // Also check root-level config files
+  // Note: Only includes files with JS/TS syntax (process.env.X / getRequiredEnv('X'))
+  // package.json uses shell-style $VAR/%VAR% which requires different parsing
   const rootConfigFiles = [
     'drizzle.config.ts',
     'next.config.ts',
-    'package.json',
   ]
     .map((file) => path.join(rootDir, file))
     .filter((file) => fs.existsSync(file));
