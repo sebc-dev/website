@@ -197,8 +197,12 @@ describe('i18n logger', () => {
       expect(consoleDebugSpy).toHaveBeenCalledTimes(1);
       const logOutput = consoleDebugSpy.mock.calls[0][0];
 
+      // Null values should be serialized
       expect(logOutput).toContain('"nullValue":null');
-      // undefined values are omitted from JSON
+
+      // Undefined values should be omitted from JSON
+      expect(logOutput).not.toContain('undefinedValue');
+      expect(logOutput).not.toContain('"undefined"');
     });
   });
 
