@@ -134,9 +134,21 @@ export function endTimer(timer: PerformanceTimer): number {
 export function measurePerformance(
   timer: PerformanceTimer,
 ): PerformanceMeasurement {
-  const endTime = Date.now();
-  const duration = endTimer(timer);
-  const startTime = endTime - duration;
+  // Capture current performance time and corresponding wall-clock time atomically
+  const endPerfTime = performance.now();
+  const currentWallClockTime = Date.now();
+
+  // Calculate duration directly from start to current time
+  const duration = Math.round((endPerfTime - timer.startTime) * 100) / 100;
+
+  // Convert performance times to absolute timestamps
+  // The offset converts from performance.now() origin to Date.now() epoch
+  const perfToWallClockOffset = currentWallClockTime - endPerfTime;
+
+  // Compute absolute timestamps ensuring they align with duration
+  // Use integer milliseconds to match ISO string precision
+  const endTime = Math.round(endPerfTime + perfToWallClockOffset);
+  const startTime = endTime - Math.round(duration);
 
   return {
     name: timer.name,
