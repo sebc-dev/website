@@ -153,6 +153,15 @@ function main() {
     path.join(rootDir, 'lib'),
   ];
 
+  // Also check root-level config files
+  const rootConfigFiles = [
+    'drizzle.config.ts',
+    'next.config.ts',
+    'package.json',
+  ]
+    .map((file) => path.join(rootDir, file))
+    .filter((file) => fs.existsSync(file));
+
   // Check if .env.example exists
   if (!fs.existsSync(envExamplePath)) {
     console.log(`${colors.yellow}⚠️  .env.example not found${colors.reset}`);
@@ -180,6 +189,28 @@ function main() {
 
   // Extract code environment variables
   const codeEnvVars = extractCodeEnvVars(srcDirs);
+
+  // Also check root-level config files
+  rootConfigFiles.forEach((filePath) => {
+    const content = fs.readFileSync(filePath, 'utf-8');
+
+    // Match process.env.VARIABLE_NAME
+    const processEnvMatches = content.matchAll(
+      /process\.env\.([A-Z_][A-Z0-9_]*)/g,
+    );
+    for (const match of processEnvMatches) {
+      codeEnvVars.add(match[1]);
+    }
+
+    // Match getRequiredEnv('VARIABLE_NAME') pattern (drizzle.config.ts)
+    const getEnvMatches = content.matchAll(
+      /getRequiredEnv\(['"]([A-Z_][A-Z0-9_]*)["']\)/g,
+    );
+    for (const match of getEnvMatches) {
+      codeEnvVars.add(match[1]);
+    }
+  });
+
   console.log(
     `${colors.blue}💻 Referenced in code:${colors.reset} ${codeEnvVars.size} variables`,
   );
