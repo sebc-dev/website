@@ -90,13 +90,17 @@ function extractEnvVarsFromContent(content, includeGetRequiredEnv = false) {
   const envVars = new Set();
 
   // Match process.env.VARIABLE_NAME
-  const processEnvMatches = content.matchAll(/process\.env\.([A-Z_][A-Z0-9_]*)/g);
+  const processEnvMatches = content.matchAll(
+    /process\.env\.([A-Z_][A-Z0-9_]*)/g,
+  );
   for (const match of processEnvMatches) {
     envVars.add(match[1]);
   }
 
   // Match import.meta.env.VARIABLE_NAME (Vite pattern)
-  const viteMatches = content.matchAll(/import\.meta\.env\.([A-Z_][A-Z0-9_]*)/g);
+  const viteMatches = content.matchAll(
+    /import\.meta\.env\.([A-Z_][A-Z0-9_]*)/g,
+  );
   for (const match of viteMatches) {
     envVars.add(match[1]);
   }
@@ -181,10 +185,7 @@ function main() {
   // Also check root-level config files
   // Note: Only includes files with JS/TS syntax (process.env.X / getRequiredEnv('X'))
   // package.json uses shell-style $VAR/%VAR% which requires different parsing
-  const rootConfigFiles = [
-    'drizzle.config.ts',
-    'next.config.ts',
-  ]
+  const rootConfigFiles = ['drizzle.config.ts', 'next.config.ts']
     .map((file) => path.join(rootDir, file))
     .filter((file) => fs.existsSync(file));
 
