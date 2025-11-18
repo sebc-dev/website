@@ -198,10 +198,10 @@ function log(
  * All methods accept a message and optional data object.
  *
  * @example
- * logger.debug('Language detected', { locale: 'fr', source: 'cookie' });
- * logger.info('Redirect performed', { from: '/de/', to: '/fr/' });
- * logger.warn('Invalid cookie value', { value: 'invalid' });
- * logger.error('Middleware error', { error: err.message });
+ * logger.debug('Language detected', \{ locale: 'fr', source: 'cookie' \});
+ * logger.info('Redirect performed', \{ from: '/de/', to: '/fr/' \});
+ * logger.warn('Invalid cookie value', \{ value: 'invalid' \});
+ * logger.error('Middleware error', \{ error: err.message \});
  */
 export const logger = {
   /**
