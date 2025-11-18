@@ -229,7 +229,11 @@ test.describe('i18n Middleware - Core Scenarios', () => {
       // Should not be intercepted by i18n middleware
       // Status could be 200 (exists) or 404 (doesn't exist) but not redirected
       const status = response?.status();
-      expect(status).not.toMatch(/3\d\d/); // Not a redirect
+      // Verify status is defined and not in 3xx redirect range
+      expect(status).toBeDefined();
+      if (typeof status === 'number') {
+        expect(status < 300 || status >= 400).toBeTruthy();
+      }
     });
 
     test('should allow access to Next.js static files', async ({ page }) => {
