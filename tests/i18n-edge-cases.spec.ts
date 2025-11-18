@@ -300,7 +300,7 @@ test.describe('i18n Middleware - Edge Cases & Mobile', () => {
       await page.goto('/de/messages-test', { waitUntil: 'networkidle' });
 
       // Should redirect once to correct language, then stop
-      expect(redirectCount).toBeLessThanOrEqual(2);
+      expect(redirectCount).toBe(1);
       await expect(page).toHaveURL(/\/fr\/messages-test/);
     });
   });
