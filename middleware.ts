@@ -579,26 +579,26 @@ export function middleware(request: NextRequest): NextResponse {
  * Current pattern processes:
  * - All app routes under [locale]/ (e.g., /fr/*, /en/*)
  * - Root path (/)
- * - Routes with dots in segments (e.g., /fr/version-2.0/features)
  *
  * Explicitly excluded:
  * - /_next/* (Next.js internal routes)
  * - /api/* (API routes)
- * - /public/* (Static public files)
- * - /images/* (Images)
- * - Static files with common extensions in the final path segment
- *   (.png, .svg, .jpg, .jpeg, .gif, .ico, .webp, .avif, .ttf, .otf, .woff, .woff2,
- *    .js, .css, .json, .xml, .txt, .pdf, .zip)
+ * - /_vercel/* (Vercel internal routes)
+ * - **Any path containing a dot anywhere** (e.g., /images/logo.png, /style.css)
+ *   This includes both static files AND route segments with dots (e.g., /fr/version-2.0/features)
+ *
+ * **Important**: The pattern `(?!.*\\.*)` excludes ALL paths containing a dot character,
+ * not just files with extensions. If you need to support route segments with dots
+ * (e.g., version numbers), the regex pattern must be modified.
  *
  * This matcher ensures the middleware runs only on user-facing routes,
- * avoiding unnecessary processing of static assets and API routes while
- * allowing dotted route segments like version numbers.
+ * avoiding unnecessary processing of static assets and API routes.
  *
  * @see https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
  */
 export const config = {
   matcher: [
-    // Match all pathnames except those starting with specific prefixes or containing a dot (static files)
+    // Match all pathnames except those starting with specific prefixes or containing a dot
     // Pattern from next-intl documentation: https://next-intl.dev/docs/routing/middleware
     '/((?!api|_next|_vercel|.*\\..*).*)',
   ],
