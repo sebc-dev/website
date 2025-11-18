@@ -425,19 +425,14 @@ describe('i18n performance monitoring', () => {
 
       monitor.start('locale-detection');
       // Simulate locale detection
-      const locale = 'fr';
       monitor.end('locale-detection');
 
       monitor.start('cookie-parsing');
       // Simulate cookie parsing
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const cookie = 'NEXT_LOCALE=fr';
       monitor.end('cookie-parsing');
 
       monitor.start('redirect-logic');
       // Simulate redirect logic
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const redirect = `/${locale}/`;
       monitor.end('redirect-logic');
 
       monitor.end('middleware-total');
