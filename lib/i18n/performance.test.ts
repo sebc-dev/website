@@ -388,7 +388,7 @@ describe('i18n performance monitoring', () => {
       // Simulate middleware operations
       const locale = 'fr';
       const pathname = '/articles';
-      const result = `${locale}${pathname}`;
+      void `${locale}${pathname}`; // Simulate path construction
 
       const duration = endTimer(timer);
       const measurement = measurePerformance(timer);
