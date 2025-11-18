@@ -190,10 +190,17 @@ describe('i18n performance monitoring', () => {
     });
 
     it('should be frozen (immutable at runtime)', () => {
+      // PERFORMANCE_TARGETS is frozen via Object.freeze() in implementation
+      // TypeScript enforces immutability at compile-time via 'as const'
+
+      // Attempting to modify should throw in strict mode (or fail silently in non-strict)
       expect(() => {
-        // @ts-expect-error - Testing runtime immutability
+        // @ts-expect-error - TypeScript prevents modification
         PERFORMANCE_TARGETS.MIDDLEWARE_EXECUTION = 100;
       }).toThrow();
+
+      // Value should remain unchanged
+      expect(PERFORMANCE_TARGETS.MIDDLEWARE_EXECUTION).toBe(50);
     });
   });
 
@@ -270,25 +277,25 @@ describe('i18n performance monitoring', () => {
     });
 
     it('should calculate summary statistics', () => {
-      // Mock measurements with known durations
+      // Create spy before any monitor operations
       const perfSpy = vi.spyOn(performance, 'now');
 
-      // op-1: 20ms
-      perfSpy.mockReturnValueOnce(100);
+      // op-1: 20ms (start: 100, end: 120)
+      perfSpy.mockReturnValueOnce(100); // startTimer in monitor.start()
       monitor.start('op-1');
-      perfSpy.mockReturnValueOnce(120);
+      perfSpy.mockReturnValueOnce(120); // measurePerformance in monitor.end()
       monitor.end('op-1');
 
-      // op-2: 30ms
-      perfSpy.mockReturnValueOnce(200);
+      // op-2: 30ms (start: 200, end: 230)
+      perfSpy.mockReturnValueOnce(200); // startTimer in monitor.start()
       monitor.start('op-2');
-      perfSpy.mockReturnValueOnce(230);
+      perfSpy.mockReturnValueOnce(230); // measurePerformance in monitor.end()
       monitor.end('op-2');
 
-      // op-3: 50ms
-      perfSpy.mockReturnValueOnce(300);
+      // op-3: 50ms (start: 300, end: 350)
+      perfSpy.mockReturnValueOnce(300); // startTimer in monitor.start()
       monitor.start('op-3');
-      perfSpy.mockReturnValueOnce(350);
+      perfSpy.mockReturnValueOnce(350); // measurePerformance in monitor.end()
       monitor.end('op-3');
 
       const summary = monitor.getSummary();
@@ -298,6 +305,8 @@ describe('i18n performance monitoring', () => {
       expect(summary.min).toBeCloseTo(20, 1);
       expect(summary.max).toBeCloseTo(50, 1);
       expect(summary.average).toBeCloseTo(33.33, 1); // (20 + 30 + 50) / 3
+
+      perfSpy.mockRestore();
     });
 
     it('should return zero summary for empty monitor', () => {
@@ -313,11 +322,12 @@ describe('i18n performance monitoring', () => {
     });
 
     it('should round summary values to 2 decimal places', () => {
+      // Create spy before any monitor operations
       const perfSpy = vi.spyOn(performance, 'now');
 
-      perfSpy.mockReturnValueOnce(0);
+      perfSpy.mockReturnValueOnce(0); // startTimer in monitor.start()
       monitor.start('op-1');
-      perfSpy.mockReturnValueOnce(33.333); // 33.333ms
+      perfSpy.mockReturnValueOnce(33.333); // measurePerformance in monitor.end()
       monitor.end('op-1');
 
       const summary = monitor.getSummary();
@@ -335,6 +345,8 @@ describe('i18n performance monitoring', () => {
       expect(
         summary.average.toString().split('.')[1]?.length || 0,
       ).toBeLessThanOrEqual(2);
+
+      perfSpy.mockRestore();
     });
   });
 
