@@ -155,7 +155,7 @@ Phase 4 is documentation-heavy. Ensure you're familiar with markdown syntax:
 
 ### Quick Markdown Reference
 
-````markdown
+```markdown
 # Heading 1
 
 ## Heading 2
@@ -178,7 +178,7 @@ code block with syntax highlighting
 | Table | Header |
 | ----- | ------ |
 | Cell  | Cell   |
-````
+```
 
 ### Markdown Validation
 

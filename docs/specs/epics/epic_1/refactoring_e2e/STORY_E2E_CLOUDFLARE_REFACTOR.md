@@ -685,6 +685,7 @@ grep -A 5 "E2E Tests" .github/workflows/quality.yml  # Vérifier simplification
 
 2. **Documenter dans CLAUDE.md**
    - [ ] Ajouter dans la section "Development":
+
      ```markdown
      **Development Servers**:
 
