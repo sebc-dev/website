@@ -58,6 +58,15 @@ function parseEnvExample(filePath) {
 function extractWorkflowSecrets(workflowDir) {
   const secrets = new Set();
 
+  // GitHub-provided secrets that don't need to be documented in .env.example
+  const githubProvidedSecrets = new Set([
+    'GITHUB_TOKEN', // Automatically provided by GitHub Actions
+    'GITHUB_ACTOR',
+    'GITHUB_REPOSITORY',
+    'GITHUB_SHA',
+    'GITHUB_REF',
+  ]);
+
   if (!fs.existsSync(workflowDir)) {
     return secrets;
   }
@@ -72,7 +81,10 @@ function extractWorkflowSecrets(workflowDir) {
     // Match secrets.VARIABLE_NAME
     const matches = content.matchAll(/secrets\.([A-Z_][A-Z0-9_]*)/g);
     for (const match of matches) {
-      secrets.add(match[1]);
+      // Exclude GitHub-provided secrets
+      if (!githubProvidedSecrets.has(match[1])) {
+        secrets.add(match[1]);
+      }
     }
   });
 
