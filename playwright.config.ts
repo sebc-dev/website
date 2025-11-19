@@ -4,6 +4,8 @@ import { defineConfig, devices } from '@playwright/test';
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
+  /* Global setup: Initialize D1 database before tests */
+  globalSetup: './tests/global-setup',
   testDir: './tests',
   testMatch: '**/*.spec.ts',
   /* Run tests in files in parallel */
@@ -55,12 +57,13 @@ export default defineConfig({
      *
      * Server: wrangler dev with OpenNext adapter
      * URL: http://127.0.0.1:8788 (IPv4, not localhost or ::1)
+     * Timeout: 120 seconds to account for OpenNext cold start + wrangler dev startup
      *
      * See: /docs/specs/epics/epic_1/refactoring_e2e/STORY_E2E_CLOUDFLARE_REFACTOR.md
      */
     command: 'pnpm preview',
     url: 'http://127.0.0.1:8788',
     reuseExistingServer: false,
-    timeout: 120000, // 2 minutes (production server can take longer)
+    timeout: 120 * 1000, // 120 seconds for OpenNext cold start + wrangler startup
   },
 });
