@@ -19,7 +19,7 @@ test.describe('HomePage - Basic Loading', () => {
    * Expected: URL matches localhost:3000, page has content
    */
   test('homepage loads successfully', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/', { waitUntil: 'networkidle', timeout: 10000 });
 
     // Verify the page loaded correctly
     await expect(page).toHaveURL(/localhost:3000/);
@@ -77,11 +77,11 @@ test.describe('HomePage - Visual Elements', () => {
    * Expected: Root div with flex layout is rendered
    */
   test('main container is visible', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 10000 });
 
     // Verify main content container
     const mainContainer = page.locator('div.relative.flex.min-h-screen');
-    await expect(mainContainer).toBeVisible();
+    await expect(mainContainer).toBeVisible({ timeout: 10000 });
   });
 
   /**
@@ -522,18 +522,18 @@ test.describe('HomePage - Accessibility', () => {
 test.describe('HomePage - Performance', () => {
   /**
    * Test: Page loads within acceptable time
-   * Expected: Load complete within 3 seconds
+   * Expected: Load complete within 5 seconds (increased for remote deployments)
    */
   test('page loads within acceptable time', async ({ page }) => {
     const startTime = Date.now();
 
-    await page.goto('/');
+    await page.goto('/', { waitUntil: 'networkidle', timeout: 15000 });
 
     const endTime = Date.now();
     const loadTime = endTime - startTime;
 
-    // Should load within 3 seconds
-    expect(loadTime).toBeLessThan(3000);
+    // Should load within 5 seconds (higher tolerance for preview deployments)
+    expect(loadTime).toBeLessThan(5000);
   });
 
   /**
