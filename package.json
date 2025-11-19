@@ -37,7 +37,7 @@
     "db:seed": "wrangler d1 execute DB --local --file=./drizzle/seeds/categories.sql",
     "db:seed:articles": "wrangler d1 execute DB --local --file=./drizzle/seeds/sample-articles.sql",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
-    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "preview": "opennextjs-cloudflare build && wrangler dev --port 8788 --ip 127.0.0.1",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv ./cloudflare-env.d.ts",
     "prepare": "husky"
   },
