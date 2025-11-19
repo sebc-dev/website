@@ -131,21 +131,10 @@ jobs:
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps
 
-      # TEMPORARY: E2E tests disabled due to Next.js + Cloudflare Workers compatibility
-      # Issue: Server fails to start within timeout in CI environment
-      # Root cause: next dev/start with OpenNext Cloudflare takes >60s to initialize
-      # Tested solutions:
-      #   - pnpm dev: Timeout after 120s
-      #   - pnpm start: Timeout after 60s (same wrangler dev initialization issue)
-      # TODO: Re-enable once OpenNext/Cloudflare startup time is optimized
-      # Tracking: https://github.com/sebc-dev/website/issues/35
+      # E2E Tests temporarily disabled - See ADR 003 for history and resolution plan
+      # Will be reactivated in Phase 3 (Intégration CI)
       - name: E2E Tests (Temporarily Disabled)
-        run: |
-          echo "⚠️ E2E tests temporarily disabled due to CI timeout issues"
-          echo "Issue: Next.js + OpenNext + Cloudflare Workers initialization takes >60s in CI"
-          echo "Status: All other quality checks pass (lint, format, unit tests, build)"
-          echo "Tests work locally: Run 'pnpm test:e2e' for local E2E testing"
-          echo "✅ Skipping to unblock CI pipeline"
+        run: echo "⚠️ E2E tests disabled - See /docs/decisions/003-e2e-ci-timeout-history.md"
 
       - name: Upload Playwright report
         if: always()
