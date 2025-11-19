@@ -104,9 +104,11 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Setup Cloudflare credentials
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
           mkdir -p ~/.wrangler
-          echo "${{ secrets.CLOUDFLARE_API_TOKEN }}" > ~/.wrangler/config.toml
+          echo "${CLOUDFLARE_API_TOKEN}" > ~/.wrangler/config.toml
 
       - name: Deploy preview environment
         id: deploy
@@ -148,7 +150,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-${{ steps.pr.outputs.number }}
+          name: playwright-report-${{ github.event.issue.number || github.event.inputs.pr_number }}
           path: playwright-report/
           retention-days: 7
 
@@ -181,7 +183,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-metadata-${{ steps.pr.outputs.number }}
+          name: test-metadata-${{ github.event.issue.number || github.event.inputs.pr_number }}
           path: test-results/metadata.json
           retention-days: 1
 
