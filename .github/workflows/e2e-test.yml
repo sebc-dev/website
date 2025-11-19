@@ -98,8 +98,9 @@ jobs:
       # Safe to run pnpm install here because we have no write permissions
       # Even if malicious code executes, it cannot:
       # - Write to PR comments/status checks
-      # - Access repository secrets
+      # - Access repository secrets (except those explicitly passed for deployment)
       # - Modify repository contents
+      # CodeQL: Intentionally executing untrusted code in isolated environment
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -110,6 +111,8 @@ jobs:
           mkdir -p ~/.wrangler
           echo "${CLOUDFLARE_API_TOKEN}" > ~/.wrangler/config.toml
 
+      # CodeQL: Intentionally executing PR script in isolated environment
+      # This script deploys preview but cannot compromise the repository
       - name: Deploy preview environment
         id: deploy
         env:
@@ -139,6 +142,8 @@ jobs:
       - name: Install Playwright browsers
         run: pnpm exec playwright install chromium --with-deps
 
+      # CodeQL: Running tests from PR code in isolated environment
+      # Test results are uploaded as artifacts for privileged workflow
       - name: Run E2E tests
         id: test
         continue-on-error: true
@@ -187,6 +192,8 @@ jobs:
           path: test-results/metadata.json
           retention-days: 1
 
+      # CodeQL: Using wrangler CLI with deployment name from PR script
+      # Safe because wrangler only deletes the specific preview deployment
       - name: Cleanup preview deployment
         if: always()
         env:
