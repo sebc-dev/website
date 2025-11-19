@@ -15,6 +15,37 @@ This is a Next.js 15 website deployed to Cloudflare Workers using OpenNext. The 
 - `pnpm start` - Start production server
 - `pnpm lint` - Run ESLint
 
+#### Development Servers
+
+The project uses two distinct development servers depending on the use case:
+
+**Local Development (`pnpm dev`)**
+- **Command**: `pnpm dev`
+- **Runtime**: Node.js (Next.js dev server with Turbopack)
+- **Script**: `scripts/dev-quiet.sh` (filters Durable Objects warnings)
+- **URL**: http://localhost:3000
+- **Use case**: Local development with hot-reload, debugging, rapid iteration
+- **Features**: Fast Refresh, detailed error overlay, instant updates
+
+**E2E Testing (`pnpm preview`)**
+- **Command**: `pnpm preview`
+- **Runtime**: Cloudflare Workers (wrangler dev with workerd)
+- **Script**: Direct wrangler execution (as of Phase 1)
+- **URL**: http://127.0.0.1:8788 (IPv4 forced)
+- **Use case**: E2E tests, Playwright, production-like environment simulation
+- **Features**: D1 bindings, R2 cache, Durable Objects, Edge APIs
+
+**Important**: After Phase 1 implementation, E2E tests will ONLY work with `pnpm preview`.
+Using `pnpm dev` for tests will fail due to missing Cloudflare runtime features
+(D1 database, R2 cache, Durable Objects, etc.).
+
+**When to use which:**
+- Development/debugging → `pnpm dev` (faster, hot-reload)
+- E2E tests/validation → `pnpm preview` (production-like)
+- Manual testing against Workers → `pnpm preview`
+
+See: `/docs/specs/epics/epic_1/refactoring_e2e/STORY_E2E_CLOUDFLARE_REFACTOR.md`
+
 ### Testing
 
 - `pnpm test` - Run Vitest unit tests

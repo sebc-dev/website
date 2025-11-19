@@ -1,4 +1,19 @@
 #!/bin/bash
+# ============================================================================
+# Script: Local Development Server (Next.js with Turbopack)
+# ============================================================================
+# Usage: pnpm dev
+#
+# Description:
+#   Starts Next.js development server with hot-reload and Turbopack.
+#   Filters Durable Objects warnings for cleaner console output.
+#
+# IMPORTANT:
+#   E2E tests use 'pnpm preview' (wrangler dev), NOT this script.
+#   This script is ONLY for local development with hot-reload.
+#
+# See: CLAUDE.md section "Development Servers" for details.
+# ============================================================================
 
 # Script pour lancer le serveur de dev en filtrant les warnings Durable Objects
 # Ces warnings sont attendus en local (les DO fonctionnent en production)
