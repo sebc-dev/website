@@ -1,14 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
 /**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// import dotenv from 'dotenv';
-// import path from 'path';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
-
-/**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
@@ -49,36 +41,19 @@ export default defineConfig({
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
     },
-
-    /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
   ],
 
   /* Run your local dev server before starting the tests */
   webServer: {
     /**
-     * In CI: use production build (faster and more stable than dev server)
-     * Locally: use filtered dev command to suppress Durable Objects warnings
-     * These warnings are expected in local development as Durable Objects
-     * are not supported by wrangler dev (they work in production)
-     * See: https://opennext.js.org/cloudflare/known-issues
+     * Development server configuration
+     * - Local dev: uses `pnpm dev` (next dev with Turbopack)
+     * - E2E Tests (Phase 1+): will use `pnpm preview` (wrangler dev)
+     *
+     * Current config uses Node.js dev server (localhost:3000).
+     * Phase 1 will migrate to Cloudflare Workers runtime (127.0.0.1:8788).
+     *
+     * See: /docs/specs/epics/epic_1/refactoring_e2e/STORY_E2E_CLOUDFLARE_REFACTOR.md
      */
     command: 'pnpm start',
     url: 'http://localhost:3000',
