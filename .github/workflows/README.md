@@ -294,6 +294,7 @@ This ensures all validation and quality checks pass before code merges.
 ## E2E Tests on Preview Deployments
 
 **Files**:
+
 - `.github/workflows/e2e-test.yml` (Unprivileged)
 - `.github/workflows/e2e-report.yml` (Privileged)
 - `.github/workflows/e2e-reminder.yml` (PR automation)
@@ -308,10 +309,10 @@ Comment `@e2e` on any PR to trigger E2E tests on a preview deployment.
 
 ### Workflow Responsibilities
 
-| Workflow            | Permissions | Purpose                                                   |
-| ------------------- | ----------- | --------------------------------------------------------- |
-| **e2e-test.yml**    | Read-only   | Deploy preview, run tests, upload results as artifacts    |
-| **e2e-report.yml**  | Write       | Post comments, create status checks (never executes code) |
+| Workflow             | Permissions | Purpose                                                   |
+| -------------------- | ----------- | --------------------------------------------------------- |
+| **e2e-test.yml**     | Read-only   | Deploy preview, run tests, upload results as artifacts    |
+| **e2e-report.yml**   | Write       | Post comments, create status checks (never executes code) |
 | **e2e-reminder.yml** | Write       | Auto-comment on PRs to main requesting E2E tests          |
 
 ### CodeQL Security Alerts

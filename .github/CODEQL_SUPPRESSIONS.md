@@ -22,6 +22,7 @@ This workflow (`e2e-test.yml`) intentionally executes untrusted code from Pull R
 ### Why This Is Safe
 
 #### Line 107: Setup Cloudflare credentials
+
 - **Risk**: Exposes `CLOUDFLARE_API_TOKEN` to untrusted PR code
 - **Mitigation**:
   - Token is scoped to preview deployments only
@@ -30,6 +31,7 @@ This workflow (`e2e-test.yml`) intentionally executes untrusted code from Pull R
   - No write access to repository means token cannot be exfiltrated via commits/comments
 
 #### Line 124: Wait for deployment URL
+
 - **Risk**: Uses `DEPLOYMENT_URL` from PR-controlled script
 - **Mitigation**:
   - Only used for health check with `curl -sf` (fails on invalid URLs)
@@ -37,6 +39,7 @@ This workflow (`e2e-test.yml`) intentionally executes untrusted code from Pull R
   - Worst case: deployment check fails and workflow exits
 
 #### Line 147: Run E2E tests
+
 - **Risk**: Executes Playwright tests from PR code
 - **Mitigation**:
   - Tests run against isolated preview deployment
@@ -45,6 +48,7 @@ This workflow (`e2e-test.yml`) intentionally executes untrusted code from Pull R
   - Test failures do not compromise security
 
 #### Line 154: Upload test results
+
 - **Risk**: Uses PR number from untrusted source
 - **Mitigation**:
   - Already changed to use `github.event.issue.number` (trusted source)
@@ -52,6 +56,7 @@ This workflow (`e2e-test.yml`) intentionally executes untrusted code from Pull R
   - Cannot overwrite other PRs' artifacts
 
 #### Line 205: Cleanup preview deployment
+
 - **Risk**: Uses `DEPLOYMENT_NAME` from PR-controlled script
 - **Mitigation**:
   - `wrangler delete` command scoped to preview environment only
