@@ -19,6 +19,7 @@ Complete validation checklist before marking Phase 1 - Configuration Locale as c
 - [ ] Git history is clean and readable
 
 **Validation**:
+
 ```bash
 # Check commit history
 git log --oneline --graph | head -10
@@ -44,6 +45,7 @@ git log --oneline --graph | head -10
 - [ ] JSON syntax is valid
 
 **Validation**:
+
 ```bash
 # Check preview script
 grep -A 1 '"preview"' package.json
@@ -71,6 +73,7 @@ cat package.json | jq . > /dev/null
 - [ ] TypeScript compiles without errors
 
 **Validation**:
+
 ```bash
 # CRITICAL: Verify ALL wrangler commands use --local
 grep -n "wrangler" tests/global-setup.ts | grep -v "--local"
@@ -99,6 +102,7 @@ pnpm exec tsx tests/global-setup.ts
 - [ ] TypeScript compiles without errors
 
 **Validation**:
+
 ```bash
 # Check URLs use IPv4
 grep "127.0.0.1:8788" playwright.config.ts
@@ -129,6 +133,7 @@ pnpm exec tsc --noEmit playwright.config.ts
 - [ ] Wrangler authenticated (`pnpm wrangler whoami` succeeds)
 
 **Validation**:
+
 ```bash
 # Check wrangler.jsonc exists
 test -f wrangler.jsonc && echo "✅ wrangler.jsonc exists"
@@ -153,6 +158,7 @@ pnpm wrangler whoami
 - [ ] Database has data after seeding
 
 **Validation**:
+
 ```bash
 # List D1 databases
 pnpm wrangler d1 list
@@ -189,6 +195,7 @@ pnpm wrangler d1 execute DB --local --command "SELECT COUNT(*) FROM categories"
 - [ ] Application is accessible via HTTP
 
 **Validation**:
+
 ```bash
 # Start wrangler dev
 pnpm preview
@@ -217,6 +224,7 @@ curl -I http://127.0.0.1:8788
 - [ ] No errors in global setup logs
 
 **Validation**:
+
 ```bash
 # Run Playwright dry-run (triggers global setup)
 pnpm exec playwright test --dry-run 2>&1 | head -50
@@ -245,6 +253,7 @@ pnpm exec playwright test --dry-run 2>&1 | head -50
 - [ ] Total execution time < 5 minutes locally
 
 **Validation**:
+
 ```bash
 # Run full E2E test suite
 pnpm test:e2e
@@ -273,6 +282,7 @@ pnpm test:e2e tests/i18n-edge-cases.spec.ts
 - [ ] No timing-related errors
 
 **Validation**:
+
 ```bash
 # Run tests 3 times consecutively
 pnpm test:e2e && pnpm test:e2e && pnpm test:e2e
@@ -295,6 +305,7 @@ done
 - [ ] All browsers use wrangler runtime (not Node.js)
 
 **Validation**:
+
 ```bash
 # Test each browser individually
 pnpm test:e2e --project=chromium
@@ -314,6 +325,7 @@ pnpm test:e2e --project=webkit
 - [ ] No TypeScript errors in project (`pnpm exec tsc --noEmit`)
 
 **Validation**:
+
 ```bash
 # Check global-setup
 pnpm exec tsc --noEmit tests/global-setup.ts
@@ -337,6 +349,7 @@ pnpm exec tsc --noEmit
 - [ ] No build warnings (or only expected warnings)
 
 **Validation**:
+
 ```bash
 # Clean build
 rm -rf .next .open-next node_modules/.cache
@@ -367,6 +380,7 @@ test -d .open-next/assets && echo "✅ assets directory exists"
 - [ ] No debug statements (except intentional logging)
 
 **Validation**:
+
 ```bash
 # Run linter
 pnpm lint
@@ -393,6 +407,7 @@ grep -r "// TODO\|// FIXME" tests/global-setup.ts playwright.config.ts
 - [ ] All commands in docs are correct
 
 **Validation**:
+
 ```bash
 # Check all docs exist
 test -f docs/specs/epics/epic_1/refactoring_e2e/implementation/phase_1/IMPLEMENTATION_PLAN.md && echo "✅ IMPLEMENTATION_PLAN.md"
@@ -415,6 +430,7 @@ test -f docs/specs/epics/epic_1/refactoring_e2e/implementation/phase_1/validatio
 - [ ] No conflicts with Phase 0 changes
 
 **Validation**:
+
 ```bash
 # Check ADR 002 exists
 test -f docs/decisions/002-e2e-local-wrangler-dev.md && echo "✅ ADR 002 exists"
@@ -432,6 +448,7 @@ git status
 - [ ] Project builds successfully
 
 **Validation**:
+
 ```bash
 # Test other scripts
 pnpm dev --help
@@ -455,6 +472,7 @@ pnpm test
 - [ ] Error messages don't leak sensitive info
 
 **Validation**:
+
 ```bash
 # CRITICAL CHECK: All wrangler commands use --local
 grep -r "wrangler d1" tests/ | grep -v "--local" | grep -v ".md"
@@ -478,6 +496,7 @@ git log -p | grep -i "password\|secret\|token" | head -20
 - [ ] Timeout (120s) is appropriate
 
 **Validation**:
+
 ```bash
 # Time global setup
 time pnpm exec tsx tests/global-setup.ts
@@ -623,18 +642,18 @@ grep -r "wrangler d1" tests/ | grep -v "--local" | grep -v ".md"
 
 ## 📊 Success Metrics
 
-| Metric                     | Target       | Actual | Status |
-| -------------------------- | ------------ | ------ | ------ |
-| **Commits**                | 5            | -      | ⏳     |
-| **TypeScript Errors**      | 0            | -      | ⏳     |
-| **E2E Tests Pass Rate**    | 100%         | -      | ⏳     |
-| **Test Stability**         | 5/5 runs     | -      | ⏳     |
-| **Wrangler Startup Time**  | < 90s        | -      | ⏳     |
-| **Global Setup Time**      | < 10s        | -      | ⏳     |
-| **Total E2E Time**         | < 5min       | -      | ⏳     |
-| **Build Status**           | ✅ Success   | -      | ⏳     |
-| **Lint Status**            | ✅ No errors | -      | ⏳     |
-| **Browsers Tested**        | 3            | -      | ⏳     |
+| Metric                       | Target       | Actual | Status |
+| ---------------------------- | ------------ | ------ | ------ |
+| **Commits**                  | 5            | -      | ⏳     |
+| **TypeScript Errors**        | 0            | -      | ⏳     |
+| **E2E Tests Pass Rate**      | 100%         | -      | ⏳     |
+| **Test Stability**           | 5/5 runs     | -      | ⏳     |
+| **Wrangler Startup Time**    | < 90s        | -      | ⏳     |
+| **Global Setup Time**        | < 10s        | -      | ⏳     |
+| **Total E2E Time**           | < 5min       | -      | ⏳     |
+| **Build Status**             | ✅ Success   | -      | ⏳     |
+| **Lint Status**              | ✅ No errors | -      | ⏳     |
+| **Browsers Tested**          | 3            | -      | ⏳     |
 | **D1 Commands with --local** | 100%         | -      | ⏳     |
 
 ---

@@ -109,14 +109,15 @@ grep -A 5 'database_id' wrangler.jsonc
     {
       "binding": "DB",
       "database_name": "website-db",
-      "database_id": "..." // UUID for production
-    }
-  ]
+      "database_id": "...", // UUID for production
+    },
+  ],
   // ... other configuration
 }
 ```
 
 **Critical checks**:
+
 - [ ] `binding: "DB"` - Must match the binding name used in code and global-setup
 - [ ] `compatibility_flags` includes `"nodejs_compat"` - Required for Node.js APIs
 - [ ] `d1_databases` array is properly configured
@@ -137,6 +138,7 @@ pnpm wrangler whoami
 ```
 
 **If not authenticated**:
+
 ```bash
 # Login to Cloudflare
 pnpm wrangler login
@@ -163,6 +165,7 @@ pnpm wrangler d1 list
 ```
 
 **If database doesn't exist** (unlikely in existing project):
+
 ```bash
 # Create D1 database
 pnpm wrangler d1 create website-db
@@ -303,6 +306,7 @@ curl http://127.0.0.1:8788
 ```
 
 **Key checks**:
+
 - [ ] Server starts successfully
 - [ ] Listens on `127.0.0.1:8788` (IPv4, not localhost or ::1)
 - [ ] Application responds to HTTP requests
@@ -329,15 +333,18 @@ pnpm wrangler d1 execute DB --local --command "SELECT COUNT(*) FROM categories"
 ### Issue: wrangler command not found
 
 **Symptoms**:
+
 - `pnpm wrangler --version` returns error
 - "command not found: wrangler"
 
 **Solutions**:
+
 1. Install dependencies: `pnpm install`
 2. Verify wrangler is in package.json: `grep wrangler package.json`
 3. Try global install (not recommended): `npm install -g wrangler`
 
 **Verify Fix**:
+
 ```bash
 pnpm wrangler --version
 # Expected: ⛅️ wrangler 3.95.0
@@ -348,15 +355,18 @@ pnpm wrangler --version
 ### Issue: wrangler not authenticated
 
 **Symptoms**:
+
 - `pnpm wrangler whoami` shows "You are not authenticated"
 - Commands fail with authentication errors
 
 **Solutions**:
+
 1. Login: `pnpm wrangler login`
 2. Follow browser OAuth flow
 3. Verify: `pnpm wrangler whoami`
 
 **Verify Fix**:
+
 ```bash
 pnpm wrangler whoami
 # Expected: Shows your email and account
@@ -367,16 +377,19 @@ pnpm wrangler whoami
 ### Issue: D1 database not found
 
 **Symptoms**:
+
 - `wrangler d1` commands fail with "database not found"
 - Binding errors when starting wrangler dev
 
 **Solutions**:
+
 1. List databases: `pnpm wrangler d1 list`
 2. Verify `database_id` in `wrangler.jsonc` matches
 3. If missing, create database: `pnpm wrangler d1 create website-db`
 4. Update `wrangler.jsonc` with new database_id
 
 **Verify Fix**:
+
 ```bash
 pnpm wrangler d1 list
 # Expected: Shows website-db database
@@ -387,10 +400,12 @@ pnpm wrangler d1 list
 ### Issue: wrangler dev timeout or hangs
 
 **Symptoms**:
+
 - `pnpm preview` hangs at "Starting local server..."
 - Never shows "Ready on http://127.0.0.1:8788"
 
 **Solutions**:
+
 1. Kill existing wrangler processes: `pkill -f wrangler`
 2. Clear wrangler cache: `rm -rf .wrangler/state/`
 3. Rebuild: `rm -rf .next .open-next && pnpm run build`
@@ -398,6 +413,7 @@ pnpm wrangler d1 list
 5. Try different port: `wrangler dev --port 8789 --ip 127.0.0.1`
 
 **Verify Fix**:
+
 ```bash
 pnpm preview
 # Expected: Server starts within 60-90 seconds
@@ -408,16 +424,19 @@ pnpm preview
 ### Issue: IPv6 connection errors
 
 **Symptoms**:
+
 - Playwright tests fail with ECONNREFUSED
 - Server logs show `::1` instead of `127.0.0.1`
 
 **Solutions**:
+
 1. Verify `--ip 127.0.0.1` in package.json preview script
 2. Verify `127.0.0.1` (not localhost) in playwright.config.ts
 3. Check hosts file: `cat /etc/hosts | grep localhost`
 4. Ensure Node.js resolves correctly: `node -e "require('dns').lookup('localhost', console.log)"`
 
 **Verify Fix**:
+
 ```bash
 pnpm preview
 # Expected: Logs show "127.0.0.1:8788" (not localhost or ::1)
@@ -428,16 +447,19 @@ pnpm preview
 ### Issue: Migration or seed SQL errors
 
 **Symptoms**:
+
 - `wrangler d1 migrations apply` fails
 - `wrangler d1 execute` fails with SQL syntax errors
 
 **Solutions**:
+
 1. Verify SQL files exist and are valid
 2. Check for syntax errors in migration files
 3. Ensure foreign key dependencies are ordered correctly
 4. Test SQL manually: `pnpm wrangler d1 execute DB --local --command "SELECT 1"`
 
 **Verify Fix**:
+
 ```bash
 pnpm wrangler d1 migrations apply DB --local
 # Expected: ✅ Migrations applied successfully
@@ -448,15 +470,18 @@ pnpm wrangler d1 migrations apply DB --local
 ### Issue: tsx not found when testing global-setup
 
 **Symptoms**:
+
 - `pnpm exec tsx tests/global-setup.ts` fails
 - "command not found: tsx"
 
 **Solutions**:
+
 1. Install dev dependencies: `pnpm install`
 2. Verify tsx in package.json: `grep tsx package.json`
 3. If missing, install: `pnpm add -D tsx`
 
 **Verify Fix**:
+
 ```bash
 pnpm exec tsx --version
 # Expected: Prints version number

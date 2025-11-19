@@ -25,6 +25,7 @@ Cette checklist valide que la Phase 0 est **complète et prête pour merge** dan
 ### Quand Utiliser
 
 Exécuter cette validation:
+
 - ✅ **Après les 6 commits** (implémentation complète)
 - ✅ **Avant de créer la Pull Request**
 - ✅ **Après chaque modification** suite à review
@@ -95,31 +96,37 @@ git log main..HEAD --oneline
 **Vérifier**:
 
 **Commit 1**:
+
 - [ ] Utilise `📝 docs(e2e)`
 - [ ] Titre mentionne "ADR 002"
 - [ ] Corps explique la décision architecturale
 
 **Commit 2**:
+
 - [ ] Utilise `🗑️ remove` et `✅ test`
 - [ ] Titre mentionne "Playwright example template"
 - [ ] Corps liste les fichiers changés
 
 **Commit 3**:
+
 - [ ] Utilise `🔧 config(git)`
 - [ ] Titre mentionne ".gitignore"
 - [ ] Corps liste les patterns ajoutés
 
 **Commit 4**:
+
 - [ ] Utilise `♻️ refactor(test)`
 - [ ] Titre mentionne "playwright.config.ts"
 - [ ] Corps explique le nettoyage (dotenv, mobile configs)
 
 **Commit 5**:
+
 - [ ] Utilise `📝 docs(ci)`
 - [ ] Titre mentionne "ADR 003"
 - [ ] Corps explique l'archivage des commentaires CI
 
 **Commit 6**:
+
 - [ ] Utilise `📝 docs(scripts)`
 - [ ] Titre mentionne "dev vs preview"
 - [ ] Corps explique la documentation ajoutée
@@ -161,11 +168,13 @@ test -f docs/decisions/002-e2e-local-wrangler-dev.md && echo "✅ Existe" || ech
 ```
 
 **Contenu**:
+
 ```bash
 cat docs/decisions/002-e2e-local-wrangler-dev.md
 ```
 
 **Checklist**:
+
 - [ ] **Statut**: "Accepté"
 - [ ] **Date**: Présente (2025-01-19 ou similaire)
 - [ ] **Contexte**: Explique le conflit ADR 001 vs Story
@@ -177,6 +186,7 @@ cat docs/decisions/002-e2e-local-wrangler-dev.md
 - [ ] **Markdown valide**: Pas d'erreurs de syntaxe
 
 **Validation automatique**:
+
 ```bash
 # Vérifier les sections requises
 grep -q "## Statut" docs/decisions/002-e2e-local-wrangler-dev.md && echo "✅ Statut"
@@ -195,6 +205,7 @@ test -f docs/decisions/003-e2e-ci-timeout-history.md && echo "✅ Existe" || ech
 ```
 
 **Checklist**:
+
 - [ ] **Titre**: "Historique des Timeouts Tests E2E en CI"
 - [ ] **Statut**: "Résolu" avec date
 - [ ] **Contexte**: Explique le problème de timeout (>60s)
@@ -203,6 +214,7 @@ test -f docs/decisions/003-e2e-ci-timeout-history.md && echo "✅ Existe" || ech
 - [ ] **Références**: Liens vers quality.yml, Story, ADR 002
 
 **Validation automatique**:
+
 ```bash
 grep -q "Timeouts Tests E2E" docs/decisions/003-e2e-ci-timeout-history.md && echo "✅ Titre"
 grep -q "Résolu" docs/decisions/003-e2e-ci-timeout-history.md && echo "✅ Statut"
@@ -219,12 +231,14 @@ grep -A 5 "E2E Tests" .github/workflows/quality.yml
 ```
 
 **Checklist**:
+
 - [ ] Commentaires longs supprimés (plus de 15 lignes)
 - [ ] Référence ADR 003 présente
 - [ ] Echo mis à jour avec chemin vers ADR 003
 - [ ] YAML valide (pas d'erreur de syntaxe)
 
 **Validation YAML**:
+
 ```bash
 # Si yamllint installé
 yamllint .github/workflows/quality.yml || echo "⚠️ Installer yamllint pour vérification"
@@ -240,12 +254,14 @@ head -15 scripts/dev-quiet.sh
 ```
 
 **Checklist**:
+
 - [ ] Header présent (13 lignes)
 - [ ] Explique l'usage ("pnpm dev")
 - [ ] Note que E2E utilisent "pnpm preview"
 - [ ] Référence CLAUDE.md
 
 **Validation**:
+
 ```bash
 grep -q "E2E tests use" scripts/dev-quiet.sh && echo "✅ Note E2E présente"
 ```
@@ -260,6 +276,7 @@ grep -A 30 "Development Servers" CLAUDE.md
 ```
 
 **Checklist**:
+
 - [ ] Section "Development Servers" existe
 - [ ] Distingue "pnpm dev" (Node.js, localhost:3000)
 - [ ] Distingue "pnpm preview" (Cloudflare Workers, 127.0.0.1:8788)
@@ -268,6 +285,7 @@ grep -A 30 "Development Servers" CLAUDE.md
 - [ ] Référence Story document
 
 **Validation**:
+
 ```bash
 grep -q "Development Servers" CLAUDE.md && echo "✅ Section existe"
 grep -q "pnpm preview" CLAUDE.md && echo "✅ Mentionne preview"
@@ -288,13 +306,15 @@ grep -A 5 "# Test logs" .gitignore
 ```
 
 **Checklist**:
+
 - [ ] Commentaire "# Test logs" présent
 - [ ] Pattern "test-output.log" présent
 - [ ] Pattern "playwright-output.log" présent
-- [ ] Pattern "*.test.log" présent
-- [ ] Pattern "e2e-*.log" présent
+- [ ] Pattern "\*.test.log" présent
+- [ ] Pattern "e2e-\*.log" présent
 
 **Test fonctionnel**:
+
 ```bash
 # Créer un fichier test
 touch test-validation.test.log
@@ -313,12 +333,14 @@ grep -i "dotenv" playwright.config.ts
 ```
 
 **Checklist**:
+
 - [ ] Aucun import dotenv (commenté ou non)
 - [ ] Mobile Safari toujours présent dans projects
 - [ ] Nouveau commentaire webServer présent
 - [ ] Commentaire mentionne "Phase 1 will migrate"
 
 **Validation**:
+
 ```bash
 ! grep -q "dotenv" playwright.config.ts && echo "✅ Pas de dotenv"
 grep -q "Mobile Safari" playwright.config.ts && echo "✅ Mobile Safari présent"
@@ -411,6 +433,7 @@ git diff main --name-only
 ```
 
 **Attendu** (environ):
+
 - .gitignore
 - playwright.config.ts
 - .github/workflows/quality.yml
@@ -426,14 +449,14 @@ git diff main --name-only
 
 #### 6.1 Métriques Quantitatives
 
-| Métrique | Cible | Validation |
-|----------|-------|------------|
-| **Commits** | 6 | [ ] `git log main..HEAD --oneline | wc -l` |
-| **Fichiers modifiés** | ~10 | [ ] `git diff main --name-only | wc -l` |
-| **ADR créés** | 2 | [ ] ADR 002 + 003 |
-| **Lignes ajoutées .gitignore** | 5 | [ ] Patterns logs |
-| **Lignes supprimées playwright** | ~15 | [ ] dotenv + mobiles |
-| **Tests unitaires passing** | 100% | [ ] `pnpm test` |
+| Métrique                         | Cible | Validation                        |
+| -------------------------------- | ----- | --------------------------------- | ------ |
+| **Commits**                      | 6     | [ ] `git log main..HEAD --oneline | wc -l` |
+| **Fichiers modifiés**            | ~10   | [ ] `git diff main --name-only    | wc -l` |
+| **ADR créés**                    | 2     | [ ] ADR 002 + 003                 |
+| **Lignes ajoutées .gitignore**   | 5     | [ ] Patterns logs                 |
+| **Lignes supprimées playwright** | ~15   | [ ] dotenv + mobiles              |
+| **Tests unitaires passing**      | 100%  | [ ] `pnpm test`                   |
 
 #### 6.2 Métriques Qualitatives
 
@@ -734,6 +757,7 @@ Pour considérer la Phase 0 comme **validée**, TOUS les critères suivants doiv
 ### Décision Finale
 
 **✅ PHASE 0 VALIDÉE** si:
+
 - ✅ Script de validation passe (0 erreurs)
 - ✅ Tous les critères manuels cochés
 - ✅ Review team approuvée
@@ -741,6 +765,7 @@ Pour considérer la Phase 0 comme **validée**, TOUS les critères suivants doiv
 **Action**: Créer PR et demander merge.
 
 **❌ PHASE 0 NON VALIDÉE** si:
+
 - ❌ Script échoue (>0 erreurs)
 - ❌ Critères manuels incomplets
 - ❌ Décisions non consensuelles
@@ -754,6 +779,7 @@ Pour considérer la Phase 0 comme **validée**, TOUS les critères suivants doiv
 ### Après Validation Réussie
 
 1. **Créer la Pull Request**
+
    ```bash
    # Pusher la branche
    git push origin phase-0/cleanup-and-preparation
@@ -785,9 +811,9 @@ Pour considérer la Phase 0 comme **validée**, TOUS les critères suivants doiv
 
 ## Changelog
 
-| Date | Version | Changement |
-|------|---------|------------|
-| 2025-01-19 | 1.0.0 | Création de la checklist de validation Phase 0 |
+| Date       | Version | Changement                                     |
+| ---------- | ------- | ---------------------------------------------- |
+| 2025-01-19 | 1.0.0   | Création de la checklist de validation Phase 0 |
 
 ---
 

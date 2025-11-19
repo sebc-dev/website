@@ -11,6 +11,7 @@
 ### Format
 
 Chaque commit contient:
+
 1. **Pré-requis**: Ce qui doit être fait AVANT de commencer
 2. **Actions**: Étapes détaillées à suivre
 3. **Validation**: Tests à exécuter AVANT le commit
@@ -75,9 +76,11 @@ Copier le template suivant dans le fichier:
 # ADR 002: Tests E2E Locaux avec Wrangler Dev
 
 ## Statut
+
 Accepté
 
 ## Date
+
 2025-01-19
 
 ## Contexte
@@ -88,11 +91,13 @@ de l'application Next.js sur le runtime Cloudflare Workers.
 Deux approches ont été évaluées:
 
 ### Option A: Preview Deployments (ADR 001)
+
 - Tests exécutés contre des déploiements Cloudflare réels (preview URLs)
 - Environnement 100% identique à la production
 - Standard de l'industrie (Vercel, Netlify)
 
 ### Option B: Wrangler Dev Local (Story Document)
+
 - Tests exécutés contre `wrangler dev` localement en CI
 - Simulation du runtime Cloudflare Workers avec `workerd`
 - URL de test: `http://127.0.0.1:8788`
@@ -116,6 +121,7 @@ Nous adoptons **Option B: Wrangler Dev Local** pour les tests E2E.
 
 Le runtime `workerd` (utilisé par `wrangler dev`) est le **même** que
 celui utilisé en production Cloudflare Workers. Il détecte donc:
+
 - ✅ Bugs spécifiques au Edge runtime
 - ✅ Limitations I/O (pas de `fs`, `child_process`)
 - ✅ API manquantes ou contraintes mémoire
@@ -147,6 +153,7 @@ deployments APRÈS stabilisation des tests locaux (Phase future).
 ### Évolution Future
 
 Si l'Option B s'avère insuffisante (non anticipé), nous pouvons:
+
 1. Ajouter des tests de smoke en preview (complémentaires)
 2. Migrer complètement vers ADR 001 (rollback possible)
 
@@ -155,11 +162,13 @@ Si l'Option B s'avère insuffisante (non anticipé), nous pouvons:
 ### Option A: Preview Deployments (Rejetée)
 
 **Avantages**:
+
 - ✅ Environnement 100% identique à production
 - ✅ Tests l'infrastructure Cloudflare complète
 - ✅ Standard de l'industrie
 
 **Inconvénients**:
+
 - ❌ Quota Cloudflare requis (coût potentiel)
 - ❌ Temps de déploiement élevé (5-10min)
 - ❌ Gestion cleanup complexe (preview URLs persistantes)
@@ -308,6 +317,7 @@ git status
 ```
 
 Vous devriez voir:
+
 - `tests/example.spec.ts` (deleted, non commité)
 - `tests/compression.spec.ts` (untracked)
 - `tests/fixtures/compression.ts` (untracked)
@@ -751,6 +761,7 @@ Copier le template depuis [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) sec
 # ADR 003: Historique des Timeouts Tests E2E en CI
 
 ## Statut
+
 Résolu (2025-01-19)
 
 ## Contexte (Décembre 2024 - Janvier 2025)
@@ -787,6 +798,7 @@ Chercher autour des lignes 134-148:
 #### 5. Remplacer les commentaires longs
 
 **Avant** (~15 lignes de commentaires):
+
 ```yaml
 # E2E Tests temporarily disabled due to timeout issues
 # Root cause: Server fails to start within timeout in CI environment
@@ -796,6 +808,7 @@ Chercher autour des lignes 134-148:
 ```
 
 **Après** (2 lignes):
+
 ```yaml
 # E2E Tests temporarily disabled - See ADR 003 for history and resolution plan
 # Will be reactivated in Phase 3 (Intégration CI)
@@ -807,11 +820,13 @@ Chercher autour des lignes 134-148:
 #### 6. Mettre à jour le echo du step
 
 **Avant**:
+
 ```yaml
 run: echo "⚠️ E2E tests disabled - investigating timeout issues"
 ```
 
 **Après**:
+
 ```yaml
 run: echo "⚠️ E2E tests disabled - See /docs/decisions/003-e2e-ci-timeout-history.md"
 ```
@@ -923,11 +938,13 @@ code scripts/dev-quiet.sh
 #### 2. Ajouter un header de documentation
 
 **Avant** (ligne 1):
+
 ```bash
 #!/bin/bash
 ```
 
 **Après**:
+
 ```bash
 #!/bin/bash
 # ============================================================================
@@ -966,6 +983,7 @@ code CLAUDE.md
 #### 5. Localiser la section "Development"
 
 Chercher:
+
 ```markdown
 ### Development
 
@@ -984,6 +1002,7 @@ Chercher:
 The project uses two distinct development servers depending on the use case:
 
 #### Local Development (`pnpm dev`)
+
 - **Command**: `pnpm dev`
 - **Runtime**: Node.js (Next.js dev server with Turbopack)
 - **Script**: `scripts/dev-quiet.sh` (filters Durable Objects warnings)
@@ -992,6 +1011,7 @@ The project uses two distinct development servers depending on the use case:
 - **Features**: Fast Refresh, detailed error overlay, instant updates
 
 #### E2E Testing (`pnpm preview`)
+
 - **Command**: `pnpm preview`
 - **Runtime**: Cloudflare Workers (wrangler dev with workerd)
 - **Script**: Direct wrangler execution (as of Phase 1)
@@ -1004,6 +1024,7 @@ Using `pnpm dev` for tests will fail due to missing Cloudflare runtime features
 (D1 database, R2 cache, Durable Objects, etc.).
 
 **When to use which:**
+
 - Development/debugging → `pnpm dev` (faster, hot-reload)
 - E2E tests/validation → `pnpm preview` (production-like)
 - Manual testing against Workers → `pnpm preview`
@@ -1198,6 +1219,7 @@ echo "=== Fin Validation ==="
 **Cause**: Les fichiers ne sont pas stagés correctement.
 
 **Solution**:
+
 ```bash
 git status  # Vérifier l'état
 git add <fichiers>  # Re-stager les fichiers
@@ -1209,6 +1231,7 @@ git commit ...
 **Cause**: Le fichier a déjà été commité ou n'existe pas.
 
 **Solution**:
+
 ```bash
 git status | grep example.spec  # Vérifier l'état
 # Si déjà commité, passer au commit suivant
@@ -1219,6 +1242,7 @@ git status | grep example.spec  # Vérifier l'état
 **Cause**: Syntaxe YAML invalide après modification.
 
 **Solution**:
+
 ```bash
 # Installer yamllint si absent
 pip install yamllint
@@ -1234,6 +1258,7 @@ yamllint .github/workflows/quality.yml
 **Cause**: Modification involontaire de playwright.config.ts.
 
 **Solution**:
+
 ```bash
 # Vérifier le diff
 git diff HEAD~1 playwright.config.ts
@@ -1247,14 +1272,14 @@ git revert HEAD
 
 ## Résumé des Commits
 
-| # | Type | Description | Files | Status |
-|---|------|-------------|-------|--------|
-| 1 | 📝 docs | ADR 002 (architecture wrangler dev) | 1 nouveau | [ ] |
-| 2 | 🗑️ remove | Nettoyage Git (example + compression) | 3 modifiés | [ ] |
-| 3 | 🔧 config | .gitignore (patterns logs) | 1 modifié | [ ] |
-| 4 | ♻️ refactor | playwright.config.ts (dotenv, mobiles) | 1 modifié | [ ] |
-| 5 | 📝 docs | ADR 003 + CI workflow | 2 modifiés | [ ] |
-| 6 | 📝 docs | Scripts + CLAUDE.md | 2 modifiés | [ ] |
+| #   | Type        | Description                            | Files      | Status |
+| --- | ----------- | -------------------------------------- | ---------- | ------ |
+| 1   | 📝 docs     | ADR 002 (architecture wrangler dev)    | 1 nouveau  | [ ]    |
+| 2   | 🗑️ remove   | Nettoyage Git (example + compression)  | 3 modifiés | [ ]    |
+| 3   | 🔧 config   | .gitignore (patterns logs)             | 1 modifié  | [ ]    |
+| 4   | ♻️ refactor | playwright.config.ts (dotenv, mobiles) | 1 modifié  | [ ]    |
+| 5   | 📝 docs     | ADR 003 + CI workflow                  | 2 modifiés | [ ]    |
+| 6   | 📝 docs     | Scripts + CLAUDE.md                    | 2 modifiés | [ ]    |
 
 **Durée totale**: ~2h20
 **Critère de succès**: Tous les commits complétés, validation finale ✅

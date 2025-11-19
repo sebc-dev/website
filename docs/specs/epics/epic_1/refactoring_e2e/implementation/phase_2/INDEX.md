@@ -49,14 +49,14 @@ This phase focuses on **stabilizing the E2E testing infrastructure** after the c
 
 ## 📚 Available Documents
 
-| Document | Description | For Who | Duration |
-|----------|-------------|---------|----------|
-| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)** | Atomic strategy in 5 commits | Developer | 15 min |
-| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)** | Detailed checklist per commit | Developer | Reference |
-| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)** | Environment variables & setup | DevOps/Dev | 10 min |
-| **[guides/REVIEW.md](./guides/REVIEW.md)** | Code review guide | Reviewer | 20 min |
-| **[guides/TESTING.md](./guides/TESTING.md)** | Testing guide (validation strategy) | QA/Dev | 20 min |
-| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist | Tech Lead | 30 min |
+| Document                                                                       | Description                         | For Who    | Duration  |
+| ------------------------------------------------------------------------------ | ----------------------------------- | ---------- | --------- |
+| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)**                         | Atomic strategy in 5 commits        | Developer  | 15 min    |
+| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)**                               | Detailed checklist per commit       | Developer  | Reference |
+| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)**                             | Environment variables & setup       | DevOps/Dev | 10 min    |
+| **[guides/REVIEW.md](./guides/REVIEW.md)**                                     | Code review guide                   | Reviewer   | 20 min    |
+| **[guides/TESTING.md](./guides/TESTING.md)**                                   | Testing guide (validation strategy) | QA/Dev     | 20 min    |
+| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist          | Tech Lead  | 30 min    |
 
 ---
 
@@ -151,14 +151,14 @@ cat docs/specs/epics/epic_1/refactoring_e2e/implementation/phase_2/validation/VA
 
 ## 📊 Metrics
 
-| Metric | Target | Actual |
-|--------|--------|--------|
-| **Total Commits** | 5 | - |
-| **Implementation Time** | 2-4h | - |
-| **Review Time** | 1-2h | - |
-| **Test Success Rate** | 100% | - |
-| **Flaky Tests** | 0 | - |
-| **Browser Coverage** | 3 engines | - |
+| Metric                  | Target    | Actual |
+| ----------------------- | --------- | ------ |
+| **Total Commits**       | 5         | -      |
+| **Implementation Time** | 2-4h      | -      |
+| **Review Time**         | 1-2h      | -      |
+| **Test Success Rate**   | 100%      | -      |
+| **Flaky Tests**         | 0         | -      |
+| **Browser Coverage**    | 3 engines | -      |
 
 ---
 

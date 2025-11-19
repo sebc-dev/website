@@ -60,6 +60,7 @@ Phase 1 is split into **5 atomic commits**. You can:
 - [ ] **No extra flags**: Only necessary flags present
 
 **Expected script**:
+
 ```json
 "preview": "opennextjs-cloudflare build && wrangler dev --port 8788 --ip 127.0.0.1"
 ```
@@ -151,6 +152,7 @@ curl -I http://127.0.0.1:8788
 - [ ] **Throws on failure**: Function throws error if setup fails
 
 **CRITICAL CHECK**: Search file for `wrangler` and verify EVERY occurrence has `--local`:
+
 ```bash
 grep -n "wrangler" tests/global-setup.ts | grep -v "--local"
 # Expected: No results (or only in comments)
@@ -621,11 +623,13 @@ Use this template for feedback:
 ### 🔧 Required Changes
 
 **Commit 2 - Global Setup**
+
 - **Issue**: Missing `--local` flag on line X
   - **Why**: Would target production database
   - **Suggestion**: Add `--local` to command
 
 **Commit 3 - URLs**
+
 - **Issue**: Comment could be more descriptive
   - **Why**: Future developers may not understand IPv4 rationale
   - **Suggestion**: Expand comment to explain Node.js 20+ localhost resolution

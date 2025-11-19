@@ -43,6 +43,7 @@ La Phase 0 est une phase de **nettoyage et documentation**, elle ne nécessite *
 ### Système d'Exploitation
 
 Testé et supporté sur:
+
 - ✅ macOS 12+ (Monterey, Ventura, Sonoma)
 - ✅ Linux (Ubuntu 20.04+, Debian 11+, Fedora 36+)
 - ✅ Windows 10/11 avec WSL2 (Ubuntu 22.04 recommandé)
@@ -74,6 +75,7 @@ git --version
 #### Installation
 
 **macOS**:
+
 ```bash
 # Avec Homebrew
 brew install git
@@ -82,17 +84,20 @@ brew install git
 ```
 
 **Linux (Ubuntu/Debian)**:
+
 ```bash
 sudo apt update
 sudo apt install git
 ```
 
 **Linux (Fedora)**:
+
 ```bash
 sudo dnf install git
 ```
 
 **Windows**:
+
 - Installer WSL2: https://learn.microsoft.com/en-us/windows/wsl/install
 - Puis installer Git dans WSL:
   ```bash
@@ -141,6 +146,7 @@ node --version
 ```
 
 **Alternative: Installation directe**:
+
 - macOS: `brew install node@20`
 - Ubuntu/Debian: https://github.com/nodesource/distributions
 - Windows WSL: Utiliser nvm (recommandé)
@@ -449,6 +455,7 @@ Ready to start Phase 0 implementation!
 ### Pas de Configuration Additionnelle Requise
 
 La Phase 0 étant une phase de nettoyage/documentation:
+
 - ❌ Pas de variables d'environnement à configurer
 - ❌ Pas de services à démarrer
 - ❌ Pas de secrets à générer
@@ -457,6 +464,7 @@ La Phase 0 étant une phase de nettoyage/documentation:
 ### Configurations Nécessaires pour Phases Futures (Informations)
 
 **Phase 1+** nécessitera:
+
 - wrangler CLI configuré
 - Cloudflare account
 - Secrets CLOUDFLARE_API_TOKEN et CLOUDFLARE_ACCOUNT_ID
@@ -472,6 +480,7 @@ La Phase 0 étant une phase de nettoyage/documentation:
 **Cause**: pnpm non installé ou non dans PATH.
 
 **Solution**:
+
 ```bash
 # Installer avec npm
 npm install -g pnpm
@@ -488,6 +497,7 @@ echo $PATH | grep npm
 **Cause**: Mauvaise version de Node.js.
 
 **Solution**:
+
 ```bash
 # Avec nvm
 nvm install 20
@@ -505,6 +515,7 @@ nvm alias default 20
 **Cause**: Permissions node_modules ou cache corrompus.
 
 **Solution**:
+
 ```bash
 # Nettoyer le cache
 pnpm store prune
@@ -521,11 +532,13 @@ pnpm install
 **Cause**: Problèmes existants dans le code (pas liés à Phase 0).
 
 **Action**:
+
 1. **Ne pas démarrer Phase 0**
 2. Fixer les erreurs existantes d'abord
 3. Ou consulter l'équipe si les erreurs sont normales (tests désactivés?)
 
 **Workaround temporaire** (si erreurs acceptées):
+
 ```bash
 # Commenter temporairement dans package.json
 # "lint": "echo 'Lint skipped for Phase 0'"
@@ -537,6 +550,7 @@ pnpm install
 **Cause**: Branche phase-0/cleanup-and-preparation déjà créée.
 
 **Solution**:
+
 ```bash
 # Supprimer la branche existante
 git branch -D phase-0/cleanup-and-preparation
@@ -551,6 +565,7 @@ git checkout -b phase-0/cleanup-and-preparation
 **Cause**: Fichiers modifiés dans working directory.
 
 **Solution**:
+
 ```bash
 # Option 1: Stash temporaire
 git stash
@@ -568,6 +583,7 @@ git checkout -b phase-0/cleanup-and-preparation
 **Cause**: yamllint non installé (optionnel).
 
 **Solution**:
+
 ```bash
 # Python/pip requis
 # Vérifier:
@@ -687,9 +703,9 @@ Si tous les checks passent:
 
 ## Changelog
 
-| Date | Version | Changement |
-|------|---------|------------|
-| 2025-01-19 | 1.0.0 | Création du guide de setup Phase 0 |
+| Date       | Version | Changement                         |
+| ---------- | ------- | ---------------------------------- |
+| 2025-01-19 | 1.0.0   | Création du guide de setup Phase 0 |
 
 ---
 

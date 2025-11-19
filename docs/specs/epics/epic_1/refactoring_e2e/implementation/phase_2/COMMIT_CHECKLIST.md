@@ -68,6 +68,7 @@ echo $?  # Should be 0
 ```
 
 **Expected Result**:
+
 - Build completes without errors
 - `worker.js` is ~500KB-2MB (varies by app size)
 - Assets directory contains all static files
@@ -154,10 +155,10 @@ Part of Phase 2 - Commit 1/5"
 
 Record startup times:
 
-- [ ] Run 1: _____ seconds
-- [ ] Run 2: _____ seconds
-- [ ] Run 3: _____ seconds
-- [ ] Average: _____ seconds
+- [ ] Run 1: **\_** seconds
+- [ ] Run 2: **\_** seconds
+- [ ] Run 3: **\_** seconds
+- [ ] Average: **\_** seconds
 - [ ] Target: <120 seconds
 
 ### Potential Issues & Fixes
@@ -215,6 +216,7 @@ pnpm test:e2e --grep "should" | head -20
 ```
 
 **Expected Result**:
+
 - Server starts consistently in <120 seconds
 - Binds to 127.0.0.1:8788 every time
 - Playwright detects server readiness
@@ -325,6 +327,7 @@ Part of Phase 2 - Commit 2/5"
 **Symptoms**: Expected `br` but got `gzip` or no compression
 
 **Solutions**:
+
 - [ ] Check Cloudflare automatic compression settings
 - [ ] Verify request headers include `accept-encoding`
 - [ ] Adjust test assertions to match workerd behavior
@@ -335,6 +338,7 @@ Part of Phase 2 - Commit 2/5"
 **Symptoms**: Redirect status code or location header differs
 
 **Solutions**:
+
 - [ ] Verify middleware configuration
 - [ ] Check Next.js 15 redirect behavior
 - [ ] Adjust assertions if workerd behavior is correct
@@ -345,6 +349,7 @@ Part of Phase 2 - Commit 2/5"
 **Symptoms**: Intermittent failures, race conditions
 
 **Solutions**:
+
 - [ ] Add explicit waits: `await page.waitForLoadState('networkidle')`
 - [ ] Use Playwright auto-waiting features
 - [ ] Check for async operations completing
@@ -384,6 +389,7 @@ done
 ```
 
 **Expected Result**:
+
 - All tests pass on first run
 - All tests pass consistently (3/3 runs)
 - No flaky or intermittent failures
@@ -494,6 +500,7 @@ Part of Phase 2 - Commit 3/5"
 #### Issue: Global Setup Fails with D1_ERROR
 
 **Solutions**:
+
 - [ ] Verify `--local` flag is present (critical!)
 - [ ] Check wrangler version: `pnpm wrangler --version` (should be 3.x)
 - [ ] Ensure D1 database is created locally
@@ -502,6 +509,7 @@ Part of Phase 2 - Commit 3/5"
 #### Issue: Migrations Don't Apply
 
 **Solutions**:
+
 - [ ] Check migration files exist in `drizzle/migrations/`
 - [ ] Verify SQL syntax in migration files
 - [ ] Try applying manually: `pnpm wrangler d1 migrations apply DB --local`
@@ -510,6 +518,7 @@ Part of Phase 2 - Commit 3/5"
 #### Issue: Seeding Fails with SQL Syntax Error
 
 **Solutions**:
+
 - [ ] Validate SQL syntax in seed files
 - [ ] Check for missing semicolons
 - [ ] Verify string quoting (SQLite uses single quotes)
@@ -518,6 +527,7 @@ Part of Phase 2 - Commit 3/5"
 #### Issue: No Data After Seeding
 
 **Solutions**:
+
 - [ ] Check if SQL file paths are correct
 - [ ] Verify seed files are not empty
 - [ ] Check for foreign key constraints (seed in correct order)
@@ -552,6 +562,7 @@ pnpm test:e2e
 ```
 
 **Expected Result**:
+
 - Global setup completes successfully
 - Categories and articles tables populated
 - Tests can query D1 without errors
@@ -625,31 +636,31 @@ Run full test suite on each browser:
 #### Chromium Tests
 
 - [ ] Run: `pnpm test:e2e --project=chromium`
-- [ ] Record results: ___/X tests passed
+- [ ] Record results: \_\_\_/X tests passed
 - [ ] Note any failures
-- [ ] Check execution time: _____ seconds
+- [ ] Check execution time: **\_** seconds
 
 #### Firefox Tests
 
 - [ ] Run: `pnpm test:e2e --project=firefox`
-- [ ] Record results: ___/X tests passed
+- [ ] Record results: \_\_\_/X tests passed
 - [ ] Note any failures
-- [ ] Check execution time: _____ seconds
+- [ ] Check execution time: **\_** seconds
 
 #### WebKit Tests
 
 - [ ] Run: `pnpm test:e2e --project=webkit`
-- [ ] Record results: ___/X tests passed
+- [ ] Record results: \_\_\_/X tests passed
 - [ ] Note any failures
-- [ ] Check execution time: _____ seconds
+- [ ] Check execution time: **\_** seconds
 
 ### Flakiness Detection
 
 Run tests 3 times to check for flaky tests:
 
-- [ ] Run 1: `pnpm test:e2e` → Result: _____
-- [ ] Run 2: `pnpm test:e2e` → Result: _____
-- [ ] Run 3: `pnpm test:e2e` → Result: _____
+- [ ] Run 1: `pnpm test:e2e` → Result: **\_**
+- [ ] Run 2: `pnpm test:e2e` → Result: **\_**
+- [ ] Run 3: `pnpm test:e2e` → Result: **\_**
 
 **Flakiness Check**: All 3 runs should have identical results
 
@@ -658,6 +669,7 @@ Run tests 3 times to check for flaky tests:
 #### Issue: Tests Pass on Chromium but Fail on Firefox/WebKit
 
 **Solutions**:
+
 - [ ] Check for browser-specific API usage
 - [ ] Verify CSS compatibility
 - [ ] Adjust wait strategies for slower browsers
@@ -666,6 +678,7 @@ Run tests 3 times to check for flaky tests:
 #### Issue: Flaky Tests (Pass Sometimes, Fail Sometimes)
 
 **Solutions**:
+
 - [ ] Identify flaky test: review 3 runs results
 - [ ] Add explicit waits: `await page.waitForLoadState('networkidle')`
 - [ ] Use Playwright's auto-wait features
@@ -675,6 +688,7 @@ Run tests 3 times to check for flaky tests:
 #### Issue: WebKit Takes Much Longer
 
 **Solutions**:
+
 - [ ] This is normal (WebKit is typically slower)
 - [ ] Consider increasing timeouts for WebKit project
 - [ ] Optimize expensive operations in application
@@ -726,6 +740,7 @@ done
 ```
 
 **Expected Result**:
+
 - All tests pass on all 3 browsers
 - 3 consecutive runs have identical results (0 flaky tests)
 - Total execution time <5 minutes locally

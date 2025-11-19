@@ -1,6 +1,7 @@
 # ADR 003: Historique des Timeouts Tests E2E en CI
 
 ## Statut
+
 Résolu (2025-01-19)
 
 ## Contexte (Décembre 2024 - Janvier 2025)
@@ -25,23 +26,26 @@ Le serveur Next.js avec l'adaptateur OpenNext Cloudflare prend **>60 secondes**
 ```yaml
 # Configuration actuelle dans playwright.config.ts
 webServer: {
-  command: 'pnpm start',         # Production build
-  url: 'http://localhost:3000',
-  timeout: 120000,               # 2 minutes
-}
+    command: 'pnpm start', # Production build
+    url: 'http://localhost:3000',
+    timeout: 120000, # 2 minutes
+  }
 ```
 
 #### Tentatives de Solutions
 
 **Option 1: pnpm dev (Next.js dev server)**
+
 - Résultat: Timeout après 120s
 - Cause: Turbopack + OpenNext Cloudflare adapter = cold start lent
 
 **Option 2: pnpm start (Production build)**
+
 - Résultat: Timeout après 60-120s
 - Cause: Même problème d'initialisation wrangler dev
 
 **Option 3: Augmenter timeout à 180s**
+
 - Résultat: Échecs intermittents
 - Cause: Ne résout pas le problème sous-jacent
 
@@ -68,6 +72,7 @@ Tests E2E désactivés dans `.github/workflows/quality.yml`:
 **Refonte complète de l'architecture E2E** (ADR 002 + Story E2E Cloudflare Refactor)
 
 Au lieu de corriger le symptôme (timeout), nous résolvons la cause racine:
+
 - Abandon de `next dev`/`next start` pour les tests E2E
 - Migration vers `wrangler dev` (runtime Cloudflare Workers)
 - Utilisation de `workerd` directement (pas de surcouche Next.js)
@@ -83,14 +88,14 @@ Au lieu de corriger le symptôme (timeout), nous résolvons la cause racine:
 
 ### Comparaison Architectures
 
-| Aspect | Avant (next start) | Après (wrangler dev) |
-|--------|-------------------|---------------------|
-| Runtime | Node.js | Cloudflare Workers (workerd) |
-| Startup (CI) | >120s (timeout) | 60-90s (stable) |
-| Startup (local) | ~5-10s | ~30-40s |
-| Fidélité prod | ❌ Faible | ✅ Identique |
-| D1 support | ⚠️ Simulé | ✅ Natif |
-| Debugging | ⚠️ Difficile | ✅ Facile |
+| Aspect          | Avant (next start) | Après (wrangler dev)         |
+| --------------- | ------------------ | ---------------------------- |
+| Runtime         | Node.js            | Cloudflare Workers (workerd) |
+| Startup (CI)    | >120s (timeout)    | 60-90s (stable)              |
+| Startup (local) | ~5-10s             | ~30-40s                      |
+| Fidélité prod   | ❌ Faible          | ✅ Identique                 |
+| D1 support      | ⚠️ Simulé          | ✅ Natif                     |
+| Debugging       | ⚠️ Difficile       | ✅ Facile                    |
 
 ## Implémentation
 
@@ -127,6 +132,7 @@ Au lieu de corriger le symptôme (timeout), nous résolvons la cause racine:
 **Date de résolution**: 2025-01-19 (Phase 0 completed)
 
 Le problème de timeout est résolu par:
+
 1. ✅ **ADR 002** créé et accepté (architecture wrangler dev)
 2. 🚧 **Phase 0** terminée (nettoyage et préparation)
 3. ⏳ **Phase 1-3** à implémenter (configuration, stabilisation, CI)
@@ -134,6 +140,7 @@ Le problème de timeout est résolu par:
 **Statut actuel**: Tests E2E toujours désactivés, mais solution validée.
 
 **Prochaines étapes**:
+
 - Implémenter Phase 1 (Configuration Locale)
 - Valider tests localement
 - Réactiver CI (Phase 3)

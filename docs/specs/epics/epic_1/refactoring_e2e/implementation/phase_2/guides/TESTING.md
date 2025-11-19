@@ -18,6 +18,7 @@ Phase 2 focuses on **debugging and validating** the E2E testing infrastructure. 
 6. **Flakiness Detection**: Eliminate intermittent failures
 
 **Target Metrics**:
+
 - Build success rate: 100%
 - Startup success rate: 100%
 - Test pass rate: 100%
@@ -51,6 +52,7 @@ time (pnpm run build && pnpm exec opennextjs-cloudflare build)
 ### Expected Results
 
 **Success Indicators**:
+
 ```
 ✓ Compiled successfully
 ✓ Build completed in [X]s
@@ -134,6 +136,7 @@ WRANGLER_LOG=debug pnpm preview
 ### Expected Results
 
 **Success Indicators**:
+
 ```
 ⛅️ wrangler 3.x.x
 -------------------
@@ -142,6 +145,7 @@ WRANGLER_LOG=debug pnpm preview
 ```
 
 **Metrics**:
+
 - Startup time: <120 seconds
 - Consistent across runs (variance <20s)
 - Binds to IPv4 (127.0.0.1)
@@ -214,6 +218,7 @@ pnpm exec playwright show-report
 ### Expected Results
 
 **Success Output**:
+
 ```
 Running 15 tests using 4 workers
 
@@ -226,6 +231,7 @@ Running 15 tests using 4 workers
 ```
 
 **Metrics**:
+
 - Pass rate: 100% (15/15 or X/X tests)
 - Total time: <5 minutes
 - No flaky tests
@@ -238,12 +244,14 @@ Running 15 tests using 4 workers
 **What it tests**: HTTP compression (Brotli, Gzip) works on workerd
 
 **Assertions**:
+
 - `content-encoding: br` header present for Brotli
 - `content-encoding: gzip` header present for Gzip
 - Compressed response size < uncompressed size
 - Content decompresses correctly
 
 **Common issues**:
+
 - Cloudflare automatic compression may interfere
 - Need to check actual headers, not just assume compression
 
@@ -252,12 +260,14 @@ Running 15 tests using 4 workers
 **What it tests**: i18n routing and redirects work correctly
 
 **Assertions**:
+
 - `/fr` redirects to `/fr/`
 - `/en` redirects to `/en/`
 - Root `/` redirects to default locale `/fr/`
 - Accept-Language header affects routing
 
 **Common issues**:
+
 - Redirect behavior may differ on workerd
 - Need to verify response status codes (301, 302, 307)
 
@@ -266,12 +276,14 @@ Running 15 tests using 4 workers
 **What it tests**: Edge cases in internationalization
 
 **Assertions**:
+
 - Missing translation keys handled gracefully
 - Special characters in URLs work
 - Unicode support
 - Fallback behavior correct
 
 **Common issues**:
+
 - Encoding differences between Node.js and workerd
 - Edge runtime limitations
 
@@ -287,12 +299,14 @@ Running 15 tests using 4 workers
 ### Debugging Failed Tests
 
 **View detailed report**:
+
 ```bash
 pnpm test:e2e --reporter=html
 pnpm exec playwright show-report
 ```
 
 The HTML report includes:
+
 - Screenshots on failure
 - Video recordings
 - Trace files (step-by-step execution)
@@ -300,6 +314,7 @@ The HTML report includes:
 - Console logs
 
 **Analyze specific failure**:
+
 ```bash
 # Run single test in debug mode
 pnpm test:e2e tests/compression.spec.ts --debug
@@ -340,6 +355,7 @@ pnpm wrangler d1 execute DB --local --command "SELECT sql FROM sqlite_master WHE
 ### Expected Results
 
 **Global Setup Output**:
+
 ```
 🚀 [GlobalSetup] Démarrage de l'initialisation D1...
    📋 Application des migrations D1...
@@ -351,6 +367,7 @@ pnpm wrangler d1 execute DB --local --command "SELECT sql FROM sqlite_master WHE
 ```
 
 **Data Verification**:
+
 ```sql
 -- Categories count
 SELECT COUNT(*) FROM categories;
@@ -426,6 +443,7 @@ done
 ### Expected Results
 
 **Per Browser**:
+
 ```
 [chromium] 15 passed (1.2m)
 [firefox]  15 passed (1.4m)
@@ -434,6 +452,7 @@ done
 
 **Consistency Check**:
 All 3 runs should have IDENTICAL results:
+
 - Same pass/fail status for each test
 - No intermittent failures
 - Similar execution times (within 20% variance)
@@ -450,12 +469,14 @@ All 3 runs should have IDENTICAL results:
 ### Detecting Flaky Tests
 
 **Flakiness indicators**:
+
 - Test passes sometimes, fails sometimes
 - Different results across runs
 - Timeouts on some runs
 - "Element not found" errors intermittently
 
 **How to identify**:
+
 ```bash
 # Run tests 5-10 times
 for i in {1..10}; do
@@ -469,6 +490,7 @@ diff run_2.txt run_3.txt
 ```
 
 **Common fixes**:
+
 - Add explicit waits: `await page.waitForLoadState('networkidle')`
 - Use Playwright auto-waiting
 - Check for race conditions
@@ -482,41 +504,41 @@ Track these metrics throughout Phase 2:
 
 ### Build Metrics
 
-| Run | Build Time | Worker Size | Assets Count | Status |
-|-----|------------|-------------|--------------|--------|
-| 1   | ___ sec    | ___ KB      | ___          | [✅/❌] |
-| 2   | ___ sec    | ___ KB      | ___          | [✅/❌] |
-| 3   | ___ sec    | ___ KB      | ___          | [✅/❌] |
+| Run | Build Time | Worker Size | Assets Count | Status  |
+| --- | ---------- | ----------- | ------------ | ------- |
+| 1   | \_\_\_ sec | \_\_\_ KB   | \_\_\_       | [✅/❌] |
+| 2   | \_\_\_ sec | \_\_\_ KB   | \_\_\_       | [✅/❌] |
+| 3   | \_\_\_ sec | \_\_\_ KB   | \_\_\_       | [✅/❌] |
 
 **Target**: 100% success rate, consistent times
 
 ### Startup Metrics
 
-| Run | Startup Time | IPv4 Bind | Responds | Status |
-|-----|--------------|-----------|----------|--------|
-| 1   | ___ sec      | [Yes/No]  | [Yes/No] | [✅/❌] |
-| 2   | ___ sec      | [Yes/No]  | [Yes/No] | [✅/❌] |
-| 3   | ___ sec      | [Yes/No]  | [Yes/No] | [✅/❌] |
+| Run | Startup Time | IPv4 Bind | Responds | Status  |
+| --- | ------------ | --------- | -------- | ------- |
+| 1   | \_\_\_ sec   | [Yes/No]  | [Yes/No] | [✅/❌] |
+| 2   | \_\_\_ sec   | [Yes/No]  | [Yes/No] | [✅/❌] |
+| 3   | \_\_\_ sec   | [Yes/No]  | [Yes/No] | [✅/❌] |
 
 **Target**: <120s, 100% IPv4, 100% responds
 
 ### Test Metrics
 
-| Run | Tests | Passed | Failed | Flaky | Time |
-|-----|-------|--------|--------|-------|------|
-| 1   | ___   | ___    | ___    | ___   | ___ |
-| 2   | ___   | ___    | ___    | ___   | ___ |
-| 3   | ___   | ___    | ___    | ___   | ___ |
+| Run | Tests  | Passed | Failed | Flaky  | Time   |
+| --- | ------ | ------ | ------ | ------ | ------ |
+| 1   | \_\_\_ | \_\_\_ | \_\_\_ | \_\_\_ | \_\_\_ |
+| 2   | \_\_\_ | \_\_\_ | \_\_\_ | \_\_\_ | \_\_\_ |
+| 3   | \_\_\_ | \_\_\_ | \_\_\_ | \_\_\_ | \_\_\_ |
 
 **Target**: 100% pass, 0 flaky, <5 min
 
 ### Browser Metrics
 
-| Browser  | Tests | Passed | Failed | Time | Status |
-|----------|-------|--------|--------|------|--------|
-| Chromium | ___   | ___    | ___    | ___  | [✅/❌] |
-| Firefox  | ___   | ___    | ___    | ___  | [✅/❌] |
-| WebKit   | ___   | ___    | ___    | ___  | [✅/❌] |
+| Browser  | Tests  | Passed | Failed | Time   | Status  |
+| -------- | ------ | ------ | ------ | ------ | ------- |
+| Chromium | \_\_\_ | \_\_\_ | \_\_\_ | \_\_\_ | [✅/❌] |
+| Firefox  | \_\_\_ | \_\_\_ | \_\_\_ | \_\_\_ | [✅/❌] |
+| WebKit   | \_\_\_ | \_\_\_ | \_\_\_ | \_\_\_ | [✅/❌] |
 
 **Target**: 100% pass on all browsers
 

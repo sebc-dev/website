@@ -15,6 +15,7 @@ Complete validation checklist before marking Phase 2 as complete.
 - [ ] Commit messages document issue, cause, and solution
 
 **Validation**:
+
 ```bash
 git log --oneline | head -5
 # Should show 5 commits for Phase 2
@@ -35,6 +36,7 @@ git log --oneline | head -5
 - [ ] Build time is reasonable (<5 minutes)
 
 **Validation**:
+
 ```bash
 # Clean build test
 rm -rf .next .open-next node_modules/.cache
@@ -64,6 +66,7 @@ du -sh .open-next/
 - [ ] Port 8788 is correctly configured
 
 **Validation**:
+
 ```bash
 # Startup timing test (3 runs)
 for i in {1..3}; do
@@ -99,6 +102,7 @@ pnpm preview | grep "127.0.0.1:8788"
 - [ ] Tests complete in reasonable time (<5 min)
 
 **Validation**:
+
 ```bash
 # Run all tests
 pnpm test:e2e
@@ -129,6 +133,7 @@ pnpm exec playwright show-report
 - [ ] Tests can query D1 successfully
 
 **Validation**:
+
 ```bash
 # Test global setup
 pnpm exec tsx tests/global-setup.ts
@@ -163,6 +168,7 @@ pnpm exec tsx tests/global-setup.ts
 - [ ] No excessively slow tests (>30s per test)
 
 **Validation**:
+
 ```bash
 # Test each browser individually
 pnpm test:e2e --project=chromium
@@ -188,6 +194,7 @@ pnpm test:e2e
 - [ ] No race conditions observed
 
 **Validation**:
+
 ```bash
 # Flakiness detection (3 consecutive runs)
 for i in {1..3}; do
@@ -219,6 +226,7 @@ diff test_run_2.log test_run_3.log
 - [ ] Configuration changes are documented
 
 **Validation**:
+
 ```bash
 # Type-checking
 pnpm exec tsc --noEmit
@@ -245,6 +253,7 @@ echo $?  # Should be 0
 - [ ] Configuration is well-commented
 
 **Validation**:
+
 ```bash
 # Check playwright config
 grep "127.0.0.1:8788" playwright.config.ts
@@ -273,6 +282,7 @@ grep -A 5 "d1_databases" wrangler.jsonc
 - [ ] Metrics recorded for baseline
 
 **Validation**:
+
 ```bash
 # Check commit messages
 git log --format="%s%n%b" | head -50
@@ -290,39 +300,39 @@ Record final metrics:
 
 ### Build Metrics
 
-- **Build success rate**: ___/3 runs = ___% (Target: 100%)
-- **Average build time**: ___ seconds (Target: <300s)
-- **Worker size**: ___ KB (Baseline for monitoring)
-- **Assets count**: ___ files
+- **Build success rate**: **_/3 runs = _**% (Target: 100%)
+- **Average build time**: \_\_\_ seconds (Target: <300s)
+- **Worker size**: \_\_\_ KB (Baseline for monitoring)
+- **Assets count**: \_\_\_ files
 
 ### Startup Metrics
 
-- **Startup success rate**: ___/3 runs = ___% (Target: 100%)
-- **Average startup time**: ___ seconds (Target: <120s)
+- **Startup success rate**: **_/3 runs = _**% (Target: 100%)
+- **Average startup time**: \_\_\_ seconds (Target: <120s)
 - **IPv4 binding**: [Yes/No] (Target: Yes)
 - **HTTP response**: [Yes/No] (Target: Yes)
 
 ### Test Metrics
 
-- **Total tests**: ___
-- **Tests passed**: ___ (Target: 100%)
-- **Tests failed**: ___ (Target: 0)
-- **Pass rate**: ___% (Target: 100%)
-- **Flaky tests**: ___ (Target: 0)
-- **Total execution time**: ___ seconds (Target: <300s)
+- **Total tests**: \_\_\_
+- **Tests passed**: \_\_\_ (Target: 100%)
+- **Tests failed**: \_\_\_ (Target: 0)
+- **Pass rate**: \_\_\_% (Target: 100%)
+- **Flaky tests**: \_\_\_ (Target: 0)
+- **Total execution time**: \_\_\_ seconds (Target: <300s)
 
 ### Browser Metrics
 
-- **Chromium pass rate**: ___% (Target: 100%)
-- **Firefox pass rate**: ___% (Target: 100%)
-- **WebKit pass rate**: ___% (Target: 100%)
+- **Chromium pass rate**: \_\_\_% (Target: 100%)
+- **Firefox pass rate**: \_\_\_% (Target: 100%)
+- **WebKit pass rate**: \_\_\_% (Target: 100%)
 
 ### D1 Metrics
 
 - **Global setup success**: [Yes/No] (Target: Yes)
-- **Categories seeded**: ___ rows
-- **Articles seeded**: ___ rows
-- **Seeding time**: ___ seconds
+- **Categories seeded**: \_\_\_ rows
+- **Articles seeded**: \_\_\_ rows
+- **Seeding time**: \_\_\_ seconds
 
 ---
 
@@ -335,6 +345,7 @@ Record final metrics:
 - [ ] No regressions in application functionality
 
 **Validation**:
+
 ```bash
 # Verify Phase 1 config still present
 grep "127.0.0.1:8788" playwright.config.ts
@@ -357,6 +368,7 @@ git diff phase_1..phase_2 | less
 - [ ] No external service dependencies blocking tests
 
 **Validation**:
+
 ```bash
 # Check environment
 node --version
@@ -383,6 +395,7 @@ pnpm list wrangler
 - [ ] D1 inspection works: `pnpm wrangler d1 execute DB --local`
 
 **Validation**:
+
 ```bash
 # Test verbose logging
 WRANGLER_LOG=debug pnpm preview | grep -i "debug"
@@ -475,6 +488,7 @@ echo "Ready to proceed to Phase 3 (CI Integration)! 🚀"
 ```
 
 **Validation**:
+
 ```bash
 # Save script as validate-phase2.sh
 chmod +x validate-phase2.sh
@@ -489,18 +503,18 @@ chmod +x validate-phase2.sh
 
 Complete this table with your actual metrics:
 
-| Category | Metric | Target | Actual | Status |
-|----------|--------|--------|--------|--------|
-| **Build** | Success rate | 100% | ___% | ⏳ |
-| **Build** | Average time | <300s | ___s | ⏳ |
-| **Startup** | Success rate | 100% | ___% | ⏳ |
-| **Startup** | Average time | <120s | ___s | ⏳ |
-| **Tests** | Pass rate | 100% | ___% | ⏳ |
-| **Tests** | Flaky count | 0 | ___ | ⏳ |
-| **Chromium** | Pass rate | 100% | ___% | ⏳ |
-| **Firefox** | Pass rate | 100% | ___% | ⏳ |
-| **WebKit** | Pass rate | 100% | ___% | ⏳ |
-| **D1** | Setup success | Yes | [Y/N] | ⏳ |
+| Category     | Metric        | Target | Actual  | Status |
+| ------------ | ------------- | ------ | ------- | ------ |
+| **Build**    | Success rate  | 100%   | \_\_\_% | ⏳     |
+| **Build**    | Average time  | <300s  | \_\_\_s | ⏳     |
+| **Startup**  | Success rate  | 100%   | \_\_\_% | ⏳     |
+| **Startup**  | Average time  | <120s  | \_\_\_s | ⏳     |
+| **Tests**    | Pass rate     | 100%   | \_\_\_% | ⏳     |
+| **Tests**    | Flaky count   | 0      | \_\_\_  | ⏳     |
+| **Chromium** | Pass rate     | 100%   | \_\_\_% | ⏳     |
+| **Firefox**  | Pass rate     | 100%   | \_\_\_% | ⏳     |
+| **WebKit**   | Pass rate     | 100%   | \_\_\_% | ⏳     |
+| **D1**       | Setup success | Yes    | [Y/N]   | ⏳     |
 
 ---
 
@@ -515,13 +529,13 @@ Select one:
   - Ready for Phase 3 (CI Integration)
 
 - [ ] 🔧 **CHANGES REQUESTED** - Issues to fix:
-  - [ ] Issue 1: ___________________________
-  - [ ] Issue 2: ___________________________
-  - [ ] Issue 3: ___________________________
+  - [ ] Issue 1: ************\_\_\_************
+  - [ ] Issue 2: ************\_\_\_************
+  - [ ] Issue 3: ************\_\_\_************
 
 - [ ] ❌ **REJECTED** - Major rework needed:
-  - [ ] Major Issue 1: ___________________________
-  - [ ] Major Issue 2: ___________________________
+  - [ ] Major Issue 1: ************\_\_\_************
+  - [ ] Major Issue 2: ************\_\_\_************
 
 ---
 

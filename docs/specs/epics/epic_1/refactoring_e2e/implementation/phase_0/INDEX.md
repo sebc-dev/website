@@ -13,6 +13,7 @@
 ## Vue d'Ensemble
 
 Cette phase prépare le projet pour une refonte propre de l'architecture E2E en:
+
 - Résolvant les conflits architecturaux entre documentation
 - Nettoyant l'état Git incohérent
 - Supprimant le code mort et obsolète
@@ -43,14 +44,14 @@ Cette phase prépare le projet pour une refonte propre de l'architecture E2E en:
 
 ## Commits Atomiques (6 commits)
 
-| # | Type | Description | Durée | Files |
-|---|------|-------------|-------|-------|
-| 1 | 📝 docs | Résolution conflit architectural (ADR 002) | 30min | 1 nouveau |
-| 2 | 🗑️ remove | Nettoyage Git (suppression + tracking) | 20min | 3 modifiés |
-| 3 | 🔧 config | Mise à jour .gitignore (patterns logs) | 10min | 1 modifié |
-| 4 | ♻️ refactor | Nettoyage playwright.config.ts | 30min | 1 modifié |
-| 5 | 📝 docs | Archivage commentaires CI (ADR 003) | 30min | 2 modifiés |
-| 6 | 📝 docs | Documentation scripts et workflow | 20min | 2 modifiés |
+| #   | Type        | Description                                | Durée | Files      |
+| --- | ----------- | ------------------------------------------ | ----- | ---------- |
+| 1   | 📝 docs     | Résolution conflit architectural (ADR 002) | 30min | 1 nouveau  |
+| 2   | 🗑️ remove   | Nettoyage Git (suppression + tracking)     | 20min | 3 modifiés |
+| 3   | 🔧 config   | Mise à jour .gitignore (patterns logs)     | 10min | 1 modifié  |
+| 4   | ♻️ refactor | Nettoyage playwright.config.ts             | 30min | 1 modifié  |
+| 5   | 📝 docs     | Archivage commentaires CI (ADR 003)        | 30min | 2 modifiés |
+| 6   | 📝 docs     | Documentation scripts et workflow          | 20min | 2 modifiés |
 
 **Total**: ~2h20 (hors décisions architecturales)
 
@@ -61,6 +62,7 @@ Cette phase prépare le projet pour une refonte propre de l'architecture E2E en:
 ### Pourquoi cette phase?
 
 L'analyse approfondie du projet a révélé un **état de transition** entre deux architectures E2E:
+
 - **Score de conformité**: 61% vs guide Cloudflare/Playwright 2025
 - **Conflits**: ADR 001 (preview deployments) vs Story (wrangler dev local)
 - **Code mort**: Imports commentés, configurations obsolètes
@@ -150,11 +152,11 @@ L'analyse approfondie du projet a révélé un **état de transition** entre deu
 
 ## Risques et Mitigations
 
-| Risque | Probabilité | Impact | Mitigation |
-|--------|-------------|--------|------------|
-| Décision architecturale retardée | Moyenne | Élevé | Préparer comparaison détaillée Option A vs B |
-| Désaccord sur choix mobile configs | Faible | Faible | Examiner git log pour contexte historique |
-| Perte d'historique important | Très faible | Moyen | Archiver dans ADR, ne jamais supprimer sans backup |
+| Risque                             | Probabilité | Impact | Mitigation                                         |
+| ---------------------------------- | ----------- | ------ | -------------------------------------------------- |
+| Décision architecturale retardée   | Moyenne     | Élevé  | Préparer comparaison détaillée Option A vs B       |
+| Désaccord sur choix mobile configs | Faible      | Faible | Examiner git log pour contexte historique          |
+| Perte d'historique important       | Très faible | Moyen  | Archiver dans ADR, ne jamais supprimer sans backup |
 
 ---
 
@@ -246,9 +248,9 @@ Créer une issue ou PR pour améliorer cette documentation.
 
 ## Changelog de la Phase
 
-| Date | Version | Changement |
-|------|---------|------------|
-| 2025-01-19 | 1.0.0 | Création initiale de la documentation Phase 0 |
+| Date       | Version | Changement                                    |
+| ---------- | ------- | --------------------------------------------- |
+| 2025-01-19 | 1.0.0   | Création initiale de la documentation Phase 0 |
 
 ---
 

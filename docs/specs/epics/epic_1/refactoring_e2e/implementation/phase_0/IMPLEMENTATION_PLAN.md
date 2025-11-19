@@ -35,6 +35,7 @@ Préparer le projet pour une refonte propre de l'architecture E2E en résolvant 
 ### Approche
 
 **6 commits atomiques** groupés par type de changement:
+
 - **Commits 1, 5, 6**: Documentation (ADR, commentaires, scripts)
 - **Commits 2, 3**: Nettoyage Git (.gitignore, tracking)
 - **Commit 4**: Refactoring configuration (playwright.config.ts)
@@ -47,13 +48,13 @@ Préparer le projet pour une refonte propre de l'architecture E2E en résolvant 
 
 **Score de conformité**: 61% vs guide Cloudflare/Playwright 2025
 
-| Aspect | État | Problème | Impact |
-|--------|------|----------|--------|
-| **Architecture E2E** | ⚠️ Conflit | ADR 001 vs Story Document | Bloque Phase 1 |
-| **Git Status** | ❌ Incohérent | 3 fichiers non commités | Confusion |
-| **playwright.config.ts** | ⚠️ Code mort | Imports dotenv commentés | Maintenance |
-| **CI Workflow** | ⚠️ Commentaires longs | 15 lignes de doc inline | Lisibilité |
-| **Scripts** | ⚠️ Non documenté | Confusion dev vs preview | Onboarding |
+| Aspect                   | État                  | Problème                  | Impact         |
+| ------------------------ | --------------------- | ------------------------- | -------------- |
+| **Architecture E2E**     | ⚠️ Conflit            | ADR 001 vs Story Document | Bloque Phase 1 |
+| **Git Status**           | ❌ Incohérent         | 3 fichiers non commités   | Confusion      |
+| **playwright.config.ts** | ⚠️ Code mort          | Imports dotenv commentés  | Maintenance    |
+| **CI Workflow**          | ⚠️ Commentaires longs | 15 lignes de doc inline   | Lisibilité     |
+| **Scripts**              | ⚠️ Non documenté      | Confusion dev vs preview  | Onboarding     |
 
 ### Tech Stack
 
@@ -99,14 +100,14 @@ Total: 10 fichiers
 
 ### Sizing
 
-| Commit | Type | Lines Changed | Files | Durée Impl | Durée Review |
-|--------|------|---------------|-------|------------|--------------|
-| 1 | docs | +80 | 1 nouveau | 30min | 15min |
-| 2 | remove | ~100 (±50/±50) | 3 | 20min | 10min |
-| 3 | config | +5 | 1 | 10min | 5min |
-| 4 | refactor | ~15 (-12/+3) | 1 | 30min | 15min |
-| 5 | docs | ~120 (+100/±20) | 2 | 30min | 15min |
-| 6 | docs | ~30 (+25/+5) | 2 | 20min | 10min |
+| Commit | Type     | Lines Changed   | Files     | Durée Impl | Durée Review |
+| ------ | -------- | --------------- | --------- | ---------- | ------------ |
+| 1      | docs     | +80             | 1 nouveau | 30min      | 15min        |
+| 2      | remove   | ~100 (±50/±50)  | 3         | 20min      | 10min        |
+| 3      | config   | +5              | 1         | 10min      | 5min         |
+| 4      | refactor | ~15 (-12/+3)    | 1         | 30min      | 15min        |
+| 5      | docs     | ~120 (+100/±20) | 2         | 30min      | 15min        |
+| 6      | docs     | ~30 (+25/+5)    | 2         | 20min      | 10min        |
 
 **Total**: ~350 lines changed, 10 files, 2h20 impl, 1h10 review
 
@@ -139,6 +140,7 @@ Documenter la décision architecturale entre preview deployments (ADR 001) et wr
 #### Changements
 
 **Fichiers créés**:
+
 - `docs/decisions/002-e2e-local-wrangler-dev.md` (~80 lines)
 
 **Contenu du fichier ADR 002**:
@@ -147,15 +149,19 @@ Documenter la décision architecturale entre preview deployments (ADR 001) et wr
 # ADR 002: Tests E2E Locaux avec Wrangler Dev
 
 ## Statut
+
 Accepté
 
 ## Contexte
+
 Conflit entre ADR 001 (preview deployments) et Story (wrangler dev local).
 
 ## Décision
+
 Utiliser wrangler dev localement en CI pour les tests E2E.
 
 ## Rationale
+
 - Plus rapide (pas de déploiement cloud)
 - Pas de dépendance aux quotas Cloudflare
 - workerd runtime suffisamment fidèle
@@ -163,18 +169,22 @@ Utiliser wrangler dev localement en CI pour les tests E2E.
 - Possibilité d'ajouter smoke tests en preview ultérieurement
 
 ## Conséquences
+
 - ADR 001 archivé (pas supprimé)
 - Implémentation selon Story Document phases 1-4
 - CI utilise `pnpm preview` (wrangler dev)
 
 ## Alternatives Considérées
+
 **Option A**: Preview Deployments (ADR 001)
+
 - ✅ Environnement 100% identique production
 - ❌ Quota Cloudflare requis
 - ❌ Temps de déploiement élevé
 - ❌ Gestion cleanup complexe
 
 ## Références
+
 - /docs/decisions/001-e2e-tests-preview-deployments.md (archivé)
 - /docs/specs/epics/epic_1/refactoring_e2e/STORY_E2E_CLOUDFLARE_REFACTOR.md
 - /docs/guide_cloudflare_playwright.md
@@ -221,6 +231,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 #### Objectif
 
 Mettre l'index Git en cohérence:
+
 - Commiter la suppression de `tests/example.spec.ts` (template Playwright)
 - Tracker les nouveaux tests fonctionnels (`compression.spec.ts`, `compression.ts`)
 - Supprimer le fichier temporaire `test-output.log`
@@ -228,11 +239,13 @@ Mettre l'index Git en cohérence:
 #### Changements
 
 **Fichiers modifiés**:
+
 - `tests/example.spec.ts` (deleted, maintenant commité)
 - `tests/compression.spec.ts` (nouveau, maintenant tracké)
 - `tests/fixtures/compression.ts` (nouveau, maintenant tracké)
 
 **Fichiers supprimés** (non Git):
+
 - `test-output.log` (fichier temporaire à la racine)
 
 #### Actions
@@ -311,6 +324,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 #### Changements
 
 **Fichiers modifiés**:
+
 - `.gitignore` (+5 lines)
 
 **Contenu ajouté** (après la section Playwright):
@@ -371,11 +385,13 @@ Supprimer le code mort (imports dotenv commentés, configurations mobiles inutil
 #### Changements
 
 **Fichiers modifiés**:
+
 - `playwright.config.ts` (~15 lines: -12 suppressed, +3 comments updated)
 
 **Actions détaillées**:
 
 1. **Supprimer les imports dotenv commentés** (lignes 7-9):
+
    ```typescript
    // À SUPPRIMER:
    // import dotenv from 'dotenv';
@@ -459,17 +475,20 @@ Archiver l'historique des timeouts CI dans un ADR dédié et simplifier les comm
 #### Changements
 
 **Fichiers créés**:
+
 - `docs/decisions/003-e2e-ci-timeout-history.md` (~100 lines)
 
 **Fichiers modifiés**:
+
 - `.github/workflows/quality.yml` (~20 lines: suppression commentaires longs)
 
 **Contenu du fichier ADR 003**:
 
-```markdown
+````markdown
 # ADR 003: Historique des Timeouts Tests E2E en CI
 
 ## Statut
+
 Résolu (2025-01-19)
 
 ## Contexte (2025-01-XX)
@@ -483,6 +502,7 @@ en raison de timeouts persistants lors du démarrage du serveur.
 # GitHub Actions logs:
 Error: webServer.url http://localhost:3000 timed out (60000ms)
 ```
+````
 
 ### Environnement
 
@@ -498,6 +518,7 @@ Le serveur de développement Next.js avec OpenNext Cloudflare prend
 **>60 secondes** pour démarrer en "cold start" sur les runners CI.
 
 Facteurs contributifs:
+
 1. OpenNext adapter initialize (~20-30s)
 2. Next.js compilation avec Turbopack (~15-25s)
 3. Durable Objects warnings flood stdout (~5-10s)
@@ -520,9 +541,9 @@ Migrer vers architecture wrangler dev (ADR 002) avec timeouts augmentés.
 
 ```yaml
 webServer:
-  command: pnpm preview  # wrangler dev (pas next dev)
+  command: pnpm preview # wrangler dev (pas next dev)
   url: http://127.0.0.1:8788
-  timeout: 120000  # 2 minutes (vs 60s précédent)
+  timeout: 120000 # 2 minutes (vs 60s précédent)
 ```
 
 ### Améliorations
@@ -549,7 +570,8 @@ webServer:
 - 2025-01-XX: Tests désactivés (timeout)
 - 2025-01-19: ADR créé, historique archivé
 - 2025-01-XX: Phase 1-3 implémentées, tests réactivés
-```
+
+````
 
 **Modifications `.github/workflows/quality.yml`**:
 
@@ -562,9 +584,10 @@ webServer:
 # Tracked in: /docs/specs/epics/epic_1/refactoring_e2e/STORY_E2E_CLOUDFLARE_REFACTOR.md
 - name: E2E Tests (Temporarily Disabled)
   run: echo "⚠️ E2E tests disabled - investigating timeout issues"
-```
+````
 
 **Après**:
+
 ```yaml
 # E2E Tests temporarily disabled - See ADR 003 for history and resolution plan
 # Will be reactivated in Phase 3 (Intégration CI)
@@ -626,17 +649,20 @@ Clarifier la différence entre `pnpm dev` (développement) et `pnpm preview` (E2
 #### Changements
 
 **Fichiers modifiés**:
+
 - `scripts/dev-quiet.sh` (+5 lines de commentaires en tête)
 - `CLAUDE.md` (~20 lines ajoutées dans section "Development")
 
 **Modifications `scripts/dev-quiet.sh`**:
 
 **Avant** (ligne 1):
+
 ```bash
 #!/bin/bash
 ```
 
 **Après**:
+
 ```bash
 #!/bin/bash
 # Script: Local Development Server (Next.js with Turbopack)
@@ -659,6 +685,7 @@ Ajouter après la ligne "- `pnpm dev` - Start Next.js dev server...":
 The project uses two distinct development servers depending on the use case:
 
 #### Local Development (`pnpm dev`)
+
 - **Command**: `pnpm dev`
 - **Runtime**: Node.js (Next.js dev server with Turbopack)
 - **Script**: `scripts/dev-quiet.sh` (filters Durable Objects warnings)
@@ -667,6 +694,7 @@ The project uses two distinct development servers depending on the use case:
 - **Features**: Fast Refresh, detailed error overlay, instant updates
 
 #### E2E Testing (`pnpm preview`)
+
 - **Command**: `pnpm preview`
 - **Runtime**: Cloudflare Workers (wrangler dev with workerd)
 - **Script**: Direct wrangler execution
@@ -750,11 +778,13 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 Si plusieurs développeurs disponibles:
 
 **Développeur A**:
+
 - Commit 1 (ADR 002) - 30min
 - Commit 5 (ADR 003) - 30min
 - Commit 6 (Docs) - 20min
 
 **Développeur B** (après Commit 1):
+
 - Commit 2 (Git cleanup) - 20min
 - Commit 3 (.gitignore) - 10min
 - Commit 4 (playwright.config) - 30min
@@ -868,14 +898,14 @@ git checkout -b phase-0/cleanup-and-preparation
 
 ### Métriques Quantitatives
 
-| Métrique | Avant Phase 0 | Après Phase 0 | Target |
-|----------|---------------|---------------|--------|
-| **Fichiers untracked** | 3 | 0 | 0 |
-| **Fichiers deleted non commités** | 1 | 0 | 0 |
-| **Imports dotenv dans playwright.config** | 3 lignes | 0 | 0 |
-| **ADR créés** | 1 (ADR 001) | 3 (002, 003) | 2+ |
-| **Lignes de commentaires CI** | 15 | 2 | <5 |
-| **Documentation scripts** | 0 | 1 section | 1 |
+| Métrique                                  | Avant Phase 0 | Après Phase 0 | Target |
+| ----------------------------------------- | ------------- | ------------- | ------ |
+| **Fichiers untracked**                    | 3             | 0             | 0      |
+| **Fichiers deleted non commités**         | 1             | 0             | 0      |
+| **Imports dotenv dans playwright.config** | 3 lignes      | 0             | 0      |
+| **ADR créés**                             | 1 (ADR 001)   | 3 (002, 003)  | 2+     |
+| **Lignes de commentaires CI**             | 15            | 2             | <5     |
+| **Documentation scripts**                 | 0             | 1 section     | 1      |
 
 ### Métriques Qualitatives
 
@@ -898,6 +928,7 @@ git checkout -b phase-0/cleanup-and-preparation
 ### Transition vers Phase 1
 
 **Prérequis Phase 1** (tous doivent être ✅):
+
 - ✅ Phase 0 mergée dans main
 - ✅ ADR 002 validé par l'équipe
 - ✅ Git status clean
@@ -927,6 +958,7 @@ Lire `/docs/specs/epics/epic_1/refactoring_e2e/STORY_E2E_CLOUDFLARE_REFACTOR.md`
 ### Escalation
 
 Si bloqué >1h sur un commit:
+
 1. Vérifier la section "Validation" du commit concerné
 2. Consulter [guides/REVIEW.md](./guides/REVIEW.md) section "Troubleshooting"
 3. Demander aide au tech lead ou créer une issue GitHub
@@ -935,9 +967,9 @@ Si bloqué >1h sur un commit:
 
 ## Changelog
 
-| Date | Version | Changement |
-|------|---------|------------|
-| 2025-01-19 | 1.0.0 | Création du plan d'implémentation Phase 0 |
+| Date       | Version | Changement                                |
+| ---------- | ------- | ----------------------------------------- |
+| 2025-01-19 | 1.0.0   | Création du plan d'implémentation Phase 0 |
 
 ---
 

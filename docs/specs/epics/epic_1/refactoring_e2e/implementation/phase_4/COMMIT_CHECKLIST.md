@@ -158,7 +158,7 @@ grep "guide_cloudflare_playwright" CLAUDE.md
 #### AI Assistant Context
 
 - [ ] Information helps Claude Code understand architecture
-- [ ] Explains *why* there are two server modes
+- [ ] Explains _why_ there are two server modes
 - [ ] Clarifies when to use which command
 - [ ] Provides enough context for AI to help with E2E tests
 
@@ -217,7 +217,7 @@ Part of Phase 4 - Commit 2/4"
   - [ ] IPv4 forcing (127.0.0.1:8788)
 - [ ] Section: "Adding a New Test"
   - [ ] Step-by-step guide with example
-  - [ ] Test file naming convention (*.spec.ts)
+  - [ ] Test file naming convention (\*.spec.ts)
   - [ ] Basic test structure
   - [ ] Using fixtures
   - [ ] Best practices for Cloudflare Workers (Edge constraints)
@@ -253,7 +253,7 @@ Part of Phase 4 - Commit 2/4"
 
 ### Validation
 
-```bash
+````bash
 # Verify file created
 test -f tests/README.md && echo "✅ File exists"
 
@@ -277,7 +277,7 @@ test -f tests/global-setup.ts
 # Verify code blocks have syntax highlighting
 grep '```bash' tests/README.md
 grep '```typescript' tests/README.md
-```
+````
 
 **Expected Result**: Comprehensive, actionable guide for E2E test development
 
@@ -314,7 +314,7 @@ grep '```typescript' tests/README.md
 
 - [ ] Markdown syntax valid
 - [ ] Consistent heading levels
-- [ ] Code blocks have language tags (```typescript, ```bash)
+- [ ] Code blocks have language tags (`typescript, `bash)
 - [ ] Links use proper format
 - [ ] No spelling or grammar errors
 
@@ -487,6 +487,7 @@ After all documentation commits are complete:
 - [ ] Update team wiki/Confluence with links (if applicable)
 
 **Suggested Team Message**:
+
 ```
 📚 E2E Testing Documentation Complete!
 

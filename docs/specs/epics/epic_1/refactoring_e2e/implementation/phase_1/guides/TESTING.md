@@ -42,6 +42,7 @@ pnpm preview --help 2>&1 | head -5
 ```
 
 **What to check**:
+
 - [ ] package.json is valid JSON
 - [ ] preview script can be invoked
 - [ ] No syntax errors
@@ -66,6 +67,7 @@ pnpm exec tsx tests/global-setup.ts
 ```
 
 **What to check**:
+
 - [ ] TypeScript compiles without errors
 - [ ] Script runs without throwing
 - [ ] Migrations applied successfully
@@ -93,6 +95,7 @@ pnpm exec playwright test --list
 ```
 
 **What to check**:
+
 - [ ] TypeScript compiles without errors
 - [ ] Playwright can load config
 - [ ] globalSetup file is found (Commit 4)
@@ -136,6 +139,7 @@ curl http://127.0.0.1:8788
 ```
 
 **Validation checklist**:
+
 - [ ] Wrangler starts within 120 seconds
 - [ ] Logs show `127.0.0.1:8788`
 - [ ] Application responds to HTTP requests
@@ -162,6 +166,7 @@ pnpm wrangler d1 execute DB --local --command "SELECT name FROM categories LIMIT
 ```
 
 **Validation checklist**:
+
 - [ ] Global setup runs without errors
 - [ ] Migrations applied
 - [ ] Categories seeded (count > 0)
@@ -187,6 +192,7 @@ pnpm exec playwright test --dry-run
 ```
 
 **Validation checklist**:
+
 - [ ] Playwright calls global setup
 - [ ] Global setup completes successfully
 - [ ] Wrangler dev starts
@@ -276,18 +282,21 @@ pnpm test:e2e --project=webkit
 ### Expected Results
 
 **Compression Tests** (tests/compression.spec.ts):
+
 - [ ] Brotli compression detected in response headers
 - [ ] Gzip compression works as fallback
 - [ ] Content-Encoding header is correct
 - [ ] Response body is compressed
 
 **Middleware Tests** (tests/middleware.spec.ts):
+
 - [ ] i18n routing works (e.g., /fr redirects to /fr/)
 - [ ] Locale detection from URL
 - [ ] Default locale handling
 - [ ] Language switching
 
 **i18n Edge Cases** (tests/i18n-edge-cases.spec.ts):
+
 - [ ] Handles missing translations gracefully
 - [ ] Fallback to default locale
 - [ ] URL patterns with complex paths
@@ -373,6 +382,7 @@ pnpm test:e2e --workers=2
 ### Flakiness Indicators
 
 **Symptoms of flaky tests**:
+
 - ❌ Tests pass sometimes, fail other times
 - ❌ Different results on repeated runs
 - ❌ Timing-dependent failures
@@ -380,6 +390,7 @@ pnpm test:e2e --workers=2
 - ❌ Database state inconsistencies
 
 **Common causes**:
+
 1. **IPv4/IPv6 issues**: Using localhost instead of 127.0.0.1
 2. **Timing issues**: Insufficient timeout
 3. **Database state**: Global setup not cleaning DB properly
@@ -388,6 +399,7 @@ pnpm test:e2e --workers=2
 ### Fixing Flaky Tests
 
 **Fix 1: IPv4 Forcing**
+
 ```bash
 # Verify 127.0.0.1 everywhere
 grep -r "localhost" package.json playwright.config.ts
@@ -395,6 +407,7 @@ grep -r "localhost" package.json playwright.config.ts
 ```
 
 **Fix 2: Extend Timeout**
+
 ```typescript
 // In playwright.config.ts
 webServer: {
@@ -403,6 +416,7 @@ webServer: {
 ```
 
 **Fix 3: Clean DB State**
+
 ```typescript
 // In tests/global-setup.ts
 // Uncomment D1 cache purge to ensure clean state
@@ -429,12 +443,12 @@ Phase 1 doesn't add new code, so coverage is about **existing tests passing**:
 
 ### Performance Metrics
 
-| Phase                 | Expected Time |
-| --------------------- | ------------- |
-| **Global setup**      | < 10 seconds  |
-| **Wrangler startup**  | 60-90 seconds |
-| **Tests execution**   | 2-3 minutes   |
-| **Total**             | < 5 minutes   |
+| Phase                | Expected Time |
+| -------------------- | ------------- |
+| **Global setup**     | < 10 seconds  |
+| **Wrangler startup** | 60-90 seconds |
+| **Tests execution**  | 2-3 minutes   |
+| **Total**            | < 5 minutes   |
 
 Track actual times:
 
@@ -581,12 +595,14 @@ Before merging Phase 1:
 ### Running Tests
 
 ✅ **Do**:
+
 - Clean build before first test run
 - Run full suite before committing
 - Check for flakiness (run multiple times)
 - Review Playwright HTML report
 
 ❌ **Don't**:
+
 - Skip global setup validation
 - Ignore timeout warnings
 - Commit without running tests
@@ -595,12 +611,14 @@ Before merging Phase 1:
 ### Debugging
 
 ✅ **Do**:
+
 - Use Playwright UI for visual debugging
 - Check wrangler logs for binding errors
 - Verify D1 database state
 - Use verbose logging when stuck
 
 ❌ **Don't**:
+
 - Debug without understanding the issue
 - Change timeouts without investigating root cause
 - Ignore error messages

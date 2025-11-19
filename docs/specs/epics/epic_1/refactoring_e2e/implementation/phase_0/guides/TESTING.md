@@ -35,6 +35,7 @@ La Phase 0 est une **phase de préparation** (nettoyage, documentation, décisio
 ### Objectif de la Stratégie
 
 S'assurer que les modifications de la Phase 0:
+
 1. Ne cassent **rien** (tests existants passent toujours)
 2. Sont de **haute qualité** (documentation claire, code propre)
 3. Sont **complètes** (tous les fichiers prévus sont modifiés)
@@ -45,15 +46,16 @@ S'assurer que les modifications de la Phase 0:
 
 ### Types de Modifications
 
-| Type | Commits | Tests Requis |
-|------|---------|--------------|
-| **Documentation** | 1, 5, 6 | Validation manuelle (liens, clarté) |
-| **Nettoyage Git** | 2, 3 | Vérification automatique (git status) |
-| **Refactoring Config** | 4 | Non-régression (tests existants) |
+| Type                   | Commits | Tests Requis                          |
+| ---------------------- | ------- | ------------------------------------- |
+| **Documentation**      | 1, 5, 6 | Validation manuelle (liens, clarté)   |
+| **Nettoyage Git**      | 2, 3    | Vérification automatique (git status) |
+| **Refactoring Config** | 4       | Non-régression (tests existants)      |
 
 ### Aucune Logique Métier
 
 Phase 0 ne contient **aucun** des éléments suivants:
+
 - Nouvelles fonctions ou classes
 - Nouveaux endpoints API
 - Nouvelle logique de calcul
@@ -95,6 +97,7 @@ Chaque type de modification nécessite une validation spécifique:
 #### Documentation (Commits 1, 5, 6)
 
 **Checklist manuelle**:
+
 - [ ] Markdown valide (pas d'erreurs de syntaxe)
 - [ ] Liens fonctionnels (pas de 404)
 - [ ] Clarté du contenu (compréhensible par un nouveau dev)
@@ -102,28 +105,33 @@ Chaque type de modification nécessite une validation spécifique:
 - [ ] Structure cohérente (titres, sections)
 
 **Outils**:
+
 - Markdownlint (VS Code extension)
 - Lecture humaine (le plus important!)
 
 #### Configuration (Commit 4)
 
 **Checklist manuelle**:
+
 - [ ] Syntaxe TypeScript correcte (compilable)
 - [ ] Aucune option supprimée par erreur
 - [ ] Commentaires clairs et à jour
 
 **Outils**:
+
 - `tsc --noEmit` (compilation TypeScript)
 - Lecture du diff Git
 
 #### Nettoyage Git (Commits 2, 3)
 
 **Checklist automatique**:
+
 - [ ] Git status clean (pas de fichiers oubliés)
 - [ ] Fichiers trackés sont les bons
 - [ ] Patterns .gitignore fonctionnent
 
 **Commandes**:
+
 ```bash
 git status
 git ls-files | grep compression
@@ -135,11 +143,13 @@ git status --ignored | grep test-output.log
 **Objectif**: S'assurer qu'aucune fonctionnalité existante n'est cassée.
 
 **Méthode**:
+
 - Exécuter **tous** les tests existants (unitaires)
 - Vérifier que le build passe
 - Vérifier que le linter passe
 
 **Commandes complètes**:
+
 ```bash
 # Installation fresh (si doute)
 pnpm install
@@ -168,20 +178,24 @@ echo "✅ Tous les checks passent"
 #### 1. Tests Unitaires (Vitest)
 
 **Commande**:
+
 ```bash
 pnpm test
 ```
 
 **Fichiers testés** (exemples):
+
 - `**/*.{test,spec}.{ts,tsx}` (sauf /tests directory)
 - Par exemple: `lib/**/*.test.ts`, `components/**/*.spec.tsx`
 
 **Critère de succès**:
+
 - ✅ Tous les tests passent (100% success rate)
 - ✅ Aucune nouvelle erreur introduite
 - ✅ Coverage ne doit pas diminuer (si metrics activées)
 
 **En cas d'échec**:
+
 1. Identifier le commit responsable
 2. Examiner le diff du commit
 3. Fixer ou rollback le commit
@@ -189,20 +203,24 @@ pnpm test
 #### 2. Linter (ESLint/Biome)
 
 **Commande**:
+
 ```bash
 pnpm lint
 ```
 
 **Vérifie**:
+
 - Style de code (indentation, guillemets, etc.)
 - Bonnes pratiques (pas de console.log, etc.)
 - Imports inutilisés
 
 **Critère de succès**:
+
 - ✅ 0 erreurs
 - ⚠️ Warnings acceptables si préexistants
 
 **En cas d'échec**:
+
 ```bash
 # Auto-fix si possible
 pnpm lint:fix
@@ -213,39 +231,47 @@ pnpm lint:fix
 #### 3. TypeScript (Vérification de Types)
 
 **Commande**:
+
 ```bash
 pnpm exec tsc --noEmit
 ```
 
 **Vérifie**:
+
 - Types corrects dans playwright.config.ts (Commit 4)
 - Pas de `any` implicites
 - Imports/exports corrects
 
 **Critère de succès**:
+
 - ✅ 0 erreurs de type
 
 **En cas d'échec** (Commit 4):
+
 - Vérifier que les imports de `@playwright/test` sont présents
 - Vérifier que `devices` est importé si utilisé
 
 #### 4. Build Next.js
 
 **Commande**:
+
 ```bash
 pnpm build
 ```
 
 **Vérifie**:
+
 - Compilation de toutes les pages
 - Génération des assets
 - Pas d'erreurs de bundling
 
 **Critère de succès**:
+
 - ✅ Build réussit sans erreur
 - ✅ Dossier `.next` généré
 
 **En cas d'échec**:
+
 - Examiner les logs de build
 - Vérifier les imports/exports dans les fichiers modifiés
 
@@ -290,6 +316,7 @@ cat docs/decisions/003-e2e-ci-timeout-history.md
 ```
 
 **Critère de succès**:
+
 - ✅ Un nouveau développeur peut comprendre les décisions
 - ✅ Les liens sont fonctionnels
 - ✅ Pas de sections manquantes
@@ -315,6 +342,7 @@ pnpm dev
 ```
 
 **Critère de succès**:
+
 - ✅ Header clair et informatif
 - ✅ Script toujours fonctionnel
 
@@ -335,6 +363,7 @@ grep -A 40 "Development Servers" CLAUDE.md
 ```
 
 **Critère de succès**:
+
 - ✅ Un nouveau développeur comprend quand utiliser dev vs preview
 - ✅ Pas de typos ou erreurs factuelles
 
@@ -358,6 +387,7 @@ rm test-example.test.log
 ```
 
 **Critère de succès**:
+
 - ✅ Fichiers de logs de test sont ignorés
 - ✅ Patterns fonctionnent correctement
 
@@ -380,6 +410,7 @@ grep -A 5 "Development server configuration" playwright.config.ts
 ```
 
 **Critère de succès**:
+
 - ✅ Code mort supprimé
 - ✅ Fonctionnalités préservées
 - ✅ Commentaires clairs
@@ -456,13 +487,13 @@ kill %1  # Arrêter le serveur
 
 ### Métriques de Non-Régression
 
-| Métrique | Avant Phase 0 | Après Phase 0 | Status |
-|----------|---------------|---------------|--------|
-| **Tests unitaires** | X passed | X passed | ✅ Identique |
-| **Linter errors** | 0 | 0 | ✅ Identique |
-| **TypeScript errors** | 0 | 0 | ✅ Identique |
-| **Build time** | ~30s | ~30s | ✅ Similaire |
-| **Dev server start** | Fonctionne | Fonctionne | ✅ OK |
+| Métrique              | Avant Phase 0 | Après Phase 0 | Status       |
+| --------------------- | ------------- | ------------- | ------------ |
+| **Tests unitaires**   | X passed      | X passed      | ✅ Identique |
+| **Linter errors**     | 0             | 0             | ✅ Identique |
+| **TypeScript errors** | 0             | 0             | ✅ Identique |
+| **Build time**        | ~30s          | ~30s          | ✅ Similaire |
+| **Dev server start**  | Fonctionne    | Fonctionne    | ✅ OK        |
 
 **Critère de succès**: Toutes les métriques sont identiques ou améliorées.
 
@@ -590,6 +621,7 @@ Phase 0 prête pour review et merge!
 ### Coverage NON Applicable
 
 **Phase 0 n'ajoute pas de code métier**, donc:
+
 - ❌ Pas de nouveau code à couvrir par des tests
 - ❌ Pas de metrics de coverage à vérifier
 - ❌ Pas de seuils de coverage à atteindre
@@ -600,12 +632,12 @@ Phase 0 prête pour review et merge!
 
 **Métriques subjectives** (review humaine requise):
 
-| Critère | Score Cible | Validation |
-|---------|-------------|------------|
-| **Clarté ADR** | 5/5 | Compréhensible par nouveau dev |
-| **Complétude Docs** | 100% | Toutes sections présentes |
-| **Liens Fonctionnels** | 100% | Aucun lien 404 |
-| **Orthographe** | >95% | Peu de typos |
+| Critère                | Score Cible | Validation                     |
+| ---------------------- | ----------- | ------------------------------ |
+| **Clarté ADR**         | 5/5         | Compréhensible par nouveau dev |
+| **Complétude Docs**    | 100%        | Toutes sections présentes      |
+| **Liens Fonctionnels** | 100%        | Aucun lien 404                 |
+| **Orthographe**        | >95%        | Peu de typos                   |
 
 ---
 
@@ -614,12 +646,14 @@ Phase 0 prête pour review et merge!
 ### Problème: Tests unitaires échouent après Commit 4
 
 **Symptôme**:
+
 ```
 pnpm test
 # ❌ FAIL tests/example.test.ts
 ```
 
 **Diagnostic**:
+
 ```bash
 # Voir quel commit a cassé
 git bisect start
@@ -630,18 +664,21 @@ pnpm test
 ```
 
 **Solution**:
+
 - Si Commit 4: Vérifier playwright.config.ts (imports manquants?)
 - Rollback ou fix du commit responsable
 
 ### Problème: TypeScript erreurs après Commit 4
 
 **Symptôme**:
+
 ```
 pnpm exec tsc --noEmit
 # error TS2304: Cannot find name 'devices'
 ```
 
 **Solution**:
+
 ```typescript
 // Vérifier que l'import est présent dans playwright.config.ts
 import { defineConfig, devices } from '@playwright/test';
@@ -650,18 +687,21 @@ import { defineConfig, devices } from '@playwright/test';
 ### Problème: Build échoue
 
 **Symptôme**:
+
 ```
 pnpm build
 # ❌ Failed to compile
 ```
 
 **Diagnostic**:
+
 ```bash
 # Voir les logs détaillés
 pnpm build 2>&1 | less
 ```
 
 **Solution**:
+
 - Vérifier les imports/exports dans fichiers modifiés
 - Vérifier que CLAUDE.md ou autres docs n'ont pas d'impact sur le build (normalement non)
 
@@ -674,6 +714,7 @@ pnpm build 2>&1 | less
 Phase 0 n'a **pas de tests automatisés spécifiques** car c'est une phase de documentation/nettoyage.
 
 **La validation repose sur**:
+
 1. ✅ **Non-régression**: Tests existants passent
 2. ✅ **Qualité manuelle**: Review des documents
 3. ✅ **Checks automatiques**: Linter, TypeScript, Build
@@ -681,6 +722,7 @@ Phase 0 n'a **pas de tests automatisés spécifiques** car c'est une phase de do
 ### Prochaines Étapes Testing
 
 Les phases futures (1-4) nécessiteront:
+
 - **Phase 1**: Tests du globalSetup D1
 - **Phase 2**: Validation tests compression/middleware
 - **Phase 3**: Tests CI end-to-end
@@ -691,9 +733,9 @@ Voir les guides TESTING.md respectifs de ces phases.
 
 ## Changelog
 
-| Date | Version | Changement |
-|------|---------|------------|
-| 2025-01-19 | 1.0.0 | Création du guide de testing Phase 0 |
+| Date       | Version | Changement                           |
+| ---------- | ------- | ------------------------------------ |
+| 2025-01-19 | 1.0.0   | Création du guide de testing Phase 0 |
 
 ---
 

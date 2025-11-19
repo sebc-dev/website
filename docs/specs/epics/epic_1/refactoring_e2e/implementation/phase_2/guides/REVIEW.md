@@ -475,13 +475,13 @@ Use this template for review feedback:
 
 ### 📊 Metrics Review
 
-| Metric | Target | Actual | Status |
-|--------|--------|--------|--------|
-| Build success | 100% | [X]% | [✅/❌] |
-| Startup time | <120s | [X]s | [✅/❌] |
-| Test pass rate | 100% | [X]% | [✅/❌] |
-| Flaky tests | 0 | [X] | [✅/❌] |
-| Browser coverage | 3 | [X] | [✅/❌] |
+| Metric           | Target | Actual | Status  |
+| ---------------- | ------ | ------ | ------- |
+| Build success    | 100%   | [X]%   | [✅/❌] |
+| Startup time     | <120s  | [X]s   | [✅/❌] |
+| Test pass rate   | 100%   | [X]%   | [✅/❌] |
+| Flaky tests      | 0      | [X]    | [✅/❌] |
+| Browser coverage | 3      | [X]    | [✅/❌] |
 
 ### 📊 Verdict
 
@@ -531,6 +531,7 @@ Use this template for review feedback:
 **Symptoms**: Tests pass now but seem likely to break
 
 **Actions**:
+
 - Review test logic for timing dependencies
 - Check for assumptions about environment
 - Suggest additional stability measures
@@ -540,6 +541,7 @@ Use this template for review feedback:
 **Symptoms**: Issues papered over, not truly fixed
 
 **Actions**:
+
 - Request root cause analysis
 - Suggest proper fix instead of workaround
 - Discuss with developer if unsure
@@ -549,6 +551,7 @@ Use this template for review feedback:
 **Symptoms**: Unclear what was fixed or why
 
 **Actions**:
+
 - Request clearer commit messages
 - Ask for detailed problem/solution documentation
 - Suggest adding troubleshooting notes
@@ -558,6 +561,7 @@ Use this template for review feedback:
 **Symptoms**: Tests now slower, or more timeouts needed
 
 **Actions**:
+
 - Compare metrics before/after
 - Identify performance bottlenecks
 - Suggest optimizations

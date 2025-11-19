@@ -37,16 +37,19 @@ The implementation is split into **5 independent commits** to:
 **Duration**: 10 min (implementation) + 10 min (review)
 
 **Content**:
+
 - Modify `preview` script in `package.json`
 - Change from `opennextjs-cloudflare preview` to `wrangler dev --port 8788 --ip 127.0.0.1`
 - Force IPv4 binding to avoid Node.js 20+ localhost resolution issues
 
 **Why it's atomic**:
+
 - Single responsibility: Configure the preview command
 - No external dependencies (wrangler already installed)
 - Can be validated independently by running `pnpm preview`
 
 **Technical Validation**:
+
 ```bash
 # Test the new preview script
 pnpm preview
@@ -58,6 +61,7 @@ pnpm preview
 **Expected Result**: Wrangler dev server starts successfully on IPv4 address 127.0.0.1 port 8788
 
 **Review Criteria**:
+
 - [ ] Script uses `wrangler dev` (not opennextjs-cloudflare preview)
 - [ ] Port is explicitly set to 8788
 - [ ] IPv4 is forced with `--ip 127.0.0.1`
@@ -74,6 +78,7 @@ pnpm preview
 **Duration**: 30 min (implementation) + 20 min (review)
 
 **Content**:
+
 - Create new file `tests/global-setup.ts`
 - Implement D1 database initialization logic
 - Apply migrations using `wrangler d1 migrations apply DB --local`
@@ -83,12 +88,14 @@ pnpm preview
 - Optional: Add D1 cache purge logic (commented out by default)
 
 **Why it's atomic**:
+
 - Single responsibility: Database initialization for tests
 - Depends on: existing drizzle migrations and seed files (already present)
 - Can be validated independently by running the script with tsx
 - No impact on Playwright config yet (connected in Commit 4)
 
 **Technical Validation**:
+
 ```bash
 # Test global setup script independently
 pnpm exec tsx tests/global-setup.ts
@@ -111,6 +118,7 @@ pnpm wrangler d1 execute DB --local --command "SELECT COUNT(*) FROM articles"
 **Expected Result**: D1 local database is initialized with migrations applied and test data seeded
 
 **Review Criteria**:
+
 - [ ] Uses `--local` flag for all wrangler commands (critical for safety)
 - [ ] Applies migrations before seeding
 - [ ] Seeds categories before articles (respects foreign key constraints)
@@ -130,18 +138,21 @@ pnpm wrangler d1 execute DB --local --command "SELECT COUNT(*) FROM articles"
 **Duration**: 15 min (implementation) + 15 min (review)
 
 **Content**:
+
 - Change `baseURL` from `http://localhost:3000` to `http://127.0.0.1:8788`
 - Change `webServer.url` from `http://localhost:3000` to `http://127.0.0.1:8788`
 - Change `webServer.command` from current command to `pnpm preview`
 - Update comments to explain IPv4 forcing and wrangler runtime
 
 **Why it's atomic**:
+
 - Single responsibility: URL configuration update
 - Depends on: Commit 1 (preview script) to be functional
 - Can be validated independently (Playwright will fail to start but config is valid)
 - Isolated change that can be reviewed quickly
 
 **Technical Validation**:
+
 ```bash
 # Validate Playwright config syntax
 pnpm exec playwright --version
@@ -156,6 +167,7 @@ pnpm exec playwright test --list
 **Expected Result**: Playwright configuration uses correct IPv4 URLs for wrangler
 
 **Review Criteria**:
+
 - [ ] `baseURL` uses `http://127.0.0.1:8788`
 - [ ] `webServer.url` uses `http://127.0.0.1:8788`
 - [ ] `webServer.command` uses `pnpm preview`
@@ -174,18 +186,21 @@ pnpm exec playwright test --list
 **Duration**: 15 min (implementation) + 15 min (review)
 
 **Content**:
+
 - Add `globalSetup: require.resolve('./tests/global-setup')` to config
 - Change `webServer.timeout` from default (30s) to `120 * 1000` (120s)
 - Update comments to explain timeout is for OpenNext cold start
 - Keep `workers: process.env.CI ? 1 : undefined` for CI stability
 
 **Why it's atomic**:
+
 - Single responsibility: Setup hooks and timeouts
 - Depends on: Commit 2 (global-setup.ts must exist)
 - Can be validated independently
 - Completes the Playwright configuration for wrangler
 
 **Technical Validation**:
+
 ```bash
 # Validate that globalSetup file is found
 node -e "console.log(require.resolve('./tests/global-setup'))"
@@ -199,6 +214,7 @@ pnpm exec playwright --version
 **Expected Result**: Playwright will run global setup before tests and allow sufficient time for wrangler to start
 
 **Review Criteria**:
+
 - [ ] `globalSetup` uses `require.resolve('./tests/global-setup')`
 - [ ] `webServer.timeout` is set to `120 * 1000` (120 seconds)
 - [ ] Timeout rationale is documented in comments
@@ -216,6 +232,7 @@ pnpm exec playwright --version
 **Duration**: 20 min (validation) + 10 min (review)
 
 **Content**:
+
 - Run complete E2E test suite
 - Verify wrangler dev starts successfully
 - Verify D1 global setup executes
@@ -224,12 +241,14 @@ pnpm exec playwright --version
 - Confirm no flaky tests (run multiple times)
 
 **Why it's atomic**:
+
 - Single responsibility: End-to-end validation
 - Depends on: All previous commits (complete configuration)
 - Proves that the entire phase works together
 - No code changes, only validation
 
 **Technical Validation**:
+
 ```bash
 # Run E2E tests locally
 pnpm test:e2e
@@ -257,6 +276,7 @@ pnpm test:e2e tests/i18n-edge-cases.spec.ts
 **Expected Result**: All E2E tests pass consistently against wrangler dev runtime
 
 **Review Criteria**:
+
 - [ ] Global setup logs appear in output
 - [ ] Wrangler starts on 127.0.0.1:8788
 - [ ] All 3 tests pass (compression, middleware, i18n-edge-cases)
@@ -284,6 +304,7 @@ pnpm test:e2e tests/i18n-edge-cases.spec.ts
 ### Validation at Each Step
 
 After each commit:
+
 ```bash
 # Syntax check (if code changes)
 pnpm exec tsc --noEmit
@@ -304,14 +325,14 @@ All must pass before moving to next commit.
 
 ## 📊 Commit Metrics
 
-| Commit                                   | Files | Lines | Implementation | Review | Total  |
-| ---------------------------------------- | ----- | ----- | -------------- | ------ | ------ |
-| 1. Configure preview script              | 1     | ~3    | 10 min         | 10 min | 20 min |
-| 2. Create D1 global setup                | 1     | ~90   | 30 min         | 20 min | 50 min |
-| 3. Update Playwright URLs                | 1     | ~5    | 15 min         | 15 min | 30 min |
-| 4. Add global setup + timeout            | 1     | ~4    | 15 min         | 15 min | 30 min |
-| 5. Validate E2E tests                    | 0     | 0     | 20 min         | 10 min | 30 min |
-| **TOTAL**                                | **4** | **~102** | **1h 30min** | **1h 10min** | **2h 40min** |
+| Commit                        | Files | Lines    | Implementation | Review       | Total        |
+| ----------------------------- | ----- | -------- | -------------- | ------------ | ------------ |
+| 1. Configure preview script   | 1     | ~3       | 10 min         | 10 min       | 20 min       |
+| 2. Create D1 global setup     | 1     | ~90      | 30 min         | 20 min       | 50 min       |
+| 3. Update Playwright URLs     | 1     | ~5       | 15 min         | 15 min       | 30 min       |
+| 4. Add global setup + timeout | 1     | ~4       | 15 min         | 15 min       | 30 min       |
+| 5. Validate E2E tests         | 0     | 0        | 20 min         | 10 min       | 30 min       |
+| **TOTAL**                     | **4** | **~102** | **1h 30min**   | **1h 10min** | **2h 40min** |
 
 ---
 
@@ -342,6 +363,7 @@ All must pass before moving to next commit.
 ### Commit Messages
 
 Format:
+
 ```
 type(scope): short description (max 50 chars)
 

@@ -33,6 +33,7 @@ Secrets ready     Workflow updated   CI passes           Documented
 ### Commit 1: Configure GitHub Secrets (Documentation)
 
 **Files**:
+
 - `docs/specs/epics/epic_1/refactoring_e2e/implementation/phase_3/ENVIRONMENT_SETUP.md` (updated/verified)
 - `docs/specs/epics/epic_1/refactoring_e2e/CI_SECRETS_SETUP.md` (new - step-by-step guide)
 
@@ -40,6 +41,7 @@ Secrets ready     Workflow updated   CI passes           Documented
 **Duration**: 30-45 min (implementation) + 15 min (review)
 
 **Content**:
+
 - Document exact steps to create Cloudflare API token
 - Document where to find Cloudflare Account ID
 - Create step-by-step guide with screenshots/descriptions
@@ -47,12 +49,14 @@ Secrets ready     Workflow updated   CI passes           Documented
 - Add troubleshooting section for common secret configuration errors
 
 **Why it's atomic**:
+
 - Single responsibility: Secret configuration documentation
 - No code changes, only documentation
 - Can be completed by someone with admin access separately
 - Provides clear instructions for secret setup
 
 **Manual Action Required**:
+
 ```bash
 # After commit, administrator must:
 # 1. Go to GitHub Repository Settings → Secrets and variables → Actions
@@ -64,6 +68,7 @@ Secrets ready     Workflow updated   CI passes           Documented
 **Expected Result**: GitHub Secrets configured and documented
 
 **Review Criteria**:
+
 - [ ] Documentation is clear and actionable
 - [ ] All required permissions documented
 - [ ] Troubleshooting section covers common issues
@@ -75,12 +80,14 @@ Secrets ready     Workflow updated   CI passes           Documented
 ### Commit 2: Update CI Workflow Configuration
 
 **Files**:
+
 - `.github/workflows/quality.yml` (modified - ~40 lines changed)
 
 **Size**: ~40 lines changed, ~100 lines context
 **Duration**: 45-60 min (implementation) + 30 min (review)
 
 **Content**:
+
 - Increase `timeout-minutes` from 30 to 60 for e2e-tests job
 - Add `env` section with `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` from secrets
 - Add new step "Build OpenNext Worker" before running tests
@@ -89,12 +96,14 @@ Secrets ready     Workflow updated   CI passes           Documented
 - Ensure `--with-deps` flag in Playwright install step
 
 **Why it's atomic**:
+
 - Single responsibility: CI workflow configuration
 - All changes are in one file
 - Can be reviewed independently
 - Enables CI testing in next commit
 
 **Technical Validation**:
+
 ```bash
 # Validate YAML syntax
 yamllint .github/workflows/quality.yml
@@ -106,6 +115,7 @@ yamllint .github/workflows/quality.yml
 **Expected Result**: Workflow file is valid YAML with all required changes
 
 **Review Criteria**:
+
 - [ ] Timeout increased to 60 minutes
 - [ ] Environment variables use correct secret names
 - [ ] Build OpenNext step added before test execution
@@ -119,6 +129,7 @@ yamllint .github/workflows/quality.yml
 ### Commit 3: Test CI Integration (Test PR)
 
 **Files**:
+
 - `.github/workflows/quality.yml` (no changes - testing only)
 - Git branch: `test/e2e-ci-integration` (temporary)
 
@@ -126,6 +137,7 @@ yamllint .github/workflows/quality.yml
 **Duration**: 1-2h (waiting for CI + debugging) + 30 min (review)
 
 **Content**:
+
 - Create test branch from main with Phase 1 + 2 + 3 changes
 - Push to GitHub to trigger CI workflow
 - Monitor `e2e-tests` job execution
@@ -139,12 +151,14 @@ yamllint .github/workflows/quality.yml
 - If successful, merge test branch or create final PR
 
 **Why it's atomic**:
+
 - Single responsibility: CI validation
 - Tests the entire CI pipeline
 - Identifies issues before merging to main
 - Provides concrete evidence of success
 
 **Technical Validation**:
+
 ```bash
 # Create test branch
 git checkout -b test/e2e-ci-integration
@@ -165,6 +179,7 @@ git push origin test/e2e-ci-integration
 **Expected Result**: CI job passes with all tests green, duration <15 minutes
 
 **Review Criteria**:
+
 - [ ] CI job completes successfully
 - [ ] No timeout errors
 - [ ] All 3 test suites pass (compression, middleware, i18n)
@@ -179,6 +194,7 @@ git push origin test/e2e-ci-integration
 ### Commit 4: Finalize Documentation and Merge
 
 **Files**:
+
 - `docs/specs/epics/epic_1/refactoring_e2e/implementation/phase_3/guides/TESTING.md` (updated)
 - `docs/specs/epics/epic_1/refactoring_e2e/STORY_E2E_CLOUDFLARE_REFACTOR.md` (status update)
 - `CLAUDE.md` (CI section updated)
@@ -188,6 +204,7 @@ git push origin test/e2e-ci-integration
 **Duration**: 30-45 min (implementation) + 15 min (review)
 
 **Content**:
+
 - Update TESTING.md with CI debugging procedures
 - Add section on how to download and analyze Playwright reports from CI
 - Document common CI failure patterns and solutions
@@ -196,12 +213,14 @@ git push origin test/e2e-ci-integration
 - Optional: Add CI status badge to README
 
 **Why it's atomic**:
+
 - Single responsibility: Documentation finalization
 - Captures lessons learned from CI integration
 - Provides future developers with debugging resources
 - Closes out the phase formally
 
 **Technical Validation**:
+
 ```bash
 # Verify documentation links work
 grep -r "](../" docs/specs/epics/epic_1/refactoring_e2e/implementation/phase_3/
@@ -213,6 +232,7 @@ grep -r "](../" docs/specs/epics/epic_1/refactoring_e2e/implementation/phase_3/
 **Expected Result**: Complete, accurate documentation for CI testing
 
 **Review Criteria**:
+
 - [ ] TESTING.md includes CI debugging section
 - [ ] Common failure patterns documented with solutions
 - [ ] Story document status updated to "Phase 3 - ✅ COMPLETED"
@@ -244,6 +264,7 @@ grep -r "](../" docs/specs/epics/epic_1/refactoring_e2e/implementation/phase_3/
 ### Validation at Each Step
 
 After Commit 1:
+
 ```bash
 # Manual verification: Secrets configured in GitHub
 # Navigate to: Settings → Secrets and variables → Actions
@@ -251,6 +272,7 @@ After Commit 1:
 ```
 
 After Commit 2:
+
 ```bash
 # Validate YAML syntax
 yamllint .github/workflows/quality.yml
@@ -259,6 +281,7 @@ yamllint .github/workflows/quality.yml
 ```
 
 After Commit 3:
+
 ```bash
 # Monitor GitHub Actions
 # https://github.com/[org]/[repo]/actions
@@ -269,6 +292,7 @@ After Commit 3:
 ```
 
 After Commit 4:
+
 ```bash
 # Verify documentation completeness
 # Manually review all updated documents
@@ -278,13 +302,13 @@ After Commit 4:
 
 ## 📊 Commit Metrics
 
-| Commit | Files | Lines | Implementation | Review | Total |
-|--------|-------|-------|----------------|--------|-------|
-| 1. Configure Secrets (Doc) | 2 | ~150 | 30-45 min | 15 min | 45-60 min |
-| 2. Update CI Workflow | 1 | ~40 | 45-60 min | 30 min | 75-90 min |
-| 3. Test CI Integration | 0 (testing) | 0 | 1-2h | 30 min | 1.5-2.5h |
-| 4. Finalize Documentation | 4 | ~80 | 30-45 min | 15 min | 45-60 min |
-| **TOTAL** | **7** | **~270** | **2.5-4h** | **1.5h** | **4-6h** |
+| Commit                     | Files       | Lines    | Implementation | Review   | Total     |
+| -------------------------- | ----------- | -------- | -------------- | -------- | --------- |
+| 1. Configure Secrets (Doc) | 2           | ~150     | 30-45 min      | 15 min   | 45-60 min |
+| 2. Update CI Workflow      | 1           | ~40      | 45-60 min      | 30 min   | 75-90 min |
+| 3. Test CI Integration     | 0 (testing) | 0        | 1-2h           | 30 min   | 1.5-2.5h  |
+| 4. Finalize Documentation  | 4           | ~80      | 30-45 min      | 15 min   | 45-60 min |
+| **TOTAL**                  | **7**       | **~270** | **2.5-4h**     | **1.5h** | **4-6h**  |
 
 **Note**: Total duration includes CI wait time (~1-2h for testing and validation)
 
@@ -317,6 +341,7 @@ After Commit 4:
 ### Commit Messages
 
 **Format**:
+
 ```
 type(scope): short description (max 50 chars)
 
@@ -330,6 +355,7 @@ Part of Phase 3 - Commit X/4
 **Examples**:
 
 Commit 1:
+
 ```
 docs(ci): document GitHub Secrets setup for Cloudflare
 
@@ -342,6 +368,7 @@ Part of Phase 3 - Commit 1/4
 ```
 
 Commit 2:
+
 ```
 ci(e2e): reactivate E2E tests with Cloudflare Workers runtime
 
@@ -357,6 +384,7 @@ Part of Phase 3 - Commit 2/4
 ```
 
 Commit 3:
+
 ```
 test(ci): validate E2E tests in GitHub Actions
 
@@ -370,6 +398,7 @@ Part of Phase 3 - Commit 3/4
 ```
 
 Commit 4:
+
 ```
 docs(e2e): finalize Phase 3 documentation
 
@@ -418,6 +447,7 @@ Before committing:
 ### Prerequisites Verification
 
 Before starting Phase 3:
+
 ```bash
 # Verify Phase 1-2 local setup works
 pnpm test:e2e

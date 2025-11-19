@@ -17,6 +17,7 @@ Cette phase implémente la configuration locale pour exécuter les tests E2E con
 **Objectif**: Transformer l'architecture E2E de Node.js → Cloudflare Workers runtime
 
 **Changements majeurs**:
+
 - Script `preview` utilise wrangler dev avec IPv4 forcé
 - GlobalSetup D1 pour seeding automatique
 - Playwright configuré pour `127.0.0.1:8788` (wrangler)
@@ -45,13 +46,13 @@ Cette phase implémente la configuration locale pour exécuter les tests E2E con
 
 ## Commits Atomiques (5 commits)
 
-| # | Type | Description | Durée | Files |
-|---|------|-------------|-------|-------|
-| 1 | 🔧 config | Modifier package.json (script preview) | 10min | 1 modifié |
-| 2 | ✨ feat | Créer tests/global-setup.ts (D1 seeding) | 30min | 1 nouveau |
-| 3 | 🔧 config | Modifier playwright.config.ts (URLs) | 15min | 1 modifié |
-| 4 | 🔧 config | Modifier playwright.config.ts (setup + timeout) | 15min | 1 modifié |
-| 5 | ✅ test | Validation locale (tests compression) | 20min | 0 (tests) |
+| #   | Type      | Description                                     | Durée | Files     |
+| --- | --------- | ----------------------------------------------- | ----- | --------- |
+| 1   | 🔧 config | Modifier package.json (script preview)          | 10min | 1 modifié |
+| 2   | ✨ feat   | Créer tests/global-setup.ts (D1 seeding)        | 30min | 1 nouveau |
+| 3   | 🔧 config | Modifier playwright.config.ts (URLs)            | 15min | 1 modifié |
+| 4   | 🔧 config | Modifier playwright.config.ts (setup + timeout) | 15min | 1 modifié |
+| 5   | ✅ test   | Validation locale (tests compression)           | 20min | 0 (tests) |
 
 **Total**: ~1h30
 
@@ -62,6 +63,7 @@ Cette phase implémente la configuration locale pour exécuter les tests E2E con
 ### Pourquoi cette phase?
 
 Phase 0 a **nettoyé et documenté** les décisions. Phase 1 **implémente** ces décisions:
+
 - Décision ADR 002: wrangler dev local → Implémentation script preview
 - Tests E2E doivent tourner sur workerd → Configuration Playwright
 - D1 database doit être seeded → GlobalSetup automatique
@@ -153,12 +155,12 @@ Phase 0 a **nettoyé et documenté** les décisions. Phase 1 **implémente** ces
 
 ## Risques et Mitigations
 
-| Risque | Probabilité | Impact | Mitigation |
-|--------|-------------|--------|------------|
-| wrangler dev timeout >120s | Moyenne | Élevé | Augmenter timeout à 180s si nécessaire |
-| D1 seeding échoue (SQL invalide) | Faible | Élevé | Tester seeds manuellement avant commit |
-| IPv4/IPv6 race conditions persistent | Faible | Moyen | Triple vérification `--ip 127.0.0.1` |
-| Tests E2E échouent sur wrangler | Moyenne | Élevé | Phase 2 dédiée au debug |
+| Risque                               | Probabilité | Impact | Mitigation                             |
+| ------------------------------------ | ----------- | ------ | -------------------------------------- |
+| wrangler dev timeout >120s           | Moyenne     | Élevé  | Augmenter timeout à 180s si nécessaire |
+| D1 seeding échoue (SQL invalide)     | Faible      | Élevé  | Tester seeds manuellement avant commit |
+| IPv4/IPv6 race conditions persistent | Faible      | Moyen  | Triple vérification `--ip 127.0.0.1`   |
+| Tests E2E échouent sur wrangler      | Moyenne     | Élevé  | Phase 2 dédiée au debug                |
 
 ---
 
@@ -256,9 +258,9 @@ Créer une issue ou PR pour améliorer cette documentation.
 
 ## Changelog de la Phase
 
-| Date | Version | Changement |
-|------|---------|------------|
-| 2025-01-19 | 1.0.0 | Création initiale de la documentation Phase 1 |
+| Date       | Version | Changement                                    |
+| ---------- | ------- | --------------------------------------------- |
+| 2025-01-19 | 1.0.0   | Création initiale de la documentation Phase 1 |
 
 ---
 

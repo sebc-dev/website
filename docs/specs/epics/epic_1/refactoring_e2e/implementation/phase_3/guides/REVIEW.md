@@ -43,6 +43,7 @@ Phase 3 is split into **4 atomic commits**. You can:
 ### Commit 1: Configure GitHub Secrets (Documentation)
 
 **Files**:
+
 - `docs/specs/epics/epic_1/refactoring_e2e/CI_SECRETS_SETUP.md` (new)
 - `docs/specs/epics/epic_1/refactoring_e2e/implementation/phase_3/ENVIRONMENT_SETUP.md` (updated)
 
@@ -114,6 +115,7 @@ grep -E 'TODO|FIXME|your-token-here|your-account-id-here' docs/specs/epics/epic_
 ### Commit 2: Update CI Workflow Configuration
 
 **Files**:
+
 - `.github/workflows/quality.yml` (modified)
 
 **Size**: ~40 lines changed
@@ -268,7 +270,7 @@ Review CI logs for:
 - [ ] No authentication errors (secrets work)
 - [ ] Wrangler starts without issues
 - [ ] No IPv6/IPv4 resolution issues
-- [ ] Secrets are masked in logs (appear as ***)
+- [ ] Secrets are masked in logs (appear as \*\*\*)
 - [ ] No unexpected warnings or errors
 
 #### Questions to Ask
@@ -283,6 +285,7 @@ Review CI logs for:
 ### Commit 4: Finalize Documentation
 
 **Files**:
+
 - `docs/specs/epics/epic_1/refactoring_e2e/implementation/phase_3/guides/TESTING.md` (updated)
 - `docs/specs/epics/epic_1/refactoring_e2e/STORY_E2E_CLOUDFLARE_REFACTOR.md` (updated)
 - `CLAUDE.md` (updated)

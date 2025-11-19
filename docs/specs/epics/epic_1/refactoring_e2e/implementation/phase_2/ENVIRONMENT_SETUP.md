@@ -50,6 +50,7 @@ pnpm install --frozen-lockfile
 ```
 
 **Key Packages**:
+
 - `@opennextjs/cloudflare` - OpenNext adapter for Cloudflare
 - `@playwright/test` - E2E testing framework
 - `wrangler` - Cloudflare Workers CLI
@@ -204,6 +205,7 @@ ls -la .open-next/assets/
 ```
 
 **Expected**:
+
 - [ ] Build completes without errors
 - [ ] `worker.js` exists (>100KB)
 - [ ] `assets/` directory contains files
@@ -221,6 +223,7 @@ curl -I http://127.0.0.1:8788
 ```
 
 **Expected**:
+
 - [ ] Server starts and shows "Ready on http://127.0.0.1:8788"
 - [ ] curl returns 200 OK
 - [ ] Server binds to IPv4 (not IPv6)
@@ -237,6 +240,7 @@ pnpm wrangler d1 execute DB --local --command "SELECT COUNT(*) FROM articles"
 ```
 
 **Expected**:
+
 - [ ] Global setup completes without errors
 - [ ] Categories table has rows
 - [ ] Articles table has rows
@@ -252,6 +256,7 @@ pnpm test:e2e
 ```
 
 **Expected**:
+
 - [ ] Playwright starts
 - [ ] webServer launches
 - [ ] Tests attempt to run (failures OK at this stage)
@@ -263,6 +268,7 @@ pnpm test:e2e
 ### Issue: "Module not found" during build
 
 **Solution**:
+
 ```bash
 # Reinstall dependencies
 rm -rf node_modules pnpm-lock.yaml
@@ -272,6 +278,7 @@ pnpm install
 ### Issue: "Port 8788 already in use"
 
 **Solution**:
+
 ```bash
 # Find and kill process
 lsof -i :8788
@@ -283,6 +290,7 @@ kill -9 <PID>
 ### Issue: "wrangler command not found"
 
 **Solution**:
+
 ```bash
 # Install wrangler globally (optional)
 pnpm add -g wrangler
@@ -294,11 +302,13 @@ pnpm exec wrangler --version
 ### Issue: Build is very slow (>5 minutes)
 
 **Possible causes**:
+
 - Large node_modules
 - Slow disk (check if using network drive)
 - Antivirus scanning
 
 **Solutions**:
+
 ```bash
 # Clear caches
 rm -rf .next .open-next node_modules/.cache
@@ -311,6 +321,7 @@ rm test.tmp
 ### Issue: Playwright browsers not installed
 
 **Solution**:
+
 ```bash
 # Install Playwright browsers
 pnpm exec playwright install
@@ -322,6 +333,7 @@ pnpm exec playwright install --with-deps
 ### Issue: D1 seeding fails with "table not found"
 
 **Solution**:
+
 ```bash
 # Reset D1 and reapply migrations
 rm -rf .wrangler/state/v3/d1/
@@ -334,11 +346,13 @@ pnpm exec tsx tests/global-setup.ts
 ### Issue: Wrangler hangs at "Starting local server"
 
 **Possible causes**:
+
 - Port conflict
 - IPv6 resolution issues
 - Corrupted cache
 
 **Solutions**:
+
 ```bash
 # 1. Check port
 lsof -i :8788
@@ -361,32 +375,32 @@ Record these metrics at the start of Phase 2 for comparison:
 
 ### Build Metrics
 
-- [ ] Next.js build time: _____ seconds
-- [ ] OpenNext build time: _____ seconds
-- [ ] Total build time: _____ seconds
-- [ ] Worker size: _____ KB/MB
-- [ ] Assets count: _____ files
+- [ ] Next.js build time: **\_** seconds
+- [ ] OpenNext build time: **\_** seconds
+- [ ] Total build time: **\_** seconds
+- [ ] Worker size: **\_** KB/MB
+- [ ] Assets count: **\_** files
 
 ### Startup Metrics
 
-- [ ] Server startup time (Run 1): _____ seconds
-- [ ] Server startup time (Run 2): _____ seconds
-- [ ] Server startup time (Run 3): _____ seconds
-- [ ] Average startup time: _____ seconds
+- [ ] Server startup time (Run 1): **\_** seconds
+- [ ] Server startup time (Run 2): **\_** seconds
+- [ ] Server startup time (Run 3): **\_** seconds
+- [ ] Average startup time: **\_** seconds
 
 ### Test Metrics
 
-- [ ] Tests attempted: _____
-- [ ] Tests passed: _____
-- [ ] Tests failed: _____
-- [ ] Pass rate: _____%
-- [ ] Execution time: _____ seconds
+- [ ] Tests attempted: **\_**
+- [ ] Tests passed: **\_**
+- [ ] Tests failed: **\_**
+- [ ] Pass rate: **\_**%
+- [ ] Execution time: **\_** seconds
 
 ### D1 Metrics
 
-- [ ] Categories seeded: _____ rows
-- [ ] Articles seeded: _____ rows
-- [ ] Seeding time: _____ seconds
+- [ ] Categories seeded: **\_** rows
+- [ ] Articles seeded: **\_** rows
+- [ ] Seeding time: **\_** seconds
 
 ---
 
@@ -418,11 +432,13 @@ Before proceeding with commits:
 5. **Document solutions** for future reference
 
 **Key files to monitor**:
+
 - `.open-next/worker.js` - Worker bundle
 - `.wrangler/state/v3/d1/` - Local D1 database
 - `playwright-report/` - Test results
 
 **Useful debug commands**:
+
 ```bash
 # Monitor server logs
 WRANGLER_LOG=debug pnpm preview 2>&1 | tee wrangler.log

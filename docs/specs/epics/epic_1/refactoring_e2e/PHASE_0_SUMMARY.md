@@ -15,17 +15,20 @@ La Phase 0 a été ajoutée suite à une analyse approfondie du projet révélan
 ## Découvertes Clés
 
 ### 🚨 CRITIQUE - Conflit Architectural
+
 - **Problème**: ADR 001 (preview deployments) vs Story (wrangler dev local)
 - **Action**: Décision architecturale requise AVANT Phase 1
 - **Recommandation**: Option B (Wrangler Dev Local)
 
 ### ⚠️ HAUTE PRIORITÉ - État Git Incohérent
+
 - `tests/example.spec.ts` - Deleted mais non commité
 - `tests/compression.spec.ts` - Nouveau fichier non tracké
 - `tests/fixtures/compression.ts` - Nouveau fixture non tracké
 - `test-output.log` - Fichier temporaire à la racine
 
 ### 🧹 Code Mort et Obsolète
+
 - Imports dotenv commentés dans `playwright.config.ts` (L7-9)
 - Configurations mobiles commentées (L54-71) - Décision requise
 - Commentaires obsolètes décrivant ancienne architecture (L74-82)
@@ -36,27 +39,32 @@ La Phase 0 a été ajoutée suite à une analyse approfondie du projet révélan
 ## Checklist Phase 0 (5 Sous-phases)
 
 ### 0.1 - Résolution Conflit Architectural
+
 - [ ] Décider: Preview Deployments (A) ou Wrangler Dev Local (B)
 - [ ] Si B: Créer `/docs/decisions/002-e2e-local-wrangler-dev.md`
 - [ ] Archiver ou supprimer ADR 001
 
 ### 0.2 - Nettoyage Git
+
 - [ ] `git add tests/example.spec.ts` + commit suppression
 - [ ] `git add tests/compression.spec.ts tests/fixtures/compression.ts` + commit
 - [ ] `rm test-output.log`
 - [ ] Ajouter patterns logs à `.gitignore`
 
 ### 0.3 - Nettoyage playwright.config.ts
+
 - [ ] Supprimer imports dotenv commentés (L7-9)
 - [ ] Décider: Supprimer/Documenter/Activer configs mobiles (L54-71)
 - [ ] Noter mise à jour commentaires pour Phase 1
 
 ### 0.4 - Archivage Commentaires CI
+
 - [ ] Créer `/docs/decisions/003-e2e-ci-timeout-history.md`
 - [ ] Copier historique des commentaires workflow
 - [ ] Simplifier commentaire dans `quality.yml`
 
 ### 0.5 - Documentation Scripts
+
 - [ ] Ajouter commentaires dans `scripts/dev-quiet.sh`
 - [ ] Documenter différence dev/preview dans `CLAUDE.md`
 
@@ -92,29 +100,29 @@ grep -q "tests E2E" scripts/dev-quiet.sh
 
 ## Inventaire des Fichiers Impactés
 
-| Fichier | Type | Action |
-|---------|------|--------|
-| `tests/example.spec.ts` | Suppression | Commiter |
-| `tests/compression.spec.ts` | Nouveau | Tracker |
-| `tests/fixtures/compression.ts` | Nouveau | Tracker |
-| `test-output.log` | Temporaire | Supprimer |
-| `.gitignore` | Config | Ajouter patterns |
-| `playwright.config.ts` | Config | Nettoyer imports, décider mobiles |
-| `.github/workflows/quality.yml` | CI | Simplifier commentaires |
-| `scripts/dev-quiet.sh` | Script | Documenter |
-| `CLAUDE.md` | Doc | Ajouter section dev/preview |
-| `/docs/decisions/002-e2e-local-wrangler-dev.md` | ADR | Créer |
-| `/docs/decisions/003-e2e-ci-timeout-history.md` | ADR | Créer |
+| Fichier                                         | Type        | Action                            |
+| ----------------------------------------------- | ----------- | --------------------------------- |
+| `tests/example.spec.ts`                         | Suppression | Commiter                          |
+| `tests/compression.spec.ts`                     | Nouveau     | Tracker                           |
+| `tests/fixtures/compression.ts`                 | Nouveau     | Tracker                           |
+| `test-output.log`                               | Temporaire  | Supprimer                         |
+| `.gitignore`                                    | Config      | Ajouter patterns                  |
+| `playwright.config.ts`                          | Config      | Nettoyer imports, décider mobiles |
+| `.github/workflows/quality.yml`                 | CI          | Simplifier commentaires           |
+| `scripts/dev-quiet.sh`                          | Script      | Documenter                        |
+| `CLAUDE.md`                                     | Doc         | Ajouter section dev/preview       |
+| `/docs/decisions/002-e2e-local-wrangler-dev.md` | ADR         | Créer                             |
+| `/docs/decisions/003-e2e-ci-timeout-history.md` | ADR         | Créer                             |
 
 ---
 
 ## Impact sur l'Estimation Globale
 
-| Composant | Avant Phase 0 | Après Phase 0 |
-|-----------|---------------|---------------|
-| **Effort Total** | 8 points | 10 points |
-| **Durée Estimée** | 12-16h | 15-19h |
-| **Phases** | 4 (1-4) | 5 (0-4) |
+| Composant         | Avant Phase 0 | Après Phase 0 |
+| ----------------- | ------------- | ------------- |
+| **Effort Total**  | 8 points      | 10 points     |
+| **Durée Estimée** | 12-16h        | 15-19h        |
+| **Phases**        | 4 (1-4)       | 5 (0-4)       |
 
 ---
 
