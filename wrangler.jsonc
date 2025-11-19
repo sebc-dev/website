@@ -147,6 +147,36 @@
    */
   // "placement": { "mode": "smart" }
   /**
+   * Environments
+   * Configure different environments for your Worker
+   * https://developers.cloudflare.com/workers/wrangler/environments/
+   *
+   * Production Environment:
+   * - Deployed with: wrangler deploy --env production
+   * - Uses routes configured below for sebc.dev domain
+   *
+   * Preview Environment:
+   * - Deployed with: wrangler deploy --env preview --name <unique-name>
+   * - Uses workers.dev subdomain (no custom routes)
+   * - Name pattern: website-preview-* (e.g., website-preview-123 for PR #123)
+   * - Use case: E2E tests on Cloudflare preview deployments in CI
+   */
+  "env": {
+    "production": {
+      "name": "website-production",
+      "routes": [
+        {
+          "pattern": "sebc.dev",
+          "zone_name": "sebc.dev"
+        }
+      ]
+    },
+    "preview": {
+      "name": "website-preview-*",
+      "routes": []
+    }
+  }
+  /**
    * Bindings
    * Bindings allow your Worker to interact with resources on the Cloudflare Developer Platform, including
    * databases, object storage, AI inference, real-time communication and more.
