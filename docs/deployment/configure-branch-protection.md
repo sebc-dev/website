@@ -91,6 +91,7 @@ gh api repos/:owner/:repo/branches/main/protection/required_status_checks \
 ```
 
 **Explication des paramètres** :
+
 - `contexts[]=e2e/preview-deployment` : Ajoute le check comme requis
 - `strict=true` : Force les branches à être à jour avant merge
 
@@ -115,6 +116,7 @@ gh api repos/:owner/:repo/branches/main/protection \
 ### Test manuel
 
 1. **Créer une PR de test vers `main`**
+
    ```bash
    git checkout -b test-branch-protection
    echo "test" > test.txt
@@ -130,6 +132,7 @@ gh api repos/:owner/:repo/branches/main/protection \
    - Un commentaire automatique devrait expliquer comment lancer les tests
 
 3. **Commenter `@e2e` sur la PR**
+
    ```bash
    gh pr comment --body "@e2e"
    ```
@@ -160,9 +163,7 @@ Devrait retourner quelque chose comme :
 ```json
 {
   "strict": true,
-  "contexts": [
-    "e2e/preview-deployment"
-  ],
+  "contexts": ["e2e/preview-deployment"],
   "checks": []
 }
 ```
@@ -174,6 +175,7 @@ Devrait retourner quelque chose comme :
 **Cause** : Le status check n'a jamais été créé.
 
 **Solution** :
+
 1. Créer une PR de test
 2. Commenter `@e2e` pour déclencher le workflow
 3. Attendre que le workflow se termine
@@ -185,6 +187,7 @@ Devrait retourner quelque chose comme :
 **Cause** : Le SHA du commit a changé après le test (nouveau push).
 
 **Solution** :
+
 1. Commenter à nouveau `@e2e` pour relancer les tests sur le nouveau commit
 2. Ou : Désactiver "Require branches to be up to date before merging" si vous acceptez des branches non à jour
 
@@ -193,6 +196,7 @@ Devrait retourner quelque chose comme :
 **Cause** : Vous n'avez pas les droits admin sur le repository.
 
 **Solution** :
+
 1. Demander les droits admin
 2. Ou : Demander à un admin de configurer la protection pour vous
 
@@ -201,6 +205,7 @@ Devrait retourner quelque chose comme :
 **Cause** : Permissions insuffisantes du GITHUB_TOKEN ou problème dans le workflow.
 
 **Solution** :
+
 1. Vérifier que le workflow `e2e.yml` existe et est valide
 2. Vérifier les permissions dans le workflow :
    ```yaml

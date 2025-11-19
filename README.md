@@ -71,16 +71,19 @@ Chaque niveau dispose de templates, commandes Claude personnalisées et validati
 E2E tests in CI use Cloudflare preview deployments for a production-like environment.
 
 **Running E2E tests on a PR**:
+
 - Comment `@e2e` on the PR to trigger tests
 - Tests run on a dedicated preview deployment
 - Results posted as comment and status check
 
 **For PRs to `main`**:
+
 - E2E tests are **required** before merge
 - Status check `e2e/preview-deployment` must pass
 - Comment `@e2e` to run tests and unlock merge
 
 **Why preview deployments?**
+
 - Eliminates `wrangler dev` timeout issues in CI
 - Tests against actual Cloudflare Workers environment
 - More representative of production behavior

@@ -46,6 +46,7 @@ Phase 4: Intégration et documentation
 **Objectif** : Ajouter la configuration des environments preview dans `wrangler.jsonc`
 
 **Fichiers modifiés** :
+
 - `wrangler.jsonc`
 
 **Changements** :
@@ -54,8 +55,8 @@ Phase 4: Intégration et documentation
 // Ajouter dans wrangler.jsonc
 {
   // ... config existante
-  "compatibility_date": "2024-09-23",  // Mise à jour si < 2024-09-23
-  "compatibility_flags": ["nodejs_compat"],  // Ajouter si absent
+  "compatibility_date": "2024-09-23", // Mise à jour si < 2024-09-23
+  "compatibility_flags": ["nodejs_compat"], // Ajouter si absent
 
   "env": {
     "production": {
@@ -63,19 +64,20 @@ Phase 4: Intégration et documentation
       "routes": [
         {
           "pattern": "sebc.dev",
-          "zone_name": "sebc.dev"
-        }
-      ]
+          "zone_name": "sebc.dev",
+        },
+      ],
     },
     "preview": {
       "name": "website-preview-*",
-      "routes": []
-    }
-  }
+      "routes": [],
+    },
+  },
 }
 ```
 
 **Message de commit** :
+
 ```
 🔧 config(wrangler): add preview environment configuration
 
@@ -89,6 +91,7 @@ Related to #35
 ```
 
 **Tests de validation** :
+
 ```bash
 # Vérifier la syntaxe JSON
 pnpm wrangler config validate
@@ -98,6 +101,7 @@ pnpm wrangler whoami
 ```
 
 **Checklist** :
+
 - [ ] `compatibility_date` >= "2024-09-23"
 - [ ] `compatibility_flags` contient `nodejs_compat`
 - [ ] Environment `preview` configuré
@@ -111,12 +115,14 @@ pnpm wrangler whoami
 **Objectif** : Créer le script de déploiement preview + configuration package.json
 
 **Fichiers créés/modifiés** :
+
 - `scripts/deploy-preview.sh` (nouveau)
 - `package.json` (modification)
 
 **Changements** :
 
 1. **Créer `scripts/deploy-preview.sh`** :
+
 ```bash
 #!/bin/bash
 set -e
@@ -152,6 +158,7 @@ echo "DEPLOYMENT_NAME=${DEPLOYMENT_NAME}" >> $GITHUB_OUTPUT
 ```
 
 2. **Ajouter dans `package.json`** :
+
 ```json
 {
   "scripts": {
@@ -161,11 +168,13 @@ echo "DEPLOYMENT_NAME=${DEPLOYMENT_NAME}" >> $GITHUB_OUTPUT
 ```
 
 3. **Rendre le script exécutable** :
+
 ```bash
 chmod +x scripts/deploy-preview.sh
 ```
 
 **Message de commit** :
+
 ```
 📦 feat(deploy): add preview deployment script
 
@@ -181,6 +190,7 @@ Related to #35
 ```
 
 **Tests de validation** :
+
 ```bash
 # Vérifier que le script est exécutable
 test -x scripts/deploy-preview.sh && echo "✓ Script is executable"
@@ -196,6 +206,7 @@ pnpm run deploy:build --help 2>&1 | grep -q "opennextjs" && echo "✓ deploy:bui
 ```
 
 **Checklist** :
+
 - [ ] Script `deploy-preview.sh` créé
 - [ ] Script est exécutable (`chmod +x`)
 - [ ] Syntaxe bash validée
@@ -211,6 +222,7 @@ pnpm run deploy:build --help 2>&1 | grep -q "opennextjs" && echo "✓ deploy:bui
 **Objectif** : Créer le workflow principal déclenché par commentaire `@e2e`
 
 **Fichiers créés** :
+
 - `.github/workflows/e2e.yml`
 
 **Changements** :
@@ -275,7 +287,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-      statuses: write  # For status checks
+      statuses: write # For status checks
 
     steps:
       - name: Get PR details
@@ -433,6 +445,7 @@ jobs:
 ```
 
 **Message de commit** :
+
 ```
 🤖 ci(e2e): add workflow for preview deployment tests
 
@@ -455,6 +468,7 @@ Related to #35
 ```
 
 **Tests de validation** :
+
 ```bash
 # Valider la syntaxe YAML
 yamllint .github/workflows/e2e.yml
@@ -466,6 +480,7 @@ actionlint .github/workflows/e2e.yml
 ```
 
 **Checklist** :
+
 - [ ] Workflow YAML syntaxiquement valide
 - [ ] Trigger `issue_comment` configuré
 - [ ] Trigger `workflow_dispatch` configuré
@@ -480,6 +495,7 @@ actionlint .github/workflows/e2e.yml
 **Objectif** : Créer le workflow de rappel pour les PRs vers `main`
 
 **Fichiers créés** :
+
 - `.github/workflows/e2e-reminder.yml`
 
 **Changements** :
@@ -562,6 +578,7 @@ jobs:
 ```
 
 **Message de commit** :
+
 ```
 🔔 ci(e2e): add reminder workflow for main branch PRs
 
@@ -578,6 +595,7 @@ Related to #35
 ```
 
 **Tests de validation** :
+
 ```bash
 # Valider la syntaxe YAML
 yamllint .github/workflows/e2e-reminder.yml
@@ -589,6 +607,7 @@ actionlint .github/workflows/e2e-reminder.yml
 ```
 
 **Checklist** :
+
 - [ ] Workflow YAML syntaxiquement valide
 - [ ] Trigger sur `opened` et `ready_for_review`
 - [ ] Filtre sur branches `[main]`
@@ -605,6 +624,7 @@ actionlint .github/workflows/e2e-reminder.yml
 **Objectif** : Adapter la configuration Playwright pour supporter les preview URLs
 
 **Fichiers modifiés** :
+
 - `playwright.config.ts`
 
 **Changements** :
@@ -618,7 +638,7 @@ export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,  // Retry failed tests in CI
+  retries: process.env.CI ? 2 : 0, // Retry failed tests in CI
   workers: process.env.CI ? 1 : undefined,
   reporter: process.env.CI ? 'github' : 'html',
 
@@ -636,16 +656,19 @@ export default defineConfig({
   ],
 
   // Only run local server when PLAYWRIGHT_BASE_URL is not set
-  webServer: baseURL.startsWith('http://localhost') ? {
-    command: 'pnpm dev',
-    url: baseURL,
-    reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000,
-  } : undefined,
+  webServer: baseURL.startsWith('http://localhost')
+    ? {
+        command: 'pnpm dev',
+        url: baseURL,
+        reuseExistingServer: !process.env.CI,
+        timeout: 120 * 1000,
+      }
+    : undefined,
 });
 ```
 
 **Message de commit** :
+
 ```
 ⚙️ config(playwright): support dynamic base URL for preview tests
 
@@ -661,6 +684,7 @@ Related to #35
 ```
 
 **Tests de validation** :
+
 ```bash
 # Test local (sans PLAYWRIGHT_BASE_URL)
 pnpm test:e2e
@@ -670,6 +694,7 @@ PLAYWRIGHT_BASE_URL=https://example.com pnpm test:e2e --reporter=list
 ```
 
 **Checklist** :
+
 - [ ] Variable `PLAYWRIGHT_BASE_URL` supportée
 - [ ] Retries configurés pour CI
 - [ ] webServer conditionnel (seulement pour localhost)
@@ -683,6 +708,7 @@ PLAYWRIGHT_BASE_URL=https://example.com pnpm test:e2e --reporter=list
 **Objectif** : Améliorer la résilience des tests E2E pour les environments distants
 
 **Fichiers modifiés** :
+
 - `tests/**/*.spec.ts` (exemples de patterns à appliquer)
 
 **Changements** :
@@ -696,7 +722,7 @@ test.describe('Homepage', () => {
     // Navigate with retry on network errors
     await page.goto('/', {
       waitUntil: 'networkidle',
-      timeout: 10000  // Increase timeout for remote deployments
+      timeout: 10000, // Increase timeout for remote deployments
     });
 
     // Wait for content to be visible
@@ -716,6 +742,7 @@ test.describe('Homepage', () => {
 ```
 
 **Message de commit** :
+
 ```
 ✅ test(e2e): improve resilience for remote deployments
 
@@ -731,6 +758,7 @@ Related to #35
 ```
 
 **Tests de validation** :
+
 ```bash
 # Test local
 pnpm test:e2e
@@ -740,6 +768,7 @@ PLAYWRIGHT_BASE_URL=https://slow-server.example.com pnpm test:e2e
 ```
 
 **Checklist** :
+
 - [ ] Timeouts augmentés pour les opérations réseau
 - [ ] `waitUntil: 'networkidle'` ajouté sur navigations critiques
 - [ ] Timeouts explicites sur assertions de visibilité
@@ -755,6 +784,7 @@ PLAYWRIGHT_BASE_URL=https://slow-server.example.com pnpm test:e2e
 **Objectif** : Retirer les tests E2E de quality.yml (désormais dans e2e.yml)
 
 **Fichiers modifiés** :
+
 - `.github/workflows/quality.yml`
 
 **Changements** :
@@ -768,6 +798,7 @@ PLAYWRIGHT_BASE_URL=https://slow-server.example.com pnpm test:e2e
 ```
 
 **Message de commit** :
+
 ```
 🧹 ci(quality): remove E2E tests from quality workflow
 
@@ -782,6 +813,7 @@ Fixes #35
 ```
 
 **Tests de validation** :
+
 ```bash
 # Valider quality.yml
 yamllint .github/workflows/quality.yml
@@ -792,6 +824,7 @@ actionlint .github/workflows/quality.yml
 ```
 
 **Checklist** :
+
 - [ ] Section E2E retirée de quality.yml
 - [ ] Commentaire explicatif ajouté
 - [ ] Workflow quality.yml valide
@@ -804,6 +837,7 @@ actionlint .github/workflows/quality.yml
 **Objectif** : Mettre à jour la documentation et le template de PR
 
 **Fichiers modifiés/créés** :
+
 - `CLAUDE.md`
 - `README.md`
 - `.github/pull_request_template.md` (ou création)
@@ -815,6 +849,7 @@ actionlint .github/workflows/quality.yml
 3. **PR Template** - Ajouter checklist E2E
 
 **Message de commit** :
+
 ```
 📝 docs: update E2E testing documentation
 
@@ -830,6 +865,7 @@ Related to #35
 ```
 
 **Tests de validation** :
+
 ```bash
 # Vérifier les liens dans la doc
 grep -r "ADR-001" CLAUDE.md README.md
@@ -839,6 +875,7 @@ cat .github/pull_request_template.md
 ```
 
 **Checklist** :
+
 - [ ] CLAUDE.md mis à jour
 - [ ] README.md mis à jour
 - [ ] PR template créé/mis à jour
@@ -852,13 +889,14 @@ cat .github/pull_request_template.md
 **Objectif** : Configurer la protection de branche pour rendre E2E obligatoire
 
 **Fichiers créés** :
+
 - `docs/deployment/configure-branch-protection.md` (guide)
 
 **Changements** :
 
 Créer un guide de configuration :
 
-```markdown
+````markdown
 # Configuration de la protection de branche
 
 ## Via GitHub UI
@@ -878,16 +916,19 @@ gh api repos/:owner/:repo/branches/main/protection/required_status_checks \
   -f "contexts[]=e2e/preview-deployment" \
   -F strict=true
 ```
+````
 
 ## Vérification
 
 - Créer une PR de test vers main
 - Vérifier que le merge est bloqué sans status check
 - Commenter @e2e et vérifier que le merge se débloque
+
 ```
 
 **Message de commit** :
 ```
+
 🔒 docs(deploy): add branch protection configuration guide
 
 - Create guide for configuring branch protection
@@ -898,16 +939,18 @@ gh api repos/:owner/:repo/branches/main/protection/required_status_checks \
 This ensures E2E tests must pass before merging to main.
 
 Related to #35
-```
+
+````
 
 **Tests de validation** :
 ```bash
 # Appliquer la protection (si autorisé)
 # Créer une PR de test vers main
 # Vérifier que le merge est bloqué
-```
+````
 
 **Checklist** :
+
 - [ ] Guide de configuration créé
 - [ ] Méthode UI documentée
 - [ ] Méthode CLI documentée
@@ -1021,23 +1064,27 @@ PLAYWRIGHT_BASE_URL=https://example.com pnpm test:e2e  # Remote
 Si un commit pose problème :
 
 ### Commit 1-2 : Rollback facile
+
 ```bash
 git revert <commit-sha>
 ```
 
 ### Commit 3-4 : Workflows peuvent être désactivés
+
 ```bash
 # Renommer le fichier temporairement
 mv .github/workflows/e2e.yml .github/workflows/e2e.yml.disabled
 ```
 
 ### Commit 7 : Restaurer E2E dans quality.yml
+
 ```bash
 git revert <commit-sha>
 # Ou réactiver manuellement la section E2E
 ```
 
 ### Commit 9 : Désactiver la protection
+
 ```bash
 # Via UI GitHub ou
 gh api repos/:owner/:repo/branches/main/protection/required_status_checks \
@@ -1049,6 +1096,7 @@ gh api repos/:owner/:repo/branches/main/protection/required_status_checks \
 ## Checklist finale avant merge
 
 ### Avant de commencer
+
 - [ ] Secrets Cloudflare configurés dans GitHub
   - [ ] `CLOUDFLARE_API_TOKEN`
   - [ ] `CLOUDFLARE_ACCOUNT_ID`
@@ -1056,12 +1104,14 @@ gh api repos/:owner/:repo/branches/main/protection/required_status_checks \
 - [ ] Document d'implémentation lu
 
 ### Après chaque commit
+
 - [ ] Tests de validation passés
 - [ ] Commit message suit Gitmoji
 - [ ] Checklist du commit complétée
 - [ ] Pas de régression introduite
 
 ### Avant la PR finale
+
 - [ ] Tous les commits squashés si nécessaire
 - [ ] Documentation à jour
 - [ ] Tests E2E passent en local
@@ -1069,6 +1119,7 @@ gh api repos/:owner/:repo/branches/main/protection/required_status_checks \
 - [ ] Quality workflow passe toujours
 
 ### Après merge
+
 - [ ] Configurer la protection de branche (Commit 9)
 - [ ] Vérifier que le système fonctionne sur une PR réelle
 - [ ] Fermer l'issue #35
@@ -1078,17 +1129,20 @@ gh api repos/:owner/:repo/branches/main/protection/required_status_checks \
 ## Métriques de succès
 
 ### Par commit
+
 - ✅ Commit message clair et descriptif
 - ✅ Changements atomiques et cohérents
 - ✅ Tests passent
 - ✅ Pas de breaking changes
 
 ### Par phase
+
 - ✅ Phase testée indépendamment
 - ✅ Documentation à jour
 - ✅ Rollback possible
 
 ### Globalement
+
 - ✅ E2E tests fonctionnent via `@e2e`
 - ✅ Protection de `main` active
 - ✅ Pas de timeouts en CI

@@ -57,7 +57,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-      statuses: write  # For status checks
+      statuses: write # For status checks
 
     steps:
       - name: Get PR details

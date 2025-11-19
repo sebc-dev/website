@@ -78,9 +78,11 @@ This is a Next.js 15 website deployed to Cloudflare Workers using OpenNext. The 
 ### E2E Testing Strategy
 
 **Local Development**:
+
 - Run `pnpm test:e2e` to test against local dev server
 
 **CI (Preview Deployments)**:
+
 - Tests run on Cloudflare Workers preview deployments
 - **Triggering**: Comment `@e2e` on any PR to run tests
 - **For PRs to `main`**: E2E tests are **required** before merge
@@ -88,6 +90,7 @@ This is a Next.js 15 website deployed to Cloudflare Workers using OpenNext. The 
   - Automatic reminder comment when PR is opened
 
 **How it works**:
+
 1. Comment `@e2e` on the PR
 2. Workflow deploys to Cloudflare preview environment
 3. Playwright tests run against preview URL

@@ -167,15 +167,15 @@
       "routes": [
         {
           "pattern": "sebc.dev",
-          "zone_name": "sebc.dev"
-        }
-      ]
+          "zone_name": "sebc.dev",
+        },
+      ],
     },
     "preview": {
       "name": "website-preview-*",
-      "routes": []
-    }
-  }
+      "routes": [],
+    },
+  },
   /**
    * Bindings
    * Bindings allow your Worker to interact with resources on the Cloudflare Developer Platform, including

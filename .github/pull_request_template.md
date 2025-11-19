@@ -32,6 +32,7 @@
 **Required before merge**: Comment `@e2e` on this PR to run E2E tests on a Cloudflare preview deployment.
 
 The workflow will:
+
 1. Deploy to a preview environment
 2. Run Playwright tests
 3. Report results and update status check

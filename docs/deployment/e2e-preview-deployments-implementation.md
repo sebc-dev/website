@@ -24,16 +24,19 @@ Utiliser les preview deployments Cloudflare pour exécuter les tests E2E contre 
 ### Fonctionnement du système
 
 **Déclenchement des tests** :
+
 1. **Commenter `@e2e`** sur une PR pour lancer les tests E2E
 2. Le workflow `e2e.yml` se déclenche automatiquement
 3. Une réaction 🚀 est ajoutée au commentaire pour confirmer le déclenchement
 
 **Protection de la branche `main`** :
+
 1. Les PRs vers `main` reçoivent automatiquement un status check `e2e/preview-deployment` en état "pending"
 2. Un commentaire automatique rappelle de commenter `@e2e` pour lancer les tests
 3. Le merge est **bloqué** tant que le status check n'est pas "success"
 
 **Avantages** :
+
 - ✅ **Économie de ressources** : pas de tests à chaque push
 - ✅ **Protection garantie** : impossible de merger sur `main` sans tests E2E
 - ✅ **Flexibilité** : lancer les tests quand on veut sur les story branches
@@ -77,7 +80,7 @@ Créer/modifier `wrangler.jsonc` pour supporter les environments de preview :
   "send_metrics": false,
   "assets": {
     "directory": ".open-next/assets",
-    "binding": "ASSETS"
+    "binding": "ASSETS",
   },
 
   "env": {
@@ -86,19 +89,20 @@ Créer/modifier `wrangler.jsonc` pour supporter les environments de preview :
       "routes": [
         {
           "pattern": "sebc.dev",
-          "zone_name": "sebc.dev"
-        }
-      ]
+          "zone_name": "sebc.dev",
+        },
+      ],
     },
     "preview": {
       "name": "website-preview-*",
-      "routes": []
-    }
-  }
+      "routes": [],
+    },
+  },
 }
 ```
 
 **Notes importantes** :
+
 - Le nom `website-preview-*` permettra de créer des déploiements uniques par PR
 - Pas de routes configurées pour les previews (utilisation du domaine workers.dev par défaut)
 - **OBLIGATOIRE** : `compatibility_flags: ["nodejs_compat"]` requis pour OpenNext/Next.js
@@ -145,6 +149,7 @@ echo "DEPLOYMENT_NAME=${DEPLOYMENT_NAME}" >> $GITHUB_OUTPUT
 ```
 
 **Notes sur le script** :
+
 - Utilise `pnpm run deploy:build` qui devrait exécuter `opennextjs-cloudflare build`
 - Ne spécifie pas `--outdir` car OpenNext génère déjà dans `.open-next/`
 - Le flag `--env preview` utilise la config d'environment définie dans `wrangler.jsonc`
@@ -152,6 +157,7 @@ echo "DEPLOYMENT_NAME=${DEPLOYMENT_NAME}" >> $GITHUB_OUTPUT
 - L'URL de déploiement suit le format `<name>.<subdomain>.workers.dev`
 
 Rendre le script exécutable :
+
 ```bash
 chmod +x scripts/deploy-preview.sh
 ```
@@ -236,7 +242,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-      statuses: write  # For status checks
+      statuses: write # For status checks
 
     steps:
       - name: Get PR details
@@ -498,6 +504,7 @@ gh api repos/:owner/:repo/branches/main/protection/required_status_checks \
 ```
 
 **Résultat** :
+
 - ✅ Les PRs vers `main` ne pourront pas être mergées sans que le check `e2e/preview-deployment` soit vert
 - ✅ Le workflow de rappel créera automatiquement un status "pending" avec instructions
 - ✅ Commenter `@e2e` lancera les tests et mettra à jour le status
@@ -505,6 +512,7 @@ gh api repos/:owner/:repo/branches/main/protection/required_status_checks \
 ### 1.5 Secrets Cloudflare requis
 
 Ajouter les secrets suivants dans GitHub :
+
 - `CLOUDFLARE_API_TOKEN`: Token API avec permissions Workers Scripts Write
 - `CLOUDFLARE_ACCOUNT_ID`: ID du compte Cloudflare
 
@@ -529,7 +537,7 @@ export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,  // Retry failed tests in CI
+  retries: process.env.CI ? 2 : 0, // Retry failed tests in CI
   workers: process.env.CI ? 1 : undefined,
   reporter: process.env.CI ? 'github' : 'html',
 
@@ -547,16 +555,19 @@ export default defineConfig({
   ],
 
   // Only run local server when PLAYWRIGHT_BASE_URL is not set
-  webServer: baseURL.startsWith('http://localhost') ? {
-    command: 'pnpm dev',
-    url: baseURL,
-    reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000,
-  } : undefined,
+  webServer: baseURL.startsWith('http://localhost')
+    ? {
+        command: 'pnpm dev',
+        url: baseURL,
+        reuseExistingServer: !process.env.CI,
+        timeout: 120 * 1000,
+      }
+    : undefined,
 });
 ```
 
 **Changements clés**:
+
 - Support de `PLAYWRIGHT_BASE_URL` pour les preview deployments
 - Retries configurés pour gérer les problèmes réseau intermittents
 - `webServer` conditionnel (seulement pour local)
@@ -624,9 +635,11 @@ Ajouter une section sur les tests E2E :
 ### E2E Testing Strategy
 
 **Local Development**:
+
 - Run `pnpm test:e2e` to test against local dev server
 
 **CI (Preview Deployments)**:
+
 - Tests run on Cloudflare Workers preview deployments
 - **Triggering**: Comment `@e2e` on any PR to run tests
 - **For PRs to `main`**: E2E tests are **required** before merge
@@ -634,6 +647,7 @@ Ajouter une section sur les tests E2E :
   - Automatic reminder comment when PR is opened
 
 **How it works**:
+
 1. Comment `@e2e` on the PR
 2. Workflow deploys to Cloudflare preview environment
 3. Playwright tests run against preview URL
@@ -655,16 +669,19 @@ Ajouter dans la section Testing :
 E2E tests in CI use Cloudflare preview deployments for a production-like environment.
 
 **Running E2E tests on a PR**:
+
 - Comment `@e2e` on the PR to trigger tests
 - Tests run on a dedicated preview deployment
 - Results posted as comment and status check
 
 **For PRs to `main`**:
+
 - E2E tests are **required** before merge
 - Status check `e2e/preview-deployment` must pass
 - Comment `@e2e` to run tests and unlock merge
 
 **Why preview deployments?**
+
 - Eliminates `wrangler dev` timeout issues in CI
 - Tests against actual Cloudflare Workers environment
 - More representative of production behavior
@@ -731,6 +748,7 @@ Créer/modifier `.github/pull_request_template.md` :
 **Required before merge**: Comment `@e2e` on this PR to run E2E tests on a Cloudflare preview deployment.
 
 The workflow will:
+
 1. Deploy to a preview environment
 2. Run Playwright tests
 3. Report results and update status check
@@ -828,11 +846,13 @@ Développeur va dans Actions → E2E Tests → Run workflow
 ### Checklist de vérification avant déploiement
 
 **Configuration** :
+
 - [ ] Secrets Cloudflare configurés dans GitHub (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`)
 - [ ] `wrangler.jsonc` mis à jour avec env preview
 - [ ] Protection de branche configurée sur `main` avec status check `e2e/preview-deployment`
 
 **Fichiers créés/modifiés** :
+
 - [ ] Script `scripts/deploy-preview.sh` créé et exécutable
 - [ ] Workflow `.github/workflows/e2e.yml` créé (déclenchement par commentaire)
 - [ ] Workflow `.github/workflows/e2e-reminder.yml` créé (rappel pour main)
@@ -842,17 +862,20 @@ Développeur va dans Actions → E2E Tests → Run workflow
 - [ ] PR template `.github/pull_request_template.md` créé/mis à jour
 
 **Validation** :
+
 - [ ] Tests E2E locaux passent : `pnpm test:e2e`
 - [ ] Tests de validation passés (voir ci-dessous)
 
 ### Tests de validation
 
 1. **Test local** :
+
    ```bash
    pnpm test:e2e
    ```
 
 2. **Test du script de déploiement** (si secrets configurés) :
+
    ```bash
    export CLOUDFLARE_API_TOKEN="..."
    export CLOUDFLARE_ACCOUNT_ID="..."
@@ -973,6 +996,7 @@ Cliquez sur le lien dans le commentaire de résultats qui pointe vers les logs d
 **Symptômes** : Erreur lors de `wrangler deploy`
 
 **Solutions** :
+
 1. Vérifier que les secrets sont correctement configurés
 2. Vérifier les permissions du token API Cloudflare
 3. Vérifier les quotas du compte Cloudflare
@@ -982,6 +1006,7 @@ Cliquez sur le lien dans le commentaire de résultats qui pointe vers les logs d
 **Symptômes** : Tests verts en local, rouges en preview
 
 **Solutions** :
+
 1. Vérifier les variables d'environnement spécifiques à la preview
 2. Vérifier les différences de comportement Cloudflare Workers vs local
 3. Augmenter les timeouts dans les tests
@@ -992,6 +1017,7 @@ Cliquez sur le lien dans le commentaire de résultats qui pointe vers les logs d
 **Symptômes** : Accumulation de deployments preview
 
 **Solutions** :
+
 1. Vérifier que le step cleanup s'exécute (if: always())
 2. Exécuter le script de nettoyage manuel
 3. Vérifier les logs du workflow pour les erreurs de cleanup
