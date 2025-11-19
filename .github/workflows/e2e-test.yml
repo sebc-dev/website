@@ -2,6 +2,9 @@ name: E2E Tests (Unprivileged)
 
 # This workflow runs untrusted code from PRs with minimal permissions
 # Results are uploaded as artifacts for the privileged workflow to handle
+#
+# CodeQL Security Alerts: See .github/CODEQL_SUPPRESSIONS.md for documented
+# and accepted security risks in this workflow (two-workflow security pattern)
 
 on:
   issue_comment:

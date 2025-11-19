@@ -291,5 +291,38 @@ This ensures all validation and quality checks pass before code merges.
 
 ---
 
-**Last Updated**: 2025-01-11
-**CI/CD Version**: 2.0 (Optimized)
+## E2E Tests on Preview Deployments
+
+**Files**:
+- `.github/workflows/e2e-test.yml` (Unprivileged)
+- `.github/workflows/e2e-report.yml` (Privileged)
+- `.github/workflows/e2e-reminder.yml` (PR automation)
+
+**Purpose**: Run E2E tests on Cloudflare preview deployments triggered by PR comments.
+
+**Security Model**: Two-workflow pattern (see [E2E Workflow Security](../docs/deployment/e2e-workflow-security.md))
+
+### How to Trigger
+
+Comment `@e2e` on any PR to trigger E2E tests on a preview deployment.
+
+### Workflow Responsibilities
+
+| Workflow            | Permissions | Purpose                                                   |
+| ------------------- | ----------- | --------------------------------------------------------- |
+| **e2e-test.yml**    | Read-only   | Deploy preview, run tests, upload results as artifacts    |
+| **e2e-report.yml**  | Write       | Post comments, create status checks (never executes code) |
+| **e2e-reminder.yml** | Write       | Auto-comment on PRs to main requesting E2E tests          |
+
+### CodeQL Security Alerts
+
+This repository contains **documented and accepted** CodeQL security warnings in `e2e-test.yml`.
+
+**See**: [`.github/CODEQL_SUPPRESSIONS.md`](../CODEQL_SUPPRESSIONS.md) for detailed explanation of why these warnings are safe.
+
+**Summary**: The two-workflow pattern intentionally executes untrusted PR code in an isolated environment with minimal permissions. All privileged operations (comments, status checks) are handled by a separate workflow that never executes PR code.
+
+---
+
+**Last Updated**: 2025-11-19
+**CI/CD Version**: 2.1 (E2E + Security Hardening)
