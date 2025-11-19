@@ -8,6 +8,9 @@ import { defineConfig, devices } from '@playwright/test';
 // import path from 'path';
 // dotenv.config({ path: path.resolve(__dirname, '.env') });
 
+// Support dynamic base URL for preview deployments
+const baseURL = process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000';
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
@@ -23,14 +26,15 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  reporter: process.env.CI ? 'github' : 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
-    baseURL: 'http://localhost:3000',
+    baseURL,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
   },
 
   /* Configure projects for major browsers */
@@ -72,17 +76,20 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: {
-    /**
-     * In CI: use production build (faster and more stable than dev server)
-     * Locally: use filtered dev command to suppress Durable Objects warnings
-     * These warnings are expected in local development as Durable Objects
-     * are not supported by wrangler dev (they work in production)
-     * See: https://opennext.js.org/cloudflare/known-issues
-     */
-    command: 'pnpm start',
-    url: 'http://localhost:3000',
-    reuseExistingServer: false,
-    timeout: 120000, // 2 minutes (production server can take longer)
-  },
+  /* Only run local server when PLAYWRIGHT_BASE_URL is not set */
+  webServer: baseURL.startsWith('http://localhost')
+    ? {
+        /**
+         * In CI: use production build (faster and more stable than dev server)
+         * Locally: use filtered dev command to suppress Durable Objects warnings
+         * These warnings are expected in local development as Durable Objects
+         * are not supported by wrangler dev (they work in production)
+         * See: https://opennext.js.org/cloudflare/known-issues
+         */
+        command: 'pnpm start',
+        url: baseURL,
+        reuseExistingServer: !process.env.CI,
+        timeout: 120000, // 2 minutes (production server can take longer)
+      }
+    : undefined,
 });
