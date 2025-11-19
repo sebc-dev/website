@@ -66,6 +66,28 @@ Chaque niveau dispose de templates, commandes Claude personnalisées et validati
 - **Architecture Guards** : Prévention des fuites de code serveur vers le client
 - **Coverage Reports** : Génération automatique de rapports de couverture
 
+#### E2E Tests in CI
+
+E2E tests in CI use Cloudflare preview deployments for a production-like environment.
+
+**Running E2E tests on a PR**:
+- Comment `@e2e` on the PR to trigger tests
+- Tests run on a dedicated preview deployment
+- Results posted as comment and status check
+
+**For PRs to `main`**:
+- E2E tests are **required** before merge
+- Status check `e2e/preview-deployment` must pass
+- Comment `@e2e` to run tests and unlock merge
+
+**Why preview deployments?**
+- Eliminates `wrangler dev` timeout issues in CI
+- Tests against actual Cloudflare Workers environment
+- More representative of production behavior
+- No resource waste from running tests on every push
+
+See [E2E Implementation Guide](docs/deployment/e2e-preview-deployments-implementation.md) and [ADR-001](docs/decisions/001-e2e-tests-preview-deployments.md) for complete details.
+
 ### DevOps & Automation
 
 - **Pipeline CI/CD** : 4 jobs (Quality, E2E, Build, Mutation) sur chaque PR
