@@ -196,6 +196,7 @@ Ou si vous utilisez déjà `pnpm deploy` avec OpenNext, vous pouvez réutiliser 
 ### 1.3 Créer les workflows GitHub Actions
 
 **IMPORTANT** : Pour des raisons de sécurité, nous utilisons **deux workflows séparés** :
+
 1. Un workflow non privilégié qui exécute le code
 2. Un workflow privilégié qui gère les status checks et commentaires
 
@@ -206,10 +207,12 @@ Voir [E2E Workflow Security](./e2e-workflow-security.md) pour comprendre le mod�
 Créer `.github/workflows/e2e-test.yml` :
 
 **Voir les fichiers créés** :
+
 - `.github/workflows/e2e-test.yml` - Workflow non privilégié
 - `.github/workflows/e2e-report.yml` - Workflow privilégié
 
 **Points clés du workflow non privilégié** :
+
 - ✅ Permissions minimales : `contents: read` SEULEMENT
 - ✅ Pas de permissions d'écriture sur PRs ou status checks
 - ✅ Exécute le code de la PR de manière isolée
@@ -222,14 +225,14 @@ Créer `.github/workflows/e2e-test.yml` :
 name: E2E Tests (Unprivileged)
 
 permissions:
-  contents: read  # ⚠️ READ ONLY - Sécurité critique
+  contents: read # ⚠️ READ ONLY - Sécurité critique
 
 steps:
   - name: Checkout PR code
-  - name: Install dependencies  # ⚠️ Code potentiellement malveillant
+  - name: Install dependencies # ⚠️ Code potentiellement malveillant
   - name: Deploy preview
   - name: Run tests
-  - name: Upload results as artifacts  # ✓ Communication sécurisée
+  - name: Upload results as artifacts # ✓ Communication sécurisée
   - name: Cleanup preview
 ```
 
@@ -238,6 +241,7 @@ steps:
 Créer `.github/workflows/e2e-report.yml` :
 
 **Points clés du workflow privilégié** :
+
 - ✅ Permissions complètes : `pull-requests: write`, `statuses: write`
 - ✅ **JAMAIS** de checkout ou d'exécution de code de PR
 - ✅ Télécharge uniquement les artifacts
@@ -251,16 +255,16 @@ name: E2E Tests Report (Privileged)
 
 on:
   workflow_run:
-    workflows: ["E2E Tests (Unprivileged)"]
+    workflows: ['E2E Tests (Unprivileged)']
     types: [completed]
 
 permissions:
-  pull-requests: write  # ✓ Safe - no code execution
+  pull-requests: write # ✓ Safe - no code execution
   statuses: write
 
 steps:
-  - name: Download artifacts  # ✓ No code checkout
-  - name: Parse metadata  # ✓ Read-only data processing
+  - name: Download artifacts # ✓ No code checkout
+  - name: Parse metadata # ✓ Read-only data processing
   - name: Create status checks
   - name: Post PR comments
 ```

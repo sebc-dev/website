@@ -15,6 +15,7 @@ The E2E testing workflow uses a **two-workflow security pattern** to protect aga
 Single-workflow approaches that trigger on `issue_comment` or `pull_request_target` and execute untrusted code are vulnerable to privilege escalation:
 
 **Attack Vector**:
+
 1. Attacker creates a malicious PR with compromised `package.json` install scripts
 2. Attacker comments `@e2e` on their own PR
 3. Workflow checks out attacker's code
@@ -26,6 +27,7 @@ Single-workflow approaches that trigger on `issue_comment` or `pull_request_targ
    - Ability to post comments as the bot
 
 **Real-World Impact**:
+
 - Steal Cloudflare API tokens
 - Modify deployment targets
 - Exfiltrate sensitive data
@@ -40,6 +42,7 @@ We separate **untrusted code execution** from **privileged actions** using two i
 **File**: `.github/workflows/e2e-test.yml`
 
 **Security Properties**:
+
 - Minimal permissions: `contents: read` ONLY
 - NO write permissions to PRs, status checks, or comments
 - Executes untrusted code from PR (checkout + install)
@@ -47,6 +50,7 @@ We separate **untrusted code execution** from **privileged actions** using two i
 - Uploads results as artifacts (read-only operation)
 
 **What it does**:
+
 1. Checks out PR code (untrusted)
 2. Runs `pnpm install` (executes install scripts)
 3. Deploys to preview environment
@@ -55,6 +59,7 @@ We separate **untrusted code execution** from **privileged actions** using two i
 6. Cleans up deployment
 
 **Attack Mitigation**:
+
 - Even if malicious code executes, it has NO write permissions
 - Cannot modify status checks or post comments
 - Cannot steal secrets beyond what `deploy` step uses
@@ -65,6 +70,7 @@ We separate **untrusted code execution** from **privileged actions** using two i
 **File**: `.github/workflows/e2e-report.yml`
 
 **Security Properties**:
+
 - Full write permissions (PRs, status checks, comments)
 - Triggered by `workflow_run` completion
 - NEVER checks out or executes PR code
@@ -72,12 +78,14 @@ We separate **untrusted code execution** from **privileged actions** using two i
 - Cannot be influenced by attacker's code
 
 **What it does**:
+
 1. Downloads test results from artifacts
 2. Parses metadata (PR number, test status, etc.)
 3. Creates/updates status checks
 4. Posts comments with results
 
 **Attack Mitigation**:
+
 - No code execution from PR
 - Only processes data from artifacts
 - Artifacts created in isolated unprivileged environment
@@ -125,17 +133,22 @@ We separate **untrusted code execution** from **privileged actions** using two i
 ## Why This Works
 
 ### Principle of Least Privilege
+
 Each workflow has ONLY the permissions it needs:
+
 - Unprivileged workflow: Execute code → needs READ only
 - Privileged workflow: Report results → needs WRITE, never executes code
 
 ### Trust Boundary Isolation
+
 - Untrusted code execution happens in a sandbox with no privileges
 - Privileged actions happen in an environment that never touches untrusted code
 - Data flows one-way through artifacts (no reverse channel)
 
 ### Defense in Depth
+
 Multiple layers of protection:
+
 1. Permission separation (read vs write)
 2. Workflow isolation (separate execution contexts)
 3. Artifact-based communication (no direct data flow)
@@ -151,17 +164,17 @@ on:
     types: [created]
 
 permissions:
-  pull-requests: write  # ⚠️ Dangerous!
-  statuses: write       # ⚠️ Dangerous!
+  pull-requests: write # ⚠️ Dangerous!
+  statuses: write # ⚠️ Dangerous!
 
 steps:
   - uses: actions/checkout@v4
     with:
-      ref: ${{ steps.pr.outputs.ref }}  # ⚠️ Untrusted code!
+      ref: ${{ steps.pr.outputs.ref }} # ⚠️ Untrusted code!
 
-  - run: pnpm install  # ⚠️ Executes attacker's scripts with write permissions!
+  - run: pnpm install # ⚠️ Executes attacker's scripts with write permissions!
 
-  - uses: actions/github-script@v7  # ⚠️ Attacker can influence this!
+  - uses: actions/github-script@v7 # ⚠️ Attacker can influence this!
     with:
       script: |
         github.rest.issues.createComment(...)
@@ -219,17 +232,20 @@ steps:
 ## Additional Security Measures
 
 ### Secret Protection
+
 - Secrets only exposed in unprivileged workflow for deployment
 - Limited to `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`
 - Used only for Cloudflare deployment (isolated API)
 - Cannot be exfiltrated through PR comments or status checks
 
 ### Cleanup Isolation
+
 - Preview cleanup uses same limited API access
 - Cleanup scoped to preview environment only
 - Cannot affect production deployments
 
 ### Status Check Integrity
+
 - Status checks created ONLY by privileged workflow
 - Metadata validated before status update
 - PR number and SHA verified against GitHub API
@@ -237,15 +253,18 @@ steps:
 ## References
 
 ### Official GitHub Security Guidance
+
 - [Keeping your GitHub Actions and workflows secure Part 1: Preventing pwn requests](https://securitylab.github.com/research/github-actions-preventing-pwn-requests/)
 - [Security hardening for GitHub Actions](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions)
 - [Using workflow_run for secure workflows](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_run)
 
 ### Security Best Practices
+
 - [CodeQL Security Queries for GitHub Actions](https://github.com/github/codeql/tree/main/javascript/ql/src/Security/CWE-094)
 - [Secure GitHub Actions Patterns](https://github.com/ossf/scorecard/blob/main/docs/checks.md#token-permissions)
 
 ### Related Documentation
+
 - [ADR-001: Use Preview Deployments](../decisions/001-e2e-tests-preview-deployments.md)
 - [E2E Implementation Guide](./e2e-preview-deployments-implementation.md)
 

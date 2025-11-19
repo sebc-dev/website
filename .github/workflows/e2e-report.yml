@@ -5,7 +5,7 @@ name: E2E Tests Report (Privileged)
 
 on:
   workflow_run:
-    workflows: ["E2E Tests (Unprivileged)"]
+    workflows: ['E2E Tests (Unprivileged)']
     types: [completed]
 
 jobs:
