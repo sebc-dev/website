@@ -5,11 +5,13 @@
 - **Type**: Story Technique
 - **Epic**: Infrastructure & Testing
 - **Priority**: P0 (Critique)
-- **Effort**: 8 points
+- **Effort**: 10 points (15-19h estimées)
 - **Status**: Planifié
 - **Created**: 2025-01-19
+- **Updated**: 2025-01-19 (Ajout Phase 0: Nettoyage et Préparation)
 - **Related Documents**:
   - `/docs/guide_cloudflare_playwright.md` (Guide de référence)
+  - `/docs/decisions/001-e2e-tests-preview-deployments.md` (Conflit architectural à résoudre)
   - `/docs/specs/PRD_CLOUDFLARE_E2E_TESTING.md` (à créer si besoin de PRD formel)
 
 ---
@@ -436,7 +438,266 @@ e2e-tests:
 
 ## 4. Plan d'Implémentation par Phases
 
-### Phase 1: Configuration Locale (Pré-requis)
+### Phase 0: Nettoyage et Préparation (Prérequis Critique)
+
+**Durée estimée**: 2-3h
+
+**Objectif**: Nettoyer le code existant, résoudre les conflits architecturaux, et préparer le projet pour une implémentation propre de la refonte E2E.
+
+**Contexte**: L'analyse approfondie du projet révèle que nous sommes en **état de transition** entre deux architectures E2E. Plusieurs fichiers obsolètes, configurations commentées et conflits doivent être résolus avant d'implémenter la nouvelle architecture.
+
+---
+
+#### 0.1 CRITIQUE - Résolution du Conflit Architectural
+
+**Problème identifié**: Deux approches E2E conflictuelles coexistent dans la documentation:
+
+1. **ADR 001** (`/docs/decisions/001-e2e-tests-preview-deployments.md`):
+   - Propose d'utiliser des **preview deployments Cloudflare** réels
+   - Tests exécutés contre URLs de preview sur le cloud
+   - Approche standard de l'industrie (Vercel, Netlify)
+
+2. **Story Document** (ce document):
+   - Propose d'utiliser **wrangler dev localement** en CI
+   - Tests exécutés contre `127.0.0.1:8788`
+   - Approche de simulation locale
+
+**Impact**: Ces deux stratégies sont **mutuellement exclusives**. Implémenter l'une rend l'autre obsolète.
+
+**Tâches:**
+
+- [ ] **DÉCISION REQUISE**: Choisir UNE approche (ADR vs Story)
+
+  **Option A - Preview Deployments (ADR)**:
+  - ✅ Avantages: Environnement 100% identique à production, pas de simulation
+  - ❌ Inconvénients: Nécessite quota Cloudflare, temps de déploiement, gestion de cleanup
+
+  **Option B - Wrangler Dev Local (Story)**:
+  - ✅ Avantages: Rapide, pas de quota, contrôle total, logs directs
+  - ❌ Inconvénients: Simulation (même si très fidèle avec workerd)
+
+- [ ] **Si Option A**: Implémenter ADR, archiver cette story
+- [ ] **Si Option B**: Poursuivre cette story, archiver/supprimer ADR 001
+
+**Recommandation**: **Option B (Wrangler Dev Local)** pour les raisons suivantes:
+- Plus rapide à itérer (pas de déploiement cloud)
+- Pas de dépendance aux quotas Cloudflare
+- Plus facile à déboguer (logs directs)
+- `workerd` runtime est suffisamment fidèle pour détecter les bugs Edge
+- Possibilité d'ajouter des tests de smoke en preview deployments APRÈS stabilisation
+
+**Validation**: Une fois la décision prise, documenter dans `/docs/decisions/002-e2e-local-wrangler-dev.md` (si Option B)
+
+---
+
+#### 0.2 HAUTE PRIORITÉ - Nettoyage Git
+
+**Problème identifié**: L'index Git contient des incohérences (fichiers supprimés non commités, nouveaux fichiers non trackés).
+
+**Tâches:**
+
+1. **Commiter la suppression de l'exemple Playwright**
+   ```bash
+   git add tests/example.spec.ts  # Fichier marqué D (deleted) mais pas commité
+   ```
+   - [ ] Vérifier que c'est bien un fichier template sans valeur
+   - [ ] Commiter: `git commit -m "🗑️ remove: Playwright example template test"`
+
+2. **Tracker les nouveaux tests existants**
+   ```bash
+   git add tests/compression.spec.ts
+   git add tests/fixtures/compression.ts
+   ```
+   - [ ] Vérifier que ces fichiers sont complets et fonctionnels
+   - [ ] Commiter: `git commit -m "✅ test: add compression E2E tests and fixtures"`
+
+3. **Supprimer les fichiers temporaires**
+   ```bash
+   rm test-output.log  # Fichier de log non tracké à la racine du projet
+   ```
+   - [ ] Vérifier qu'aucun processus n'utilise ce fichier
+   - [ ] Supprimer le fichier
+
+4. **Mettre à jour .gitignore**
+   - [ ] Ajouter les patterns suivants à `.gitignore`:
+     ```
+     # Test logs (à ajouter après la section Playwright existante)
+     test-output.log
+     playwright-output.log
+     *.test.log
+     ```
+
+**Validation Phase 0.2**:
+```bash
+git status  # Doit être clean (sauf modifications volontaires)
+git status --ignored | grep -E "test.*\.log"  # Doit montrer les logs ignorés
+```
+
+---
+
+#### 0.3 HAUTE PRIORITÉ - Nettoyage de playwright.config.ts
+
+**Problème identifié**: Le fichier contient du code mort et des commentaires obsolètes.
+
+**Tâches:**
+
+1. **Supprimer les imports commentés** (Lignes 7-9)
+   ```typescript
+   // À SUPPRIMER:
+   // import dotenv from 'dotenv';
+   // import path from 'path';
+   // dotenv.config({ path: path.resolve(__dirname, '.env') });
+   ```
+   - [ ] Vérifier qu'aucune dépendance à dotenv n'existe dans le projet
+   - [ ] Supprimer ces 3 lignes
+
+2. **Décider du sort des configurations mobiles commentées** (Lignes 54-71)
+
+   **Options**:
+   - **A**: Les supprimer si jamais utilisées
+   - **B**: Les documenter explicitement comme "désactivées par design"
+   - **C**: Les activer si elles ont une valeur
+
+   - [ ] Examiner l'historique: `git log -p playwright.config.ts | grep -A 10 "Mobile Chrome"`
+   - [ ] DÉCISION: Choisir A, B, ou C
+   - [ ] Exécuter l'action correspondante
+
+3. **Mettre à jour les commentaires obsolètes** (Lignes 74-82)
+
+   **Actuel**:
+   ```typescript
+   /**
+    * In CI: use production build (faster and more stable than dev server)
+    * Locally: use filtered dev command to suppress Durable Objects warnings
+    */
+   ```
+
+   **Cible** (après implémentation Phase 1):
+   ```typescript
+   /**
+    * Run Cloudflare Workers runtime (workerd) for E2E tests
+    * Uses wrangler dev to simulate production Edge environment
+    * Forces IPv4 (127.0.0.1) to avoid Node.js 20+ localhost resolution issues
+    * See: /docs/guide_cloudflare_playwright.md for architecture details
+    */
+   ```
+
+   - [ ] Noter cette modification pour Phase 1 (ne pas faire maintenant)
+
+**Validation Phase 0.3**:
+```bash
+grep -n "dotenv" playwright.config.ts  # Ne doit rien retourner
+grep -n "Mobile Chrome" playwright.config.ts  # Vérifier décision prise
+```
+
+---
+
+#### 0.4 MOYENNE PRIORITÉ - Nettoyage des Commentaires CI
+
+**Problème identifié**: Le workflow CI contient des commentaires longs expliquant pourquoi les tests sont désactivés. Ces commentaires doivent être archivés, pas supprimés.
+
+**Fichier**: `.github/workflows/quality.yml` (lignes 134-148)
+
+**Tâches:**
+
+1. **Créer un document d'historique**
+   - [ ] Créer `/docs/decisions/003-e2e-ci-timeout-history.md`
+   - [ ] Copier les commentaires actuels du workflow dans ce document:
+     ```markdown
+     # ADR 003: Historique des Timeouts E2E en CI
+
+     ## Contexte (2025-01-XX)
+     Les tests E2E ont été désactivés temporairement en raison de:
+     - Server fails to start within timeout in CI environment
+     - Root cause: next dev/start with OpenNext Cloudflare takes >60s to initialize
+
+     ## Décision
+     Désactivation temporaire jusqu'à résolution par refonte architecture E2E.
+
+     ## Résolution
+     [À compléter après Phase 3]
+     ```
+
+2. **Simplifier le commentaire dans le workflow**
+   - [ ] Remplacer le long commentaire par une simple référence:
+     ```yaml
+     # E2E Tests temporarily disabled - See /docs/decisions/003-e2e-ci-timeout-history.md
+     - name: E2E Tests (Temporarily Disabled)
+       run: echo "⚠️ E2E tests disabled - See ADR 003"
+     ```
+
+**Validation Phase 0.4**:
+```bash
+test -f docs/decisions/003-e2e-ci-timeout-history.md  # Fichier doit exister
+grep -A 5 "E2E Tests" .github/workflows/quality.yml  # Vérifier simplification
+```
+
+---
+
+#### 0.5 BASSE PRIORITÉ - Documentation des Scripts
+
+**Problème identifié**: Le script `scripts/dev-quiet.sh` peut prêter à confusion après la refonte.
+
+**Tâches:**
+
+1. **Ajouter un commentaire en tête de dev-quiet.sh**
+   - [ ] Insérer en ligne 1:
+     ```bash
+     #!/bin/bash
+     # Script de développement local (pnpm dev)
+     # NOTE: Les tests E2E utilisent 'pnpm preview' (wrangler dev), pas ce script
+     # Ce script est uniquement pour le développement avec hot-reload
+     ```
+
+2. **Documenter dans CLAUDE.md**
+   - [ ] Ajouter dans la section "Development":
+     ```markdown
+     **Development Servers**:
+     - `pnpm dev` - Next.js dev server with Turbopack (for local development)
+       - Uses `scripts/dev-quiet.sh` to filter Durable Objects warnings
+     - `pnpm preview` - Cloudflare Workers runtime (for E2E tests)
+       - Uses `wrangler dev` with workerd runtime
+     ```
+
+**Validation Phase 0.5**:
+```bash
+head -5 scripts/dev-quiet.sh | grep "tests E2E"  # Commentaire doit apparaître
+grep "pnpm preview" CLAUDE.md  # Documentation doit mentionner preview
+```
+
+---
+
+### Validation Complète de la Phase 0
+
+Avant de passer à la Phase 1, vérifier:
+
+```bash
+# 1. Décision architecturale prise et documentée
+test -f docs/decisions/002-e2e-local-wrangler-dev.md || echo "ADR manquant"
+
+# 2. Git est propre
+git status | grep -E "(nothing to commit|working tree clean)"
+
+# 3. .gitignore contient les patterns de logs
+grep "test-output.log" .gitignore
+
+# 4. Aucun import dotenv dans playwright.config
+! grep -q "dotenv" playwright.config.ts
+
+# 5. Documentation CI existe
+test -f docs/decisions/003-e2e-ci-timeout-history.md
+
+# 6. Scripts documentés
+grep -q "tests E2E" scripts/dev-quiet.sh
+```
+
+**Critère de passage**: Tous les checks doivent passer (exit code 0)
+
+**Durée réelle estimée**: 2-3h (incluant décisions et reviews)
+
+---
+
+### Phase 1: Configuration Locale (Implémentation)
 
 **Durée estimée**: 1-2h
 
@@ -864,9 +1125,94 @@ Running 15 tests using 1 worker
 
 ---
 
-## 10. Conclusion
+## 10. Rapport d'Analyse Approfondie
 
-Cette story représente un pivot architectural majeur pour garantir la qualité de notre application Next.js sur Cloudflare Workers. L'investissement initial (estimé à 12-16h de travail) sera rapidement amorti par:
+### 10.1 Résumé Exécutif de l'Audit
+
+L'analyse approfondie du projet a révélé que nous sommes dans un **état de transition** entre deux architectures E2E. Le score de conformité actuel est de **61%** par rapport aux recommandations du guide Cloudflare/Playwright 2025.
+
+**Découvertes Majeures:**
+
+1. **Conflit Architectural Critique**: Deux approches E2E conflictuelles (ADR 001 vs Story Document)
+2. **État Git Incohérent**: Fichiers supprimés non commités, nouveaux tests non trackés
+3. **Code Mort**: Imports commentés, configurations obsolètes dans playwright.config.ts
+4. **Tests CI Désactivés**: Depuis plusieurs semaines à cause de timeouts
+5. **Documentation Fragmentée**: Commentaires longs dans le code plutôt que dans des ADR
+
+**Points Positifs:**
+
+- ✅ Aucune dépendance obsolète (next-on-pages déjà retiré)
+- ✅ wrangler.jsonc parfaitement configuré
+- ✅ open-next.config.ts avec configuration avancée (R2, DO, sharding)
+- ✅ Qualité des tests existants excellente (auto-waiting, fixtures, mobile)
+- ✅ .gitignore complet pour les artefacts de build
+
+### 10.2 Inventaire des Fichiers Obsolètes
+
+| Catégorie | Élément | État | Action Requise | Phase |
+|-----------|---------|------|----------------|-------|
+| **Git Index** | `tests/example.spec.ts` | Deleted, non commité | Commiter suppression | Phase 0.2 |
+| **Git Index** | `tests/compression.spec.ts` | Nouveau, non tracké | Commiter ajout | Phase 0.2 |
+| **Git Index** | `tests/fixtures/compression.ts` | Nouveau, non tracké | Commiter ajout | Phase 0.2 |
+| **Temp Files** | `test-output.log` | Non tracké, racine | Supprimer | Phase 0.2 |
+| **Config** | `playwright.config.ts` lignes 7-9 | Imports dotenv commentés | Supprimer | Phase 0.3 |
+| **Config** | `playwright.config.ts` lignes 54-71 | Mobile configs commentés | Décision requise | Phase 0.3 |
+| **Config** | `playwright.config.ts` lignes 74-82 | Commentaires obsolètes | Mettre à jour | Phase 1 |
+| **CI** | `.github/workflows/quality.yml` L134-148 | Longs commentaires | Archiver dans ADR | Phase 0.4 |
+| **Docs** | ADR 001 | Conflit architectural | Archiver ou supprimer | Phase 0.1 |
+| **Scripts** | `scripts/dev-quiet.sh` | Manque documentation | Ajouter commentaires | Phase 0.5 |
+
+### 10.3 Matrice de Décisions Critiques
+
+| Décision | Options | Recommandation | Impact | Deadline |
+|----------|---------|----------------|--------|----------|
+| **ADR vs Story** | A: Preview Deployments<br/>B: Wrangler Dev Local | **Option B** | Toute l'implémentation | Avant Phase 0 |
+| **Mobile Configs** | A: Supprimer<br/>B: Documenter<br/>C: Activer | À décider | Tests mobile | Phase 0.3 |
+| **ADR 001** | A: Archiver<br/>B: Supprimer | **Archiver** | Documentation historique | Phase 0.1 |
+
+### 10.4 Checklist de Validation Complète
+
+#### Avant Phase 0 (Décisions)
+- [ ] Décision architecturale prise (ADR vs Story)
+- [ ] Décision mobile configs prise (A, B, ou C)
+- [ ] ADR 002 créé (si Option B choisie)
+
+#### Après Phase 0 (Nettoyage)
+- [ ] Git status clean
+- [ ] Aucun fichier .log non tracké
+- [ ] .gitignore contient `test-output.log`
+- [ ] Aucun import dotenv dans playwright.config.ts
+- [ ] ADR 003 créé (historique timeout CI)
+- [ ] Scripts documentés dans CLAUDE.md
+
+#### Après Phase 1 (Configuration)
+- [ ] `playwright.config.ts` utilise `baseURL: 'http://127.0.0.1:8788'`
+- [ ] `package.json` preview script force IPv4
+- [ ] `tests/global-setup.ts` créé et fonctionnel
+- [ ] Tests locaux passent: `pnpm test:e2e`
+
+#### Après Phase 2 (Stabilisation)
+- [ ] Tests passent sur 3 moteurs (Chromium, Firefox, WebKit)
+- [ ] Aucun flaky test (3 runs consécutifs identiques)
+- [ ] Temps total < 5min en local
+
+#### Après Phase 3 (CI)
+- [ ] Secrets Cloudflare configurés dans GitHub
+- [ ] Job `e2e-tests` activé et passe au vert
+- [ ] Durée job CI < 15min
+- [ ] Artifacts Playwright uploadés
+
+#### Après Phase 4 (Documentation)
+- [ ] `tests/README.md` créé
+- [ ] `docs/guide_cloudflare_playwright.md` mis à jour
+- [ ] `CLAUDE.md` documenté
+- [ ] ADR 003 complété avec résolution
+
+---
+
+## 11. Conclusion
+
+Cette story représente un pivot architectural majeur pour garantir la qualité de notre application Next.js sur Cloudflare Workers. L'investissement initial (estimé à **15-19h** de travail avec Phase 0) sera rapidement amorti par:
 
 1. **Détection précoce des bugs Edge** avant production
 2. **Confiance accrue** dans les déploiements (quality gate fonctionnelle)
