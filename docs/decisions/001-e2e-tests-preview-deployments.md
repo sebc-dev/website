@@ -1,6 +1,6 @@
 # ADR 001: Use Preview Deployments for E2E Tests in CI
 
-**Status**: Accepted
+**Status**: Archivé (2025-01-19) - Remplacé par ADR 002
 **Date**: 2025-11-17
 **Tracking**: [#35](https://github.com/sebc-dev/website/issues/35)
 
