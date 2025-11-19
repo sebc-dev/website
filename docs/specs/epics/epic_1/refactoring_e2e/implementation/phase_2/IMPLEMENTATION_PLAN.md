@@ -33,6 +33,7 @@ worker builds    startup <120s     tests pass      DB seeded      3 engines pass
 ### Commit 1: Verify and Fix OpenNext Build Process
 
 **Files**:
+
 - `.open-next/worker.js` (verification)
 - `.open-next/assets/` (verification)
 - `open-next.config.ts` (potential fixes)
@@ -43,6 +44,7 @@ worker builds    startup <120s     tests pass      DB seeded      3 engines pass
 **Duration**: 30-45 min (implementation) + 15-20 min (review)
 
 **Content**:
+
 - Verify OpenNext build command executes successfully
 - Check that `.open-next/worker.js` is generated correctly
 - Validate that static assets are bundled in `.open-next/assets/`
@@ -50,12 +52,14 @@ worker builds    startup <120s     tests pass      DB seeded      3 engines pass
 - Document build output for troubleshooting
 
 **Why it's atomic**:
+
 - Single responsibility: Ensure the worker builds successfully
 - No external test dependencies
 - Can be validated independently with build command
 - Foundation for all subsequent debugging
 
 **Technical Validation**:
+
 ```bash
 # Clean build
 rm -rf .next .open-next
@@ -76,9 +80,10 @@ echo $?  # Should be 0
 **Expected Result**: Build completes without errors, worker.js and assets generated
 
 **Review Criteria**:
+
 - [ ] Build command exits with code 0
 - [ ] `.open-next/worker.js` exists and is not empty (>100KB)
-- [ ] `.open-next/assets/` contains static files (_next/, favicon.ico, etc.)
+- [ ] `.open-next/assets/` contains static files (\_next/, favicon.ico, etc.)
 - [ ] Build logs show no errors or warnings
 - [ ] Any configuration changes are justified and documented
 
@@ -87,6 +92,7 @@ echo $?  # Should be 0
 ### Commit 2: Resolve Timeout Issues and Optimize Server Startup
 
 **Files**:
+
 - `playwright.config.ts` (timeout adjustments)
 - `package.json` (preview script verification)
 - Logs analysis (not committed)
@@ -95,6 +101,7 @@ echo $?  # Should be 0
 **Duration**: 45-60 min (implementation) + 20-30 min (review)
 
 **Content**:
+
 - Analyze wrangler dev startup time with verbose logging
 - Adjust `webServer.timeout` in playwright.config.ts if needed
 - Verify `--ip 127.0.0.1` flag is present in preview script
@@ -103,12 +110,14 @@ echo $?  # Should be 0
 - Add progress logging for better visibility
 
 **Why it's atomic**:
+
 - Single responsibility: Ensure wrangler starts within timeout
 - Depends on Commit 1 (build must work)
 - Can be validated with timed startup tests
 - Critical for test reliability
 
 **Technical Validation**:
+
 ```bash
 # Test startup timing (run 3 times for average)
 time pnpm preview &
@@ -126,6 +135,7 @@ pnpm preview | grep "127.0.0.1:8788"
 **Expected Result**: Server starts consistently within 120s, binds to IPv4 correctly
 
 **Review Criteria**:
+
 - [ ] Server startup <120s (average of 3 runs)
 - [ ] Logs show "Ready on http://127.0.0.1:8788"
 - [ ] No IPv6 resolution issues
@@ -137,6 +147,7 @@ pnpm preview | grep "127.0.0.1:8788"
 ### Commit 3: Validate and Fix Existing E2E Tests on workerd
 
 **Files**:
+
 - `tests/compression.spec.ts` (potential fixes)
 - `tests/middleware.spec.ts` (potential fixes)
 - `tests/i18n-edge-cases.spec.ts` (potential fixes)
@@ -147,6 +158,7 @@ pnpm preview | grep "127.0.0.1:8788"
 **Duration**: 60-90 min (implementation) + 30-45 min (review)
 
 **Content**:
+
 - Run each test file individually to isolate failures
 - Fix compression tests (Brotli/Gzip headers on workerd)
 - Fix middleware tests (i18n routing behavior)
@@ -155,12 +167,14 @@ pnpm preview | grep "127.0.0.1:8788"
 - Document any behavioral differences vs Node.js
 
 **Why it's atomic**:
+
 - Single responsibility: Make existing tests pass
 - Depends on Commits 1 & 2 (build and startup)
 - Each test file can be fixed independently
 - Validates core functionality
 
 **Technical Validation**:
+
 ```bash
 # Run each test file individually
 pnpm test:e2e tests/compression.spec.ts
@@ -176,6 +190,7 @@ pnpm test:e2e
 **Expected Result**: All 3 test files pass successfully on workerd runtime
 
 **Review Criteria**:
+
 - [ ] `compression.spec.ts` passes (Brotli/Gzip validated)
 - [ ] `middleware.spec.ts` passes (i18n routing works)
 - [ ] `i18n-edge-cases.spec.ts` passes (edge cases handled)
@@ -188,6 +203,7 @@ pnpm test:e2e
 ### Commit 4: Debug and Validate D1 Database Integration
 
 **Files**:
+
 - `tests/global-setup.ts` (potential fixes)
 - `drizzle/seeds/categories.sql` (verification)
 - `drizzle/seeds/sample-articles.sql` (verification)
@@ -197,6 +213,7 @@ pnpm test:e2e
 **Duration**: 45-60 min (implementation) + 20-30 min (review)
 
 **Content**:
+
 - Verify D1 binding exists in wrangler.jsonc
 - Test global-setup.ts in isolation
 - Validate SQL seed files syntax
@@ -205,12 +222,14 @@ pnpm test:e2e
 - Add error handling and detailed logging
 
 **Why it's atomic**:
+
 - Single responsibility: Ensure D1 is properly initialized
 - Depends on Commits 1 & 2 (wrangler must start)
 - Can be validated independently
 - Critical for tests that use database
 
 **Technical Validation**:
+
 ```bash
 # Test global setup in isolation
 pnpm exec tsx tests/global-setup.ts
@@ -228,6 +247,7 @@ pnpm wrangler d1 execute DB --local --command "SELECT COUNT(*) FROM articles"
 **Expected Result**: Global setup completes, categories and articles seeded successfully
 
 **Review Criteria**:
+
 - [ ] Global setup executes without errors
 - [ ] Migrations apply successfully
 - [ ] Categories table contains data
@@ -241,6 +261,7 @@ pnpm wrangler d1 execute DB --local --command "SELECT COUNT(*) FROM articles"
 ### Commit 5: Verify Stability Across All Browsers
 
 **Files**:
+
 - `playwright.config.ts` (projects verification)
 - Test output logs (analysis, not committed)
 
@@ -248,6 +269,7 @@ pnpm wrangler d1 execute DB --local --command "SELECT COUNT(*) FROM articles"
 **Duration**: 30-45 min (implementation) + 15-20 min (review)
 
 **Content**:
+
 - Run full test suite on Chromium
 - Run full test suite on Firefox
 - Run full test suite on WebKit
@@ -256,12 +278,14 @@ pnpm wrangler d1 execute DB --local --command "SELECT COUNT(*) FROM articles"
 - Adjust wait strategies if needed
 
 **Why it's atomic**:
+
 - Single responsibility: Ensure cross-browser compatibility
 - Depends on all previous commits (all fixes in place)
 - Final validation of complete stability
 - Proves production readiness
 
 **Technical Validation**:
+
 ```bash
 # Run tests on each browser
 pnpm test:e2e --project=chromium
@@ -279,6 +303,7 @@ pnpm test:e2e
 **Expected Result**: All tests pass on all 3 browsers, 3 consecutive runs identical
 
 **Review Criteria**:
+
 - [ ] Chromium tests pass (100%)
 - [ ] Firefox tests pass (100%)
 - [ ] WebKit tests pass (100%)
@@ -309,6 +334,7 @@ pnpm test:e2e
 ### Validation at Each Step
 
 After each commit:
+
 ```bash
 # Type-checking (if code changes)
 pnpm exec tsc --noEmit
@@ -329,14 +355,14 @@ All must pass before moving to next commit.
 
 ## 📊 Commit Metrics
 
-| Commit | Files | Lines | Implementation | Review | Total |
-|--------|-------|-------|----------------|--------|-------|
-| 1. Build Fix | 3-5 | ~50-150 | 30-45 min | 15-20 min | 45-65 min |
-| 2. Timeout Resolution | 2-3 | ~20-50 | 45-60 min | 20-30 min | 65-90 min |
-| 3. Test Fixes | 5-6 | ~100-300 | 60-90 min | 30-45 min | 90-135 min |
-| 4. D1 Debug | 3-4 | ~50-100 | 45-60 min | 20-30 min | 65-90 min |
-| 5. Browser Stability | 1-2 | ~20-50 | 30-45 min | 15-20 min | 45-65 min |
-| **TOTAL** | **14-20** | **~240-650** | **3.5-5h** | **1.5-2.5h** | **5-7.5h** |
+| Commit                | Files     | Lines        | Implementation | Review       | Total      |
+| --------------------- | --------- | ------------ | -------------- | ------------ | ---------- |
+| 1. Build Fix          | 3-5       | ~50-150      | 30-45 min      | 15-20 min    | 45-65 min  |
+| 2. Timeout Resolution | 2-3       | ~20-50       | 45-60 min      | 20-30 min    | 65-90 min  |
+| 3. Test Fixes         | 5-6       | ~100-300     | 60-90 min      | 30-45 min    | 90-135 min |
+| 4. D1 Debug           | 3-4       | ~50-100      | 45-60 min      | 20-30 min    | 65-90 min  |
+| 5. Browser Stability  | 1-2       | ~20-50       | 30-45 min      | 15-20 min    | 45-65 min  |
+| **TOTAL**             | **14-20** | **~240-650** | **3.5-5h**     | **1.5-2.5h** | **5-7.5h** |
 
 **Note**: Debugging phases typically take longer than estimated due to investigation time.
 
@@ -369,6 +395,7 @@ All must pass before moving to next commit.
 ### Commit Messages
 
 Format:
+
 ```
 fix(e2e): short description (max 50 chars)
 
@@ -422,6 +449,7 @@ Before committing:
 **Symptoms**: `Cannot find module '@/...'` or similar
 
 **Solutions**:
+
 1. Verify `tsconfig.json` paths are correct
 2. Check `next.config.ts` for path aliases
 3. Ensure OpenNext adapter version is compatible with Next.js 15
@@ -431,6 +459,7 @@ Before committing:
 **Symptoms**: "Starting local server..." but never "Ready"
 
 **Solutions**:
+
 1. Check port 8788 is not in use: `lsof -i :8788`
 2. Verify IPv4 binding: `--ip 127.0.0.1` flag
 3. Try verbose logging: `WRANGLER_LOG=debug pnpm preview`
@@ -440,6 +469,7 @@ Before committing:
 **Symptoms**: `page.goto() timeout exceeded`
 
 **Solutions**:
+
 1. Increase timeout in test: `{ timeout: 60000 }`
 2. Wait for network idle: `{ waitUntil: 'networkidle' }`
 3. Check wrangler logs for errors
@@ -449,6 +479,7 @@ Before committing:
 **Symptoms**: `D1_ERROR` or `table not found`
 
 **Solutions**:
+
 1. Verify migrations ran: `pnpm wrangler d1 migrations list DB --local`
 2. Check SQL syntax in seed files
 3. Ensure `--local` flag is present (critical!)

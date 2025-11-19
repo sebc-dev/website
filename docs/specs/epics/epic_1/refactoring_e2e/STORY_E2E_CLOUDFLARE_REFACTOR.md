@@ -23,6 +23,7 @@
 Notre projet Next.js 15 est déployé sur **Cloudflare Workers** via l'adaptateur **OpenNext** (`@opennextjs/cloudflare`). Actuellement, les tests E2E Playwright s'exécutent contre le serveur de développement Next.js (`pnpm dev`) ou le serveur de production Node.js (`pnpm start`), **pas contre le runtime Cloudflare Workers** (`workerd`).
 
 **Conséquences:**
+
 - ❌ Les tests ne valident **pas** le comportement réel de l'application en production
 - ❌ Les bugs spécifiques au runtime Edge (limitations I/O, API manquantes, contraintes mémoire) ne sont **pas détectés**
 - ❌ Les tests E2E sont **désactivés en CI** depuis plusieurs semaines à cause de timeouts inexpliqués
@@ -60,18 +61,18 @@ Selon le guide exhaustif `/docs/guide_cloudflare_playwright.md` (édition 2025),
 
 Voici le résultat de l'audit complet de la configuration actuelle:
 
-| Composant | État Actuel | État Cible | Gap | Priorité |
-|-----------|-------------|------------|-----|----------|
-| **Runtime de Test** | Node.js (`next dev`/`start`) | Cloudflare Workers (`wrangler dev`) | **CRITIQUE** | P0 |
-| **Base URL** | `localhost:3000` | `http://127.0.0.1:8788` | **CRITIQUE** | P0 |
-| **Commande webServer** | `pnpm dev` (local), `pnpm start` (CI) | `pnpm preview` (wrangler dev) | **CRITIQUE** | P0 |
-| **IPv4 Forcing** | ❌ Absent | `--ip 127.0.0.1` dans wrangler | **CRITIQUE** | P0 |
-| **D1 Seeding** | Scripts existent mais non automatisés | `globalSetup` hook Playwright | **HIGH** | P1 |
-| **CI E2E Tests** | ❌ Désactivés (timeout) | ✅ Activés et stables | **CRITIQUE** | P0 |
-| **Cloudflare Secrets** | ❌ Non configurés | `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` | **MEDIUM** | P1 |
-| **wrangler.jsonc** | ✅ Parfait (nodejs_compat, assets, bindings) | ✅ Conforme | ✅ OK | - |
-| **open-next.config.ts** | ✅ Excellent (R2 cache, DO queue, sharding) | ✅ Conforme | ✅ OK | - |
-| **Qualité des Tests** | ✅ Excellente (auto-waiting, fixtures, mobile) | ✅ Maintenir | ✅ OK | - |
+| Composant               | État Actuel                                    | État Cible                                      | Gap          | Priorité |
+| ----------------------- | ---------------------------------------------- | ----------------------------------------------- | ------------ | -------- |
+| **Runtime de Test**     | Node.js (`next dev`/`start`)                   | Cloudflare Workers (`wrangler dev`)             | **CRITIQUE** | P0       |
+| **Base URL**            | `localhost:3000`                               | `http://127.0.0.1:8788`                         | **CRITIQUE** | P0       |
+| **Commande webServer**  | `pnpm dev` (local), `pnpm start` (CI)          | `pnpm preview` (wrangler dev)                   | **CRITIQUE** | P0       |
+| **IPv4 Forcing**        | ❌ Absent                                      | `--ip 127.0.0.1` dans wrangler                  | **CRITIQUE** | P0       |
+| **D1 Seeding**          | Scripts existent mais non automatisés          | `globalSetup` hook Playwright                   | **HIGH**     | P1       |
+| **CI E2E Tests**        | ❌ Désactivés (timeout)                        | ✅ Activés et stables                           | **CRITIQUE** | P0       |
+| **Cloudflare Secrets**  | ❌ Non configurés                              | `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` | **MEDIUM**   | P1       |
+| **wrangler.jsonc**      | ✅ Parfait (nodejs_compat, assets, bindings)   | ✅ Conforme                                     | ✅ OK        | -        |
+| **open-next.config.ts** | ✅ Excellent (R2 cache, DO queue, sharding)    | ✅ Conforme                                     | ✅ OK        | -        |
+| **Qualité des Tests**   | ✅ Excellente (auto-waiting, fixtures, mobile) | ✅ Maintenir                                    | ✅ OK        | -        |
 
 **Score de Conformité Global: 61%**
 
@@ -102,6 +103,7 @@ Voici le résultat de l'audit complet de la configuration actuelle:
 **AC3**: Le script `preview` dans `package.json` force IPv4: `wrangler dev --port 8788 --ip 127.0.0.1`
 
 **AC4**: Un fichier `tests/global-setup.ts` existe et:
+
 - Applique les migrations D1 (`wrangler d1 migrations apply DB --local`)
 - Seed les données de test (`categories.sql`, `sample-articles.sql`)
 - Logue clairement chaque étape
@@ -110,11 +112,13 @@ Voici le résultat de l'audit complet de la configuration actuelle:
 **AC5**: Le fichier `playwright.config.ts` référence `globalSetup: require.resolve('./tests/global-setup')`
 
 **AC6**: Le workflow CI `.github/workflows/quality.yml` contient un job `e2e-tests` actif avec:
+
 - Variables d'environnement `CLOUDFLARE_API_TOKEN` et `CLOUDFLARE_ACCOUNT_ID`
 - Étape explicite de build worker
 - Exécution de `pnpm test:e2e`
 
 **AC7**: Les 3 tests existants passent avec succès:
+
 - `tests/compression.spec.ts` (compression Brotli/Gzip)
 - `tests/middleware.spec.ts` (i18n routing)
 - `tests/i18n-edge-cases.spec.ts` (edge cases i18n)
@@ -199,11 +203,13 @@ export default defineConfig({
 **Fichier**: `/home/negus/dev/website/package.json`
 
 **Script `preview` actuel:**
+
 ```json
 "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview"
 ```
 
 **Script `preview` cible:**
+
 ```json
 "preview": "opennextjs-cloudflare build && wrangler dev --port 8788 --ip 127.0.0.1"
 ```
@@ -211,12 +217,14 @@ export default defineConfig({
 **Justification:**
 
 Le guide recommande d'utiliser directement `wrangler dev` plutôt que `opennextjs-cloudflare preview` pour avoir un contrôle total sur les flags:
+
 - `--port 8788`: Port explicite (pas de détection automatique)
 - `--ip 127.0.0.1`: Force l'écoute IPv4
 
 **Alternative (si OpenNext CLI doit être conservé):**
 
 Vérifier si `opennextjs-cloudflare preview` accepte des flags de passage à wrangler:
+
 ```json
 "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview --port 8788 --ip 127.0.0.1"
 ```
@@ -245,7 +253,7 @@ import path from 'path';
  * Référence: /docs/guide_cloudflare_playwright.md section 5.3
  */
 async function globalSetup() {
-  console.log('🚀 [GlobalSetup] Démarrage de l\'initialisation D1...');
+  console.log("🚀 [GlobalSetup] Démarrage de l'initialisation D1...");
 
   // Optionnel: Purge complète du cache local D1 pour garantir un état vierge
   // Décommenter si nécessaire pour des tests ultra-isolés
@@ -265,26 +273,32 @@ async function globalSetup() {
 
     // Étape 2: Seed des données de test (Categories)
     console.log('   🌱 Seed des catégories...');
-    execSync('pnpm wrangler d1 execute DB --local --file=./drizzle/seeds/categories.sql', {
-      stdio: 'inherit',
-      encoding: 'utf-8',
-    });
+    execSync(
+      'pnpm wrangler d1 execute DB --local --file=./drizzle/seeds/categories.sql',
+      {
+        stdio: 'inherit',
+        encoding: 'utf-8',
+      },
+    );
 
     // Étape 3: Seed des données de test (Articles)
     console.log('   📄 Seed des articles de test...');
-    execSync('pnpm wrangler d1 execute DB --local --file=./drizzle/seeds/sample-articles.sql', {
-      stdio: 'inherit',
-      encoding: 'utf-8',
-    });
+    execSync(
+      'pnpm wrangler d1 execute DB --local --file=./drizzle/seeds/sample-articles.sql',
+      {
+        stdio: 'inherit',
+        encoding: 'utf-8',
+      },
+    );
 
     console.log('   ✅ Base de données D1 initialisée avec succès\n');
   } catch (error) {
-    console.error('   ❌ ERREUR CRITIQUE lors de l\'initialisation D1');
+    console.error("   ❌ ERREUR CRITIQUE lors de l'initialisation D1");
     console.error(error);
 
     // IMPORTANT: Throw l'erreur pour bloquer l'exécution des tests
     // Si la DB n'est pas prête, les tests produiront des faux négatifs
-    throw new Error('Échec de l\'initialisation de la base de données D1');
+    throw new Error("Échec de l'initialisation de la base de données D1");
   }
 }
 
@@ -345,7 +359,7 @@ e2e-tests:
 ```yaml
 e2e-tests:
   name: E2E Tests (Playwright)
-  timeout-minutes: 60  # ✅ Augmenté pour cold start wrangler
+  timeout-minutes: 60 # ✅ Augmenté pour cold start wrangler
   runs-on: ubuntu-latest
 
   env:
@@ -430,6 +444,7 @@ e2e-tests:
    ```
 
 **Sécurité:**
+
 - ❌ Ne JAMAIS commiter ces valeurs en clair dans le code
 - ✅ Utiliser uniquement GitHub Secrets
 - ✅ Limiter les permissions du token au strict minimum
@@ -480,6 +495,7 @@ e2e-tests:
 - [ ] **Si Option B**: Poursuivre cette story, archiver/supprimer ADR 001
 
 **Recommandation**: **Option B (Wrangler Dev Local)** pour les raisons suivantes:
+
 - Plus rapide à itérer (pas de déploiement cloud)
 - Pas de dépendance aux quotas Cloudflare
 - Plus facile à déboguer (logs directs)
@@ -497,24 +513,30 @@ e2e-tests:
 **Tâches:**
 
 1. **Commiter la suppression de l'exemple Playwright**
+
    ```bash
    git add tests/example.spec.ts  # Fichier marqué D (deleted) mais pas commité
    ```
+
    - [ ] Vérifier que c'est bien un fichier template sans valeur
    - [ ] Commiter: `git commit -m "🗑️ remove: Playwright example template test"`
 
 2. **Tracker les nouveaux tests existants**
+
    ```bash
    git add tests/compression.spec.ts
    git add tests/fixtures/compression.ts
    ```
+
    - [ ] Vérifier que ces fichiers sont complets et fonctionnels
    - [ ] Commiter: `git commit -m "✅ test: add compression E2E tests and fixtures"`
 
 3. **Supprimer les fichiers temporaires**
+
    ```bash
    rm test-output.log  # Fichier de log non tracké à la racine du projet
    ```
+
    - [ ] Vérifier qu'aucun processus n'utilise ce fichier
    - [ ] Supprimer le fichier
 
@@ -528,6 +550,7 @@ e2e-tests:
      ```
 
 **Validation Phase 0.2**:
+
 ```bash
 git status  # Doit être clean (sauf modifications volontaires)
 git status --ignored | grep -E "test.*\.log"  # Doit montrer les logs ignorés
@@ -542,12 +565,14 @@ git status --ignored | grep -E "test.*\.log"  # Doit montrer les logs ignorés
 **Tâches:**
 
 1. **Supprimer les imports commentés** (Lignes 7-9)
+
    ```typescript
    // À SUPPRIMER:
    // import dotenv from 'dotenv';
    // import path from 'path';
    // dotenv.config({ path: path.resolve(__dirname, '.env') });
    ```
+
    - [ ] Vérifier qu'aucune dépendance à dotenv n'existe dans le projet
    - [ ] Supprimer ces 3 lignes
 
@@ -565,6 +590,7 @@ git status --ignored | grep -E "test.*\.log"  # Doit montrer les logs ignorés
 3. **Mettre à jour les commentaires obsolètes** (Lignes 74-82)
 
    **Actuel**:
+
    ```typescript
    /**
     * In CI: use production build (faster and more stable than dev server)
@@ -573,6 +599,7 @@ git status --ignored | grep -E "test.*\.log"  # Doit montrer les logs ignorés
    ```
 
    **Cible** (après implémentation Phase 1):
+
    ```typescript
    /**
     * Run Cloudflare Workers runtime (workerd) for E2E tests
@@ -585,6 +612,7 @@ git status --ignored | grep -E "test.*\.log"  # Doit montrer les logs ignorés
    - [ ] Noter cette modification pour Phase 1 (ne pas faire maintenant)
 
 **Validation Phase 0.3**:
+
 ```bash
 grep -n "dotenv" playwright.config.ts  # Ne doit rien retourner
 grep -n "Mobile Chrome" playwright.config.ts  # Vérifier décision prise
@@ -603,18 +631,23 @@ grep -n "Mobile Chrome" playwright.config.ts  # Vérifier décision prise
 1. **Créer un document d'historique**
    - [ ] Créer `/docs/decisions/003-e2e-ci-timeout-history.md`
    - [ ] Copier les commentaires actuels du workflow dans ce document:
+
      ```markdown
      # ADR 003: Historique des Timeouts E2E en CI
 
      ## Contexte (2025-01-XX)
+
      Les tests E2E ont été désactivés temporairement en raison de:
+
      - Server fails to start within timeout in CI environment
      - Root cause: next dev/start with OpenNext Cloudflare takes >60s to initialize
 
      ## Décision
+
      Désactivation temporaire jusqu'à résolution par refonte architecture E2E.
 
      ## Résolution
+
      [À compléter après Phase 3]
      ```
 
@@ -627,6 +660,7 @@ grep -n "Mobile Chrome" playwright.config.ts  # Vérifier décision prise
      ```
 
 **Validation Phase 0.4**:
+
 ```bash
 test -f docs/decisions/003-e2e-ci-timeout-history.md  # Fichier doit exister
 grep -A 5 "E2E Tests" .github/workflows/quality.yml  # Vérifier simplification
@@ -653,6 +687,7 @@ grep -A 5 "E2E Tests" .github/workflows/quality.yml  # Vérifier simplification
    - [ ] Ajouter dans la section "Development":
      ```markdown
      **Development Servers**:
+
      - `pnpm dev` - Next.js dev server with Turbopack (for local development)
        - Uses `scripts/dev-quiet.sh` to filter Durable Objects warnings
      - `pnpm preview` - Cloudflare Workers runtime (for E2E tests)
@@ -660,6 +695,7 @@ grep -A 5 "E2E Tests" .github/workflows/quality.yml  # Vérifier simplification
      ```
 
 **Validation Phase 0.5**:
+
 ```bash
 head -5 scripts/dev-quiet.sh | grep "tests E2E"  # Commentaire doit apparaître
 grep "pnpm preview" CLAUDE.md  # Documentation doit mentionner preview
@@ -721,9 +757,11 @@ grep -q "tests E2E" scripts/dev-quiet.sh
    - [ ] Augmenter timeout → `120 * 1000`
 
 **Validation Phase 1:**
+
 ```bash
 pnpm test:e2e
 ```
+
 - [ ] Le serveur démarre sur `127.0.0.1:8788`
 - [ ] Le globalSetup s'exécute avec succès
 - [ ] Les 3 tests existants passent (compression, middleware, i18n)
@@ -757,11 +795,13 @@ pnpm test:e2e
    - [ ] Tester manuellement: `pnpm wrangler d1 execute DB --local --command "SELECT * FROM categories"`
 
 **Validation Phase 2:**
+
 ```bash
 pnpm test:e2e --project=chromium
 pnpm test:e2e --project=firefox
 pnpm test:e2e --project=webkit
 ```
+
 - [ ] Tous les tests passent sur les 3 moteurs
 - [ ] Aucun "flaky test" (relancer 3 fois pour confirmer)
 - [ ] Temps total < 5 minutes en local
@@ -799,6 +839,7 @@ pnpm test:e2e --project=webkit
    - [ ] Vérifier que wrangler démarre correctement
 
 **Validation Phase 3:**
+
 - [ ] Le job CI `e2e-tests` passe au vert
 - [ ] Durée totale du job < 15 minutes
 - [ ] Aucune erreur de timeout
@@ -837,26 +878,28 @@ pnpm test:e2e --project=webkit
 
 ### 5.1 Risques Identifiés
 
-| Risque | Probabilité | Impact | Mitigation |
-|--------|-------------|--------|------------|
-| **R1**: Timeout CI > 60min | Moyenne | Élevé | Augmenter timeout à 90min si nécessaire, optimiser build cache |
-| **R2**: Tests existants cassés sur wrangler | Moyenne | Élevé | Phase 2 dédiée au debug, rollback possible |
-| **R3**: Problèmes de compatibilité OpenNext | Faible | Critique | Vérifier version `@opennextjs/cloudflare` à jour, consulter changelog |
-| **R4**: Secrets Cloudflare non configurés | Faible | Moyen | Documentation claire (section 3.5), validation manuelle avant CI |
-| **R5**: Race conditions IPv6/IPv4 persistent | Faible | Moyen | Double vérification du flag `--ip 127.0.0.1`, test sur plusieurs OS |
-| **R6**: D1 seeding échoue en CI | Moyenne | Élevé | Logs verbeux, validation manuelle du globalSetup, fichiers SQL testés |
+| Risque                                       | Probabilité | Impact   | Mitigation                                                            |
+| -------------------------------------------- | ----------- | -------- | --------------------------------------------------------------------- |
+| **R1**: Timeout CI > 60min                   | Moyenne     | Élevé    | Augmenter timeout à 90min si nécessaire, optimiser build cache        |
+| **R2**: Tests existants cassés sur wrangler  | Moyenne     | Élevé    | Phase 2 dédiée au debug, rollback possible                            |
+| **R3**: Problèmes de compatibilité OpenNext  | Faible      | Critique | Vérifier version `@opennextjs/cloudflare` à jour, consulter changelog |
+| **R4**: Secrets Cloudflare non configurés    | Faible      | Moyen    | Documentation claire (section 3.5), validation manuelle avant CI      |
+| **R5**: Race conditions IPv6/IPv4 persistent | Faible      | Moyen    | Double vérification du flag `--ip 127.0.0.1`, test sur plusieurs OS   |
+| **R6**: D1 seeding échoue en CI              | Moyenne     | Élevé    | Logs verbeux, validation manuelle du globalSetup, fichiers SQL testés |
 
 ### 5.2 Plan de Rollback
 
 Si l'implémentation échoue de manière bloquante:
 
 1. **Restaurer `playwright.config.ts`**:
+
    ```typescript
    baseURL: 'http://localhost:3000',
    webServer: { command: 'pnpm dev', url: 'http://localhost:3000' }
    ```
 
 2. **Restaurer `package.json`**:
+
    ```json
    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview"
    ```
@@ -948,14 +991,14 @@ git push origin test/e2e-cloudflare-refactor
 
 ### 7.1 Métriques Quantitatives
 
-| Métrique | Baseline (Avant) | Cible (Après) | Mesure |
-|----------|------------------|---------------|--------|
-| **Runtime des tests** | Node.js | workerd | Vérifier logs wrangler |
-| **Taux de succès CI** | 0% (désactivé) | > 95% | 19/20 runs passent |
-| **Durée E2E job CI** | N/A (timeout) | < 15min | Moyenne sur 10 runs |
-| **Flaky tests** | Inconnu | 0 | 10 runs consécutifs identiques |
-| **Temps de démarrage serveur** | ~30s (next dev) | < 120s (wrangler) | Logs Playwright |
-| **Couverture navigateurs** | 3 (Chromium, Firefox, WebKit) | 3 (maintenu) | playwright.config projects |
+| Métrique                       | Baseline (Avant)              | Cible (Après)     | Mesure                         |
+| ------------------------------ | ----------------------------- | ----------------- | ------------------------------ |
+| **Runtime des tests**          | Node.js                       | workerd           | Vérifier logs wrangler         |
+| **Taux de succès CI**          | 0% (désactivé)                | > 95%             | 19/20 runs passent             |
+| **Durée E2E job CI**           | N/A (timeout)                 | < 15min           | Moyenne sur 10 runs            |
+| **Flaky tests**                | Inconnu                       | 0                 | 10 runs consécutifs identiques |
+| **Temps de démarrage serveur** | ~30s (next dev)               | < 120s (wrangler) | Logs Playwright                |
+| **Couverture navigateurs**     | 3 (Chromium, Firefox, WebKit) | 3 (maintenu)      | playwright.config projects     |
 
 ### 7.2 Métriques Qualitatives
 
@@ -1149,35 +1192,37 @@ L'analyse approfondie du projet a révélé que nous sommes dans un **état de t
 
 ### 10.2 Inventaire des Fichiers Obsolètes
 
-| Catégorie | Élément | État | Action Requise | Phase |
-|-----------|---------|------|----------------|-------|
-| **Git Index** | `tests/example.spec.ts` | Deleted, non commité | Commiter suppression | Phase 0.2 |
-| **Git Index** | `tests/compression.spec.ts` | Nouveau, non tracké | Commiter ajout | Phase 0.2 |
-| **Git Index** | `tests/fixtures/compression.ts` | Nouveau, non tracké | Commiter ajout | Phase 0.2 |
-| **Temp Files** | `test-output.log` | Non tracké, racine | Supprimer | Phase 0.2 |
-| **Config** | `playwright.config.ts` lignes 7-9 | Imports dotenv commentés | Supprimer | Phase 0.3 |
-| **Config** | `playwright.config.ts` lignes 54-71 | Mobile configs commentés | Décision requise | Phase 0.3 |
-| **Config** | `playwright.config.ts` lignes 74-82 | Commentaires obsolètes | Mettre à jour | Phase 1 |
-| **CI** | `.github/workflows/quality.yml` L134-148 | Longs commentaires | Archiver dans ADR | Phase 0.4 |
-| **Docs** | ADR 001 | Conflit architectural | Archiver ou supprimer | Phase 0.1 |
-| **Scripts** | `scripts/dev-quiet.sh` | Manque documentation | Ajouter commentaires | Phase 0.5 |
+| Catégorie      | Élément                                  | État                     | Action Requise        | Phase     |
+| -------------- | ---------------------------------------- | ------------------------ | --------------------- | --------- |
+| **Git Index**  | `tests/example.spec.ts`                  | Deleted, non commité     | Commiter suppression  | Phase 0.2 |
+| **Git Index**  | `tests/compression.spec.ts`              | Nouveau, non tracké      | Commiter ajout        | Phase 0.2 |
+| **Git Index**  | `tests/fixtures/compression.ts`          | Nouveau, non tracké      | Commiter ajout        | Phase 0.2 |
+| **Temp Files** | `test-output.log`                        | Non tracké, racine       | Supprimer             | Phase 0.2 |
+| **Config**     | `playwright.config.ts` lignes 7-9        | Imports dotenv commentés | Supprimer             | Phase 0.3 |
+| **Config**     | `playwright.config.ts` lignes 54-71      | Mobile configs commentés | Décision requise      | Phase 0.3 |
+| **Config**     | `playwright.config.ts` lignes 74-82      | Commentaires obsolètes   | Mettre à jour         | Phase 1   |
+| **CI**         | `.github/workflows/quality.yml` L134-148 | Longs commentaires       | Archiver dans ADR     | Phase 0.4 |
+| **Docs**       | ADR 001                                  | Conflit architectural    | Archiver ou supprimer | Phase 0.1 |
+| **Scripts**    | `scripts/dev-quiet.sh`                   | Manque documentation     | Ajouter commentaires  | Phase 0.5 |
 
 ### 10.3 Matrice de Décisions Critiques
 
-| Décision | Options | Recommandation | Impact | Deadline |
-|----------|---------|----------------|--------|----------|
-| **ADR vs Story** | A: Preview Deployments<br/>B: Wrangler Dev Local | **Option B** | Toute l'implémentation | Avant Phase 0 |
-| **Mobile Configs** | A: Supprimer<br/>B: Documenter<br/>C: Activer | À décider | Tests mobile | Phase 0.3 |
-| **ADR 001** | A: Archiver<br/>B: Supprimer | **Archiver** | Documentation historique | Phase 0.1 |
+| Décision           | Options                                          | Recommandation | Impact                   | Deadline      |
+| ------------------ | ------------------------------------------------ | -------------- | ------------------------ | ------------- |
+| **ADR vs Story**   | A: Preview Deployments<br/>B: Wrangler Dev Local | **Option B**   | Toute l'implémentation   | Avant Phase 0 |
+| **Mobile Configs** | A: Supprimer<br/>B: Documenter<br/>C: Activer    | À décider      | Tests mobile             | Phase 0.3     |
+| **ADR 001**        | A: Archiver<br/>B: Supprimer                     | **Archiver**   | Documentation historique | Phase 0.1     |
 
 ### 10.4 Checklist de Validation Complète
 
 #### Avant Phase 0 (Décisions)
+
 - [ ] Décision architecturale prise (ADR vs Story)
 - [ ] Décision mobile configs prise (A, B, ou C)
 - [ ] ADR 002 créé (si Option B choisie)
 
 #### Après Phase 0 (Nettoyage)
+
 - [ ] Git status clean
 - [ ] Aucun fichier .log non tracké
 - [ ] .gitignore contient `test-output.log`
@@ -1186,23 +1231,27 @@ L'analyse approfondie du projet a révélé que nous sommes dans un **état de t
 - [ ] Scripts documentés dans CLAUDE.md
 
 #### Après Phase 1 (Configuration)
+
 - [ ] `playwright.config.ts` utilise `baseURL: 'http://127.0.0.1:8788'`
 - [ ] `package.json` preview script force IPv4
 - [ ] `tests/global-setup.ts` créé et fonctionnel
 - [ ] Tests locaux passent: `pnpm test:e2e`
 
 #### Après Phase 2 (Stabilisation)
+
 - [ ] Tests passent sur 3 moteurs (Chromium, Firefox, WebKit)
 - [ ] Aucun flaky test (3 runs consécutifs identiques)
 - [ ] Temps total < 5min en local
 
 #### Après Phase 3 (CI)
+
 - [ ] Secrets Cloudflare configurés dans GitHub
 - [ ] Job `e2e-tests` activé et passe au vert
 - [ ] Durée job CI < 15min
 - [ ] Artifacts Playwright uploadés
 
 #### Après Phase 4 (Documentation)
+
 - [ ] `tests/README.md` créé
 - [ ] `docs/guide_cloudflare_playwright.md` mis à jour
 - [ ] `CLAUDE.md` documenté
@@ -1222,12 +1271,14 @@ Cette story représente un pivot architectural majeur pour garantir la qualité 
 Les critères de succès sont clairs et mesurables. La phase d'implémentation est découpée en étapes incrémentales avec des points de validation réguliers.
 
 **Next Steps:**
+
 1. Validation de cette spec par l'équipe technique
 2. Création d'un ticket JIRA/Linear avec estimation formelle
 3. Planification dans le prochain sprint
 4. Assignation à un développeur senior (familier avec Playwright + Cloudflare)
 
 **Signature:**
+
 - **Auteur**: Claude Code (AI Assistant)
 - **Reviewer**: [À compléter]
 - **Date**: 2025-01-19

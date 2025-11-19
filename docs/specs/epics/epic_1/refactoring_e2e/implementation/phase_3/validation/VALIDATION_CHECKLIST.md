@@ -16,6 +16,7 @@ Complete validation checklist before marking Phase 3 as complete.
 - [ ] Git history is clean (no merge commits in phase branch)
 
 **Validation**:
+
 ```bash
 # Verify git history
 git log --oneline --grep="Phase 3" -10
@@ -29,7 +30,7 @@ git log --oneline --grep="Phase 3" -10
 
 - [ ] `CLOUDFLARE_API_TOKEN` secret exists in GitHub repository
 - [ ] `CLOUDFLARE_ACCOUNT_ID` secret exists in GitHub repository
-- [ ] Secrets are masked in workflow logs (appear as ***)
+- [ ] Secrets are masked in workflow logs (appear as \*\*\*)
 - [ ] No secrets committed to code (verified with git grep)
 - [ ] API token has required permissions:
   - [ ] Account Settings: Read (minimum)
@@ -38,6 +39,7 @@ git log --oneline --grep="Phase 3" -10
 - [ ] Account ID matches Cloudflare Workers account
 
 **Validation**:
+
 ```bash
 # Verify no secrets in code
 git grep -i "cloudflare.*token" -- ':!.github/workflows'
@@ -65,6 +67,7 @@ git grep -i "account.*id" -- ':!wrangler.jsonc' ':!.github/workflows'
 - [ ] YAML syntax is valid (no errors)
 
 **Validation**:
+
 ```bash
 # Validate YAML syntax
 yamllint .github/workflows/quality.yml
@@ -96,6 +99,7 @@ grep "if: always()" .github/workflows/quality.yml
 - [ ] Job duration < 15 minutes (or acceptable if slightly over)
 
 **Validation**:
+
 ```bash
 # Check GitHub Actions status (GitHub CLI)
 gh run list --workflow=quality.yml --limit 5
@@ -118,6 +122,7 @@ gh run view --log
 - [ ] Durations are consistent (within ±2 minutes)
 
 **Validation**:
+
 ```bash
 # Trigger manual re-runs via GitHub UI or CLI
 gh workflow run quality.yml
@@ -141,6 +146,7 @@ gh workflow run quality.yml
 - [ ] Traces, screenshots, videos available (if configured)
 
 **Validation**:
+
 ```bash
 # Download artifact (GitHub CLI)
 gh run download [run-id] -n playwright-report
@@ -168,6 +174,7 @@ open playwright-report/index.html
 - [ ] Markdown renders correctly
 
 **Validation**:
+
 ```bash
 # Check all Phase 3 docs exist
 ls -la docs/specs/epics/epic_1/refactoring_e2e/CI_SECRETS_SETUP.md
@@ -192,13 +199,14 @@ grep -r "](../" docs/specs/epics/epic_1/refactoring_e2e/implementation/phase_3/
 
 - [ ] No secrets hardcoded in any files
 - [ ] All secrets use GitHub Secrets mechanism
-- [ ] Secrets are masked in CI logs (appear as ***)
+- [ ] Secrets are masked in CI logs (appear as \*\*\*)
 - [ ] Token permissions follow least privilege principle
 - [ ] No sensitive data in Playwright artifacts
 - [ ] `.gitignore` excludes sensitive files
 - [ ] Security best practices documented
 
 **Validation**:
+
 ```bash
 # Search for potential secret leaks
 git grep -i "api.*token" | grep -v "secrets\."
@@ -221,6 +229,7 @@ grep "\.env" .gitignore
 - [ ] Wrangler still starts on `127.0.0.1:8788`
 
 **Validation**:
+
 ```bash
 # Run local tests
 pnpm test:e2e
@@ -240,6 +249,7 @@ pnpm test:e2e
 - [ ] All previous validation still passes
 
 **Validation**:
+
 ```bash
 # Verify Phase 1 config
 grep "baseURL.*127.0.0.1:8788" playwright.config.ts
@@ -264,6 +274,7 @@ pnpm test:e2e --project=webkit
 - [ ] Notifications work (if configured)
 
 **Validation**:
+
 ```bash
 # Check workflow triggers in quality.yml
 grep -A 5 "on:" .github/workflows/quality.yml
@@ -284,6 +295,7 @@ grep -A 5 "on:" .github/workflows/quality.yml
 - [ ] Resource usage acceptable
 
 **Validation**:
+
 ```bash
 # Review GitHub Actions timing
 gh run view [run-id] --json timing
@@ -296,13 +308,13 @@ gh run view [run-id] --json timing
 
 **Metrics Table**:
 
-| Metric | Target | Actual | Status |
-|--------|--------|--------|--------|
-| Total Duration | <15 min | _____ min | ⏳ |
-| Build Time | <5 min | _____ min | ⏳ |
-| Test Time | <10 min | _____ min | ⏳ |
-| Success Rate | >95% | _____% | ⏳ |
-| Flakiness | 0 | _____ | ⏳ |
+| Metric         | Target  | Actual     | Status |
+| -------------- | ------- | ---------- | ------ |
+| Total Duration | <15 min | **\_** min | ⏳     |
+| Build Time     | <5 min  | **\_** min | ⏳     |
+| Test Time      | <10 min | **\_** min | ⏳     |
+| Success Rate   | >95%    | **\_**%    | ⏳     |
+| Flakiness      | 0       | **\_**     | ⏳     |
 
 ---
 
@@ -341,18 +353,18 @@ grep -rE 'TODO|FIXME' docs/specs/epics/epic_1/refactoring_e2e/implementation/pha
 
 ## 📊 Success Criteria
 
-| Criterion | Status |
-|-----------|--------|
-| All 4 commits completed | ⏳ |
-| GitHub Secrets configured | ⏳ |
-| CI workflow updated correctly | ⏳ |
-| CI tests pass reliably (3/3 runs) | ⏳ |
-| No flaky tests | ⏳ |
-| Job duration < 15 minutes | ⏳ |
-| Artifacts upload successfully | ⏳ |
-| Documentation complete | ⏳ |
-| No security issues | ⏳ |
-| Local tests still pass | ⏳ |
+| Criterion                         | Status |
+| --------------------------------- | ------ |
+| All 4 commits completed           | ⏳     |
+| GitHub Secrets configured         | ⏳     |
+| CI workflow updated correctly     | ⏳     |
+| CI tests pass reliably (3/3 runs) | ⏳     |
+| No flaky tests                    | ⏳     |
+| Job duration < 15 minutes         | ⏳     |
+| Artifacts upload successfully     | ⏳     |
+| Documentation complete            | ⏳     |
+| No security issues                | ⏳     |
+| Local tests still pass            | ⏳     |
 
 **All criteria must be ✅ before marking Phase 3 as complete.**
 

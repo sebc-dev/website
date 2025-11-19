@@ -43,14 +43,14 @@ Réactiver et stabiliser les tests E2E Playwright en environnement CI (GitHub Ac
 
 ## 📚 Available Documents
 
-| Document | Description | For Who | Duration |
-|----------|-------------|---------|----------|
-| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)** | Atomic strategy in 4 commits | Developer | 15 min |
-| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)** | Detailed checklist per commit | Developer | Reference |
-| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)** | GitHub Secrets & CI setup | DevOps/Dev | 10 min |
-| **[guides/REVIEW.md](./guides/REVIEW.md)** | Code review guide | Reviewer | 20 min |
-| **[guides/TESTING.md](./guides/TESTING.md)** | Testing guide (CI validation) | QA/Dev | 20 min |
-| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist | Tech Lead | 30 min |
+| Document                                                                       | Description                   | For Who    | Duration  |
+| ------------------------------------------------------------------------------ | ----------------------------- | ---------- | --------- |
+| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)**                         | Atomic strategy in 4 commits  | Developer  | 15 min    |
+| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)**                               | Detailed checklist per commit | Developer  | Reference |
+| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)**                             | GitHub Secrets & CI setup     | DevOps/Dev | 10 min    |
+| **[guides/REVIEW.md](./guides/REVIEW.md)**                                     | Code review guide             | Reviewer   | 20 min    |
+| **[guides/TESTING.md](./guides/TESTING.md)**                                   | Testing guide (CI validation) | QA/Dev     | 20 min    |
+| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist    | Tech Lead  | 30 min    |
 
 ---
 
@@ -145,14 +145,14 @@ cat docs/specs/epics/epic_1/refactoring_e2e/implementation/phase_3/validation/VA
 
 ## 📊 Metrics
 
-| Metric | Target | Actual |
-|--------|--------|--------|
-| **Total Commits** | 4 | - |
-| **Implementation Time** | 2-3h | - |
-| **Review Time** | 1-2h | - |
-| **CI Job Duration** | <15min | - |
-| **CI Success Rate** | >95% | - |
-| **Timeout Incidents** | 0 | - |
+| Metric                  | Target | Actual |
+| ----------------------- | ------ | ------ |
+| **Total Commits**       | 4      | -      |
+| **Implementation Time** | 2-3h   | -      |
+| **Review Time**         | 1-2h   | -      |
+| **CI Job Duration**     | <15min | -      |
+| **CI Success Rate**     | >95%   | -      |
+| **Timeout Incidents**   | 0      | -      |
 
 ---
 

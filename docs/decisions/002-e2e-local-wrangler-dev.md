@@ -1,9 +1,11 @@
 # ADR 002: Tests E2E Locaux avec Wrangler Dev
 
 ## Statut
+
 Accepté
 
 ## Date
+
 2025-01-19
 
 ## Contexte
@@ -14,11 +16,13 @@ de l'application Next.js sur le runtime Cloudflare Workers.
 Deux approches ont été évaluées:
 
 ### Option A: Preview Deployments (ADR 001)
+
 - Tests exécutés contre des déploiements Cloudflare réels (preview URLs)
 - Environnement 100% identique à la production
 - Standard de l'industrie (Vercel, Netlify)
 
 ### Option B: Wrangler Dev Local (Story Document)
+
 - Tests exécutés contre `wrangler dev` localement en CI
 - Simulation du runtime Cloudflare Workers avec `workerd`
 - URL de test: `http://127.0.0.1:8788`
@@ -42,6 +46,7 @@ Nous adoptons **Option B: Wrangler Dev Local** pour les tests E2E.
 
 Le runtime `workerd` (utilisé par `wrangler dev`) est le **même** que
 celui utilisé en production Cloudflare Workers. Il détecte donc:
+
 - ✅ Bugs spécifiques au Edge runtime
 - ✅ Limitations I/O (pas de `fs`, `child_process`)
 - ✅ API manquantes ou contraintes mémoire
@@ -73,6 +78,7 @@ deployments APRÈS stabilisation des tests locaux (Phase future).
 ### Évolution Future
 
 Si l'Option B s'avère insuffisante (non anticipé), nous pouvons:
+
 1. Ajouter des tests de smoke en preview (complémentaires)
 2. Migrer complètement vers ADR 001 (rollback possible)
 
@@ -81,11 +87,13 @@ Si l'Option B s'avère insuffisante (non anticipé), nous pouvons:
 ### Option A: Preview Deployments (Rejetée)
 
 **Avantages**:
+
 - ✅ Environnement 100% identique à production
 - ✅ Tests l'infrastructure Cloudflare complète
 - ✅ Standard de l'industrie
 
 **Inconvénients**:
+
 - ❌ Quota Cloudflare requis (coût potentiel)
 - ❌ Temps de déploiement élevé (5-10min)
 - ❌ Gestion cleanup complexe (preview URLs persistantes)

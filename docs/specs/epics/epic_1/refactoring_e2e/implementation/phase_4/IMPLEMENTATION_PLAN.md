@@ -32,12 +32,14 @@ The implementation is split into **4 independent commits** to:
 ### Commit 1: Update Cloudflare Playwright Guide
 
 **Files**:
+
 - `docs/guide_cloudflare_playwright.md`
 
 **Size**: ~50-100 lines (additions)
 **Duration**: 20-30 min (implementation) + 15-20 min (review)
 
 **Content**:
+
 - Add "Implementation Completed" section with date
 - Document actual implementation choices made
 - Add troubleshooting entries for issues encountered
@@ -45,12 +47,14 @@ The implementation is split into **4 independent commits** to:
 - Add metrics from actual CI runs
 
 **Why it's atomic**:
+
 - Single file update
 - No dependencies on other commits
 - Can be reviewed independently
 - Self-contained documentation improvement
 
 **Technical Validation**:
+
 ```bash
 # Verify markdown syntax
 cat docs/guide_cloudflare_playwright.md
@@ -65,6 +69,7 @@ grep '^##' docs/guide_cloudflare_playwright.md
 **Expected Result**: Guide includes implementation details specific to this project
 
 **Review Criteria**:
+
 - [ ] New section clearly marks implementation completion
 - [ ] Project-specific examples are accurate
 - [ ] Troubleshooting entries match actual issues encountered
@@ -77,12 +82,14 @@ grep '^##' docs/guide_cloudflare_playwright.md
 ### Commit 2: Update CLAUDE.md with E2E Architecture
 
 **Files**:
+
 - `CLAUDE.md`
 
 **Size**: ~30-50 lines (additions/modifications)
 **Duration**: 15-20 min (implementation) + 10-15 min (review)
 
 **Content**:
+
 - Add note in "Testing" section about E2E architecture
 - Document the difference between `pnpm dev` and `pnpm preview`
 - Explain when to use each command
@@ -90,12 +97,14 @@ grep '^##' docs/guide_cloudflare_playwright.md
 - Add reference to `/tests/README.md` for test developers
 
 **Why it's atomic**:
+
 - Single file update
 - No dependencies on other commits
 - Critical for Claude Code context
 - Helps AI assistant understand project architecture
 
 **Technical Validation**:
+
 ```bash
 # Verify markdown syntax
 cat CLAUDE.md
@@ -110,6 +119,7 @@ grep "pnpm preview" CLAUDE.md
 **Expected Result**: CLAUDE.md clearly distinguishes dev vs E2E testing environments
 
 **Review Criteria**:
+
 - [ ] Testing section includes E2E architecture notes
 - [ ] `pnpm dev` vs `pnpm preview` clearly differentiated
 - [ ] D1 seeding process documented
@@ -122,12 +132,14 @@ grep "pnpm preview" CLAUDE.md
 ### Commit 3: Create Tests README
 
 **Files**:
+
 - `tests/README.md` (new file)
 
 **Size**: ~200-300 lines
 **Duration**: 30-40 min (implementation) + 20-30 min (review)
 
 **Content**:
+
 - Overview of E2E testing architecture
 - How to run tests locally (`pnpm test:e2e`)
 - How to run tests in UI mode (`pnpm test:e2e:ui`)
@@ -140,12 +152,14 @@ grep "pnpm preview" CLAUDE.md
 - Examples from existing tests (`compression.spec.ts`, etc.)
 
 **Why it's atomic**:
+
 - Single new file creation
 - No dependencies on other commits
 - Comprehensive test development guide
 - Serves as onboarding documentation
 
 **Technical Validation**:
+
 ```bash
 # Verify file created
 test -f tests/README.md
@@ -165,6 +179,7 @@ grep -E '\[.*\]\(.*\)' tests/README.md
 **Expected Result**: Comprehensive guide for E2E test development
 
 **Review Criteria**:
+
 - [ ] Architecture overview is clear and accurate
 - [ ] All test commands documented with examples
 - [ ] Step-by-step guide for adding new tests
@@ -181,12 +196,14 @@ grep -E '\[.*\]\(.*\)' tests/README.md
 ### Commit 4: Complete ADR 003 with Resolution
 
 **Files**:
+
 - `docs/decisions/003-e2e-ci-timeout-history.md`
 
 **Size**: ~30-50 lines (additions)
 **Duration**: 10-15 min (implementation) + 10-15 min (review)
 
 **Content**:
+
 - Add "Resolution" section to ADR 003
 - Document how the timeout issue was resolved
 - Include metrics from successful CI runs
@@ -195,12 +212,14 @@ grep -E '\[.*\]\(.*\)' tests/README.md
 - Add link to this documentation in story
 
 **Why it's atomic**:
+
 - Single file update
 - Closes the loop on architectural decision
 - No dependencies on other commits
 - Critical for decision history
 
 **Technical Validation**:
+
 ```bash
 # Verify file exists (should have been created in Phase 0)
 test -f docs/decisions/003-e2e-ci-timeout-history.md
@@ -215,6 +234,7 @@ grep -i "resolved" docs/decisions/003-e2e-ci-timeout-history.md
 **Expected Result**: ADR 003 has complete resolution documenting the fix
 
 **Review Criteria**:
+
 - [ ] Resolution section clearly explains the fix
 - [ ] References to implementing phases (1, 2, 3)
 - [ ] Metrics from actual CI runs included
@@ -241,6 +261,7 @@ grep -i "resolved" docs/decisions/003-e2e-ci-timeout-history.md
 ### Validation at Each Step
 
 After each commit (documentation commits):
+
 ```bash
 # Check markdown syntax (no specific command, manual review)
 cat <file>
@@ -258,13 +279,13 @@ All documentation should be clear, accurate, and well-formatted.
 
 ## 📊 Commit Metrics
 
-| Commit | Files | Lines | Implementation | Review | Total |
-|--------|-------|-------|----------------|--------|-------|
-| 1. Update Guide | 1 | ~75 | 25 min | 18 min | 43 min |
-| 2. Update CLAUDE.md | 1 | ~40 | 18 min | 12 min | 30 min |
-| 3. Create Tests README | 1 | ~250 | 35 min | 25 min | 60 min |
-| 4. Complete ADR 003 | 1 | ~40 | 12 min | 12 min | 24 min |
-| **TOTAL** | **4** | **~405** | **1.5h** | **1h** | **2.5h** |
+| Commit                 | Files | Lines    | Implementation | Review | Total    |
+| ---------------------- | ----- | -------- | -------------- | ------ | -------- |
+| 1. Update Guide        | 1     | ~75      | 25 min         | 18 min | 43 min   |
+| 2. Update CLAUDE.md    | 1     | ~40      | 18 min         | 12 min | 30 min   |
+| 3. Create Tests README | 1     | ~250     | 35 min         | 25 min | 60 min   |
+| 4. Complete ADR 003    | 1     | ~40      | 12 min         | 12 min | 24 min   |
+| **TOTAL**              | **4** | **~405** | **1.5h**       | **1h** | **2.5h** |
 
 Note: Slightly longer than story estimate (1h) due to comprehensive documentation scope.
 
@@ -297,6 +318,7 @@ Note: Slightly longer than story estimate (1h) due to comprehensive documentatio
 ### Commit Messages
 
 Format:
+
 ```
 📝 docs(scope): short description (max 50 chars)
 
@@ -310,6 +332,7 @@ Part of Phase 4 - Commit X/4
 ### Documentation Quality Checklist
 
 Before committing:
+
 - [ ] Markdown syntax is valid
 - [ ] All links work (internal and external)
 - [ ] Code blocks have syntax highlighting

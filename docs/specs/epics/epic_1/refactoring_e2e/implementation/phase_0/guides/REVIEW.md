@@ -23,6 +23,7 @@
 ### Nature de la Phase 0
 
 Cette phase contient **principalement de la documentation et du nettoyage**:
+
 - **Pas de logique métier** à reviewer
 - **Pas de tests unitaires** à valider (phase de nettoyage)
 - **Pas de code algorithmique** complexe
@@ -36,14 +37,14 @@ Cette phase contient **principalement de la documentation et du nettoyage**:
 
 ### Durée Estimée
 
-| Commit | Type | Durée Review | Complexité |
-|--------|------|--------------|------------|
-| 1 | ADR 002 | 15min | Moyenne (décision critique) |
-| 2 | Nettoyage Git | 10min | Faible |
-| 3 | .gitignore | 5min | Très faible |
-| 4 | playwright.config | 15min | Moyenne (refactoring) |
-| 5 | ADR 003 + CI | 15min | Moyenne (documentation) |
-| 6 | Scripts/CLAUDE.md | 10min | Faible |
+| Commit | Type              | Durée Review | Complexité                  |
+| ------ | ----------------- | ------------ | --------------------------- |
+| 1      | ADR 002           | 15min        | Moyenne (décision critique) |
+| 2      | Nettoyage Git     | 10min        | Faible                      |
+| 3      | .gitignore        | 5min         | Très faible                 |
+| 4      | playwright.config | 15min        | Moyenne (refactoring)       |
+| 5      | ADR 003 + CI      | 15min        | Moyenne (documentation)     |
+| 6      | Scripts/CLAUDE.md | 10min        | Faible                      |
 
 **Total**: ~1h10
 
@@ -54,6 +55,7 @@ Cette phase contient **principalement de la documentation et du nettoyage**:
 ### Workflow Général
 
 1. **Checkout de la branche**
+
    ```bash
    git fetch origin
    git checkout phase-0/cleanup-and-preparation
@@ -154,12 +156,14 @@ cat docs/decisions/002-e2e-local-wrangler-dev.md
 #### Critères d'Approbation
 
 ✅ **APPROVE** si:
+
 - ADR complet et bien structuré
 - Décision clairement documentée
 - Rationale convaincant
 - Équipe alignée (si confirmé)
 
 🚨 **REQUEST CHANGES** si:
+
 - Sections manquantes (Statut, Décision, Rationale)
 - Rationale flou ou insuffisant
 - Références cassées
@@ -190,6 +194,7 @@ git show <commit-sha-commit-2>
 **2. Vérifier les fichiers**
 
 Devrait montrer:
+
 - **Deleted**: `tests/example.spec.ts` (template Playwright, ~50 lines)
 - **New**: `tests/compression.spec.ts` (~80 lines)
 - **New**: `tests/fixtures/compression.ts` (~30 lines)
@@ -205,6 +210,7 @@ git show <commit-sha>:tests/fixtures/compression.ts
 ```
 
 **Checklist du contenu**:
+
 - [ ] Tests utilisent Playwright API correctement
 - [ ] Tests valident compression Brotli/Gzip
 - [ ] Assertions claires (expect... toBe...)
@@ -233,11 +239,13 @@ git show <commit-sha>^:tests/example.spec.ts | head -20
 #### Critères d'Approbation
 
 ✅ **APPROVE** si:
+
 - example.spec.ts était bien un template
 - compression tests semblent valides
 - Aucun fichier important supprimé
 
 🚨 **REQUEST CHANGES** si:
+
 - example.spec.ts contenait de la logique métier
 - Tests compression mal écrits (pas d'assertions, etc.)
 - Fichiers supprimés par erreur
@@ -266,6 +274,7 @@ git show <commit-sha-commit-3>
 **2. Vérifier les patterns ajoutés**
 
 Devrait montrer:
+
 ```diff
 +# Test logs
 +test-output.log
@@ -275,6 +284,7 @@ Devrait montrer:
 ```
 
 **Checklist**:
+
 - [ ] Patterns ajoutés **après** section Playwright (pas au début du fichier)
 - [ ] Syntaxe gitignore correcte (pas de regex complexe)
 - [ ] Aucun pattern existant supprimé
@@ -296,11 +306,13 @@ rm test-example.test.log
 #### Critères d'Approbation
 
 ✅ **APPROVE** si:
+
 - Patterns corrects et bien placés
 - Aucune suppression accidentelle
 - Commentaire clair
 
 🚨 **REQUEST CHANGES** si:
+
 - Patterns mal formés (syntaxe invalide)
 - Patterns trop larges (risque d'ignorer fichiers importants)
 - Suppression de patterns existants
@@ -330,6 +342,7 @@ git show <commit-sha-commit-4>
 **2. Vérifier les imports dotenv supprimés**
 
 Devrait montrer:
+
 ```diff
 -// import dotenv from 'dotenv';
 -// import path from 'path';
@@ -337,12 +350,14 @@ Devrait montrer:
 ```
 
 **Checklist**:
+
 - [ ] 3 lignes d'imports supprimées
 - [ ] Aucun autre import dotenv restant dans le fichier
 
 **3. Vérifier les configs mobiles**
 
 **Si supprimées** (décision A):
+
 ```diff
 -  // {
 -  //   name: 'Mobile Chrome',
@@ -351,6 +366,7 @@ Devrait montrer:
 ```
 
 **Checklist**:
+
 - [ ] Configs commentées supprimées (~18 lines)
 - [ ] Mobile Safari reste actif (ligne 71 préservée)
 - [ ] **OU** ADR 004 créé si archivées (décision B)
@@ -358,6 +374,7 @@ Devrait montrer:
 **4. Vérifier le nouveau commentaire**
 
 Devrait montrer:
+
 ```diff
 +  /**
 +   * Development server configuration
@@ -368,6 +385,7 @@ Devrait montrer:
 ```
 
 **Checklist**:
+
 - [ ] Commentaire clair et documenté
 - [ ] Mentionne Phase 1 migration
 - [ ] Référence Story document
@@ -394,12 +412,14 @@ pnpm test:e2e --project=chromium tests/compression.spec.ts || echo "⚠️ À v�
 #### Critères d'Approbation
 
 ✅ **APPROVE** si:
+
 - Code mort supprimé
 - Commentaires clairs
 - TypeScript compile
 - Tests non cassés
 
 🚨 **REQUEST CHANGES** si:
+
 - Fonctionnalité cassée (tests échouent)
 - Suppression trop agressive (configs nécessaires)
 - Commentaires ambigus
@@ -427,6 +447,7 @@ git show <commit-sha-commit-5>
 ```
 
 Devrait montrer:
+
 - **New**: `docs/decisions/003-e2e-ci-timeout-history.md`
 - **Modified**: `.github/workflows/quality.yml`
 
@@ -437,6 +458,7 @@ git show <commit-sha>:docs/decisions/003-e2e-ci-timeout-history.md | less
 ```
 
 **Checklist ADR 003**:
+
 - [ ] Titre clair ("Historique des Timeouts...")
 - [ ] Statut "Résolu" avec date
 - [ ] Contexte explique le problème (timeout >60s)
@@ -451,6 +473,7 @@ git show <commit-sha> -- .github/workflows/quality.yml
 ```
 
 **Avant** (~15 lignes de commentaires):
+
 ```yaml
 # E2E Tests temporarily disabled due to timeout issues
 # Root cause: Server fails to start...
@@ -458,12 +481,14 @@ git show <commit-sha> -- .github/workflows/quality.yml
 ```
 
 **Après** (~2 lignes):
+
 ```yaml
 # E2E Tests temporarily disabled - See ADR 003 for history
 # Will be reactivated in Phase 3
 ```
 
 **Checklist workflow**:
+
 - [ ] Commentaires longs supprimés
 - [ ] Référence ADR 003 ajoutée
 - [ ] Echo mis à jour avec chemin ADR
@@ -484,12 +509,14 @@ cat .github/workflows/quality.yml | grep -A 5 "E2E Tests"
 #### Critères d'Approbation
 
 ✅ **APPROVE** si:
+
 - ADR 003 complet et clair
 - Workflow simplifié
 - YAML valide
 - Historique préservé
 
 🚨 **REQUEST CHANGES** si:
+
 - ADR incomplet ou confus
 - YAML invalide (indentation, syntaxe)
 - Historique perdu (commentaires supprimés sans archivage)
@@ -523,6 +550,7 @@ git show <commit-sha>:scripts/dev-quiet.sh | head -20
 ```
 
 **Checklist**:
+
 - [ ] Header de 13 lignes ajouté
 - [ ] Explique l'usage (local dev, pas E2E)
 - [ ] Note "E2E tests use pnpm preview"
@@ -535,6 +563,7 @@ git show <commit-sha>:CLAUDE.md | grep -A 40 "Development Servers"
 ```
 
 **Checklist**:
+
 - [ ] Section "Development Servers" ajoutée (~30 lignes)
 - [ ] Distingue clairement `pnpm dev` vs `pnpm preview`
 - [ ] Explique les use cases de chaque serveur
@@ -550,11 +579,13 @@ git show <commit-sha>:CLAUDE.md | grep -A 40 "Development Servers"
 #### Critères d'Approbation
 
 ✅ **APPROVE** si:
+
 - Documentation claire et complète
 - Informations exactes
 - Distinction dev/preview bien expliquée
 
 🚨 **REQUEST CHANGES** si:
+
 - URLs incorrectes
 - Confusion possible entre dev et preview
 - Typos ou erreurs factuelles
@@ -610,16 +641,19 @@ git log main..HEAD --oneline | wc -l  # Doit être 6
 ### Décision Finale
 
 **✅ APPROVE et MERGE** si:
+
 - ✅ Tous les commits validés individuellement
 - ✅ Checklist globale complète
 - ✅ Équipe alignée sur décisions (ADR 002)
 
 **💬 COMMENT (demande modifications mineures)** si:
+
 - Typos à corriger
 - Commentaires à clarifier
 - Améliorations suggestions (non-bloquantes)
 
 **🚨 REQUEST CHANGES (bloquant)** si:
+
 - Tests cassés
 - Décision ADR 002 non consensuelle
 - YAML invalide (CI)
@@ -677,6 +711,7 @@ Avant d'approuver la PR, cocher:
 **Symptôme**: `pnpm test:e2e` échoue
 
 **Diagnostic**:
+
 ```bash
 # Vérifier le diff de playwright.config.ts
 git show <commit-4-sha> -- playwright.config.ts
@@ -685,6 +720,7 @@ git show <commit-4-sha> -- playwright.config.ts
 ```
 
 **Solution**:
+
 - Demander rollback du commit 4
 - Ou proposer un fix commit
 - Vérifier que Mobile Safari n'a pas été supprimé par erreur
@@ -694,12 +730,14 @@ git show <commit-4-sha> -- playwright.config.ts
 **Symptôme**: GitHub Actions ne démarre pas
 
 **Diagnostic**:
+
 ```bash
 yamllint .github/workflows/quality.yml
 # Erreur: indentation incorrecte
 ```
 
 **Solution**:
+
 ```bash
 # Demander fix de l'indentation
 # Ou proposer le bon YAML dans un commentaire
@@ -710,12 +748,14 @@ yamllint .github/workflows/quality.yml
 **Symptôme**: Liens vers Story ou autres docs 404
 
 **Diagnostic**:
+
 ```bash
 # Vérifier les liens
 grep -r "\[.*\](.*)" docs/decisions/002-e2e-local-wrangler-dev.md
 ```
 
 **Solution**:
+
 - Vérifier que les chemins sont relatifs corrects
 - Proposer les bons chemins dans un commentaire
 
@@ -724,6 +764,7 @@ grep -r "\[.*\](.*)" docs/decisions/002-e2e-local-wrangler-dev.md
 **Symptôme**: Membre de l'équipe en désaccord
 
 **Action**:
+
 1. **Ne pas merger**
 2. Escalader au tech lead ou architecte
 3. Organiser une discussion d'équipe
@@ -734,12 +775,14 @@ grep -r "\[.*\](.*)" docs/decisions/002-e2e-local-wrangler-dev.md
 **Symptôme**: 5 ou 7 commits au lieu de 6
 
 **Diagnostic**:
+
 ```bash
 git log main..HEAD --oneline
 # Compter manuellement
 ```
 
 **Solution**:
+
 - Si <6: Demander les commits manquants
 - Si >6: Vérifier si commits additionnels sont valides (fix commits OK)
 - Demander rebase si historique pollué
@@ -754,6 +797,7 @@ git log main..HEAD --oneline
 ✅ **LGTM (Looks Good To Me)**
 
 Phase 0 review completed. All commits validated:
+
 - ADR 002 and 003 are clear and well-justified
 - Git cleanup is correct
 - No regressions detected (tests pass)
@@ -799,9 +843,9 @@ Approving as-is.
 
 ## Changelog
 
-| Date | Version | Changement |
-|------|---------|------------|
-| 2025-01-19 | 1.0.0 | Création du guide de review Phase 0 |
+| Date       | Version | Changement                          |
+| ---------- | ------- | ----------------------------------- |
+| 2025-01-19 | 1.0.0   | Création du guide de review Phase 0 |
 
 ---
 

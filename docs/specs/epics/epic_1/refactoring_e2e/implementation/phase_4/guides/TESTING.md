@@ -28,7 +28,7 @@ Phase 4 is **documentation-focused** with no code changes. Therefore, "testing" 
 
 **Manual Validation**:
 
-```bash
+````bash
 # Read each file and check for formatting issues
 cat docs/guide_cloudflare_playwright.md
 cat CLAUDE.md
@@ -40,7 +40,7 @@ cat docs/decisions/003-e2e-ci-timeout-history.md
 # - Broken heading hierarchy (## followed by ####, skipping ###)
 # - Malformed links [text](url)
 # - Unescaped special characters
-```
+````
 
 **VSCode Validation** (if using VSCode):
 

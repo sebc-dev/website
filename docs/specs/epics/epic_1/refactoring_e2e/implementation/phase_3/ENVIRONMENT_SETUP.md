@@ -74,10 +74,10 @@ Phase 3 introduces two **repository-level secrets** in GitHub Actions. These are
 
 Create these secrets in GitHub repository settings:
 
-| Secret Name | Description | Where to Find | Required |
-|-------------|-------------|---------------|----------|
-| `CLOUDFLARE_API_TOKEN` | API token for Cloudflare authentication | Cloudflare Dashboard → My Profile → API Tokens | Yes |
-| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare account identifier | Cloudflare Dashboard → Workers & Pages → Overview | Yes |
+| Secret Name             | Description                             | Where to Find                                     | Required |
+| ----------------------- | --------------------------------------- | ------------------------------------------------- | -------- |
+| `CLOUDFLARE_API_TOKEN`  | API token for Cloudflare authentication | Cloudflare Dashboard → My Profile → API Tokens    | Yes      |
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare account identifier           | Cloudflare Dashboard → Workers & Pages → Overview | Yes      |
 
 ---
 
@@ -114,14 +114,17 @@ Create these secrets in GitHub repository settings:
 #### 3. Required Permissions
 
 **Minimum required permissions**:
+
 - ✅ `Account Settings: Read`
 
 **Recommended permissions** (for full wrangler dev functionality):
+
 - ✅ `Workers Scripts: Edit`
 - ✅ `D1: Edit`
 - ✅ `Account Settings: Read`
 
 **Why these permissions**:
+
 - `Workers Scripts: Edit` - Allows wrangler to interact with Workers runtime
 - `D1: Edit` - Allows wrangler to manage D1 database locally
 - `Account Settings: Read` - Required for authentication
@@ -147,6 +150,7 @@ Create these secrets in GitHub repository settings:
 #### 2. Find Account ID
 
 Look for **Account ID** on the right side of the page:
+
 - Usually displayed in the sidebar
 - Format: Long hexadecimal string (e.g., `a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6`)
 
@@ -207,6 +211,7 @@ pnpm wrangler whoami
 ```
 
 **If this fails**:
+
 - Token is invalid or expired
 - Insufficient permissions
 - Network connectivity issues
@@ -227,6 +232,7 @@ pnpm wrangler dev --port 8788 --ip 127.0.0.1
 ```
 
 **If this fails**:
+
 - Account ID is incorrect
 - Token doesn't have access to this account
 - Missing bindings in wrangler.jsonc
@@ -236,6 +242,7 @@ pnpm wrangler dev --port 8788 --ip 127.0.0.1
 Secrets cannot be tested locally. They will be validated when you push code and trigger GitHub Actions.
 
 **How to verify secrets work in CI**:
+
 1. Push a commit to trigger the workflow
 2. Go to Actions tab and view the workflow run
 3. Check logs for these indicators:
@@ -250,16 +257,19 @@ Secrets cannot be tested locally. They will be validated when you push code and 
 ### Issue: "Authentication error" in CI
 
 **Symptoms**:
+
 - CI job fails with "Authentication error"
 - Wrangler cannot access Cloudflare API
 
 **Solutions**:
+
 1. Verify secret names are **exactly**: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`
 2. Check token has required permissions (Account Settings: Read minimum)
 3. Verify token hasn't expired (check Cloudflare Dashboard)
 4. Regenerate token if necessary and update GitHub Secret
 
 **Verify Fix**:
+
 ```bash
 # Re-run the GitHub Actions workflow
 # Check logs for successful authentication
@@ -270,15 +280,18 @@ Secrets cannot be tested locally. They will be validated when you push code and 
 ### Issue: "Account ID mismatch"
 
 **Symptoms**:
+
 - CI job fails with account-related errors
 - Wrangler reports wrong account
 
 **Solutions**:
+
 1. Verify Account ID in GitHub Secrets matches Cloudflare Dashboard
 2. Copy-paste Account ID again carefully (no extra spaces)
 3. Ensure token is associated with correct Cloudflare account
 
 **Verify Fix**:
+
 ```bash
 # Check wrangler.jsonc has correct account_id
 cat wrangler.jsonc | grep account_id
@@ -291,16 +304,19 @@ cat wrangler.jsonc | grep account_id
 ### Issue: Secrets not masked in logs
 
 **Symptoms**:
+
 - Secrets appear as plain text in workflow logs
 - Security risk
 
 **Solutions**:
+
 1. Delete exposed secrets immediately
 2. Rotate/regenerate API token in Cloudflare Dashboard
 3. Update GitHub Secret with new token
 4. Verify secret names match EXACTLY what's in workflow YAML
 
 **Verify Fix**:
+
 ```bash
 # Check workflow file uses correct syntax
 grep -A 5 "env:" .github/workflows/quality.yml
@@ -316,10 +332,12 @@ grep -A 5 "env:" .github/workflows/quality.yml
 ### Issue: "wrangler whoami" fails locally
 
 **Symptoms**:
+
 - `wrangler whoami` command fails
 - Cannot verify token
 
 **Solutions**:
+
 1. Ensure token is exported correctly:
    ```bash
    echo $CLOUDFLARE_API_TOKEN

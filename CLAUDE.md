@@ -20,6 +20,7 @@ This is a Next.js 15 website deployed to Cloudflare Workers using OpenNext. The 
 The project uses two distinct development servers depending on the use case:
 
 **Local Development (`pnpm dev`)**
+
 - **Command**: `pnpm dev`
 - **Runtime**: Node.js (Next.js dev server with Turbopack)
 - **Script**: `scripts/dev-quiet.sh` (filters Durable Objects warnings)
@@ -28,6 +29,7 @@ The project uses two distinct development servers depending on the use case:
 - **Features**: Fast Refresh, detailed error overlay, instant updates
 
 **E2E Testing (`pnpm preview`)**
+
 - **Command**: `pnpm preview`
 - **Runtime**: Cloudflare Workers (wrangler dev with workerd)
 - **Script**: Direct wrangler execution (as of Phase 1)
@@ -40,6 +42,7 @@ Using `pnpm dev` for tests will fail due to missing Cloudflare runtime features
 (D1 database, R2 cache, Durable Objects, etc.).
 
 **When to use which:**
+
 - Development/debugging → `pnpm dev` (faster, hot-reload)
 - E2E tests/validation → `pnpm preview` (production-like)
 - Manual testing against Workers → `pnpm preview`

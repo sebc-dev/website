@@ -600,32 +600,37 @@ pnpm run build
 ### Common Issues and Solutions
 
 **Issue**: Wrangler dev timeout
+
 - **Solution**: Increase timeout in Commit 4 to 180s if 120s is insufficient
 
 **Issue**: D1 "table already exists" error
+
 - **Solution**: Uncomment cache purge in global-setup.ts
 
 **Issue**: IPv4/IPv6 race conditions
+
 - **Solution**: Verify `--ip 127.0.0.1` in package.json and 127.0.0.1 in playwright.config.ts
 
 **Issue**: Tests fail with ECONNREFUSED
+
 - **Solution**: Check that preview script uses correct port (8788) and playwright config matches
 
 **Issue**: Global setup not running
+
 - **Solution**: Verify `require.resolve('./tests/global-setup')` path is correct
 
 ### Time Tracking
 
 Track actual time spent on each commit:
 
-| Commit | Estimated | Actual | Notes |
-|--------|-----------|--------|-------|
-| 1      | 20 min    | -      |       |
-| 2      | 50 min    | -      |       |
-| 3      | 30 min    | -      |       |
-| 4      | 30 min    | -      |       |
-| 5      | 30 min    | -      |       |
-| **Total** | **2h 40min** | **-** |       |
+| Commit    | Estimated    | Actual | Notes |
+| --------- | ------------ | ------ | ----- |
+| 1         | 20 min       | -      |       |
+| 2         | 50 min       | -      |       |
+| 3         | 30 min       | -      |       |
+| 4         | 30 min       | -      |       |
+| 5         | 30 min       | -      |       |
+| **Total** | **2h 40min** | **-**  |       |
 
 ---
 

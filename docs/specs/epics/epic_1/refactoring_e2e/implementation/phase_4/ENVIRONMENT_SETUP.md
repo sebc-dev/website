@@ -114,6 +114,7 @@ test -f tests/README.md && echo "⚠️ README already exists" || echo "✅ READ
 ```
 
 **Expected Results**:
+
 - ✅ Guide exists
 - ✅ CLAUDE.md exists
 - ✅ ADR 003 exists
@@ -154,13 +155,15 @@ Phase 4 is documentation-heavy. Ensure you're familiar with markdown syntax:
 
 ### Quick Markdown Reference
 
-```markdown
+````markdown
 # Heading 1
+
 ## Heading 2
+
 ### Heading 3
 
 **Bold Text**
-*Italic Text*
+_Italic Text_
 
 - Bullet point
 - [ ] Checkbox (unchecked)
@@ -168,18 +171,19 @@ Phase 4 is documentation-heavy. Ensure you're familiar with markdown syntax:
 
 [Link Text](url)
 
-​```bash
+​`bash
 code block with syntax highlighting
-​```
+​`
 
 | Table | Header |
-|-------|--------|
+| ----- | ------ |
 | Cell  | Cell   |
-```
+````
 
 ### Markdown Validation
 
 No specific tool required, but useful resources:
+
 - VSCode Markdown Preview (Ctrl+Shift+V)
 - GitHub markdown preview when pushing
 - Online: https://dillinger.io/
@@ -191,11 +195,13 @@ No specific tool required, but useful resources:
 ### Issue: Phase 0-3 not complete
 
 **Symptoms**:
+
 - Missing files (globalSetup, ADR 003)
 - Tests failing
 - CI not running E2E tests
 
 **Solution**:
+
 1. Go back and complete previous phases
 2. Validate each phase's VALIDATION_CHECKLIST.md
 3. Only proceed to Phase 4 when all previous phases validated
@@ -205,10 +211,12 @@ No specific tool required, but useful resources:
 ### Issue: Cannot collect CI metrics
 
 **Symptoms**:
+
 - No CI runs visible
 - E2E tests disabled in CI
 
 **Solution**:
+
 1. Ensure Phase 3 completed (CI integration)
 2. Check GitHub Actions tab for runs
 3. If no runs, may need to trigger manually:
@@ -222,9 +230,11 @@ No specific tool required, but useful resources:
 ### Issue: Markdown preview not working
 
 **Symptoms**:
+
 - Cannot see formatted documentation while writing
 
 **Solutions**:
+
 1. **VSCode**: Install "Markdown All in One" extension
 2. **GitHub**: Push to branch and view on GitHub
 3. **Online**: Copy-paste to https://dillinger.io/

@@ -7,6 +7,7 @@ This document provides a detailed checklist for each atomic commit of Phase 3.
 ## 📋 Commit 1: Configure GitHub Secrets (Documentation)
 
 **Files**:
+
 - `docs/specs/epics/epic_1/refactoring_e2e/implementation/phase_3/ENVIRONMENT_SETUP.md`
 - `docs/specs/epics/epic_1/refactoring_e2e/CI_SECRETS_SETUP.md` (new)
 
@@ -119,6 +120,7 @@ Part of Phase 3 - Commit 1/4"
 ## 📋 Commit 2: Update CI Workflow Configuration
 
 **Files**:
+
 - `.github/workflows/quality.yml` (modified)
 
 **Estimated Duration**: 45-60 minutes
@@ -145,18 +147,21 @@ Part of Phase 3 - Commit 1/4"
 #### Update Steps
 
 - [ ] Verify "Install Playwright Browsers" step uses `--with-deps`:
+
   ```yaml
   - name: Install Playwright Browsers
     run: pnpm exec playwright install --with-deps
   ```
 
 - [ ] Add new step before "Run E2E Tests":
+
   ```yaml
   - name: Build OpenNext Worker
     run: pnpm run build && pnpm exec opennextjs-cloudflare build
   ```
 
 - [ ] Enable/update "Run E2E Tests" step:
+
   ```yaml
   - name: Run E2E Tests
     run: pnpm test:e2e
@@ -347,7 +352,7 @@ git ls-remote origin test/e2e-ci-integration
 - [ ] Wrangler logs show "Ready on http://127.0.0.1:8788"
 - [ ] Playwright logs show all tests passing
 - [ ] No error messages in logs
-- [ ] Secrets are masked in logs (show as ***)
+- [ ] Secrets are masked in logs (show as \*\*\*)
 
 #### Artifact Verification
 
@@ -388,6 +393,7 @@ Part of Phase 3 - Commit 3/4"
 ## 📋 Commit 4: Finalize Documentation
 
 **Files**:
+
 - `docs/specs/epics/epic_1/refactoring_e2e/implementation/phase_3/guides/TESTING.md`
 - `docs/specs/epics/epic_1/refactoring_e2e/STORY_E2E_CLOUDFLARE_REFACTOR.md`
 - `CLAUDE.md`
@@ -416,6 +422,7 @@ Part of Phase 3 - Commit 3/4"
   - [ ] Tests fail in CI but pass locally: environment differences, check uploaded report
   - [ ] Flaky tests: IPv6/IPv4 issues, resource constraints
 - [ ] Add debugging commands for CI:
+
   ```bash
   # Download artifact and view report
   unzip playwright-report.zip
@@ -440,6 +447,7 @@ Part of Phase 3 - Commit 3/4"
 - [ ] Open `CLAUDE.md`
 - [ ] Find Testing section
 - [ ] Update to reflect active E2E tests in CI:
+
   ```markdown
   ### Testing
 

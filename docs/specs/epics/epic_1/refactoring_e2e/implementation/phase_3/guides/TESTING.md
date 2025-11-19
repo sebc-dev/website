@@ -139,6 +139,7 @@ git push origin test/e2e-ci-integration
 #### Key Log Indicators
 
 **Success Indicators**:
+
 ```
 ✓ [install] Installing dependencies...
 ✓ [build] Build completed in 23.4s
@@ -148,6 +149,7 @@ git push origin test/e2e-ci-integration
 ```
 
 **Failure Indicators**:
+
 ```
 ✗ Authentication error (check secrets)
 ✗ Build failed (check OpenNext build logs)
@@ -236,6 +238,7 @@ See "CI Testing and Debugging" section below.
 #### Issue 1: Timeout During Build
 
 **Symptoms**:
+
 ```
 Error: The operation was canceled.
 Step: Build OpenNext Worker
@@ -245,9 +248,10 @@ Duration: > 10 minutes
 **Solutions**:
 
 1. **Increase build step timeout** (if not set):
+
    ```yaml
    - name: Build OpenNext Worker
-     timeout-minutes: 10  # Add this
+     timeout-minutes: 10 # Add this
      run: pnpm run build && pnpm exec opennextjs-cloudflare build
    ```
 
@@ -268,6 +272,7 @@ Re-run workflow and check build completes in <5 minutes.
 #### Issue 2: Wrangler Fails to Start
 
 **Symptoms**:
+
 ```
 Error: Authentication error
 Error: Failed to start wrangler
@@ -303,6 +308,7 @@ Check logs for `Ready on http://127.0.0.1:8788`.
 #### Issue 3: Tests Fail in CI But Pass Locally
 
 **Symptoms**:
+
 ```
 ✓ [local] All tests pass
 ✗ [CI] Tests fail with errors
@@ -334,6 +340,7 @@ Run tests in CI and confirm all pass.
 #### Issue 4: Flaky Tests (Intermittent Failures)
 
 **Symptoms**:
+
 ```
 Run 1: ✓ All pass
 Run 2: ✗ Some fail
@@ -372,6 +379,7 @@ Run CI 5 times consecutively - all should pass.
 #### Issue 5: Secrets Visible in Logs
 
 **Symptoms**:
+
 ```
 [CI logs] CLOUDFLARE_API_TOKEN=abc123...
 ```
@@ -405,17 +413,18 @@ Re-run workflow and confirm secrets appear as `***` in logs.
 
 Track these metrics over time:
 
-| Metric | Target | How to Measure |
-|--------|--------|----------------|
-| **Success Rate** | >95% | (Passed runs / Total runs) × 100 |
-| **Job Duration** | <15 min | Check "Total duration" in workflow run |
-| **Build Time** | <5 min | Check "Build OpenNext Worker" step duration |
-| **Test Time** | <10 min | Check "Run E2E Tests" step duration |
-| **Flakiness** | 0 failures | Run 10 times, all should pass |
+| Metric           | Target     | How to Measure                              |
+| ---------------- | ---------- | ------------------------------------------- |
+| **Success Rate** | >95%       | (Passed runs / Total runs) × 100            |
+| **Job Duration** | <15 min    | Check "Total duration" in workflow run      |
+| **Build Time**   | <5 min     | Check "Build OpenNext Worker" step duration |
+| **Test Time**    | <10 min    | Check "Run E2E Tests" step duration         |
+| **Flakiness**    | 0 failures | Run 10 times, all should pass               |
 
 ### Collecting Metrics
 
 **GitHub CLI**:
+
 ```bash
 # List last 20 runs with status and duration
 gh run list --workflow=quality.yml --limit 20 --json status,conclusion,createdAt,updatedAt,displayTitle
@@ -425,6 +434,7 @@ gh run view [run-id] --json jobs,conclusion,timing
 ```
 
 **GitHub UI**:
+
 1. Go to Actions tab
 2. Select "Quality" workflow
 3. Review runs over past week
@@ -516,12 +526,14 @@ After Phase 3 is merged:
 ### Running Tests
 
 ✅ **Do**:
+
 - Always validate locally before pushing to CI
 - Run full test suite before merging
 - Monitor CI runs until they complete
 - Download reports when tests fail
 
 ❌ **Don't**:
+
 - Skip local testing and rely only on CI
 - Merge PRs with failing E2E tests
 - Ignore flaky tests ("it'll pass next time")
@@ -530,12 +542,14 @@ After Phase 3 is merged:
 ### Debugging CI
 
 ✅ **Do**:
+
 - Use Playwright reports for visual debugging
 - Check trace viewer for detailed execution
 - Compare local vs CI logs
 - Ask for help if stuck
 
 ❌ **Don't**:
+
 - Randomly change configs without understanding
 - Increase timeouts excessively (masks real issues)
 - Disable tests to "make CI green"

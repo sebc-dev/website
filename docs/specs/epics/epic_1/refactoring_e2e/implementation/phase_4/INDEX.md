@@ -41,14 +41,14 @@ Finalize the E2E testing refactoring by creating comprehensive documentation, up
 
 ## 📚 Available Documents
 
-| Document | Description | For Who | Duration |
-|----------|-------------|---------|----------|
-| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)** | Atomic strategy in 4 commits | Developer | 10 min |
-| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)** | Detailed checklist per commit | Developer | Reference |
-| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)** | Prerequisites validation | Developer | 5 min |
-| **[guides/REVIEW.md](./guides/REVIEW.md)** | Documentation review guide | Reviewer | 15 min |
-| **[guides/TESTING.md](./guides/TESTING.md)** | Validation strategy | QA/Dev | 10 min |
-| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist | Tech Lead | 20 min |
+| Document                                                                       | Description                   | For Who   | Duration  |
+| ------------------------------------------------------------------------------ | ----------------------------- | --------- | --------- |
+| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)**                         | Atomic strategy in 4 commits  | Developer | 10 min    |
+| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)**                               | Detailed checklist per commit | Developer | Reference |
+| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)**                             | Prerequisites validation      | Developer | 5 min     |
+| **[guides/REVIEW.md](./guides/REVIEW.md)**                                     | Documentation review guide    | Reviewer  | 15 min    |
+| **[guides/TESTING.md](./guides/TESTING.md)**                                   | Validation strategy           | QA/Dev    | 10 min    |
+| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist    | Tech Lead | 20 min    |
 
 ---
 
@@ -136,13 +136,13 @@ cat docs/specs/epics/epic_1/refactoring_e2e/implementation/phase_4/validation/VA
 
 ## 📊 Metrics
 
-| Metric | Target | Actual |
-|--------|--------|--------|
-| **Total Commits** | 4 | - |
-| **Implementation Time** | 1-2h | - |
-| **Review Time** | 30min-1h | - |
-| **Documentation Files Updated** | 4 | - |
-| **Team Training Sessions** | 1 | - |
+| Metric                          | Target   | Actual |
+| ------------------------------- | -------- | ------ |
+| **Total Commits**               | 4        | -      |
+| **Implementation Time**         | 1-2h     | -      |
+| **Review Time**                 | 30min-1h | -      |
+| **Documentation Files Updated** | 4        | -      |
+| **Team Training Sessions**      | 1        | -      |
 
 ---
 

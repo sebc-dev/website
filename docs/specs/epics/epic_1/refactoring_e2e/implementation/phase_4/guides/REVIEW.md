@@ -63,7 +63,7 @@ Phase 4 consists of **4 documentation commits**. You can:
 
 - [ ] Markdown syntax is valid
 - [ ] Heading hierarchy is consistent
-- [ ] Code blocks use proper syntax highlighting (```bash, ```typescript)
+- [ ] Code blocks use proper syntax highlighting (`bash, `typescript)
 - [ ] Internal links work (e.g., to `/tests/README.md`)
 - [ ] External links work (if any)
 - [ ] Integrates smoothly with existing guide content
@@ -126,7 +126,7 @@ grep '^##' docs/guide_cloudflare_playwright.md
 ##### AI Assistant Context
 
 - [ ] Provides enough context for Claude Code to understand architecture
-- [ ] Explains *why* there are two modes
+- [ ] Explains _why_ there are two modes
 - [ ] Helps AI determine when to use which command
 - [ ] Sufficient detail for AI to assist with E2E development
 
@@ -212,7 +212,7 @@ grep "guide_cloudflare_playwright" CLAUDE.md
 
 - [ ] Markdown syntax valid
 - [ ] Consistent heading hierarchy
-- [ ] Code blocks have language tags (```typescript, ```bash)
+- [ ] Code blocks have language tags (`typescript, `bash)
 - [ ] Links work (internal and external)
 - [ ] Table of contents if document is long
 - [ ] Proper formatting throughout
