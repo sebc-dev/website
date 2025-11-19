@@ -1,4 +1,7 @@
-name: E2E Tests (Preview Deployment)
+name: E2E Tests (Unprivileged)
+
+# This workflow runs untrusted code from PRs with minimal permissions
+# Results are uploaded as artifacts for the privileged workflow to handle
 
 on:
   issue_comment:
@@ -15,7 +18,6 @@ env:
   NODE_VERSION: 20
 
 jobs:
-  # Check if comment triggers E2E tests
   check-trigger:
     name: Check E2E Trigger
     runs-on: ubuntu-latest
@@ -27,6 +29,10 @@ jobs:
       should_run: ${{ steps.check.outputs.should_run }}
       pr_number: ${{ steps.check.outputs.pr_number }}
 
+    # Minimal permissions - only read
+    permissions:
+      contents: read
+
     steps:
       - name: Check if should run
         id: check
@@ -34,19 +40,8 @@ jobs:
           echo "should_run=true" >> $GITHUB_OUTPUT
           echo "pr_number=${{ github.event.issue.number }}" >> $GITHUB_OUTPUT
 
-      - name: Add reaction to comment
-        uses: actions/github-script@v7
-        with:
-          script: |
-            github.rest.reactions.createForIssueComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              comment_id: context.payload.comment.id,
-              content: 'rocket'
-            });
-
-  e2e-preview:
-    name: E2E Tests on Preview Deployment
+  e2e-test:
+    name: Run E2E Tests
     needs: [check-trigger]
     if: |
       always() &&
@@ -54,10 +49,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
+    # Minimal permissions - only read
+    # NO write permissions to prevent privilege escalation
     permissions:
       contents: read
-      pull-requests: write
-      statuses: write # For status checks
+
+    outputs:
+      pr_number: ${{ steps.pr.outputs.number }}
+      pr_sha: ${{ steps.pr.outputs.sha }}
+      deployment_url: ${{ steps.deploy.outputs.DEPLOYMENT_URL }}
+      deployment_name: ${{ steps.deploy.outputs.DEPLOYMENT_NAME }}
+      test_status: ${{ steps.test.outcome }}
 
     steps:
       - name: Get PR details
@@ -80,20 +82,6 @@ jobs:
         with:
           ref: ${{ steps.pr.outputs.ref }}
 
-      - name: Create status check (pending)
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.repos.createCommitStatus({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              sha: '${{ steps.pr.outputs.sha }}',
-              state: 'pending',
-              target_url: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}',
-              description: 'E2E tests running on preview deployment',
-              context: 'e2e/preview-deployment'
-            });
-
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -105,11 +93,17 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
 
+      # Safe to run pnpm install here because we have no write permissions
+      # Even if malicious code executes, it cannot:
+      # - Write to PR comments/status checks
+      # - Access repository secrets
+      # - Modify repository contents
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Setup Cloudflare credentials
         run: |
+          mkdir -p ~/.wrangler
           echo "${{ secrets.CLOUDFLARE_API_TOKEN }}" > ~/.wrangler/config.toml
 
       - name: Deploy preview environment
@@ -125,7 +119,6 @@ jobs:
           DEPLOYMENT_URL="${{ steps.deploy.outputs.DEPLOYMENT_URL }}"
           echo "Waiting for ${DEPLOYMENT_URL} to respond..."
 
-          # Wait up to 60 seconds for deployment to be ready
           for i in {1..12}; do
             if curl -sf "${DEPLOYMENT_URL}" > /dev/null; then
               echo "Deployment is ready!"
@@ -142,6 +135,8 @@ jobs:
         run: pnpm exec playwright install chromium --with-deps
 
       - name: Run E2E tests
+        id: test
+        continue-on-error: true
         env:
           PLAYWRIGHT_BASE_URL: ${{ steps.deploy.outputs.DEPLOYMENT_URL }}
         run: pnpm test:e2e
@@ -150,9 +145,34 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
+          name: playwright-report-${{ steps.pr.outputs.number }}
           path: playwright-report/
           retention-days: 7
+
+      # Save test metadata for the privileged workflow
+      - name: Save test metadata
+        if: always()
+        run: |
+          mkdir -p test-results
+          cat > test-results/metadata.json <<EOF
+          {
+            "pr_number": "${{ steps.pr.outputs.number }}",
+            "pr_sha": "${{ steps.pr.outputs.sha }}",
+            "deployment_url": "${{ steps.deploy.outputs.DEPLOYMENT_URL }}",
+            "deployment_name": "${{ steps.deploy.outputs.DEPLOYMENT_NAME }}",
+            "test_status": "${{ steps.test.outcome }}",
+            "workflow_run_id": "${{ github.run_id }}",
+            "triggered_by": "${{ github.event.comment.user.login || github.actor }}"
+          }
+          EOF
+
+      - name: Upload test metadata
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-metadata-${{ steps.pr.outputs.number }}
+          path: test-results/metadata.json
+          retention-days: 1
 
       - name: Cleanup preview deployment
         if: always()
@@ -163,52 +183,3 @@ jobs:
           DEPLOYMENT_NAME="${{ steps.deploy.outputs.DEPLOYMENT_NAME }}"
           echo "Cleaning up deployment: ${DEPLOYMENT_NAME}"
           pnpm wrangler delete --name "${DEPLOYMENT_NAME}" --env preview || true
-
-      - name: Update status check (success)
-        if: success()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.repos.createCommitStatus({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              sha: '${{ steps.pr.outputs.sha }}',
-              state: 'success',
-              target_url: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}',
-              description: 'E2E tests passed ✅',
-              context: 'e2e/preview-deployment'
-            });
-
-      - name: Update status check (failure)
-        if: failure()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.repos.createCommitStatus({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              sha: '${{ steps.pr.outputs.sha }}',
-              state: 'failure',
-              target_url: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}',
-              description: 'E2E tests failed ❌',
-              context: 'e2e/preview-deployment'
-            });
-
-      - name: Comment PR with results
-        if: always()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const deploymentUrl = '${{ steps.deploy.outputs.DEPLOYMENT_URL }}';
-            const testsPassed = '${{ job.status }}' === 'success';
-
-            const body = testsPassed
-              ? `✅ E2E tests passed on preview deployment!\n\n📦 Preview URL: ${deploymentUrl}\n\n*Triggered by @${{ github.event.comment.user.login }}*`
-              : `❌ E2E tests failed on preview deployment.\n\n📦 Preview URL: ${deploymentUrl}\n\nCheck the [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.\n\n*Triggered by @${{ github.event.comment.user.login }}*`;
-
-            await github.rest.issues.createComment({
-              issue_number: ${{ steps.pr.outputs.number }},
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: body
-            });

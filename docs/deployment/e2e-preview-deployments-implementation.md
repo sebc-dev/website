@@ -21,13 +21,25 @@ Utiliser les preview deployments Cloudflare pour exécuter les tests E2E contre 
 
 ## Architecture de la solution
 
+### Modèle de sécurité : Two-Workflow Pattern
+
+**IMPORTANT** : Le système utilise **deux workflows séparés** pour des raisons de sécurité :
+
+1. **`e2e-test.yml`** (non privilégié) : Exécute le code de la PR sans permissions d'écriture
+2. **`e2e-report.yml`** (privilégié) : Gère les status checks et commentaires sans exécuter de code
+
+Voir [E2E Workflow Security](./e2e-workflow-security.md) pour les détails complets sur le modèle de sécurité.
+
 ### Fonctionnement du système
 
 **Déclenchement des tests** :
 
 1. **Commenter `@e2e`** sur une PR pour lancer les tests E2E
-2. Le workflow `e2e.yml` se déclenche automatiquement
-3. Une réaction 🚀 est ajoutée au commentaire pour confirmer le déclenchement
+2. Le workflow `e2e-test.yml` se déclenche automatiquement
+3. Les tests s'exécutent dans un environnement isolé sans permissions d'écriture
+4. Les résultats sont sauvegardés en tant qu'artifacts
+5. Le workflow `e2e-report.yml` se déclenche automatiquement après completion
+6. Le rapport final est posté avec status check et commentaire
 
 **Protection de la branche `main`** :
 
@@ -37,6 +49,7 @@ Utiliser les preview deployments Cloudflare pour exécuter les tests E2E contre 
 
 **Avantages** :
 
+- ✅ **Sécurité renforcée** : protection contre l'exécution de code malveillant avec privilèges
 - ✅ **Économie de ressources** : pas de tests à chaque push
 - ✅ **Protection garantie** : impossible de merger sur `main` sans tests E2E
 - ✅ **Flexibilité** : lancer les tests quand on veut sur les story branches
@@ -50,19 +63,23 @@ graph TD
     B --> C[Status check 'pending' créé]
     C --> D[Commentaire avec instructions]
     D --> E{Développeur commente @e2e}
-    E --> F[Workflow e2e.yml se lance]
-    F --> G[Réaction 🚀 ajoutée]
+    E --> F[Workflow e2e-test.yml se lance - UNPRIVILEGED]
+    F --> G[Checkout PR code - no write perms]
     G --> H[Build application]
     H --> I[Deploy to Cloudflare Preview]
     I --> J[Wait for deployment ready]
     J --> K[Run Playwright tests]
-    K --> L{Tests réussis?}
-    L -->|Oui| M[Status check 'success' ✅]
-    L -->|Non| N[Status check 'failure' ❌]
-    M --> O[Merge autorisé]
-    N --> P[Merge bloqué]
-    K --> Q[Cleanup preview deployment]
-    Q --> R[Commentaire avec résultats]
+    K --> L[Upload results as artifacts]
+    L --> M[Cleanup preview deployment]
+    M --> N[Workflow e2e-report.yml se lance - PRIVILEGED]
+    N --> O[Download artifacts - no code execution]
+    O --> P{Tests réussis?}
+    P -->|Oui| Q[Status check 'success' ✅]
+    P -->|Non| R[Status check 'failure' ❌]
+    Q --> S[Merge autorisé]
+    R --> T[Merge bloqué]
+    O --> U[Commentaire avec résultats]
+    O --> V[Réaction 🚀 ajoutée]
 ```
 
 ## Phase 1: Configuration des Preview Deployments (1-2h)
@@ -178,228 +195,80 @@ Ou si vous utilisez déjà `pnpm deploy` avec OpenNext, vous pouvez réutiliser 
 
 ### 1.3 Créer les workflows GitHub Actions
 
-#### A. Workflow principal déclenché par commentaire
+**IMPORTANT** : Pour des raisons de sécurité, nous utilisons **deux workflows séparés** :
+1. Un workflow non privilégié qui exécute le code
+2. Un workflow privilégié qui gère les status checks et commentaires
 
-Créer `.github/workflows/e2e.yml` :
+Voir [E2E Workflow Security](./e2e-workflow-security.md) pour comprendre le modèle de sécurité.
+
+#### A. Workflow non privilégié (exécution des tests)
+
+Créer `.github/workflows/e2e-test.yml` :
+
+**Voir les fichiers créés** :
+- `.github/workflows/e2e-test.yml` - Workflow non privilégié
+- `.github/workflows/e2e-report.yml` - Workflow privilégié
+
+**Points clés du workflow non privilégié** :
+- ✅ Permissions minimales : `contents: read` SEULEMENT
+- ✅ Pas de permissions d'écriture sur PRs ou status checks
+- ✅ Exécute le code de la PR de manière isolée
+- ✅ Sauvegarde les résultats en tant qu'artifacts
+- ✅ Nettoie l'environnement de preview
+
+**Exemple de structure** :
 
 ```yaml
-name: E2E Tests (Preview Deployment)
+name: E2E Tests (Unprivileged)
 
-on:
-  issue_comment:
-    types: [created]
-  workflow_dispatch:
-    inputs:
-      pr_number:
-        description: 'PR number to test'
-        required: true
-        type: string
+permissions:
+  contents: read  # ⚠️ READ ONLY - Sécurité critique
 
-env:
-  PNPM_VERSION: 9.15.0
-  NODE_VERSION: 20
-
-jobs:
-  # Check if comment triggers E2E tests
-  check-trigger:
-    name: Check E2E Trigger
-    runs-on: ubuntu-latest
-    if: |
-      github.event_name == 'issue_comment' &&
-      github.event.issue.pull_request &&
-      (contains(github.event.comment.body, '@e2e') || contains(github.event.comment.body, '@e2e-test'))
-    outputs:
-      should_run: ${{ steps.check.outputs.should_run }}
-      pr_number: ${{ steps.check.outputs.pr_number }}
-
-    steps:
-      - name: Check if should run
-        id: check
-        run: |
-          echo "should_run=true" >> $GITHUB_OUTPUT
-          echo "pr_number=${{ github.event.issue.number }}" >> $GITHUB_OUTPUT
-
-      - name: Add reaction to comment
-        uses: actions/github-script@v7
-        with:
-          script: |
-            github.rest.reactions.createForIssueComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              comment_id: context.payload.comment.id,
-              content: 'rocket'
-            });
-
-  e2e-preview:
-    name: E2E Tests on Preview Deployment
-    needs: [check-trigger]
-    if: |
-      always() &&
-      (needs.check-trigger.outputs.should_run == 'true' || github.event_name == 'workflow_dispatch')
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    permissions:
-      contents: read
-      pull-requests: write
-      statuses: write # For status checks
-
-    steps:
-      - name: Get PR details
-        id: pr
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const prNumber = context.payload.issue?.number || '${{ github.event.inputs.pr_number }}';
-            const { data: pr } = await github.rest.pulls.get({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: prNumber
-            });
-            core.setOutput('ref', pr.head.ref);
-            core.setOutput('sha', pr.head.sha);
-            core.setOutput('number', prNumber);
-
-      - name: Checkout PR code
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ steps.pr.outputs.ref }}
-
-      - name: Create status check (pending)
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.repos.createCommitStatus({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              sha: '${{ steps.pr.outputs.sha }}',
-              state: 'pending',
-              target_url: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}',
-              description: 'E2E tests running on preview deployment',
-              context: 'e2e/preview-deployment'
-            });
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Setup Cloudflare credentials
-        run: |
-          echo "${{ secrets.CLOUDFLARE_API_TOKEN }}" > ~/.wrangler/config.toml
-
-      - name: Deploy preview environment
-        id: deploy
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          GITHUB_PR_NUMBER: ${{ steps.pr.outputs.number }}
-        run: ./scripts/deploy-preview.sh
-
-      - name: Wait for deployment to be ready
-        run: |
-          DEPLOYMENT_URL="${{ steps.deploy.outputs.DEPLOYMENT_URL }}"
-          echo "Waiting for ${DEPLOYMENT_URL} to respond..."
-
-          # Wait up to 60 seconds for deployment to be ready
-          for i in {1..12}; do
-            if curl -sf "${DEPLOYMENT_URL}" > /dev/null; then
-              echo "Deployment is ready!"
-              exit 0
-            fi
-            echo "Waiting... (attempt $i/12)"
-            sleep 5
-          done
-
-          echo "Deployment failed to become ready"
-          exit 1
-
-      - name: Install Playwright browsers
-        run: pnpm exec playwright install chromium --with-deps
-
-      - name: Run E2E tests
-        env:
-          PLAYWRIGHT_BASE_URL: ${{ steps.deploy.outputs.DEPLOYMENT_URL }}
-        run: pnpm test:e2e
-
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 7
-
-      - name: Cleanup preview deployment
-        if: always()
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          DEPLOYMENT_NAME="${{ steps.deploy.outputs.DEPLOYMENT_NAME }}"
-          echo "Cleaning up deployment: ${DEPLOYMENT_NAME}"
-          pnpm wrangler delete --name "${DEPLOYMENT_NAME}" --env preview || true
-
-      - name: Update status check (success)
-        if: success()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.repos.createCommitStatus({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              sha: '${{ steps.pr.outputs.sha }}',
-              state: 'success',
-              target_url: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}',
-              description: 'E2E tests passed ✅',
-              context: 'e2e/preview-deployment'
-            });
-
-      - name: Update status check (failure)
-        if: failure()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            await github.rest.repos.createCommitStatus({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              sha: '${{ steps.pr.outputs.sha }}',
-              state: 'failure',
-              target_url: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}',
-              description: 'E2E tests failed ❌',
-              context: 'e2e/preview-deployment'
-            });
-
-      - name: Comment PR with results
-        if: always()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const deploymentUrl = '${{ steps.deploy.outputs.DEPLOYMENT_URL }}';
-            const testsPassed = '${{ job.status }}' === 'success';
-
-            const body = testsPassed
-              ? `✅ E2E tests passed on preview deployment!\n\n📦 Preview URL: ${deploymentUrl}\n\n*Triggered by @${{ github.event.comment.user.login }}*`
-              : `❌ E2E tests failed on preview deployment.\n\n📦 Preview URL: ${deploymentUrl}\n\nCheck the [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.\n\n*Triggered by @${{ github.event.comment.user.login }}*`;
-
-            await github.rest.issues.createComment({
-              issue_number: ${{ steps.pr.outputs.number }},
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: body
-            });
+steps:
+  - name: Checkout PR code
+  - name: Install dependencies  # ⚠️ Code potentiellement malveillant
+  - name: Deploy preview
+  - name: Run tests
+  - name: Upload results as artifacts  # ✓ Communication sécurisée
+  - name: Cleanup preview
 ```
 
-#### B. Workflow de rappel pour les PRs vers main
+#### B. Workflow privilégié (gestion des status checks)
+
+Créer `.github/workflows/e2e-report.yml` :
+
+**Points clés du workflow privilégié** :
+- ✅ Permissions complètes : `pull-requests: write`, `statuses: write`
+- ✅ **JAMAIS** de checkout ou d'exécution de code de PR
+- ✅ Télécharge uniquement les artifacts
+- ✅ Parse les métadonnées de manière sécurisée
+- ✅ Crée les status checks et commentaires
+
+**Exemple de structure** :
+
+```yaml
+name: E2E Tests Report (Privileged)
+
+on:
+  workflow_run:
+    workflows: ["E2E Tests (Unprivileged)"]
+    types: [completed]
+
+permissions:
+  pull-requests: write  # ✓ Safe - no code execution
+  statuses: write
+
+steps:
+  - name: Download artifacts  # ✓ No code checkout
+  - name: Parse metadata  # ✓ Read-only data processing
+  - name: Create status checks
+  - name: Post PR comments
+```
+
+**Sécurité** : Ce workflow ne peut PAS être déclenché directement par un attaquant.
+Il se lance uniquement via `workflow_run` après completion du workflow non privilégié.
+
+#### C. Workflow de rappel pour les PRs vers main
 
 Créer `.github/workflows/e2e-reminder.yml` :
 

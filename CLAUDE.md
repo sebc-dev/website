@@ -84,6 +84,7 @@ This is a Next.js 15 website deployed to Cloudflare Workers using OpenNext. The 
 **CI (Preview Deployments)**:
 
 - Tests run on Cloudflare Workers preview deployments
+- **Security**: Uses two-workflow pattern to prevent privilege escalation
 - **Triggering**: Comment `@e2e` on any PR to run tests
 - **For PRs to `main`**: E2E tests are **required** before merge
   - Status check `e2e/preview-deployment` must be "success"
@@ -92,14 +93,16 @@ This is a Next.js 15 website deployed to Cloudflare Workers using OpenNext. The 
 **How it works**:
 
 1. Comment `@e2e` on the PR
-2. Workflow deploys to Cloudflare preview environment
-3. Playwright tests run against preview URL
-4. Status check updated with results
+2. Unprivileged workflow (`e2e-test.yml`) executes tests with read-only permissions
+3. Test results saved as artifacts (isolated from privileged actions)
+4. Privileged workflow (`e2e-report.yml`) posts results and status checks
 5. Preview environment automatically cleaned up
+
+**Security Model**: Two separate workflows isolate untrusted code execution from privileged operations. See [E2E Workflow Security](docs/deployment/e2e-workflow-security.md) for details.
 
 **Preview URLs**: Available in PR comments after workflow runs
 
-See [E2E Implementation Guide](docs/deployment/e2e-preview-deployments-implementation.md) and [ADR-001](docs/decisions/001-e2e-tests-preview-deployments.md) for details.
+See [E2E Implementation Guide](docs/deployment/e2e-preview-deployments-implementation.md) and [ADR-001](docs/decisions/001-e2e-tests-preview-deployments.md) for complete details.
 
 ### Cloudflare Integration
 

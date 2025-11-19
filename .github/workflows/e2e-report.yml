@@ -1,0 +1,147 @@
+name: E2E Tests Report (Privileged)
+
+# This workflow handles privileged actions (status checks, comments)
+# It NEVER checks out or executes untrusted code from PRs
+
+on:
+  workflow_run:
+    workflows: ["E2E Tests (Unprivileged)"]
+    types: [completed]
+
+jobs:
+  report:
+    name: Post Test Results
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion != 'cancelled'
+
+    # Full write permissions - safe because we never execute untrusted code
+    permissions:
+      contents: read
+      pull-requests: write
+      statuses: write
+
+    steps:
+      - name: Download test metadata
+        uses: actions/download-artifact@v4
+        with:
+          name: test-metadata-*
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Read test metadata
+        id: metadata
+        run: |
+          # Find the metadata file
+          METADATA_FILE=$(find . -name "metadata.json" -type f | head -1)
+
+          if [ ! -f "$METADATA_FILE" ]; then
+            echo "Error: metadata.json not found"
+            exit 1
+          fi
+
+          # Parse metadata
+          PR_NUMBER=$(jq -r '.pr_number' "$METADATA_FILE")
+          PR_SHA=$(jq -r '.pr_sha' "$METADATA_FILE")
+          DEPLOYMENT_URL=$(jq -r '.deployment_url' "$METADATA_FILE")
+          TEST_STATUS=$(jq -r '.test_status' "$METADATA_FILE")
+          WORKFLOW_RUN_ID=$(jq -r '.workflow_run_id' "$METADATA_FILE")
+          TRIGGERED_BY=$(jq -r '.triggered_by' "$METADATA_FILE")
+
+          # Set outputs
+          echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "pr_sha=$PR_SHA" >> $GITHUB_OUTPUT
+          echo "deployment_url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
+          echo "test_status=$TEST_STATUS" >> $GITHUB_OUTPUT
+          echo "workflow_run_id=$WORKFLOW_RUN_ID" >> $GITHUB_OUTPUT
+          echo "triggered_by=$TRIGGERED_BY" >> $GITHUB_OUTPUT
+
+      - name: Create status check (pending)
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: '${{ steps.metadata.outputs.pr_sha }}',
+              state: 'pending',
+              target_url: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ steps.metadata.outputs.workflow_run_id }}',
+              description: 'E2E tests running on preview deployment',
+              context: 'e2e/preview-deployment'
+            });
+
+      - name: Update status check (success)
+        if: steps.metadata.outputs.test_status == 'success'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: '${{ steps.metadata.outputs.pr_sha }}',
+              state: 'success',
+              target_url: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ steps.metadata.outputs.workflow_run_id }}',
+              description: 'E2E tests passed ✅',
+              context: 'e2e/preview-deployment'
+            });
+
+      - name: Update status check (failure)
+        if: steps.metadata.outputs.test_status != 'success'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: '${{ steps.metadata.outputs.pr_sha }}',
+              state: 'failure',
+              target_url: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ steps.metadata.outputs.workflow_run_id }}',
+              description: 'E2E tests failed ❌',
+              context: 'e2e/preview-deployment'
+            });
+
+      - name: Comment PR with results
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const deploymentUrl = '${{ steps.metadata.outputs.deployment_url }}';
+            const testsPassed = '${{ steps.metadata.outputs.test_status }}' === 'success';
+            const workflowRunId = '${{ steps.metadata.outputs.workflow_run_id }}';
+            const triggeredBy = '${{ steps.metadata.outputs.triggered_by }}';
+
+            const body = testsPassed
+              ? `✅ E2E tests passed on preview deployment!\n\n📦 Preview URL: ${deploymentUrl}\n\n*Triggered by @${triggeredBy}*`
+              : `❌ E2E tests failed on preview deployment.\n\n📦 Preview URL: ${deploymentUrl}\n\nCheck the [workflow logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${workflowRunId}) for details.\n\n*Triggered by @${triggeredBy}*`;
+
+            await github.rest.issues.createComment({
+              issue_number: ${{ steps.metadata.outputs.pr_number }},
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });
+
+      - name: Add reaction to trigger comment
+        if: github.event.workflow_run.event == 'issue_comment'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Get the original issue_comment event
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: ${{ steps.metadata.outputs.pr_number }}
+            });
+
+            // Find the comment that triggered the workflow (contains @e2e)
+            const triggerComment = comments.find(c =>
+              c.body.includes('@e2e') &&
+              c.user.login === '${{ steps.metadata.outputs.triggered_by }}'
+            );
+
+            if (triggerComment) {
+              await github.rest.reactions.createForIssueComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: triggerComment.id,
+                content: 'rocket'
+              });
+            }
