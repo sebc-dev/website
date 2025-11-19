@@ -1,0 +1,26 @@
+# Build outputs
+.next/
+.open-next/
+out/
+build/
+dist/
+
+# Cache and logs
+node_modules/
+.cache/
+*.log
+
+# Documentation checklists and validation files
+# (these contain intentional formatting that Prettier breaks)
+**/VALIDATION_CHECKLIST.md
+**/validation/*.md
+docs/specs/**/validation/*.md
+
+# Generated documentation and analysis files
+.scd/**/*.md
+**/*CHECKLIST.md
+
+# Lock files
+pnpm-lock.yaml
+package-lock.json
+yarn.lock

@@ -10,6 +10,10 @@ const config = {
   trailingComma: 'all',
   bracketSpacing: true,
 
+  // Markdown formatting options
+  proseWrap: 'preserve', // Don't wrap markdown text
+  embeddedLanguageFormatting: 'auto',
+
   // Plugin critique pour la stack du projet
   plugins: ['prettier-plugin-tailwindcss'],
 };
