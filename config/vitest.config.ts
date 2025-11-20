@@ -10,7 +10,7 @@ export default defineConfig({
     globals: true,
     environment: 'happy-dom',
     root: rootDir,
-    setupFiles: [path.resolve(rootDir, 'vitest.setup.ts')],
+    setupFiles: [path.resolve(__dirname, 'vitest.setup.ts')],
     include: ['**/*.{test,spec}.{ts,tsx}'],
     exclude: ['node_modules', '.next', '.stryker-tmp', 'tests/**/*.spec.ts'],
     coverage: {
