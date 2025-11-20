@@ -75,10 +75,23 @@ See: `/docs/specs/epics/epic_1/refactoring_e2e/STORY_E2E_CLOUDFLARE_REFACTOR.md`
 ### Project Structure
 
 ```
-/app              - Next.js App Router pages (layout.tsx, page.tsx)
-/lib              - Utility functions (e.g., cn() for className merging)
-/components       - React components (intended for shadcn/ui components)
+/src              - Application source code
+  /app            - Next.js App Router pages (layout.tsx, page.tsx)
+  /lib            - Utility functions (e.g., cn() for className merging)
+  /i18n           - Internationalization configuration
+  /messages       - Translation files (fr.json, en.json)
+  middleware.ts   - Next.js middleware
+/config           - Configuration files
+  vitest.config.ts
+  playwright.config.ts
+  drizzle.config.ts
+  eslint.config.mjs
+  prettier.config.js
+  postcss.config.mjs
+  open-next.config.ts
+  components.json
 /tests            - Playwright E2E test files
+/drizzle          - Database migrations
 /docs             - Project documentation and specs
 /.claude          - Claude Code configuration and workflows
 ```
@@ -95,8 +108,8 @@ See: `/docs/specs/epics/epic_1/refactoring_e2e/STORY_E2E_CLOUDFLARE_REFACTOR.md`
 
 ### Path Aliases
 
-- `@/*` - Root-level imports (configured in tsconfig.json)
-- shadcn/ui aliases (in components.json):
+- `@/*` - Maps to `src/*` (configured in tsconfig.json)
+- shadcn/ui aliases (in config/components.json):
   - `@/components` - Components directory
   - `@/lib/utils` - Utility functions
   - `@/components/ui` - UI components
@@ -104,15 +117,15 @@ See: `/docs/specs/epics/epic_1/refactoring_e2e/STORY_E2E_CLOUDFLARE_REFACTOR.md`
 
 ### Testing Configuration
 
-- **Vitest**: Uses jsdom environment, globals enabled, setup file at `vitest.setup.ts` which imports `@testing-library/jest-dom`
+- **Vitest**: Config in `config/vitest.config.ts`, setup file at `vitest.setup.ts`
 - Unit tests: `**/*.{test,spec}.{ts,tsx}` (excludes `/tests` directory)
-- E2E tests: `/tests/**/*.spec.ts` with Playwright
+- E2E tests: `/tests/**/*.spec.ts` with Playwright (config in `config/playwright.config.ts`)
 - Coverage excludes: node_modules, .next, tests, config files, type definitions
 
 ### Cloudflare Integration
 
 - Uses OpenNext adapter for Cloudflare Workers compatibility
-- Configuration in `open-next.config.ts` and `wrangler.jsonc`
+- Configuration in `config/open-next.config.ts` and `wrangler.jsonc`
 - Built worker output in `.open-next/` directory
 - Assets served from `.open-next/assets`
 - Access Cloudflare context via `getCloudflareContext()` in dev mode
@@ -124,13 +137,13 @@ Uses Geist font family (Geist Sans and Geist Mono) via `next/font/google`
 ### Internationalization (i18n)
 
 - **Library**: next-intl v4.5.3 (supports Next.js 15 + edge runtime)
-- **Configuration**: `i18n/` directory
+- **Configuration**: `src/i18n/` directory
   - `config.ts` - Request configuration for Server Components
   - `types.ts` - TypeScript type definitions
   - `index.ts` - Barrel exports for clean imports
   - `README.md` - Comprehensive usage documentation
 - **Supported Locales**: French (fr) - default, English (en)
-- **Message Files**: `messages/fr.json`, `messages/en.json`
+- **Message Files**: `src/messages/fr.json`, `src/messages/en.json`
   - **8 namespaces**: common, nav, footer, form, article, complexity, search, error
   - **73 total keys** organized into semantic groups
   - **100% translation parity** between French and English (validated by tests)
@@ -148,7 +161,7 @@ Uses Geist font family (Geist Sans and Geist Mono) via `next/font/google`
   ```
 
 - **Testing**: Run `pnpm test messages.test.ts` to validate translation parity
-- **Documentation**: See `i18n/README.md` for complete usage guide, examples, and best practices
+- **Documentation**: See `src/i18n/README.md` for complete usage guide, examples, and best practices
 - **Development Tools**: Test page at `[locale]/messages-test` shows all translations side-by-side
 
 **Current Status**: Phase 2 complete - Configuration (Phase 1) and Message Files (Phase 2) fully implemented

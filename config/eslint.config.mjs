@@ -13,10 +13,16 @@ import testingLibrary from 'eslint-plugin-testing-library';
 import eslintPluginTSDoc from 'eslint-plugin-tsdoc';
 import eslintConfigPrettier from 'eslint-config-prettier';
 
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const rootDir = path.resolve(__dirname, '..');
+
 // Initialisation de FlatCompat pour les anciens plugins (Next.js)
 const compat = new FlatCompat({
-  baseDirectory: import.meta.dirname,
-  resolvePluginsRelativeTo: import.meta.dirname,
+  baseDirectory: rootDir,
+  resolvePluginsRelativeTo: rootDir,
 });
 
 export default [
@@ -56,7 +62,7 @@ export default [
       parserOptions: {
         // La nouvelle meilleure pratique pour le linting typé
         project: true,
-        tsconfigRootDir: import.meta.dirname,
+        tsconfigRootDir: rootDir,
       },
     },
     settings: {

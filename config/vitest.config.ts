@@ -2,12 +2,15 @@ import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 
+const rootDir = path.resolve(__dirname, '..');
+
 export default defineConfig({
   plugins: [react()],
   test: {
     globals: true,
     environment: 'happy-dom',
-    setupFiles: ['./vitest.setup.ts'],
+    root: rootDir,
+    setupFiles: [path.resolve(rootDir, 'vitest.setup.ts')],
     include: ['**/*.{test,spec}.{ts,tsx}'],
     exclude: ['node_modules', '.next', '.stryker-tmp', 'tests/**/*.spec.ts'],
     coverage: {
@@ -26,7 +29,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './'),
+      '@': path.resolve(__dirname, '../src'),
     },
   },
 });
