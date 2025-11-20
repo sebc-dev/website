@@ -57,13 +57,14 @@ export default defineConfig({
      *
      * Server: wrangler dev with OpenNext adapter
      * URL: http://127.0.0.1:8788 (IPv4, not localhost or ::1)
-     * Timeout: 120 seconds to account for OpenNext cold start + wrangler dev startup
+     * Timeout: 240 seconds to account for OpenNext cold start + wrangler dev startup
+     *          (empirically determined: build + server startup takes ~120-140 seconds)
      *
      * See: /docs/specs/epics/epic_1/refactoring_e2e/STORY_E2E_CLOUDFLARE_REFACTOR.md
      */
     command: 'pnpm preview',
     url: 'http://127.0.0.1:8788',
     reuseExistingServer: false,
-    timeout: 120 * 1000, // 120 seconds for OpenNext cold start + wrangler startup
+    timeout: 300 * 1000, // 300 seconds for OpenNext cold start + wrangler startup
   },
 });
