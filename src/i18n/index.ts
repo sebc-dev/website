@@ -1,13 +1,13 @@
-/**
- * i18n module barrel exports
- *
- * This file provides a clean import interface for the i18n system.
- * Import from '\@/i18n' instead of specific files.
- */
+// Types
+export type { Locale } from './types';
 
-// Re-export locale types and constants
-export { defaultLocale, type Locale, locales } from './config';
-// Re-export configuration
-export { default as i18nConfig } from './config';
-// Re-export type definitions
-export type { IntlMessages, LocaleParam } from './types';
+// Routing configuration
+export { routing } from './routing';
+export const locales = ['fr', 'en'] as const;
+export const defaultLocale = 'fr';
+
+// Navigation utilities
+export { Link, redirect, usePathname, useRouter, getPathname } from './routing';
+
+// Request config (for next.config.js)
+export { default as getRequestConfig } from './request';
