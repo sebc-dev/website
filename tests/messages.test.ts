@@ -24,7 +24,12 @@ import { describe, expect, it } from 'vitest';
 function loadMessages(
   locale: 'fr' | 'en',
 ): Record<string, Record<string, string>> {
-  const filePath = path.join(process.cwd(), 'src', 'messages', `${locale}.json`);
+  const filePath = path.join(
+    process.cwd(),
+    'src',
+    'messages',
+    `${locale}.json`,
+  );
   const content = fs.readFileSync(filePath, 'utf8');
   return JSON.parse(content) as Record<string, Record<string, string>>;
 }

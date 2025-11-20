@@ -4,6 +4,12 @@
 out/
 build/
 dist/
+.wrangler/
+
+# Test outputs
+coverage/
+test-results/
+playwright-report/
 
 # Cache and logs
 node_modules/
@@ -17,8 +23,9 @@ node_modules/
 docs/specs/**/validation/*.md
 
 # Generated documentation and analysis files
-.scd/**/*.md
+.scd/
 **/*CHECKLIST.md
+../.claude/*.json
 
 # Lock files
 pnpm-lock.yaml
