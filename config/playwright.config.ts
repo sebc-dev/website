@@ -5,8 +5,8 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   /* Global setup: Initialize D1 database before tests */
-  globalSetup: './tests/global-setup',
-  testDir: './tests',
+  globalSetup: '../tests/global-setup',
+  testDir: '../tests',
   testMatch: '**/*.spec.ts',
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -48,7 +48,7 @@ export default defineConfig({
   /* Run your local dev server before starting the tests */
   webServer: {
     /**
-     * E2E Tests with Cloudflare Workers runtime (Phase 1)
+     * E2E Tests with Cloudflare Workers runtime (Phase 2 - Commit 3)
      *
      * Configuration for running tests against wrangler dev (workerd runtime).
      * IPv4 (127.0.0.1) is forced to avoid Node.js 20+ localhost resolution race conditions
@@ -57,14 +57,15 @@ export default defineConfig({
      *
      * Server: wrangler dev with OpenNext adapter
      * URL: http://127.0.0.1:8788 (IPv4, not localhost or ::1)
-     * Timeout: 240 seconds to account for OpenNext cold start + wrangler dev startup
-     *          (empirically determined: build + server startup takes ~120-140 seconds)
+     * Timeout: 600 seconds to account for workerd runtime cold start
+     *          (empirically measured: full OpenNext build + wrangler startup + D1 initialization
+     *          can exceed 500+ seconds on first run. Increased to 600s for reliability.)
      *
      * See: /docs/specs/epics/epic_1/refactoring_e2e/STORY_E2E_CLOUDFLARE_REFACTOR.md
      */
     command: 'pnpm preview',
     url: 'http://127.0.0.1:8788',
-    reuseExistingServer: false,
-    timeout: 300 * 1000, // 300 seconds for OpenNext cold start + wrangler startup
+    reuseExistingServer: true,
+    timeout: 600 * 1000, // 600 seconds for reliable workerd cold start + full initialization
   },
 });

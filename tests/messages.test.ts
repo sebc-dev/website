@@ -24,7 +24,7 @@ import { describe, expect, it } from 'vitest';
 function loadMessages(
   locale: 'fr' | 'en',
 ): Record<string, Record<string, string>> {
-  const filePath = path.join(process.cwd(), 'messages', `${locale}.json`);
+  const filePath = path.join(process.cwd(), 'src', 'messages', `${locale}.json`);
   const content = fs.readFileSync(filePath, 'utf8');
   return JSON.parse(content) as Record<string, Record<string, string>>;
 }
@@ -57,7 +57,7 @@ describe('Message Files - Encoding & Structure', () => {
    * Expected: File contains French accented characters
    */
   it('should have French message file properly UTF-8 encoded', () => {
-    const filePath = path.join(process.cwd(), 'messages', 'fr.json');
+    const filePath = path.join(process.cwd(), 'src', 'messages', 'fr.json');
     const content = fs.readFileSync(filePath, 'utf8');
 
     // Check for French accented characters that indicate proper UTF-8 encoding
@@ -71,7 +71,7 @@ describe('Message Files - Encoding & Structure', () => {
    * Expected: File is valid JSON
    */
   it('should have English message file properly formatted', () => {
-    const filePath = path.join(process.cwd(), 'messages', 'en.json');
+    const filePath = path.join(process.cwd(), 'src', 'messages', 'en.json');
     const content = fs.readFileSync(filePath, 'utf8');
 
     // Should be valid JSON

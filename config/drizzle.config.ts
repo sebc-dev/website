@@ -13,8 +13,8 @@ function getRequiredEnv(key: string): string {
 }
 
 export default {
-  schema: './src/lib/server/db/schema.ts',
-  out: './drizzle/migrations',
+  schema: '../src/lib/server/db/schema.ts',
+  out: '../drizzle/migrations',
   dialect: 'sqlite', // D1 is SQLite-based
   driver: 'd1-http',
   dbCredentials: {
