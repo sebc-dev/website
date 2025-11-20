@@ -29,17 +29,20 @@ Users can access the entire website in their preferred language, with the system
 
 ## 📚 Stories in This Epic
 
-This epic contains **7 stories** as defined in the PRD:
+This epic contains **8 stories** (7 from PRD + 1 technical correction story):
 
 | Story | Title                           | Description                                                        | Status         | Phases | Progress             |
 | ----- | ------------------------------- | ------------------------------------------------------------------ | -------------- | ------ | -------------------- |
 | 1.1   | Install and configure next-intl | Set up next-intl library and basic configuration                   | 🚧 IN PROGRESS | 3      | 1/3                  |
 | 1.2   | Create message files            | Create `messages/fr.json` and `messages/en.json` translation files | 📋 PLANNING    | 2      | 1/2                  |
 | 1.3   | Create Next.js middleware       | Implement middleware with next-intl for routing                    | 🚧 IN PROGRESS | 3      | 2/3 (P3: Commit 1/4) |
-| 1.4   | Bilingual URL structure         | Implement route groups with language detection and cookie support  | 📋 NOT STARTED | -      | 0/0                  |
+| 1.4   | Bilingual URL structure         | Implement route groups with language detection and cookie support  | ⏸️ BLOCKED     | -      | 0/0                  |
 | 1.5   | Content fallback                | Add language badges and FR/EN toggle for missing translations      | 📋 NOT STARTED | -      | 0/0                  |
 | 1.6   | SEO hreflang + canonical        | Implement SEO metadata via Next.js Metadata API                    | 📋 NOT STARTED | -      | 0/0                  |
 | 1.7   | Language selector in header     | Create header component with cookie persistence                    | 📋 NOT STARTED | -      | 0/0                  |
+| 1.8   | Architecture correction & i18n pages | Align with next-intl 2025 best practices + internationalize homepage | 🚧 IN PROGRESS | 5      | 0/5 (P1: 📋 DOCS, P2: 📋 DOCS) |
+
+**Note**: Story 1.8 was added to correct architectural issues and absorbs part of Story 1.4 (segment `[locale]`). Story 1.4 is blocked until 1.8 is evaluated.
 
 **Columns Explained**:
 
@@ -93,12 +96,12 @@ cat docs/specs/epics/epic_1/EPIC_TRACKING.md
 
 ### Progress Summary
 
-- **Stories Started**: 2 / 7 (Stories 1.1, 1.2 in progress; 1.3 in progress)
-- **Stories Completed**: 0 / 7
-- **Total Phases**: 8 (Story 1.1: 3, Story 1.2: 2, Story 1.3: 3)
-- **Phases Completed**: 2 / 8 (Phase 3 in progress: Commit 1/4 done)
+- **Stories Started**: 3 / 8 (Stories 1.1, 1.3 in progress; 1.8 planning)
+- **Stories Completed**: 0 / 8
+- **Total Phases**: 13 (Story 1.1: 3, Story 1.2: 2, Story 1.3: 3, Story 1.8: 5)
+- **Phases Completed**: 2 / 13 (Phase 3 in progress: Commit 1/4 done)
 
-**Completion**: 31% (Story 1.1: 1/3, Story 1.3: 2/3 phases complete, Phase 3 at 25%)
+**Completion**: ~23% (Story 1.1: 1/3, Story 1.3: 2/3 phases complete, Phase 3 at 25%)
 
 ### Timeline
 
@@ -116,17 +119,18 @@ cat docs/specs/epics/epic_1/EPIC_TRACKING.md
 The stories in this epic have the following dependency chain:
 
 - **Story 1.1** (next-intl installation) must be completed before all other stories
-- **Story 1.2** (message files) must be completed before Stories 1.4, 1.5, 1.7 (they need translations)
-- **Story 1.3** (middleware) must be completed before Story 1.4 (URL structure relies on middleware)
-- **Story 1.4** (URL structure) should be completed before Stories 1.5, 1.6, 1.7 (foundation for routing)
-- Stories 1.5, 1.6, 1.7 can be implemented in parallel once dependencies are met
+- **Story 1.2** (message files) must be completed before Stories 1.5, 1.7, 1.8 (they need translations)
+- **Story 1.3** (middleware) must be completed before Story 1.8 (architecture correction needs middleware)
+- **Story 1.8** (architecture correction) absorbs Story 1.4 and must be completed before 1.5, 1.6, 1.7
+- **Story 1.4** (URL structure) is BLOCKED - absorbed by Story 1.8
+- Stories 1.5, 1.6, 1.7 can be implemented in parallel once Story 1.8 is complete
 
 **Recommended Implementation Order**:
 
-1. Story 1.1 (next-intl setup)
-2. Story 1.2 (message files)
-3. Story 1.3 (middleware)
-4. Story 1.4 (URL structure)
+1. Story 1.1 (next-intl setup) - IN PROGRESS
+2. Story 1.2 (message files) - PLANNING
+3. Story 1.3 (middleware) - IN PROGRESS
+4. **Story 1.8** (architecture correction + i18n pages) - NEW - absorbs 1.4
 5. Stories 1.5, 1.6, 1.7 (parallel - fallback, SEO, language selector)
 
 ### External Dependencies
@@ -166,6 +170,7 @@ Stories will be linked here as they are planned:
 - Story 1.5: `docs/specs/epics/epic_1/story_1_5/story_1.5.md` (not yet created)
 - Story 1.6: `docs/specs/epics/epic_1/story_1_6/story_1.6.md` (not yet created)
 - Story 1.7: `docs/specs/epics/epic_1/story_1_7/story_1.7.md` (not yet created)
+- Story 1.8: `docs/specs/epics/epic_1/story_1_8/story_1.8.md` ✅
 
 ### Phase Plans
 
@@ -174,6 +179,7 @@ Phase plans will be linked here as stories are planned:
 - Story 1.1: `docs/specs/epics/epic_1/story_1_1/implementation/PHASES_PLAN.md` ✅ (3 phases)
 - Story 1.2: `docs/specs/epics/epic_1/story_1_2/implementation/PHASES_PLAN.md` ✅ (2 phases)
 - Story 1.3: `docs/specs/epics/epic_1/story_1_3/implementation/PHASES_PLAN.md` ✅ (3 phases)
+- Story 1.8: `docs/specs/epics/epic_1/story_1_8/implementation/PHASES_PLAN.md` ✅ (5 phases)
 
 ### Related Documentation
 
@@ -222,13 +228,37 @@ Phase plans will be linked here as stories are planned:
 ---
 
 **Epic Initialized**: 2025-11-16
-**Last Updated**: 2025-11-16
+**Last Updated**: 2025-11-20
 **Created by**: Claude Code (epic-initializer skill)
 
 ---
 
 ## 📝 Recent Updates
 
+- **2025-11-20**: Story 1.8 Phase 2 documentation generated (7 comprehensive documents)
+  - Generated complete implementation documentation for Segment [locale] et Layout Provider phase
+  - 5 atomic commits planned: layout.tsx with Provider → simplify root layout → not-found.tsx → middleware update → messages-test migration
+  - Documents: INDEX.md, IMPLEMENTATION_PLAN.md, COMMIT_CHECKLIST.md, ENVIRONMENT_SETUP.md, guides (REVIEW.md, TESTING.md), validation/VALIDATION_CHECKLIST.md
+  - Total: ~3,100 lines of professional documentation
+  - Ready for Phase 2 implementation (5 commits, 4-6h, Provider setup, [locale] routing)
+  - Location: `docs/specs/epics/epic_1/story_1_8/implementation/phase_2/`
+- **2025-11-20**: Story 1.8 Phase 1 documentation generated (7 comprehensive documents)
+  - Generated complete implementation documentation for Restructuration i18n et nouveau routing phase
+  - 5 atomic commits planned: routing.ts → request.ts → barrel export → update imports → archive old
+  - Documents: INDEX.md, IMPLEMENTATION_PLAN.md, COMMIT_CHECKLIST.md, ENVIRONMENT_SETUP.md, guides (REVIEW.md, TESTING.md), validation/VALIDATION_CHECKLIST.md
+  - Total: ~2,800 lines of professional documentation
+  - Ready for Phase 1 implementation (5 commits, 3-4h, 100% type safety)
+  - Location: `docs/specs/epics/epic_1/story_1_8/implementation/phase_1/`
+- **2025-11-20**: Story 1.8 created - Architecture correction & i18n pages
+  - New story added to correct next-intl implementation issues identified from technical report
+  - Based on `/docs/tech/cloudflare-workers/cloudflare-nextjs-nextintl.md` best practices
+  - 5 phases planned: i18n restructuring → [locale] segment → homepage i18n → SEO metadata → tests
+  - Absorbs part of Story 1.4 (segment `[locale]` implementation)
+  - Includes internationalization of homepage (7 text keys + metadata)
+  - Estimated duration: 4-5 days, ~18-20 commits
+  - Story spec: `docs/specs/epics/epic_1/story_1_8/story_1.8.md`
+  - Phase plan: `docs/specs/epics/epic_1/story_1_8/implementation/PHASES_PLAN.md`
+  - Story 1.4 status changed to BLOCKED (absorbed by 1.8)
 - **2025-11-17**: Story 1.3 Phase 3 - Commit 1/4 completed ✅
   - E2E Test Suite - Core Scenarios implemented
   - Files created: `tests/middleware.spec.ts` (23+ test cases), `tests/fixtures/i18n.ts` (Playwright fixtures)

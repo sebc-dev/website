@@ -24,8 +24,6 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import createMiddleware from 'next-intl/middleware';
 
-import type { Locale } from '@/i18n';
-import { defaultLocale, locales, routingConfig } from '@/i18n/config';
 import { validateLocale } from '@/lib/i18n/cookie';
 import { logger } from '@/lib/i18n/logger';
 import {
@@ -35,6 +33,8 @@ import {
   startTimer,
 } from '@/lib/i18n/performance';
 import { handleRootPathRedirect } from '@/lib/i18n/redirect';
+import type { Locale } from '@/src/i18n';
+import { defaultLocale, routing } from '@/src/i18n';
 
 /**
  * Detects the locale from the URL pathname prefix
@@ -416,11 +416,7 @@ function detectLocale(request: NextRequest): Locale {
  *
  * @see https://next-intl.dev/docs/routing/middleware
  */
-const intlMiddleware = createMiddleware({
-  locales,
-  defaultLocale,
-  ...routingConfig,
-});
+const intlMiddleware = createMiddleware(routing);
 
 /**
  * Cookie options for NEXT_LOCALE cookie

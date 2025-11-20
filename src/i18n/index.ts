@@ -1,13 +1,11 @@
-// Types
-export type { Locale } from './types';
+// Configuration (testable without Next.js runtime)
+export { defaultLocale, type Locale, localePrefix, locales } from './config';
 
-// Routing configuration
+// Routing (requires Next.js runtime)
 export { routing } from './routing';
-export const locales = ['fr', 'en'] as const;
-export const defaultLocale = 'fr';
 
-// Navigation utilities
-export { Link, redirect, usePathname, useRouter, getPathname } from './routing';
+// Navigation utilities (requires Next.js runtime)
+export { getPathname, Link, redirect, usePathname, useRouter } from './routing';
 
 // Request config (for next.config.js)
 export { default as getRequestConfig } from './request';
