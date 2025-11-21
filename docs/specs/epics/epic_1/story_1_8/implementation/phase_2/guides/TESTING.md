@@ -159,15 +159,15 @@ Verify visual appearance and user experience.
 
 After running `pnpm dev`:
 
-| URL | Expected Result |
-|-----|-----------------|
-| `http://localhost:3000/fr` | French layout renders |
-| `http://localhost:3000/en` | English layout renders |
-| `http://localhost:3000/` | Redirects to /fr or /en |
-| `http://localhost:3000/fr/messages-test` | French translations displayed |
+| URL                                      | Expected Result                |
+| ---------------------------------------- | ------------------------------ |
+| `http://localhost:3000/fr`               | French layout renders          |
+| `http://localhost:3000/en`               | English layout renders         |
+| `http://localhost:3000/`                 | Redirects to /fr or /en        |
+| `http://localhost:3000/fr/messages-test` | French translations displayed  |
 | `http://localhost:3000/en/messages-test` | English translations displayed |
-| `http://localhost:3000/fr/nonexistent` | French 404 page |
-| `http://localhost:3000/en/nonexistent` | English 404 page |
+| `http://localhost:3000/fr/nonexistent`   | French 404 page                |
+| `http://localhost:3000/en/nonexistent`   | English 404 page               |
 
 ### View Source Checks
 
@@ -191,13 +191,13 @@ After running `pnpm dev`:
 ```typescript
 const mockMessages = {
   common: {
-    appName: 'Test App'
+    appName: 'Test App',
   },
   error: {
     notFound: 'Not Found',
     notFoundDescription: 'Page does not exist',
-    backHome: 'Go Home'
-  }
+    backHome: 'Go Home',
+  },
 };
 ```
 
@@ -243,11 +243,11 @@ open coverage/lcov-report/index.html
 
 ### Coverage Goals
 
-| Area | Target | Current |
-|------|--------|---------|
-| `app/[locale]/layout.tsx` | >80% | - |
-| `app/[locale]/not-found.tsx` | >90% | - |
-| Overall Phase 2 | >80% | - |
+| Area                         | Target | Current |
+| ---------------------------- | ------ | ------- |
+| `app/[locale]/layout.tsx`    | >80%   | -       |
+| `app/[locale]/not-found.tsx` | >90%   | -       |
+| Overall Phase 2              | >80%   | -       |
 
 ---
 
@@ -260,6 +260,7 @@ open coverage/lcov-report/index.html
 **Cause**: Component not wrapped in Provider
 
 **Solution**:
+
 ```typescript
 // Wrap component in Provider
 render(
@@ -274,6 +275,7 @@ render(
 **Cause**: Path alias not configured in test environment
 
 **Solution**: Check `vitest.config.ts`:
+
 ```typescript
 resolve: {
   alias: {
@@ -305,6 +307,7 @@ pnpm test --silent=false
 ### GitHub Actions
 
 Tests run automatically on:
+
 - [ ] Pull requests
 - [ ] Push to main branch
 
@@ -320,6 +323,7 @@ Tests run automatically on:
 ### Required Checks
 
 All PRs must:
+
 - [ ] Pass all unit tests
 - [ ] Pass all integration tests
 - [ ] Meet coverage threshold (>80%)
@@ -333,17 +337,20 @@ All PRs must:
 Before merging Phase 2:
 
 ### Unit Tests
+
 - [ ] Layout test file created
 - [ ] NotFound test file created
 - [ ] All tests pass
 - [ ] Coverage >80%
 
 ### Integration Tests
+
 - [ ] Provider integration tested
 - [ ] Routing integration tested
 - [ ] Message loading tested
 
 ### Manual Tests
+
 - [ ] /fr renders correctly
 - [ ] /en renders correctly
 - [ ] 404 pages work in both locales
@@ -352,6 +359,7 @@ Before merging Phase 2:
 - [ ] html lang attribute correct
 
 ### CI Tests
+
 - [ ] Tests run in CI
 - [ ] Coverage reported
 - [ ] All checks pass
@@ -363,12 +371,14 @@ Before merging Phase 2:
 ### Writing Tests
 
 ✅ **Do**:
+
 - Test behavior, not implementation
 - Use descriptive test names
 - One assertion per test (when possible)
 - Test edge cases (invalid locale, missing keys)
 
 ❌ **Don't**:
+
 - Test Next.js or next-intl internals
 - Over-mock (test real integration)
 - Write flaky tests

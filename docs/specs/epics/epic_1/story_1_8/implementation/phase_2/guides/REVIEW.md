@@ -23,11 +23,13 @@ Validate that the implementation:
 Phase 2 is split into **5 atomic commits**. You can:
 
 **Option A: Commit-by-commit review** (recommended)
+
 - Easier to digest (15-30 min per commit)
 - Progressive validation
 - Targeted feedback
 
 **Option B: Global review at once**
+
 - Faster (1.5-2h total)
 - Immediate overview
 - Requires more focus
@@ -46,29 +48,34 @@ Phase 2 is split into **5 atomic commits**. You can:
 #### Review Checklist
 
 ##### Provider Configuration
+
 - [ ] `NextIntlClientProvider` wraps children
 - [ ] `messages` prop passed from `getMessages()`
 - [ ] No `locale` prop (automatically inferred)
 - [ ] Provider is at correct level in tree
 
 ##### Locale Handling
+
 - [ ] `generateStaticParams()` returns all locales
 - [ ] Locale parameter properly typed
 - [ ] Validation with `notFound()` for invalid locales
 - [ ] Uses `routing.locales` for validation
 
 ##### HTML Structure
+
 - [ ] `<html lang={locale}>` is dynamic
 - [ ] `<body>` includes font classes
 - [ ] `antialiased` class applied
 - [ ] No duplicate html/body tags
 
 ##### Async Handling
+
 - [ ] `getMessages()` is awaited
 - [ ] Layout function is async
 - [ ] Params destructured correctly (Next.js 15 pattern)
 
 ##### Code Quality
+
 - [ ] No `any` types
 - [ ] Proper TypeScript interfaces
 - [ ] Clean imports organization
@@ -101,22 +108,26 @@ pnpm dev
 #### Review Checklist
 
 ##### Structure Simplification
+
 - [ ] No `<html>` tag
 - [ ] No `<body>` tag
 - [ ] Returns only children
 - [ ] Minimal code
 
 ##### Imports
+
 - [ ] globals.css imported
 - [ ] Unnecessary imports removed
 - [ ] No orphan font imports (if moved)
 
 ##### Metadata
+
 - [ ] No metadata export
 - [ ] No hardcoded lang attribute
 - [ ] Clean separation of concerns
 
 ##### Code Quality
+
 - [ ] Proper TypeScript types
 - [ ] No commented code
 - [ ] No debug statements
@@ -148,28 +159,33 @@ pnpm dev
 #### Review Checklist
 
 ##### Internationalization
+
 - [ ] `useTranslations('error')` called
 - [ ] All visible text uses translations
 - [ ] No hardcoded strings
 - [ ] Link from `@/src/i18n`
 
 ##### Client Component
+
 - [ ] `'use client'` directive present
 - [ ] Hooks used correctly
 - [ ] No server-only imports
 
 ##### Design
+
 - [ ] Centered layout
 - [ ] Readable typography
 - [ ] Consistent with site style
 - [ ] Responsive
 
 ##### Functionality
+
 - [ ] Return home link works
 - [ ] Link uses correct href="/"
 - [ ] Accessible (semantic HTML)
 
 ##### Code Quality
+
 - [ ] Clean component structure
 - [ ] Proper imports
 - [ ] No unnecessary complexity
@@ -202,24 +218,28 @@ pnpm dev
 #### Review Checklist
 
 ##### Configuration Import
+
 - [ ] Imports `routing` from `@/src/i18n/routing`
 - [ ] Uses `createMiddleware(routing)`
 - [ ] No duplicate locale arrays
 - [ ] No duplicate defaultLocale
 
 ##### Matcher Configuration
+
 - [ ] Includes root path `/`
 - [ ] Includes locale paths `/(fr|en)/:path*`
 - [ ] Excludes static assets properly
 - [ ] Excludes `_next` and `_vercel`
 
 ##### Functionality
+
 - [ ] Root `/` redirects correctly
 - [ ] Accept-Language detection works
 - [ ] Invalid locales redirect
 - [ ] Locale prefix behavior correct
 
 ##### Code Quality
+
 - [ ] Single source of truth
 - [ ] No hardcoded values
 - [ ] Clean, minimal code
@@ -254,28 +274,33 @@ pnpm dev
 #### Review Checklist
 
 ##### Route Structure
+
 - [ ] Uses route group `(test)`
 - [ ] Correct directory nesting
 - [ ] Page accessible at expected URL
 
 ##### Internationalization
+
 - [ ] `useTranslations` for each namespace
 - [ ] All namespaces displayed
 - [ ] No hardcoded strings
 - [ ] Works in both locales
 
 ##### Client Component
+
 - [ ] `'use client'` directive present
 - [ ] Hooks used correctly
 - [ ] Proper error boundaries if needed
 
 ##### Usefulness
+
 - [ ] Displays all available translations
 - [ ] Easy to read format
 - [ ] Helpful for development
 - [ ] Easy to add new namespaces
 
 ##### Code Quality
+
 - [ ] Clean structure
 - [ ] Proper formatting
 - [ ] No debug code in production
@@ -359,6 +384,7 @@ Use this template for feedback:
 **Commits Reviewed**: [list or "all"]
 
 ### ✅ Strengths
+
 - [What was done well]
 - [Highlight good practices]
 
@@ -371,6 +397,7 @@ Use this template for feedback:
 2. [Repeat for each required change]
 
 ### 💡 Suggestions (Optional)
+
 - [Nice-to-have improvements]
 - [Alternative approaches to consider]
 
@@ -381,6 +408,7 @@ Use this template for feedback:
 - [ ] ❌ **REJECTED** - Major rework needed
 
 ### Next Steps
+
 [What should happen next]
 ```
 
@@ -412,21 +440,25 @@ Use this template for feedback:
 ## 🔍 Common Issues to Watch For
 
 ### Provider Issues
+
 - ❌ Provider wrapping wrong elements
 - ❌ Missing messages prop
 - ❌ Unnecessary locale prop
 
 ### Layout Issues
+
 - ❌ Duplicate html/body tags
 - ❌ Missing globals.css import
 - ❌ Hardcoded lang attribute
 
 ### Middleware Issues
+
 - ❌ Duplicate locale configuration
 - ❌ Incorrect matcher pattern
 - ❌ Missing redirect handling
 
 ### Client Component Issues
+
 - ❌ Missing 'use client' directive
 - ❌ Server imports in client components
 - ❌ Incorrect hook usage

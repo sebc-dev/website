@@ -14,22 +14,22 @@ Cette phase implémente les métadonnées dynamiques et localisées pour le SEO.
 
 ## Quick Links
 
-| Document | Description |
-|----------|-------------|
-| [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) | Plan détaillé des 3 commits |
-| [COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md) | Checklists par commit |
-| [ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md) | Configuration environnement |
-| [guides/REVIEW.md](./guides/REVIEW.md) | Guide de code review |
-| [guides/TESTING.md](./guides/TESTING.md) | Stratégie de test |
+| Document                                                                   | Description                    |
+| -------------------------------------------------------------------------- | ------------------------------ |
+| [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)                         | Plan détaillé des 3 commits    |
+| [COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)                               | Checklists par commit          |
+| [ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)                             | Configuration environnement    |
+| [guides/REVIEW.md](./guides/REVIEW.md)                                     | Guide de code review           |
+| [guides/TESTING.md](./guides/TESTING.md)                                   | Stratégie de test              |
 | [validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md) | Checklist de validation finale |
 
 ## Commits Overview
 
-| # | Commit | Focus | Est. Time |
-|---|--------|-------|-----------|
+| #   | Commit                       | Focus                         | Est. Time |
+| --- | ---------------------------- | ----------------------------- | --------- |
 | 4.1 | Implémenter generateMetadata | Title, description dynamiques | 30-45 min |
-| 4.2 | Open Graph localisé | OG tags complets | 30-45 min |
-| 4.3 | Twitter card et robots | Twitter, robots config | 20-30 min |
+| 4.2 | Open Graph localisé          | OG tags complets              | 30-45 min |
+| 4.3 | Twitter card et robots       | Twitter, robots config        | 20-30 min |
 
 **Total estimé**: 1h20 - 2h
 

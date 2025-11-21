@@ -35,23 +35,23 @@ Cette phase migre et internationalise complètement la page d'accueil. Elle ajou
 
 ### Core Documentation
 
-| Document | Description |
-|----------|-------------|
+| Document                                           | Description                        |
+| -------------------------------------------------- | ---------------------------------- |
 | [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) | Atomic commit strategy (5 commits) |
-| [COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md) | Detailed checklist per commit |
-| [ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md) | Prerequisites and environment |
+| [COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)       | Detailed checklist per commit      |
+| [ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)     | Prerequisites and environment      |
 
 ### Guides
 
-| Guide | Description |
-|-------|-------------|
-| [guides/REVIEW.md](./guides/REVIEW.md) | Code review guide per commit |
+| Guide                                    | Description                   |
+| ---------------------------------------- | ----------------------------- |
+| [guides/REVIEW.md](./guides/REVIEW.md)   | Code review guide per commit  |
 | [guides/TESTING.md](./guides/TESTING.md) | Testing strategy (unit + E2E) |
 
 ### Validation
 
-| Document | Description |
-|----------|-------------|
+| Document                                                                   | Description                |
+| -------------------------------------------------------------------------- | -------------------------- |
 | [validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md) | Final validation checklist |
 
 ---
@@ -75,34 +75,34 @@ Cette phase migre et internationalise complètement la page d'accueil. Elle ajou
 
 ### Files to Create
 
-| File | Description | Commit |
-|------|-------------|--------|
-| `app/[locale]/page.tsx` | Homepage internationalisée | 3.3 |
+| File                    | Description                | Commit |
+| ----------------------- | -------------------------- | ------ |
+| `app/[locale]/page.tsx` | Homepage internationalisée | 3.3    |
 
 ### Files to Modify
 
-| File | Description | Commit |
-|------|-------------|--------|
+| File               | Description                   | Commit   |
+| ------------------ | ----------------------------- | -------- |
 | `messages/fr.json` | Namespace `home` + `metadata` | 3.1, 3.4 |
 | `messages/en.json` | Namespace `home` + `metadata` | 3.2, 3.4 |
 
 ### Files to Delete
 
-| File | Description | Commit |
-|------|-------------|--------|
-| `app/page.tsx` | Ancien fichier page d'accueil | 3.5 |
+| File           | Description                   | Commit |
+| -------------- | ----------------------------- | ------ |
+| `app/page.tsx` | Ancien fichier page d'accueil | 3.5    |
 
 ---
 
 ## Commit Summary
 
-| # | Commit | Description | Est. Time |
-|---|--------|-------------|-----------|
-| 3.1 | Add home namespace FR | 10 clés FR dans messages/fr.json | 20 min |
-| 3.2 | Add home namespace EN | 10 clés EN dans messages/en.json | 20 min |
-| 3.3 | Create localized homepage | app/[locale]/page.tsx avec useTranslations | 45 min |
-| 3.4 | Add metadata namespace | Métadonnées SEO FR/EN | 25 min |
-| 3.5 | Remove old homepage | Supprimer app/page.tsx | 15 min |
+| #   | Commit                    | Description                                | Est. Time |
+| --- | ------------------------- | ------------------------------------------ | --------- |
+| 3.1 | Add home namespace FR     | 10 clés FR dans messages/fr.json           | 20 min    |
+| 3.2 | Add home namespace EN     | 10 clés EN dans messages/en.json           | 20 min    |
+| 3.3 | Create localized homepage | app/[locale]/page.tsx avec useTranslations | 45 min    |
+| 3.4 | Add metadata namespace    | Métadonnées SEO FR/EN                      | 25 min    |
+| 3.5 | Remove old homepage       | Supprimer app/page.tsx                     | 15 min    |
 
 **Total Estimated Time**: ~2 heures de développement
 
@@ -120,12 +120,12 @@ Cette phase migre et internationalise complètement la page d'accueil. Elle ajou
 
 ## Risk Mitigation
 
-| Risk | Impact | Mitigation |
-|------|--------|------------|
-| Visual regression | High | Screenshots avant/après, review visuelle |
-| Missing translation keys | Medium | Tests de parité automatiques |
-| Broken animations | Medium | Test manuel animations FR/EN |
-| Build failure | Low | `pnpm build` après chaque commit |
+| Risk                     | Impact | Mitigation                               |
+| ------------------------ | ------ | ---------------------------------------- |
+| Visual regression        | High   | Screenshots avant/après, review visuelle |
+| Missing translation keys | Medium | Tests de parité automatiques             |
+| Broken animations        | Medium | Test manuel animations FR/EN             |
+| Build failure            | Low    | `pnpm build` après chaque commit         |
 
 ---
 

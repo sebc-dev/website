@@ -108,6 +108,7 @@ app/
 Phase 2 requires these keys in `messages/fr.json` and `messages/en.json`:
 
 **messages/fr.json**:
+
 ```json
 {
   "error": {
@@ -119,6 +120,7 @@ Phase 2 requires these keys in `messages/fr.json` and `messages/en.json`:
 ```
 
 **messages/en.json**:
+
 ```json
 {
   "error": {
@@ -257,10 +259,12 @@ Prepare to test these URLs after each commit:
 ### Issue: Phase 1 imports not working
 
 **Symptoms**:
+
 - TypeScript errors on `@/src/i18n` imports
 - Module not found errors
 
 **Solutions**:
+
 1. Verify `src/i18n/` structure exists
 2. Check `tsconfig.json` paths
 3. Restart TypeScript server in VS Code
@@ -275,10 +279,12 @@ ls -la src/i18n/
 ### Issue: Messages not loading
 
 **Symptoms**:
+
 - Translation keys showing instead of text
 - Console errors about missing messages
 
 **Solutions**:
+
 1. Verify message files exist
 2. Check JSON syntax
 3. Ensure keys match exactly
@@ -292,10 +298,12 @@ pnpm exec jsonlint messages/en.json
 ### Issue: Middleware conflicts
 
 **Symptoms**:
+
 - Redirects not working
 - Wrong locale displayed
 
 **Solutions**:
+
 1. Check middleware.ts matcher config
 2. Verify routing import path
 3. Clear browser cache/cookies
@@ -308,10 +316,12 @@ cat middleware.ts
 ### Issue: Fonts not loading
 
 **Symptoms**:
+
 - Fallback fonts displaying
 - Console errors about fonts
 
 **Solutions**:
+
 1. Verify font imports in layout
 2. Check font variable application
 3. Ensure globals.css loaded
@@ -323,22 +333,26 @@ cat middleware.ts
 Complete this checklist before starting implementation:
 
 ### Prerequisites
+
 - [ ] Phase 1 completed and validated
 - [ ] Clean git working directory
 - [ ] On correct branch
 
 ### Structure
+
 - [ ] `src/i18n/` exists with all files
 - [ ] `messages/fr.json` exists
 - [ ] `messages/en.json` exists
 - [ ] Error namespace keys present
 
 ### Tools
+
 - [ ] Node.js v18.17+
 - [ ] pnpm v8+
 - [ ] VS Code with TypeScript support
 
 ### Verification
+
 - [ ] `pnpm tsc` passes
 - [ ] `pnpm lint` passes
 - [ ] `pnpm dev` starts without errors

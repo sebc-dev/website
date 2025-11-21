@@ -24,13 +24,14 @@ Before starting Phase 3, ensure:
 
 ### Dependencies
 
-| Package | Required Version | Purpose |
-|---------|-----------------|---------|
-| `next-intl` | ^4.5.3 | Internationalization |
-| `next` | ^15.0.0 | Framework |
-| `react` | ^19.0.0 | UI Library |
+| Package     | Required Version | Purpose              |
+| ----------- | ---------------- | -------------------- |
+| `next-intl` | ^4.5.3           | Internationalization |
+| `next`      | ^15.0.0          | Framework            |
+| `react`     | ^19.0.0          | UI Library           |
 
 Check versions:
+
 ```bash
 pnpm list next-intl next react
 ```
@@ -91,6 +92,7 @@ pnpm dev
 ```
 
 Then verify:
+
 - [ ] http://localhost:3000/fr responds
 - [ ] http://localhost:3000/en responds
 
@@ -100,11 +102,11 @@ Then verify:
 
 ### Required Tools
 
-| Tool | Purpose |
-|------|---------|
+| Tool    | Purpose           |
+| ------- | ----------------- |
 | VS Code | IDE (recommended) |
-| pnpm | Package manager |
-| Git | Version control |
+| pnpm    | Package manager   |
+| Git     | Version control   |
 
 ### Recommended VS Code Extensions
 
@@ -118,6 +120,7 @@ Then verify:
 Open two terminals:
 
 1. **Dev Server**:
+
    ```bash
    pnpm dev
    ```
@@ -135,20 +138,20 @@ Before starting, familiarize yourself with:
 
 ### Source Files
 
-| File | Purpose |
-|------|---------|
-| `app/page.tsx` | Current homepage (to be migrated) |
-| `messages/fr.json` | French translations |
-| `messages/en.json` | English translations |
-| `app/[locale]/layout.tsx` | Locale layout with Provider |
+| File                      | Purpose                           |
+| ------------------------- | --------------------------------- |
+| `app/page.tsx`            | Current homepage (to be migrated) |
+| `messages/fr.json`        | French translations               |
+| `messages/en.json`        | English translations              |
+| `app/[locale]/layout.tsx` | Locale layout with Provider       |
 
 ### Documentation
 
-| File | Purpose |
-|------|---------|
-| `docs/specs/epics/epic_1/story_1_8/story_1.8.md` | Story specification |
+| File                                                         | Purpose             |
+| ------------------------------------------------------------ | ------------------- |
+| `docs/specs/epics/epic_1/story_1_8/story_1.8.md`             | Story specification |
 | `docs/tech/cloudflare-workers/cloudflare-nextjs-nextintl.md` | Technical reference |
-| `CLAUDE.md` | Project conventions |
+| `CLAUDE.md`                                                  | Project conventions |
 
 ---
 
@@ -202,17 +205,21 @@ After Phase 3 completion:
 ### Common Issues
 
 #### "Cannot find module 'next-intl'"
+
 ```bash
 pnpm install
 ```
 
 #### TypeScript errors in translations
+
 Ensure `messages/fr.json` and `messages/en.json` have identical keys.
 
 #### Page not rendering
+
 Check that `NextIntlClientProvider` is properly configured in `app/[locale]/layout.tsx`.
 
 #### Animations not working
+
 Ensure all Tailwind classes are copied exactly from the original `app/page.tsx`.
 
 ### Getting Help

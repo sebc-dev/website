@@ -34,6 +34,7 @@ Cette story corrige l'implémentation actuelle de next-intl pour l'aligner avec 
 ### Contenu à internationaliser
 
 Page d'accueil (`app/page.tsx`) - Textes identifiés :
+
 - "En développement"
 - "sebc.dev" (conservé tel quel - nom de marque)
 - "Un laboratoire d'apprentissage public"
@@ -43,6 +44,7 @@ Page d'accueil (`app/page.tsx`) - Textes identifiés :
 - "Blog technique • Articles • Guides"
 
 Layout racine (`app/layout.tsx`) - Métadonnées :
+
 - Title, description, keywords
 - Open Graph metadata
 - Twitter card metadata
@@ -65,51 +67,60 @@ Layout racine (`app/layout.tsx`) - Métadonnées :
 ### Acceptance Criteria
 
 #### AC1: Structure des fichiers conforme
+
 - [ ] Fichiers i18n déplacés vers `src/i18n/`
 - [ ] `src/i18n/routing.ts` créé avec `defineRouting()` et `createSharedPathnamesNavigation()`
 - [ ] `src/i18n/request.ts` créé avec la nouvelle API `requestLocale`
 - [ ] Barrel export dans `src/i18n/index.ts`
 
 #### AC2: Segment [locale] dans App Router
+
 - [ ] Structure `app/[locale]/layout.tsx` créée
 - [ ] `app/[locale]/page.tsx` créée avec contenu internationalisé
 - [ ] `app/[locale]/not-found.tsx` créée
 - [ ] Ancien `app/page.tsx` supprimé ou redirigé
 
 #### AC3: Layout localisé avec Provider
+
 - [ ] `app/[locale]/layout.tsx` utilise `<html lang={locale}>`
 - [ ] `NextIntlClientProvider` wrapping les children avec les messages
 - [ ] `getMessages()` utilisé pour charger les traductions côté serveur
 - [ ] Métadonnées dynamiques selon la locale (title, description, OG)
 
 #### AC4: Page d'accueil internationalisée
+
 - [ ] Tous les textes utilisent `useTranslations()` ou `getTranslations()`
 - [ ] Namespace `home` créé dans messages FR et EN
 - [ ] Traductions complètes pour les 7 textes identifiés
 - [ ] Contenu identique visuellement dans les deux langues
 
 #### AC5: Messages FR/EN enrichis
+
 - [ ] Namespace `home` ajouté à `messages/fr.json`
 - [ ] Namespace `home` ajouté à `messages/en.json`
 - [ ] Namespace `metadata` pour les métadonnées SEO
 - [ ] Tests de parité mis à jour
 
 #### AC6: Utilitaires de navigation typés
+
 - [ ] Export de `Link`, `redirect`, `usePathname`, `useRouter` depuis routing.ts
 - [ ] Composants utilisent ces utilitaires au lieu des natifs Next.js
 - [ ] Type-safety complète sur les navigations
 
 #### AC7: Configuration request.ts mise à jour
+
 - [ ] Utilisation de `await requestLocale` (API Next.js 15)
 - [ ] Validation robuste avec fallback sur `defaultLocale`
 - [ ] Import dynamique des messages conservé
 
 #### AC8: Middleware aligné
+
 - [ ] Middleware utilise la configuration centralisée de `routing.ts`
 - [ ] Pattern de chaînage manuel conservé
 - [ ] Redirection `/` vers `/fr/` ou `/en/` fonctionnelle
 
 #### AC9: Tests et validation
+
 - [ ] Tests unitaires mis à jour pour la nouvelle structure
 - [ ] Tests E2E passent avec le nouveau routage
 - [ ] Tests de parité des traductions passent
@@ -156,6 +167,7 @@ app/
 ### New Message Keys
 
 #### messages/fr.json - Namespace "home"
+
 ```json
 {
   "home": {
@@ -180,6 +192,7 @@ app/
 ```
 
 #### messages/en.json - Namespace "home"
+
 ```json
 {
   "home": {
@@ -208,9 +221,11 @@ app/
 ## Implementation Phases
 
 ### Phase 1: Restructuration i18n et nouveau routing (1 jour)
+
 **Objectif**: Créer la nouvelle structure conforme aux best practices
 
 **Commits**:
+
 1. Créer `src/i18n/routing.ts` avec `defineRouting()` et navigation typée
 2. Créer `src/i18n/request.ts` avec nouvelle API `requestLocale`
 3. Créer barrel export `src/i18n/index.ts`
@@ -218,6 +233,7 @@ app/
 5. Archiver/supprimer l'ancien dossier `i18n/`
 
 **Validation**:
+
 - TypeScript compile
 - Imports résolus correctement
 - Tests unitaires passent
@@ -225,9 +241,11 @@ app/
 ---
 
 ### Phase 2: Segment [locale] et Layout Provider (1.5 jours)
+
 **Objectif**: Créer la structure App Router avec segment dynamique et Provider
 
 **Commits**:
+
 1. Créer `app/[locale]/layout.tsx` avec `NextIntlClientProvider`
 2. Simplifier `app/layout.tsx` (fonts/globals uniquement)
 3. Créer `app/[locale]/not-found.tsx` internationalisé
@@ -235,6 +253,7 @@ app/
 5. Migrer `app/[locale]/(test)/messages-test/` si nécessaire
 
 **Validation**:
+
 - Routes `/fr` et `/en` répondent
 - Provider transmet les messages
 - `<html lang>` dynamique selon locale
@@ -243,9 +262,11 @@ app/
 ---
 
 ### Phase 3: Internationalisation de la page d'accueil (1 jour)
+
 **Objectif**: Migrer et internationaliser la page d'accueil
 
 **Commits**:
+
 1. Ajouter namespace `home` à `messages/fr.json`
 2. Ajouter namespace `home` à `messages/en.json`
 3. Créer `app/[locale]/page.tsx` avec `useTranslations('home')`
@@ -253,6 +274,7 @@ app/
 5. Supprimer ancien `app/page.tsx`
 
 **Validation**:
+
 - `/fr` affiche contenu en français
 - `/en` affiche contenu en anglais
 - Visuellement identique aux deux langues
@@ -261,15 +283,18 @@ app/
 ---
 
 ### Phase 4: Métadonnées dynamiques et SEO (0.5 jour)
+
 **Objectif**: Métadonnées localisées pour le SEO
 
 **Commits**:
+
 1. Implémenter `generateMetadata()` dans layout avec traductions
 2. Open Graph localisé (title, description, locale)
 3. Twitter card localisé
 4. Validation des métadonnées dans les deux langues
 
 **Validation**:
+
 - `<title>` dynamique selon locale
 - OG tags corrects
 - Inspection source HTML correcte
@@ -277,9 +302,11 @@ app/
 ---
 
 ### Phase 5: Tests et documentation (0.5-1 jour)
+
 **Objectif**: Validation complète et documentation
 
 **Commits**:
+
 1. Mettre à jour tests unitaires
 2. Mettre à jour tests E2E Playwright
 3. Mettre à jour tests de parité des messages
@@ -287,6 +314,7 @@ app/
 5. Valider build production et preview
 
 **Validation**:
+
 - `pnpm test` passe
 - `pnpm test:e2e` passe
 - `pnpm build` réussit
@@ -298,17 +326,20 @@ app/
 ## Testing Strategy
 
 ### Unit Tests
+
 - Tests pour `routing.ts` (locales, defaultLocale)
 - Tests pour la validation dans `request.ts`
 - Tests pour les utilitaires de navigation
 - Tests de parité FR/EN (tous les namespaces)
 
 ### Integration Tests
+
 - `NextIntlClientProvider` transmet les messages
 - `getTranslations('home')` retourne les bonnes clés
 - Navigation entre locales fonctionne
 
 ### E2E Tests
+
 - `/fr` affiche page d'accueil en français
 - `/en` affiche page d'accueil en anglais
 - Switching de langue préserve la page
@@ -317,6 +348,7 @@ app/
 - Tous les textes visibles dans les deux langues
 
 ### Message Parity Tests
+
 - Tous les namespaces présents dans FR et EN
 - Toutes les clés présentes dans les deux fichiers
 - Aucune clé manquante
@@ -325,26 +357,29 @@ app/
 
 ## Risks & Mitigations
 
-| Risk | Impact | Mitigation |
-|------|--------|------------|
-| Breaking changes sur routes existantes | High | Migrations incrémentales, tests E2E complets avant suppression |
-| Régression visuelle page d'accueil | Medium | Screenshots de référence, vérification manuelle |
-| Incompatibilité middleware | Medium | Tests extensifs, pattern conservé |
-| Traductions incorrectes | Low | Review des textes, tests de parité |
+| Risk                                   | Impact | Mitigation                                                     |
+| -------------------------------------- | ------ | -------------------------------------------------------------- |
+| Breaking changes sur routes existantes | High   | Migrations incrémentales, tests E2E complets avant suppression |
+| Régression visuelle page d'accueil     | Medium | Screenshots de référence, vérification manuelle                |
+| Incompatibilité middleware             | Medium | Tests extensifs, pattern conservé                              |
+| Traductions incorrectes                | Low    | Review des textes, tests de parité                             |
 
 ---
 
 ## Dependencies
 
 ### Stories prérequises
+
 - Story 1.1: Installation next-intl - COMPLETED
 - Story 1.2: Message files - COMPLETED
 - Story 1.3: Middleware - IN PROGRESS (doit être terminé)
 
 ### Cette story absorbe partiellement
+
 - Story 1.4: Bilingual URL structure (segment `[locale]`)
 
 ### Cette story bloque
+
 - Story 1.5: Content fallback
 - Story 1.6: SEO hreflang (métadonnées de base ici, hreflang dans 1.6)
 - Story 1.7: Language selector

@@ -9,12 +9,12 @@
 
 ### Test Types for This Phase
 
-| Type | Focus | Tools |
-|------|-------|-------|
-| Unit | Message parity | Vitest |
-| Integration | Translation loading | Vitest + next-intl |
-| E2E | Visual + functionality | Playwright |
-| Manual | Visual regression | Browser |
+| Type        | Focus                  | Tools              |
+| ----------- | ---------------------- | ------------------ |
+| Unit        | Message parity         | Vitest             |
+| Integration | Translation loading    | Vitest + next-intl |
+| E2E         | Visual + functionality | Playwright         |
+| Manual      | Visual regression      | Browser            |
 
 ---
 
@@ -25,6 +25,7 @@
 Ensure FR and EN have identical keys.
 
 #### Test File Location
+
 `tests/messages.test.ts` or `src/__tests__/messages.test.ts`
 
 #### Test Cases
@@ -47,12 +48,19 @@ describe('Message Parity - home namespace', () => {
 
   it('should have all 10 home keys', () => {
     const expectedKeys = [
-      'badge', 'title', 'subtitle', 'description',
-      'ai', 'ux', 'engineering',
-      'launchLabel', 'launchDate', 'tagline'
+      'badge',
+      'title',
+      'subtitle',
+      'description',
+      'ai',
+      'ux',
+      'engineering',
+      'launchLabel',
+      'launchDate',
+      'tagline',
     ];
 
-    expectedKeys.forEach(key => {
+    expectedKeys.forEach((key) => {
       expect(fr.home[key]).toBeDefined();
       expect(en.home[key]).toBeDefined();
     });
@@ -74,7 +82,7 @@ describe('Message Parity - metadata namespace', () => {
   it('should have all 4 metadata keys', () => {
     const expectedKeys = ['title', 'description', 'ogTitle', 'ogDescription'];
 
-    expectedKeys.forEach(key => {
+    expectedKeys.forEach((key) => {
       expect(fr.metadata[key]).toBeDefined();
       expect(en.metadata[key]).toBeDefined();
     });
@@ -83,6 +91,7 @@ describe('Message Parity - metadata namespace', () => {
 ```
 
 #### Run Unit Tests
+
 ```bash
 pnpm test messages.test.ts
 ```
@@ -135,6 +144,7 @@ describe('HomePage Integration', () => {
 Test full page functionality in browser.
 
 #### Test File
+
 `tests/homepage.spec.ts`
 
 #### Test Cases
@@ -151,10 +161,14 @@ test.describe('Homepage Internationalization', () => {
       await expect(page.getByText('En développement')).toBeVisible();
 
       // Title
-      await expect(page.getByRole('heading', { name: 'sebc.dev' })).toBeVisible();
+      await expect(
+        page.getByRole('heading', { name: 'sebc.dev' }),
+      ).toBeVisible();
 
       // Subtitle
-      await expect(page.getByText('Un laboratoire d\'apprentissage public')).toBeVisible();
+      await expect(
+        page.getByText("Un laboratoire d'apprentissage public"),
+      ).toBeVisible();
 
       // Description (partial match due to interpolation)
       await expect(page.getByText(/À l'intersection/)).toBeVisible();
@@ -164,7 +178,9 @@ test.describe('Homepage Internationalization', () => {
       await expect(page.getByText('Fin Novembre 2025')).toBeVisible();
 
       // Tagline
-      await expect(page.getByText('Blog technique • Articles • Guides')).toBeVisible();
+      await expect(
+        page.getByText('Blog technique • Articles • Guides'),
+      ).toBeVisible();
     });
 
     test('has correct html lang attribute', async ({ page }) => {
@@ -182,7 +198,9 @@ test.describe('Homepage Internationalization', () => {
       await expect(page.getByText('In development')).toBeVisible();
 
       // Title
-      await expect(page.getByRole('heading', { name: 'sebc.dev' })).toBeVisible();
+      await expect(
+        page.getByRole('heading', { name: 'sebc.dev' }),
+      ).toBeVisible();
 
       // Subtitle
       await expect(page.getByText('A public learning lab')).toBeVisible();
@@ -195,7 +213,9 @@ test.describe('Homepage Internationalization', () => {
       await expect(page.getByText('Late November 2025')).toBeVisible();
 
       // Tagline
-      await expect(page.getByText('Tech blog • Articles • Guides')).toBeVisible();
+      await expect(
+        page.getByText('Tech blog • Articles • Guides'),
+      ).toBeVisible();
     });
 
     test('has correct html lang attribute', async ({ page }) => {
@@ -237,6 +257,7 @@ test.describe('Homepage Internationalization', () => {
 ```
 
 #### Run E2E Tests
+
 ```bash
 # Start preview server first
 pnpm preview
@@ -283,6 +304,7 @@ pnpm test:e2e tests/homepage.spec.ts
 ### Browser Testing
 
 Test in multiple browsers:
+
 - [ ] Chrome
 - [ ] Firefox
 - [ ] Safari (if available)
@@ -290,6 +312,7 @@ Test in multiple browsers:
 ### Responsive Testing
 
 Test viewports:
+
 - [ ] Mobile (375px)
 - [ ] Tablet (768px)
 - [ ] Desktop (1280px)
@@ -327,21 +350,22 @@ pnpm test:e2e tests/homepage.spec.ts
 
 ### After Phase 3 Completion
 
-| Test Suite | Expected Result |
-|------------|-----------------|
-| Message parity (home) | PASS |
-| Message parity (metadata) | PASS |
-| Homepage integration FR | PASS |
-| Homepage integration EN | PASS |
-| E2E French homepage | PASS |
-| E2E English homepage | PASS |
-| TypeScript compilation | PASS |
-| ESLint | PASS |
-| Build | PASS |
+| Test Suite                | Expected Result |
+| ------------------------- | --------------- |
+| Message parity (home)     | PASS            |
+| Message parity (metadata) | PASS            |
+| Homepage integration FR   | PASS            |
+| Homepage integration EN   | PASS            |
+| E2E French homepage       | PASS            |
+| E2E English homepage      | PASS            |
+| TypeScript compilation    | PASS            |
+| ESLint                    | PASS            |
+| Build                     | PASS            |
 
 ### Coverage Targets
 
 For new code in this phase:
+
 - Statements: >80%
 - Branches: >80%
 - Functions: >80%

@@ -41,14 +41,14 @@ Créer la nouvelle structure `src/i18n/` conforme aux best practices next-intl 2
 
 ## 📚 Available Documents
 
-| Document | Description | For Who | Duration |
-|----------|-------------|---------|----------|
-| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)** | Atomic strategy in 5 commits | Developer | 15 min |
-| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)** | Detailed checklist per commit | Developer | Reference |
-| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)** | Environment variables & setup | DevOps/Dev | 10 min |
-| **[guides/REVIEW.md](./guides/REVIEW.md)** | Code review guide | Reviewer | 20 min |
-| **[guides/TESTING.md](./guides/TESTING.md)** | Testing guide (unit + integration) | QA/Dev | 20 min |
-| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist | Tech Lead | 30 min |
+| Document                                                                       | Description                        | For Who    | Duration  |
+| ------------------------------------------------------------------------------ | ---------------------------------- | ---------- | --------- |
+| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)**                         | Atomic strategy in 5 commits       | Developer  | 15 min    |
+| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)**                               | Detailed checklist per commit      | Developer  | Reference |
+| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)**                             | Environment variables & setup      | DevOps/Dev | 10 min    |
+| **[guides/REVIEW.md](./guides/REVIEW.md)**                                     | Code review guide                  | Reviewer   | 20 min    |
+| **[guides/TESTING.md](./guides/TESTING.md)**                                   | Testing guide (unit + integration) | QA/Dev     | 20 min    |
+| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist         | Tech Lead  | 30 min    |
 
 ---
 
@@ -143,13 +143,13 @@ cat docs/specs/epics/epic_1/story_1_8/implementation/phase_1/validation/VALIDATI
 
 ## 📊 Metrics
 
-| Metric | Target | Actual |
-|--------|--------|--------|
-| **Total Commits** | 5 | - |
-| **Implementation Time** | 3-4h | - |
-| **Review Time** | 1-2h | - |
-| **Test Coverage** | >80% | - |
-| **Type Safety** | 100% | - |
+| Metric                  | Target | Actual |
+| ----------------------- | ------ | ------ |
+| **Total Commits**       | 5      | -      |
+| **Implementation Time** | 3-4h   | -      |
+| **Review Time**         | 1-2h   | -      |
+| **Test Coverage**       | >80%   | -      |
+| **Type Safety**         | 100%   | -      |
 
 ---
 

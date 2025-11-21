@@ -36,17 +36,20 @@ The implementation is split into **5 independent commits** to:
 **Duration**: 30-45 min (implementation) + 15-20 min (review)
 
 **Content**:
+
 - Créer `src/i18n/routing.ts`
 - Implémenter `defineRouting()` avec locales FR/EN, defaultLocale 'fr', localePrefix 'always'
 - Implémenter `createNavigation()` (anciennement `createSharedPathnamesNavigation`)
 - Exporter `Link`, `redirect`, `usePathname`, `useRouter`, `getPathname`
 
 **Why it's atomic**:
+
 - Single file, single responsibility: define routing configuration
 - No dependencies on other new files
 - Can be validated independently with TypeScript
 
 **Technical Validation**:
+
 ```bash
 pnpm tsc --noEmit
 ```
@@ -54,6 +57,7 @@ pnpm tsc --noEmit
 **Expected Result**: TypeScript compiles without errors for the new file
 
 **Review Criteria**:
+
 - [ ] `defineRouting()` uses correct locales array `['fr', 'en']`
 - [ ] `defaultLocale` is set to `'fr'`
 - [ ] `localePrefix` is `'always'`
@@ -69,6 +73,7 @@ pnpm tsc --noEmit
 **Duration**: 30-45 min (implementation) + 15-20 min (review)
 
 **Content**:
+
 - Créer `src/i18n/request.ts`
 - Utiliser nouvelle API `await requestLocale` (Next.js 15)
 - Validation robuste avec fallback sur `defaultLocale`
@@ -76,11 +81,13 @@ pnpm tsc --noEmit
 - Configuration timeZone et onError optionnels
 
 **Why it's atomic**:
+
 - Single file for request configuration
 - Depends only on routing.ts for locale constants
 - Can be tested independently
 
 **Technical Validation**:
+
 ```bash
 pnpm tsc --noEmit
 ```
@@ -88,6 +95,7 @@ pnpm tsc --noEmit
 **Expected Result**: TypeScript compiles, request config uses new async API
 
 **Review Criteria**:
+
 - [ ] Uses `await requestLocale` (not old `{ locale }` pattern)
 - [ ] Validates locale against supported locales
 - [ ] Falls back to `defaultLocale` if invalid
@@ -103,6 +111,7 @@ pnpm tsc --noEmit
 **Duration**: 20-30 min (implementation) + 10-15 min (review)
 
 **Content**:
+
 - Créer `src/i18n/index.ts` avec tous les exports
 - Créer/migrer `src/i18n/types.ts` avec `Locale` type
 - Exporter `Locale`, `locales`, `defaultLocale` depuis routing
@@ -110,11 +119,13 @@ pnpm tsc --noEmit
 - Re-exporter `getRequestConfig` depuis request.ts
 
 **Why it's atomic**:
+
 - Aggregation of exports only
 - No new logic, just re-exports
 - Makes imports cleaner for consumers
 
 **Technical Validation**:
+
 ```bash
 pnpm tsc --noEmit
 ```
@@ -122,6 +133,7 @@ pnpm tsc --noEmit
 **Expected Result**: All exports accessible from `@/src/i18n`
 
 **Review Criteria**:
+
 - [ ] All navigation utilities exported
 - [ ] `Locale` type exported correctly
 - [ ] `locales` array exported
@@ -137,6 +149,7 @@ pnpm tsc --noEmit
 **Duration**: 45-60 min (implementation) + 20-30 min (review)
 
 **Content**:
+
 - Mettre à jour `middleware.ts` pour utiliser `src/i18n/routing`
 - Mettre à jour tous les imports `@/i18n` → `@/src/i18n`
 - Mettre à jour `lib/i18n/*` si nécessaire
@@ -144,11 +157,13 @@ pnpm tsc --noEmit
 - Update any components using old i18n imports
 
 **Why it's atomic**:
+
 - Critical migration step
 - All changes related to import paths
 - Must be done together to maintain compilation
 
 **Technical Validation**:
+
 ```bash
 pnpm tsc --noEmit
 pnpm lint
@@ -158,6 +173,7 @@ pnpm test
 **Expected Result**: All imports resolve correctly, tests pass
 
 **Review Criteria**:
+
 - [ ] Middleware uses routing from `src/i18n/routing`
 - [ ] All `@/i18n` imports updated
 - [ ] No broken imports anywhere
@@ -173,6 +189,7 @@ pnpm test
 **Duration**: 15-20 min (implementation) + 10-15 min (review)
 
 **Content**:
+
 - Supprimer `i18n/config.ts`
 - Supprimer `i18n/types.ts`
 - Supprimer `i18n/index.ts`
@@ -180,11 +197,13 @@ pnpm test
 - Valider que tout compile après suppression
 
 **Why it's atomic**:
+
 - Final cleanup step
 - Only safe after all imports updated
 - Confirms migration complete
 
 **Technical Validation**:
+
 ```bash
 pnpm tsc --noEmit
 pnpm lint
@@ -194,6 +213,7 @@ pnpm test
 **Expected Result**: Project compiles without old i18n folder
 
 **Review Criteria**:
+
 - [ ] Old `i18n/` folder completely removed
 - [ ] No dangling imports
 - [ ] README migrated if valuable
@@ -218,6 +238,7 @@ pnpm test
 ### Validation at Each Step
 
 After each commit:
+
 ```bash
 # TypeScript check
 pnpm tsc --noEmit
@@ -235,14 +256,14 @@ All must pass before moving to next commit.
 
 ## 📊 Commit Metrics
 
-| Commit | Files | Lines | Implementation | Review | Total |
-|--------|-------|-------|----------------|--------|-------|
-| 1. routing.ts | 1 | ~60 | 30-45 min | 15-20 min | 45-65 min |
-| 2. request.ts | 1 | ~50 | 30-45 min | 15-20 min | 45-65 min |
-| 3. barrel+types | 2 | ~40 | 20-30 min | 10-15 min | 30-45 min |
-| 4. update imports | 5+ | ~100 | 45-60 min | 20-30 min | 65-90 min |
-| 5. archive old | 4 | ~-200 | 15-20 min | 10-15 min | 25-35 min |
-| **TOTAL** | **13+** | **~50** | **2.5-3.5h** | **1-1.5h** | **3.5-5h** |
+| Commit            | Files   | Lines   | Implementation | Review     | Total      |
+| ----------------- | ------- | ------- | -------------- | ---------- | ---------- |
+| 1. routing.ts     | 1       | ~60     | 30-45 min      | 15-20 min  | 45-65 min  |
+| 2. request.ts     | 1       | ~50     | 30-45 min      | 15-20 min  | 45-65 min  |
+| 3. barrel+types   | 2       | ~40     | 20-30 min      | 10-15 min  | 30-45 min  |
+| 4. update imports | 5+      | ~100    | 45-60 min      | 20-30 min  | 65-90 min  |
+| 5. archive old    | 4       | ~-200   | 15-20 min      | 10-15 min  | 25-35 min  |
+| **TOTAL**         | **13+** | **~50** | **2.5-3.5h**   | **1-1.5h** | **3.5-5h** |
 
 ---
 
@@ -273,6 +294,7 @@ All must pass before moving to next commit.
 ### Commit Messages
 
 Format:
+
 ```
 ♻️ refactor(i18n): short description (max 50 chars)
 
@@ -288,6 +310,7 @@ Types for this phase: `♻️ refactor`, `✨ feat`, `🔧 config`, `🗑️ cho
 ### Review Checklist
 
 Before committing:
+
 - [ ] Code follows project style guide
 - [ ] TypeScript compiles without errors
 - [ ] No console.logs or debug code

@@ -41,14 +41,14 @@ Créer la structure App Router avec segment dynamique `[locale]` et configurer l
 
 ## 📚 Available Documents
 
-| Document | Description | For Who | Duration |
-|----------|-------------|---------|----------|
-| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)** | Atomic strategy in 5 commits | Developer | 15 min |
-| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)** | Detailed checklist per commit | Developer | Reference |
-| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)** | Environment variables & setup | DevOps/Dev | 10 min |
-| **[guides/REVIEW.md](./guides/REVIEW.md)** | Code review guide | Reviewer | 20 min |
-| **[guides/TESTING.md](./guides/TESTING.md)** | Testing guide (unit + integration) | QA/Dev | 20 min |
-| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist | Tech Lead | 30 min |
+| Document                                                                       | Description                        | For Who    | Duration  |
+| ------------------------------------------------------------------------------ | ---------------------------------- | ---------- | --------- |
+| **[IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)**                         | Atomic strategy in 5 commits       | Developer  | 15 min    |
+| **[COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)**                               | Detailed checklist per commit      | Developer  | Reference |
+| **[ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)**                             | Environment variables & setup      | DevOps/Dev | 10 min    |
+| **[guides/REVIEW.md](./guides/REVIEW.md)**                                     | Code review guide                  | Reviewer   | 20 min    |
+| **[guides/TESTING.md](./guides/TESTING.md)**                                   | Testing guide (unit + integration) | QA/Dev     | 20 min    |
+| **[validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md)** | Final validation checklist         | Tech Lead  | 30 min    |
 
 ---
 
@@ -143,13 +143,13 @@ cat docs/specs/epics/epic_1/story_1_8/implementation/phase_2/validation/VALIDATI
 
 ## 📊 Metrics
 
-| Metric | Target | Actual |
-|--------|--------|--------|
-| **Total Commits** | 5 | - |
-| **Implementation Time** | 4-6h | - |
-| **Review Time** | 2-3h | - |
-| **Test Coverage** | >80% | - |
-| **Type Safety** | 100% | - |
+| Metric                  | Target | Actual |
+| ----------------------- | ------ | ------ |
+| **Total Commits**       | 5      | -      |
+| **Implementation Time** | 4-6h   | -      |
+| **Review Time**         | 2-3h   | -      |
+| **Test Coverage**       | >80%   | -      |
+| **Type Safety**         | 100%   | -      |
 
 ---
 
@@ -185,6 +185,7 @@ A: It will be migrated in Commit 5 to ensure the Provider works with Client Comp
 ## ⚠️ Prerequisites
 
 **Phase 1 must be completed** before starting Phase 2:
+
 - ✅ `src/i18n/routing.ts` created with `defineRouting()`
 - ✅ `src/i18n/request.ts` created with new API
 - ✅ All imports updated to `@/src/i18n`

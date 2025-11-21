@@ -151,10 +151,10 @@ pnpm test:coverage
 
 ### Coverage Goals
 
-| Area | Target | Notes |
-|------|--------|-------|
-| src/i18n/ | >80% | If tests added |
-| Overall | No regression | Maintain current |
+| Area      | Target        | Notes            |
+| --------- | ------------- | ---------------- |
+| src/i18n/ | >80%          | If tests added   |
+| Overall   | No regression | Maintain current |
 
 **Note**: Phase 1 is primarily structural. Coverage targets apply if you add unit tests.
 
@@ -167,18 +167,22 @@ pnpm test:coverage
 #### Issue: Import errors in tests
 
 **Symptoms**:
+
 - `Cannot find module '@/src/i18n'`
 
 **Solutions**:
+
 1. Check `vitest.config.ts` has correct path aliases
 2. Ensure `tsconfig.json` paths match
 
 #### Issue: Type errors in tests
 
 **Symptoms**:
+
 - Type mismatches for `Locale`
 
 **Solutions**:
+
 1. Import types from new location
 2. Update test imports to `@/src/i18n`
 
@@ -212,11 +216,13 @@ Before marking Phase 1 complete:
 ### For Phase 1
 
 ✅ **Do**:
+
 - Run full test suite after each commit
 - Verify TypeScript compilation
 - Check existing tests pass
 
 ❌ **Don't**:
+
 - Skip type checking
 - Assume imports work without testing
 - Modify existing tests unless necessary

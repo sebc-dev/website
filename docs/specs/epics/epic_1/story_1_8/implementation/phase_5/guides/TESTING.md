@@ -11,11 +11,11 @@ This phase focuses entirely on testing the i18n implementation from phases 1-4.
 
 ### Test Types
 
-| Type | Framework | Location | Purpose |
-|------|-----------|----------|---------|
-| Unit | Vitest | `src/i18n/__tests__/` | Test i18n configuration |
-| E2E | Playwright | `tests/` | Test localized pages |
-| Parity | Vitest | `messages.test.ts` | Verify translation completeness |
+| Type   | Framework  | Location              | Purpose                         |
+| ------ | ---------- | --------------------- | ------------------------------- |
+| Unit   | Vitest     | `src/i18n/__tests__/` | Test i18n configuration         |
+| E2E    | Playwright | `tests/`              | Test localized pages            |
+| Parity | Vitest     | `messages.test.ts`    | Verify translation completeness |
 
 ---
 
@@ -125,18 +125,20 @@ pnpm test:e2e:debug
 ### E2E Best Practices
 
 1. **Use appropriate selectors**
+
    ```typescript
    // Good: semantic
-   page.locator('text=Expected launch')
+   page.locator('text=Expected launch');
 
    // Good: data-testid
-   page.locator('[data-testid="launch-label"]')
+   page.locator('[data-testid="launch-label"]');
 
    // Avoid: brittle CSS
-   page.locator('.mt-4.text-sm')
+   page.locator('.mt-4.text-sm');
    ```
 
 2. **Add proper waits**
+
    ```typescript
    // Wait for element
    await expect(element).toBeVisible();
@@ -182,7 +184,7 @@ describe('Message parity - home namespace', () => {
 
   it('should have required keys', () => {
     const requiredKeys = ['badge', 'title', 'subtitle'];
-    requiredKeys.forEach(key => {
+    requiredKeys.forEach((key) => {
       expect(frHome[key]).toBeDefined();
       expect(enHome[key]).toBeDefined();
     });
@@ -204,12 +206,12 @@ pnpm test messages.test.ts --reporter=verbose
 
 ## Coverage Targets
 
-| Area | Target | Reason |
-|------|--------|--------|
-| routing.ts | 100% | Small, critical file |
-| request.ts | 80% | Some parts hard to test |
-| E2E homepage | 100% | Full user journey |
-| Message parity | 100% | Must verify all keys |
+| Area           | Target | Reason                  |
+| -------------- | ------ | ----------------------- |
+| routing.ts     | 100%   | Small, critical file    |
+| request.ts     | 80%    | Some parts hard to test |
+| E2E homepage   | 100%   | Full user journey       |
+| Message parity | 100%   | Must verify all keys    |
 
 ### Checking Coverage
 
@@ -285,8 +287,8 @@ pnpm preview &
 
 ```typescript
 // Debug missing keys
-const missingInEn = frKeys.filter(k => !enKeys.includes(k));
-const missingInFr = enKeys.filter(k => !frKeys.includes(k));
+const missingInEn = frKeys.filter((k) => !enKeys.includes(k));
+const missingInFr = enKeys.filter((k) => !frKeys.includes(k));
 console.log({ missingInEn, missingInFr });
 ```
 

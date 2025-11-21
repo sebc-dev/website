@@ -31,15 +31,15 @@ Users can access the entire website in their preferred language, with the system
 
 This epic contains **8 stories** (7 from PRD + 1 technical correction story):
 
-| Story | Title                           | Description                                                        | Status         | Phases | Progress             |
-| ----- | ------------------------------- | ------------------------------------------------------------------ | -------------- | ------ | -------------------- |
-| 1.1   | Install and configure next-intl | Set up next-intl library and basic configuration                   | 🚧 IN PROGRESS | 3      | 1/3                  |
-| 1.2   | Create message files            | Create `messages/fr.json` and `messages/en.json` translation files | 📋 PLANNING    | 2      | 1/2                  |
-| 1.3   | Create Next.js middleware       | Implement middleware with next-intl for routing                    | 🚧 IN PROGRESS | 3      | 2/3 (P3: Commit 1/4) |
-| 1.4   | Bilingual URL structure         | Implement route groups with language detection and cookie support  | ⏸️ BLOCKED     | -      | 0/0                  |
-| 1.5   | Content fallback                | Add language badges and FR/EN toggle for missing translations      | 📋 NOT STARTED | -      | 0/0                  |
-| 1.6   | SEO hreflang + canonical        | Implement SEO metadata via Next.js Metadata API                    | 📋 NOT STARTED | -      | 0/0                  |
-| 1.7   | Language selector in header     | Create header component with cookie persistence                    | 📋 NOT STARTED | -      | 0/0                  |
+| Story | Title                                | Description                                                          | Status         | Phases | Progress                       |
+| ----- | ------------------------------------ | -------------------------------------------------------------------- | -------------- | ------ | ------------------------------ |
+| 1.1   | Install and configure next-intl      | Set up next-intl library and basic configuration                     | 🚧 IN PROGRESS | 3      | 1/3                            |
+| 1.2   | Create message files                 | Create `messages/fr.json` and `messages/en.json` translation files   | 📋 PLANNING    | 2      | 1/2                            |
+| 1.3   | Create Next.js middleware            | Implement middleware with next-intl for routing                      | 🚧 IN PROGRESS | 3      | 2/3 (P3: Commit 1/4)           |
+| 1.4   | Bilingual URL structure              | Implement route groups with language detection and cookie support    | ⏸️ BLOCKED     | -      | 0/0                            |
+| 1.5   | Content fallback                     | Add language badges and FR/EN toggle for missing translations        | 📋 NOT STARTED | -      | 0/0                            |
+| 1.6   | SEO hreflang + canonical             | Implement SEO metadata via Next.js Metadata API                      | 📋 NOT STARTED | -      | 0/0                            |
+| 1.7   | Language selector in header          | Create header component with cookie persistence                      | 📋 NOT STARTED | -      | 0/0                            |
 | 1.8   | Architecture correction & i18n pages | Align with next-intl 2025 best practices + internationalize homepage | 🚧 IN PROGRESS | 5      | 0/5 (P1: 📋 DOCS, P2: 📋 DOCS) |
 
 **Note**: Story 1.8 was added to correct architectural issues and absorbs part of Story 1.4 (segment `[locale]`). Story 1.4 is blocked until 1.8 is evaluated.
