@@ -10,14 +10,14 @@
 
 ## Quick Navigation
 
-| Document | Purpose | Priority |
-|----------|---------|----------|
-| [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) | Atomic commit strategy | 🔴 Start Here |
-| [COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md) | Per-commit detailed checklist | 🟠 During Work |
-| [ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md) | Environment configuration | 🟡 Setup |
-| [guides/REVIEW.md](./guides/REVIEW.md) | Code review guide | 🟢 Review |
-| [guides/TESTING.md](./guides/TESTING.md) | Testing strategy | 🟢 Testing |
-| [validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md) | Final validation | 🔵 Completion |
+| Document                                                                   | Purpose                       | Priority       |
+| -------------------------------------------------------------------------- | ----------------------------- | -------------- |
+| [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md)                         | Atomic commit strategy        | 🔴 Start Here  |
+| [COMMIT_CHECKLIST.md](./COMMIT_CHECKLIST.md)                               | Per-commit detailed checklist | 🟠 During Work |
+| [ENVIRONMENT_SETUP.md](./ENVIRONMENT_SETUP.md)                             | Environment configuration     | 🟡 Setup       |
+| [guides/REVIEW.md](./guides/REVIEW.md)                                     | Code review guide             | 🟢 Review      |
+| [guides/TESTING.md](./guides/TESTING.md)                                   | Testing strategy              | 🟢 Testing     |
+| [validation/VALIDATION_CHECKLIST.md](./validation/VALIDATION_CHECKLIST.md) | Final validation              | 🔵 Completion  |
 
 ---
 
@@ -66,13 +66,13 @@ Validation complète de l'implémentation i18n avec tests unitaires, tests E2E, 
 
 ## Atomic Commits Summary
 
-| Commit | Description | Files | Est. Time |
-|--------|-------------|-------|-----------|
-| 5.1 | Unit tests i18n | `src/i18n/__tests__/` | 45 min |
-| 5.2 | E2E tests locales | `tests/*.spec.ts` | 45 min |
-| 5.3 | Message parity tests | Tests de parité | 30 min |
-| 5.4 | Documentation update | `CLAUDE.md`, `src/i18n/README.md` | 45 min |
-| 5.5 | Final validation | Validation only | 30 min |
+| Commit | Description          | Files                             | Est. Time |
+| ------ | -------------------- | --------------------------------- | --------- |
+| 5.1    | Unit tests i18n      | `src/i18n/__tests__/`             | 45 min    |
+| 5.2    | E2E tests locales    | `tests/*.spec.ts`                 | 45 min    |
+| 5.3    | Message parity tests | Tests de parité                   | 30 min    |
+| 5.4    | Documentation update | `CLAUDE.md`, `src/i18n/README.md` | 45 min    |
+| 5.5    | Final validation     | Validation only                   | 30 min    |
 
 **Total Estimated Time**: 3-4 hours
 
@@ -99,11 +99,11 @@ src/i18n/__tests__/
 
 ## Risk Assessment
 
-| Risk | Probability | Impact | Mitigation |
-|------|-------------|--------|------------|
-| Flaky E2E tests | Medium | Medium | Retry logic, appropriate timeouts |
-| Missing test coverage | Low | Medium | Coverage report, review |
-| Documentation gaps | Low | Low | Template-based approach |
+| Risk                  | Probability | Impact | Mitigation                        |
+| --------------------- | ----------- | ------ | --------------------------------- |
+| Flaky E2E tests       | Medium      | Medium | Retry logic, appropriate timeouts |
+| Missing test coverage | Low         | Medium | Coverage report, review           |
+| Documentation gaps    | Low         | Low    | Template-based approach           |
 
 ---
 

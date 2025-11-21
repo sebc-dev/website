@@ -7,6 +7,7 @@
 ## Testing Overview
 
 Cette phase modifie uniquement les métadonnées. Les tests se concentrent sur:
+
 - Vérification HTML output
 - Localisation correcte
 - Pas de régression
@@ -18,6 +19,7 @@ Cette phase modifie uniquement les métadonnées. Les tests se concentrent sur:
 ### Browser DevTools
 
 1. **French Locale**
+
    ```
    URL: http://localhost:3000/fr
    DevTools > Elements > <head>
@@ -29,6 +31,7 @@ Cette phase modifie uniquement les métadonnées. Les tests se concentrent sur:
    - `<meta property="og:locale" content="fr_FR">`
 
 2. **English Locale**
+
    ```
    URL: http://localhost:3000/en
    DevTools > Elements > <head>
@@ -104,16 +107,22 @@ test.describe('SEO Metadata', () => {
     await expect(page).toHaveTitle(/sebc\.dev.*Laboratoire/);
 
     // Check description
-    const description = await page.locator('meta[name="description"]').getAttribute('content');
+    const description = await page
+      .locator('meta[name="description"]')
+      .getAttribute('content');
     expect(description).toContain('IA');
     expect(description).toContain('UX');
 
     // Check OG locale
-    const ogLocale = await page.locator('meta[property="og:locale"]').getAttribute('content');
+    const ogLocale = await page
+      .locator('meta[property="og:locale"]')
+      .getAttribute('content');
     expect(ogLocale).toBe('fr_FR');
 
     // Check OG title
-    const ogTitle = await page.locator('meta[property="og:title"]').getAttribute('content');
+    const ogTitle = await page
+      .locator('meta[property="og:title"]')
+      .getAttribute('content');
     expect(ogTitle).toContain('Laboratoire');
   });
 
@@ -124,22 +133,30 @@ test.describe('SEO Metadata', () => {
     await expect(page).toHaveTitle(/sebc\.dev.*Learning Lab/);
 
     // Check description
-    const description = await page.locator('meta[name="description"]').getAttribute('content');
+    const description = await page
+      .locator('meta[name="description"]')
+      .getAttribute('content');
     expect(description).toContain('AI');
     expect(description).toContain('UX');
 
     // Check OG locale
-    const ogLocale = await page.locator('meta[property="og:locale"]').getAttribute('content');
+    const ogLocale = await page
+      .locator('meta[property="og:locale"]')
+      .getAttribute('content');
     expect(ogLocale).toBe('en_US');
   });
 
   test('Twitter card is configured', async ({ page }) => {
     await page.goto('/fr');
 
-    const twitterCard = await page.locator('meta[name="twitter:card"]').getAttribute('content');
+    const twitterCard = await page
+      .locator('meta[name="twitter:card"]')
+      .getAttribute('content');
     expect(twitterCard).toBe('summary_large_image');
 
-    const twitterTitle = await page.locator('meta[name="twitter:title"]').getAttribute('content');
+    const twitterTitle = await page
+      .locator('meta[name="twitter:title"]')
+      .getAttribute('content');
     expect(twitterTitle).toBeTruthy();
   });
 
@@ -147,7 +164,9 @@ test.describe('SEO Metadata', () => {
     await page.goto('/fr');
 
     // Check robots allows indexing
-    const robots = await page.locator('meta[name="robots"]').getAttribute('content');
+    const robots = await page
+      .locator('meta[name="robots"]')
+      .getAttribute('content');
     expect(robots).toContain('index');
     expect(robots).toContain('follow');
   });
@@ -173,8 +192,8 @@ const namespaces = [
   'complexity',
   'search',
   'error',
-  'home',      // Added in Phase 3
-  'metadata',  // Added in Phase 3, tested here
+  'home', // Added in Phase 3
+  'metadata', // Added in Phase 3, tested here
 ];
 ```
 
@@ -183,26 +202,31 @@ const namespaces = [
 ## Validation Commands
 
 ### TypeScript
+
 ```bash
 pnpm tsc
 ```
 
 ### Lint
+
 ```bash
 pnpm lint
 ```
 
 ### Unit Tests
+
 ```bash
 pnpm test
 ```
 
 ### E2E Tests
+
 ```bash
 pnpm test:e2e tests/metadata.spec.ts
 ```
 
 ### Build
+
 ```bash
 pnpm build
 ```
@@ -218,6 +242,7 @@ pnpm build
 5. Target score: ≥90
 
 ### Common SEO Issues
+
 - Missing meta description
 - Title too long/short
 - Missing OG tags
@@ -228,18 +253,23 @@ pnpm build
 ## External Validation Tools
 
 ### Facebook Sharing Debugger
+
 ```
 https://developers.facebook.com/tools/debug/
 ```
+
 Test: `https://your-preview-url/fr`
 
 ### Twitter Card Validator
+
 ```
 https://cards-dev.twitter.com/validator
 ```
+
 Test: `https://your-preview-url/fr`
 
 ### Google Rich Results Test
+
 ```
 https://search.google.com/test/rich-results
 ```
@@ -248,21 +278,23 @@ https://search.google.com/test/rich-results
 
 ## Test Coverage Goals
 
-| Type | Coverage Target |
-|------|-----------------|
-| Message keys | 100% (all metadata keys tested) |
-| Locales | 100% (FR and EN) |
-| Meta tags | Core tags (title, description, OG, Twitter) |
+| Type         | Coverage Target                             |
+| ------------ | ------------------------------------------- |
+| Message keys | 100% (all metadata keys tested)             |
+| Locales      | 100% (FR and EN)                            |
+| Meta tags    | Core tags (title, description, OG, Twitter) |
 
 ---
 
 ## Regression Testing
 
 ### Before Phase 4
+
 - Take screenshots of `/fr` and `/en`
 - Note existing metadata (if any)
 
 ### After Phase 4
+
 - Compare view source output
 - Ensure no visual regression
 - Verify build still works

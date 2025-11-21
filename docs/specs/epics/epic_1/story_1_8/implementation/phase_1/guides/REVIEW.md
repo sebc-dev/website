@@ -22,11 +22,13 @@ Validate that the implementation:
 Phase 1 is split into **5 atomic commits**. You can:
 
 **Option A: Commit-by-commit review** (recommended)
+
 - Easier to digest (10-30 min per commit)
 - Progressive validation
 - Targeted feedback
 
 **Option B: Global review at once**
+
 - Faster (1-2h total)
 - Immediate overview
 - Requires more focus
@@ -45,6 +47,7 @@ Phase 1 is split into **5 atomic commits**. You can:
 #### Review Checklist
 
 ##### Configuration
+
 - [ ] Uses `defineRouting` from `next-intl/routing`
 - [ ] Uses `createNavigation` from `next-intl/navigation`
 - [ ] Locales array is `['fr', 'en']`
@@ -52,6 +55,7 @@ Phase 1 is split into **5 atomic commits**. You can:
 - [ ] Locale prefix is `'always'`
 
 ##### Exports
+
 - [ ] `routing` configuration exported
 - [ ] `Link` component exported
 - [ ] `redirect` function exported
@@ -60,6 +64,7 @@ Phase 1 is split into **5 atomic commits**. You can:
 - [ ] `getPathname` function exported
 
 ##### Code Quality
+
 - [ ] No `any` types
 - [ ] Clean import structure
 - [ ] No commented code
@@ -89,21 +94,25 @@ pnpm tsc --noEmit
 #### Review Checklist
 
 ##### API Usage
+
 - [ ] Uses `getRequestConfig` from `next-intl/server`
 - [ ] Uses `await requestLocale` (NOT old `{ locale }` pattern)
 - [ ] Properly awaits the async request
 
 ##### Validation Logic
+
 - [ ] Checks if locale is undefined/null
 - [ ] Validates against `routing.locales`
 - [ ] Falls back to `routing.defaultLocale`
 
 ##### Message Loading
+
 - [ ] Dynamic import: `await import(...)`
 - [ ] Correct path to messages: `../../messages/${locale}.json`
 - [ ] Accesses `.default` for JSON module
 
 ##### Code Quality
+
 - [ ] Imports routing from local `./routing`
 - [ ] No unnecessary type assertions
 - [ ] No debug/console statements
@@ -132,10 +141,12 @@ pnpm tsc --noEmit
 #### Review Checklist
 
 ##### Types
+
 - [ ] `Locale` type derived from `routing.locales`
 - [ ] Type is properly exported
 
 ##### Barrel Exports
+
 - [ ] `Locale` type exported
 - [ ] `routing` object exported
 - [ ] `locales` array exported
@@ -144,6 +155,7 @@ pnpm tsc --noEmit
 - [ ] `getRequestConfig` re-exported if needed
 
 ##### Code Quality
+
 - [ ] No circular dependencies
 - [ ] Clean re-export syntax
 - [ ] Consistent with project patterns
@@ -172,23 +184,27 @@ pnpm tsc --noEmit
 #### Review Checklist
 
 ##### Middleware
+
 - [ ] Imports from `@/src/i18n/routing`
 - [ ] Uses correct `createMiddleware` pattern
 - [ ] Chains correctly with other middleware
 - [ ] Redirection logic preserved
 
 ##### Import Updates
+
 - [ ] All `@/i18n` → `@/src/i18n`
 - [ ] All `from 'i18n'` → `from '@/src/i18n'`
 - [ ] Components use new navigation utilities
 - [ ] Test files updated
 
 ##### Functionality
+
 - [ ] No broken imports
 - [ ] TypeScript resolves all modules
 - [ ] Existing functionality preserved
 
 ##### Code Quality
+
 - [ ] Consistent import paths
 - [ ] No unused imports
 - [ ] No temporary hacks
@@ -219,6 +235,7 @@ pnpm test
 #### Review Checklist
 
 ##### Deletions
+
 - [ ] `i18n/config.ts` deleted
 - [ ] `i18n/types.ts` deleted
 - [ ] `i18n/index.ts` deleted
@@ -226,12 +243,14 @@ pnpm test
 - [ ] `i18n/` directory removed
 
 ##### Validation
+
 - [ ] No remaining references to old paths
 - [ ] Build succeeds
 - [ ] All tests pass
 - [ ] No orphaned code
 
 ##### Code Quality
+
 - [ ] Clean git diff (only deletions)
 - [ ] No accidental deletions
 
@@ -259,29 +278,34 @@ pnpm build
 After reviewing all commits:
 
 ### Architecture & Design
+
 - [ ] New structure follows next-intl 2025 best practices
 - [ ] Proper separation: routing vs request config
 - [ ] Clean barrel export pattern
 - [ ] No breaking changes to existing features
 
 ### Code Quality
+
 - [ ] Consistent naming conventions
 - [ ] Clear file organization
 - [ ] No dead code
 - [ ] Proper TypeScript usage
 
 ### Type Safety
+
 - [ ] No `any` types (except justified cases)
 - [ ] `Locale` type properly inferred
 - [ ] All exports typed correctly
 - [ ] Navigation utilities fully typed
 
 ### Testing
+
 - [ ] All existing tests pass
 - [ ] No test updates needed (structure change only)
 - [ ] Middleware still testable
 
 ### Documentation
+
 - [ ] Code is self-documenting
 - [ ] Complex logic explained if present
 

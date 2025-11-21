@@ -16,6 +16,7 @@ Messages FR → Messages EN → Page Component → Metadata → Cleanup
 ```
 
 Chaque commit est:
+
 - Indépendamment reviewable
 - Type-safe à chaque étape
 - Testable unitairement
@@ -26,9 +27,11 @@ Chaque commit est:
 ## Commit 3.1: Add home namespace to messages/fr.json
 
 ### Objective
+
 Ajouter le namespace `home` avec les 10 clés de traduction française pour la page d'accueil.
 
 ### Files Changed
+
 - `messages/fr.json`
 
 ### Implementation Details
@@ -51,11 +54,13 @@ Ajouter le namespace `home` avec les 10 clés de traduction française pour la p
 ```
 
 ### Notes
+
 - Utiliser l'interpolation `{ai}`, `{ux}`, `{engineering}` pour permettre le styling individuel des termes
 - Conserver la structure alphabétique existante du fichier
 - `title` reste "sebc.dev" (nom de marque, ne se traduit pas)
 
 ### Validation
+
 - [ ] JSON valide (pas d'erreur de syntaxe)
 - [ ] 10 clés présentes dans namespace `home`
 - [ ] Interpolation avec `{variable}` correcte
@@ -67,9 +72,11 @@ Ajouter le namespace `home` avec les 10 clés de traduction française pour la p
 ## Commit 3.2: Add home namespace to messages/en.json
 
 ### Objective
+
 Ajouter le namespace `home` avec les 10 clés de traduction anglaise correspondantes.
 
 ### Files Changed
+
 - `messages/en.json`
 
 ### Implementation Details
@@ -92,11 +99,13 @@ Ajouter le namespace `home` avec les 10 clés de traduction anglaise corresponda
 ```
 
 ### Notes
+
 - Structure identique à FR
 - Traductions professionnelles et naturelles
 - Même format d'interpolation
 
 ### Validation
+
 - [ ] JSON valide
 - [ ] 10 clés identiques à FR
 - [ ] Traductions cohérentes avec le ton du site
@@ -109,9 +118,11 @@ Ajouter le namespace `home` avec les 10 clés de traduction anglaise corresponda
 ## Commit 3.3: Create internationalized homepage
 
 ### Objective
+
 Créer `app/[locale]/page.tsx` en migrant le contenu de `app/page.tsx` avec `useTranslations`.
 
 ### Files Changed
+
 - `app/[locale]/page.tsx` (create)
 
 ### Implementation Details
@@ -156,12 +167,14 @@ export default function HomePage() {
 ```
 
 ### Key Points
+
 - Copier TOUTES les classes Tailwind existantes
 - Conserver TOUTES les animations (animate-fade-in, etc.)
 - Utiliser `t.rich()` pour le texte avec interpolation stylée
 - Ne pas modifier la structure visuelle
 
 ### Validation
+
 - [ ] Page compile sans erreur TypeScript
 - [ ] `/fr` affiche tous les textes
 - [ ] `/en` affiche tous les textes
@@ -175,15 +188,18 @@ export default function HomePage() {
 ## Commit 3.4: Add metadata namespace
 
 ### Objective
+
 Ajouter le namespace `metadata` pour les métadonnées SEO dans les deux fichiers de messages.
 
 ### Files Changed
+
 - `messages/fr.json`
 - `messages/en.json`
 
 ### Implementation Details
 
 **messages/fr.json**:
+
 ```json
 {
   "metadata": {
@@ -196,6 +212,7 @@ Ajouter le namespace `metadata` pour les métadonnées SEO dans les deux fichier
 ```
 
 **messages/en.json**:
+
 ```json
 {
   "metadata": {
@@ -208,11 +225,13 @@ Ajouter le namespace `metadata` pour les métadonnées SEO dans les deux fichier
 ```
 
 ### Notes
+
 - Ces métadonnées seront utilisées dans Phase 4 pour `generateMetadata()`
 - Préparer maintenant pour éviter les allers-retours
 - 4 clés par locale (title, description, ogTitle, ogDescription)
 
 ### Validation
+
 - [ ] JSON valide dans les deux fichiers
 - [ ] 4 clés `metadata` identiques FR/EN
 - [ ] Traductions SEO-friendly
@@ -225,17 +244,21 @@ Ajouter le namespace `metadata` pour les métadonnées SEO dans les deux fichier
 ## Commit 3.5: Remove old homepage
 
 ### Objective
+
 Supprimer l'ancien `app/page.tsx` maintenant que `app/[locale]/page.tsx` le remplace.
 
 ### Files Changed
+
 - `app/page.tsx` (delete)
 
 ### Pre-deletion Checks
+
 1. Vérifier que `app/[locale]/page.tsx` fonctionne pour `/fr` et `/en`
 2. Vérifier qu'aucun import ne référence `app/page.tsx`
 3. Confirmer que le middleware redirige `/` correctement
 
 ### Validation
+
 - [ ] `/fr` fonctionne (homepage FR)
 - [ ] `/en` fonctionne (homepage EN)
 - [ ] `/` redirige vers `/fr` ou `/en`
@@ -272,6 +295,7 @@ pnpm preview
 ```
 
 ### Manual Checks
+
 - [ ] `/fr` - Tous textes en français, visuellement correct
 - [ ] `/en` - Tous textes en anglais, visuellement correct
 - [ ] Animations fluides dans les deux langues

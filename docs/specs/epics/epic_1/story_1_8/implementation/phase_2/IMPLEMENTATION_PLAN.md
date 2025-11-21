@@ -36,6 +36,7 @@ The implementation is split into **5 independent commits** to:
 **Duration**: 45-60 min (implementation) + 20-30 min (review)
 
 **Content**:
+
 - Créer le layout localisé avec `NextIntlClientProvider`
 - Implémenter `getMessages()` pour charger les traductions
 - Configurer `<html lang={locale}>` dynamique
@@ -43,11 +44,13 @@ The implementation is split into **5 independent commits** to:
 - Export `generateStaticParams()` pour les locales
 
 **Why it's atomic**:
+
 - Single responsibility: Provider setup
 - Can be validated independently avec `pnpm dev`
 - Foundation for all localized pages
 
 **Technical Validation**:
+
 ```bash
 pnpm tsc
 pnpm dev
@@ -57,6 +60,7 @@ pnpm dev
 **Expected Result**: Routes `/fr` et `/en` répondent avec le layout correct
 
 **Review Criteria**:
+
 - [ ] `NextIntlClientProvider` correctly wraps children
 - [ ] `getMessages()` async call is properly awaited
 - [ ] `locale` parameter is validated
@@ -72,6 +76,7 @@ pnpm dev
 **Duration**: 20-30 min (implementation) + 15-20 min (review)
 
 **Content**:
+
 - Réduire le layout racine au minimum
 - Garder uniquement l'import des fonts
 - Garder l'import de globals.css
@@ -79,11 +84,13 @@ pnpm dev
 - Retirer `<html>` et `<body>` tags (délégués au layout localisé)
 
 **Why it's atomic**:
+
 - Single responsibility: cleanup root layout
 - Depends on Commit 2.1 being functional
 - Clear separation of concerns
 
 **Technical Validation**:
+
 ```bash
 pnpm tsc
 pnpm lint
@@ -94,6 +101,7 @@ pnpm dev
 **Expected Result**: Root layout minimal, [locale]/layout handles i18n
 
 **Review Criteria**:
+
 - [ ] No duplicate `<html>` or `<body>` tags
 - [ ] Fonts still load correctly
 - [ ] globals.css still applied
@@ -109,6 +117,7 @@ pnpm dev
 **Duration**: 30-40 min (implementation) + 15-20 min (review)
 
 **Content**:
+
 - Créer page 404 internationalisée
 - Utiliser `useTranslations('error')` pour les textes
 - Design cohérent avec le style du site
@@ -116,11 +125,13 @@ pnpm dev
 - Messages pour titre, description, bouton retour
 
 **Why it's atomic**:
+
 - Single responsibility: 404 page
 - Tests `useTranslations` in Client Component context
 - Validates Provider is working
 
 **Technical Validation**:
+
 ```bash
 pnpm tsc
 pnpm dev
@@ -131,6 +142,7 @@ pnpm dev
 **Expected Result**: 404 page shows localized content
 
 **Review Criteria**:
+
 - [ ] `useTranslations('error')` works correctly
 - [ ] Link component is from `@/src/i18n`
 - [ ] Design matches site style
@@ -146,6 +158,7 @@ pnpm dev
 **Duration**: 30-40 min (implementation) + 20-30 min (review)
 
 **Content**:
+
 - Importer `routing` depuis `@/src/i18n/routing`
 - Utiliser la configuration centralisée
 - Supprimer la configuration dupliquée
@@ -153,11 +166,13 @@ pnpm dev
 - Conserver le pattern de chaînage manuel si existant
 
 **Why it's atomic**:
+
 - Single responsibility: middleware alignment
 - Critical for routing to work correctly
 - Easy to test and rollback
 
 **Technical Validation**:
+
 ```bash
 pnpm tsc
 pnpm dev
@@ -170,6 +185,7 @@ pnpm dev
 **Expected Result**: Middleware uses centralized routing config
 
 **Review Criteria**:
+
 - [ ] Imports from `@/src/i18n/routing`
 - [ ] No duplicate locale configuration
 - [ ] Redirects work correctly
@@ -185,17 +201,20 @@ pnpm dev
 **Duration**: 30-45 min (implementation) + 15-20 min (review)
 
 **Content**:
+
 - Déplacer/adapter la page de test existante
 - Vérifier qu'elle fonctionne avec le nouveau Provider
 - Afficher toutes les traductions pour validation visuelle
 - Optionnel: améliorer avec la nouvelle structure
 
 **Why it's atomic**:
+
 - Single responsibility: test page migration
 - Validates entire i18n pipeline works
 - Useful for manual testing
 
 **Technical Validation**:
+
 ```bash
 pnpm tsc
 pnpm dev
@@ -206,6 +225,7 @@ pnpm dev
 **Expected Result**: Test page displays all translations in both locales
 
 **Review Criteria**:
+
 - [ ] Page renders without errors
 - [ ] All namespaces displayed
 - [ ] Both locales work
@@ -230,6 +250,7 @@ pnpm dev
 ### Validation at Each Step
 
 After each commit:
+
 ```bash
 # Type-checking
 pnpm tsc
@@ -250,30 +271,33 @@ All must pass before moving to next commit.
 
 ## 📊 Commit Metrics
 
-| Commit | Files | Lines | Implementation | Review | Total |
-|--------|-------|-------|----------------|--------|-------|
-| 2.1 Layout localisé | 1 | ~100 | 60 min | 30 min | 90 min |
-| 2.2 Layout racine | 1 | ~40 | 25 min | 15 min | 40 min |
-| 2.3 Not-found | 1 | ~50 | 35 min | 15 min | 50 min |
-| 2.4 Middleware | 1 | ~30 | 35 min | 25 min | 60 min |
-| 2.5 Test page | 1 | ~75 | 40 min | 20 min | 60 min |
-| **TOTAL** | **5** | **~295** | **3.2h** | **1.8h** | **5h** |
+| Commit              | Files | Lines    | Implementation | Review   | Total  |
+| ------------------- | ----- | -------- | -------------- | -------- | ------ |
+| 2.1 Layout localisé | 1     | ~100     | 60 min         | 30 min   | 90 min |
+| 2.2 Layout racine   | 1     | ~40      | 25 min         | 15 min   | 40 min |
+| 2.3 Not-found       | 1     | ~50      | 35 min         | 15 min   | 50 min |
+| 2.4 Middleware      | 1     | ~30      | 35 min         | 25 min   | 60 min |
+| 2.5 Test page       | 1     | ~75      | 40 min         | 20 min   | 60 min |
+| **TOTAL**           | **5** | **~295** | **3.2h**       | **1.8h** | **5h** |
 
 ---
 
 ## ✅ Atomic Approach Benefits
 
 ### For Developers
+
 - 🎯 **Clear focus**: One thing at a time
 - 🧪 **Testable**: Each commit validated
 - 📝 **Documented**: Clear commit messages
 
 ### For Reviewers
+
 - ⚡ **Fast review**: 15-30 min per commit
 - 🔍 **Focused**: Single responsibility to check
 - ✅ **Quality**: Easier to spot issues
 
 ### For the Project
+
 - 🔄 **Rollback-safe**: Revert without breaking
 - 📚 **Historical**: Clear progression in git history
 - 🏗️ **Maintainable**: Easy to understand later
@@ -285,6 +309,7 @@ All must pass before moving to next commit.
 ### Commit Messages
 
 Format:
+
 ```
 🌐 feat(i18n): short description (max 50 chars)
 
@@ -300,6 +325,7 @@ Types: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`
 ### Review Checklist
 
 Before committing:
+
 - [ ] Code follows project style guide
 - [ ] TypeScript compiles without errors
 - [ ] Linter passes
@@ -311,12 +337,14 @@ Before committing:
 ## ⚠️ Important Points
 
 ### Do's
+
 - ✅ Follow the commit order (dependencies)
 - ✅ Validate after each commit
 - ✅ Test both `/fr` and `/en` routes
 - ✅ Use provided commit messages as template
 
 ### Don'ts
+
 - ❌ Skip commits or combine them
 - ❌ Commit without running validations
 - ❌ Add features not in the spec
@@ -327,12 +355,14 @@ Before committing:
 ## 🔗 Dependencies
 
 ### Phase 1 Prerequisites
+
 - `src/i18n/routing.ts` with `defineRouting()` ✅
 - `src/i18n/request.ts` with new API ✅
 - `src/i18n/index.ts` barrel export ✅
 - All imports updated ✅
 
 ### External Dependencies
+
 - `next-intl` v4.5.3+
 - `messages/fr.json` and `messages/en.json`
 - Error namespace in messages

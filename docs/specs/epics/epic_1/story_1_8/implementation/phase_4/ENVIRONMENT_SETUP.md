@@ -7,6 +7,7 @@
 ## Prerequisites
 
 ### Previous Phases Required
+
 - [x] Phase 1: Structure src/i18n/ complète
 - [x] Phase 2: Layout [locale] avec Provider
 - [x] Phase 3: Homepage internationalisée avec namespaces

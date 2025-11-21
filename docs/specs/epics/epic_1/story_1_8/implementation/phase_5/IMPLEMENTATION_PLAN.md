@@ -129,7 +129,9 @@ test.describe('Homepage Internationalization', () => {
 
       // Check French content
       await expect(page.locator('text=En développement')).toBeVisible();
-      await expect(page.locator('text=Un laboratoire d\'apprentissage public')).toBeVisible();
+      await expect(
+        page.locator("text=Un laboratoire d'apprentissage public"),
+      ).toBeVisible();
       await expect(page.locator('text=Lancement prévu')).toBeVisible();
       await expect(page.locator('text=Fin Novembre 2025')).toBeVisible();
     });
@@ -217,12 +219,19 @@ describe('Message parity - home namespace', () => {
 
     // Verify specific keys
     const requiredKeys = [
-      'badge', 'title', 'subtitle', 'description',
-      'ai', 'ux', 'engineering',
-      'launchLabel', 'launchDate', 'tagline'
+      'badge',
+      'title',
+      'subtitle',
+      'description',
+      'ai',
+      'ux',
+      'engineering',
+      'launchLabel',
+      'launchDate',
+      'tagline',
     ];
 
-    requiredKeys.forEach(key => {
+    requiredKeys.forEach((key) => {
       expect(frHome[key]).toBeDefined();
       expect(enHome[key]).toBeDefined();
     });
@@ -242,7 +251,7 @@ describe('Message parity - metadata namespace', () => {
     // Verify specific keys
     const requiredKeys = ['title', 'description', 'ogTitle', 'ogDescription'];
 
-    requiredKeys.forEach(key => {
+    requiredKeys.forEach((key) => {
       expect(frMeta[key]).toBeDefined();
       expect(enMeta[key]).toBeDefined();
     });
@@ -277,7 +286,7 @@ Update `CLAUDE.md` and i18n documentation to reflect new architecture.
 
 Update the i18n section to reflect:
 
-```markdown
+````markdown
 ### Internationalization (i18n)
 
 - **Library**: next-intl v4.5.3 (supports Next.js 15 + edge runtime)
@@ -297,7 +306,10 @@ Update the i18n section to reflect:
   ```typescript
   import { Link, useRouter, usePathname } from '@/src/i18n';
   ```
+````
+
 - **Component Usage**:
+
   ```typescript
   import { useTranslations } from 'next-intl';
 
@@ -306,7 +318,8 @@ Update the i18n section to reflect:
     return <div>{t('title')}</div>;
   }
   ```
-```
+
+````
 
 #### src/i18n/README.md
 
@@ -340,7 +353,7 @@ Run complete validation suite and ensure production readiness.
 
 ```bash
 pnpm tsc --noEmit
-```
+````
 
 #### 2. Linting
 
@@ -406,13 +419,13 @@ Commit 5.5: Final validation
 
 ## Success Metrics
 
-| Metric | Target |
-|--------|--------|
-| Unit test coverage | ≥80% for new code |
-| E2E test pass rate | 100% |
-| Build success | Yes |
-| Preview works | Yes |
-| Documentation complete | Yes |
+| Metric                 | Target            |
+| ---------------------- | ----------------- |
+| Unit test coverage     | ≥80% for new code |
+| E2E test pass rate     | 100%              |
+| Build success          | Yes               |
+| Preview works          | Yes               |
+| Documentation complete | Yes               |
 
 ---
 

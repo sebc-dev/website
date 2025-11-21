@@ -107,6 +107,7 @@ ls -la i18n/
 ```
 
 **Expected Output**:
+
 ```
 config.ts
 index.ts
@@ -121,6 +122,7 @@ ls -la messages/
 ```
 
 **Expected Output**:
+
 ```
 en.json
 fr.json
@@ -159,9 +161,11 @@ pnpm test
 ### Issue: src/ directory doesn't exist
 
 **Symptoms**:
+
 - Cannot create `src/i18n/routing.ts`
 
 **Solution**:
+
 ```bash
 mkdir -p src/i18n
 ```
@@ -171,11 +175,13 @@ mkdir -p src/i18n
 ### Issue: Import alias @/ not resolving
 
 **Symptoms**:
+
 - TypeScript error: Cannot find module '@/src/i18n'
 
 **Solutions**:
 
 1. Check `tsconfig.json` paths:
+
 ```json
 {
   "compilerOptions": {
@@ -193,16 +199,19 @@ mkdir -p src/i18n
 ### Issue: next-intl version mismatch
 
 **Symptoms**:
+
 - Import errors for `defineRouting` or `createNavigation`
 
 **Solutions**:
 
 1. Check version:
+
 ```bash
 pnpm list next-intl
 ```
 
 2. Update if needed:
+
 ```bash
 pnpm update next-intl
 ```
@@ -214,14 +223,16 @@ pnpm update next-intl
 ### Issue: Messages files not found
 
 **Symptoms**:
+
 - Error loading messages in request.ts
 
 **Solutions**:
 
 1. Verify path in request.ts matches actual location:
+
 ```typescript
 // If messages are in /messages:
-messages: (await import(`../../messages/${locale}.json`)).default
+messages: (await import(`../../messages/${locale}.json`)).default;
 
 // Adjust relative path based on src/i18n location
 ```

@@ -8,6 +8,7 @@
 ## Review Strategy
 
 Cette phase est relativement simple avec un seul fichier modifié. Focus sur:
+
 - Correction TypeScript (types Next.js 15)
 - Traductions utilisées correctement
 - Pas de conflits avec root layout
@@ -19,6 +20,7 @@ Cette phase est relativement simple avec un seul fichier modifié. Focus sur:
 ### Critical Points
 
 1. **Type Safety**
+
    ```typescript
    // CORRECT - Next.js 15 pattern
    type Props = {
@@ -32,6 +34,7 @@ Cette phase est relativement simple avec un seul fichier modifié. Focus sur:
    ```
 
 2. **Async/Await Pattern**
+
    ```typescript
    // CORRECT
    export async function generateMetadata({ params }: Props) {
@@ -41,6 +44,7 @@ Cette phase est relativement simple avec un seul fichier modifié. Focus sur:
    ```
 
 3. **Import from correct package**
+
    ```typescript
    // CORRECT
    import { getTranslations } from 'next-intl/server';
@@ -50,6 +54,7 @@ Cette phase est relativement simple avec un seul fichier modifié. Focus sur:
    ```
 
 ### Checklist
+
 - [ ] Type `Props` with Promise for params
 - [ ] `await params` before destructuring
 - [ ] `getTranslations` from `next-intl/server`
@@ -64,6 +69,7 @@ Cette phase est relativement simple avec un seul fichier modifié. Focus sur:
 ### Critical Points
 
 1. **Locale Format**
+
    ```typescript
    // CORRECT - OG locale format
    locale: locale === 'fr' ? 'fr_FR' : 'en_US',
@@ -73,12 +79,14 @@ Cette phase est relativement simple avec un seul fichier modifié. Focus sur:
    ```
 
 2. **alternateLocales**
+
    ```typescript
    // CORRECT
    alternateLocales: locale === 'fr' ? ['en_US'] : ['fr_FR'],
    ```
 
 3. **URL Construction**
+
    ```typescript
    // CORRECT
    url: `https://sebc.dev/${locale}`,
@@ -100,6 +108,7 @@ Cette phase est relativement simple avec un seul fichier modifié. Focus sur:
    ```
 
 ### Checklist
+
 - [ ] `og:locale` uses correct format (fr_FR/en_US)
 - [ ] `alternateLocales` includes the other locale
 - [ ] `type: 'website'` present
@@ -115,6 +124,7 @@ Cette phase est relativement simple avec un seul fichier modifié. Focus sur:
 ### Critical Points
 
 1. **Twitter Card Type**
+
    ```typescript
    // CORRECT for blog/website
    card: 'summary_large_image',
@@ -124,6 +134,7 @@ Cette phase est relativement simple avec un seul fichier modifié. Focus sur:
    ```
 
 2. **Consistent Translations**
+
    ```typescript
    twitter: {
      title: t('ogTitle'),      // Reuse OG translations
@@ -147,6 +158,7 @@ Cette phase est relativement simple avec un seul fichier modifié. Focus sur:
    ```
 
 ### Checklist
+
 - [ ] Twitter card type appropriate
 - [ ] Twitter uses same translations as OG
 - [ ] Twitter image path matches OG
@@ -190,6 +202,7 @@ import { getTranslations } from 'next-intl/server';
 ### 4. Missing Keys in Messages
 
 Ensure all keys exist:
+
 - `metadata.title`
 - `metadata.description`
 - `metadata.ogTitle`
@@ -216,14 +229,17 @@ Ensure all keys exist:
 ## Accessibility & SEO
 
 ### Title Length
+
 - Should be 50-60 characters
 - Descriptive and unique
 
 ### Description Length
+
 - Should be 120-160 characters
 - Action-oriented, clear
 
 ### OG Image
+
 - 1200x630 px recommended
 - Alt text required
 
@@ -232,16 +248,19 @@ Ensure all keys exist:
 ## Final Review Checklist
 
 ### TypeScript
+
 - [ ] No type errors
 - [ ] Props type correct for Next.js 15
 - [ ] Proper imports
 
 ### Translations
+
 - [ ] All keys exist in FR and EN
 - [ ] getTranslations from server package
 - [ ] Namespace correct
 
 ### SEO Best Practices
+
 - [ ] Title descriptive
 - [ ] Description appropriate length
 - [ ] OG tags complete
@@ -249,6 +268,7 @@ Ensure all keys exist:
 - [ ] Robots configured
 
 ### No Conflicts
+
 - [ ] Root layout has no metadata
 - [ ] Single source of truth for metadata
 

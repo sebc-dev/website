@@ -22,9 +22,11 @@ Cette phase est relativement simple avec 3 commits progressifs qui construisent 
 ## Commit 4.1: Implémenter generateMetadata dans layout
 
 ### Objective
+
 Ajouter la fonction `generateMetadata()` au layout localisé avec title et description dynamiques.
 
 ### Estimated Time
+
 30-45 minutes
 
 ### Files to Modify
@@ -46,9 +48,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: t('title'),
     description: t('description'),
-    keywords: locale === 'fr'
-      ? ['IA', 'UX', 'ingénierie logicielle', 'blog technique']
-      : ['AI', 'UX', 'software engineering', 'tech blog'],
+    keywords:
+      locale === 'fr'
+        ? ['IA', 'UX', 'ingénierie logicielle', 'blog technique']
+        : ['AI', 'UX', 'software engineering', 'tech blog'],
   };
 }
 ```
@@ -76,9 +79,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 ## Commit 4.2: Open Graph localisé
 
 ### Objective
+
 Ajouter les métadonnées Open Graph complètes avec locale et traductions.
 
 ### Estimated Time
+
 30-45 minutes
 
 ### Files to Modify
@@ -95,9 +100,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: t('title'),
     description: t('description'),
-    keywords: locale === 'fr'
-      ? ['IA', 'UX', 'ingénierie logicielle', 'blog technique']
-      : ['AI', 'UX', 'software engineering', 'tech blog'],
+    keywords:
+      locale === 'fr'
+        ? ['IA', 'UX', 'ingénierie logicielle', 'blog technique']
+        : ['AI', 'UX', 'software engineering', 'tech blog'],
     openGraph: {
       title: t('ogTitle'),
       description: t('ogDescription'),
@@ -143,9 +149,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 ## Commit 4.3: Twitter card et robots
 
 ### Objective
+
 Compléter les métadonnées avec Twitter card et configuration robots.
 
 ### Estimated Time
+
 20-30 minutes
 
 ### Files to Modify
@@ -162,9 +170,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: t('title'),
     description: t('description'),
-    keywords: locale === 'fr'
-      ? ['IA', 'UX', 'ingénierie logicielle', 'blog technique']
-      : ['AI', 'UX', 'software engineering', 'tech blog'],
+    keywords:
+      locale === 'fr'
+        ? ['IA', 'UX', 'ingénierie logicielle', 'blog technique']
+        : ['AI', 'UX', 'software engineering', 'tech blog'],
     openGraph: {
       title: t('ogTitle'),
       description: t('ogDescription'),
@@ -237,9 +246,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: t('title'),
     description: t('description'),
-    keywords: locale === 'fr'
-      ? ['IA', 'UX', 'ingénierie logicielle', 'blog technique']
-      : ['AI', 'UX', 'software engineering', 'tech blog'],
+    keywords:
+      locale === 'fr'
+        ? ['IA', 'UX', 'ingénierie logicielle', 'blog technique']
+        : ['AI', 'UX', 'software engineering', 'tech blog'],
     openGraph: {
       title: t('ogTitle'),
       description: t('ogDescription'),
