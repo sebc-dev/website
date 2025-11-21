@@ -237,7 +237,7 @@ export function deleteCookie(name: string): string {
  * validateLocale(null);  // false
  *
  * @remarks
- * Supported locales are defined in `@/i18n/config` as the `Locale` type.
+ * Supported locales are defined in `@/src/i18n/config` as the `Locale` type.
  * Validation is case-sensitive - only lowercase codes are accepted.
  * Adding new locales to the config will automatically update this validation.
  */
