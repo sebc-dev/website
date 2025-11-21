@@ -13,7 +13,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { defaultLocale, locales } from '@/src/i18n/config';
+import { defaultLocale, locales } from '@/i18n/config';
 
 /**
  * Test suite for i18n configuration
@@ -63,13 +63,13 @@ describe('Cookie and Redirect Utilities', () => {
  */
 describe('Routing Configuration', () => {
   it('should export config', async () => {
-    const configModule = await import('@/src/i18n/config');
+    const configModule = await import('@/i18n/config');
     expect(configModule.locales).toBeDefined();
     expect(configModule.defaultLocale).toBeDefined();
   });
 
   it('should have localePrefix set to always', async () => {
-    const configModule = await import('@/src/i18n/config');
+    const configModule = await import('@/i18n/config');
     expect(configModule.localePrefix).toBe('always');
   });
 });
@@ -83,7 +83,7 @@ describe('Integration Flow Validation', () => {
     const [cookieModule, redirectModule, configModule] = await Promise.all([
       import('./cookie'),
       import('./redirect'),
-      import('@/src/i18n/config'),
+      import('@/i18n/config'),
     ]);
 
     // Verify all critical exports are available
@@ -94,7 +94,7 @@ describe('Integration Flow Validation', () => {
   });
 
   it('should have consistent locale types across modules', async () => {
-    const configModule = await import('@/src/i18n/config');
+    const configModule = await import('@/i18n/config');
 
     // Verify locales are consistent
     expect(configModule.locales).toEqual(['fr', 'en']);
@@ -167,7 +167,7 @@ describe('Phase 2 Implementation Completeness', () => {
 
   it('should have routing configuration ready', async () => {
     const { localePrefix, locales, defaultLocale } = await import(
-      '@/src/i18n/config'
+      '@/i18n/config'
     );
 
     expect(localePrefix).toBe('always');
