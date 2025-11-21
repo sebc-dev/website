@@ -10,7 +10,7 @@
 
 import type { NextRequest } from 'next/server';
 
-import { type Locale, locales } from '@/src/i18n/config';
+import { type Locale, locales } from '@/i18n/config';
 
 /**
  * Configuration options for cookie creation
