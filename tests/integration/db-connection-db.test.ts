@@ -43,7 +43,7 @@ describe('D1 Database Connection Integration Tests', () => {
     expect(result).toBeDefined();
     expect(Array.isArray(result)).toBe(true);
     // Should have at least our schema tables
-    const tableNames = result.map((r: { name: string }) => r.name);
+    const tableNames = (result as { name: string }[]).map((r) => r.name);
     expect(tableNames).toContain('categories');
     expect(tableNames).toContain('articles');
     expect(tableNames).toContain('article_translations');
