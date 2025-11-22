@@ -313,7 +313,7 @@ describe('Taxonomy Integration Tests', () => {
       // Attempt to delete category - should fail due to FK constraint
       await expect(
         db.delete(categories).where(eq(categories.id, 'test-cat-delete')),
-      ).rejects.toThrow(/Failed query:.*categories/);
+      ).rejects.toThrow(/Failed query:.*delete.*categories/i);
     });
   });
 });
