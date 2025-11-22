@@ -49,7 +49,7 @@ jobs:
         run: pnpm lint
 
       - name: Run unit & integration tests
-        run: pnpm test --run
+        run: pnpm test:run
 
       - name: Generate coverage report
         if: always()
