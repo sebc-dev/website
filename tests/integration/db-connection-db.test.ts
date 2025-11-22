@@ -50,15 +50,10 @@ describe('D1 Database Connection Integration Tests', () => {
     expect(tableNames).toContain('article_tags');
   });
 
-  it('should throw error when DB binding is missing', () => {
+  it('should throw error with helpful message when DB binding is missing', () => {
     const emptyEnv = {} as unknown as { DB: D1Database };
 
     expect(() => getDb(emptyEnv)).toThrow('DB binding is not available');
-  });
-
-  it('should throw error with helpful message mentioning wrangler.jsonc', () => {
-    const emptyEnv = {} as unknown as { DB: D1Database };
-
     expect(() => getDb(emptyEnv)).toThrow(/wrangler\.jsonc/);
   });
 });
