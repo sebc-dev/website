@@ -16,6 +16,41 @@ import {
   articles,
 } from '@/lib/server/db/schema';
 
+// Helper to setup article with tags for testing
+type TagConfig = {
+  id: string;
+  nameFr: string;
+  nameEn: string;
+};
+
+async function setupArticleWithTags(
+  db: ReturnType<typeof drizzle>,
+  articleId: string,
+  tagConfigs: TagConfig[],
+  articleOptions?: { complexity?: string; status?: string },
+) {
+  const { complexity = 'beginner', status = 'draft' } = articleOptions || {};
+
+  await db.insert(articles).values({
+    id: articleId,
+    complexity,
+    status,
+  });
+
+  for (const tag of tagConfigs) {
+    await db.insert(tags).values(tag);
+  }
+
+  if (tagConfigs.length > 0) {
+    await db.insert(articleTags).values(
+      tagConfigs.map((tag) => ({
+        articleId,
+        tagId: tag.id,
+      })),
+    );
+  }
+}
+
 describe('Taxonomy Integration Tests', () => {
   let db: ReturnType<typeof drizzle>;
 
@@ -109,24 +144,9 @@ describe('Taxonomy Integration Tests', () => {
 
   describe('ArticleTags Junction Table', () => {
     it('should create article-tag relationship', async () => {
-      // Create article and tag
-      await db.insert(articles).values({
-        id: 'test-tax-article',
-        complexity: 'beginner',
-        status: 'draft',
-      });
-
-      await db.insert(tags).values({
-        id: 'test-tag-1',
-        nameFr: 'React',
-        nameEn: 'React',
-      });
-
-      // Create relationship
-      await db.insert(articleTags).values({
-        articleId: 'test-tax-article',
-        tagId: 'test-tag-1',
-      });
+      await setupArticleWithTags(db, 'test-tax-article', [
+        { id: 'test-tag-1', nameFr: 'React', nameEn: 'React' },
+      ]);
 
       const results = await db
         .select()
@@ -138,28 +158,15 @@ describe('Taxonomy Integration Tests', () => {
     });
 
     it('should support multiple tags per article', async () => {
-      await db.insert(articles).values({
-        id: 'test-tax-article',
-        complexity: 'intermediate',
-        status: 'published',
-      });
-
-      await db.insert(tags).values({
-        id: 'test-tag-1',
-        nameFr: 'React',
-        nameEn: 'React',
-      });
-
-      await db.insert(tags).values({
-        id: 'test-tag-2',
-        nameFr: 'TypeScript',
-        nameEn: 'TypeScript',
-      });
-
-      await db.insert(articleTags).values([
-        { articleId: 'test-tax-article', tagId: 'test-tag-1' },
-        { articleId: 'test-tax-article', tagId: 'test-tag-2' },
-      ]);
+      await setupArticleWithTags(
+        db,
+        'test-tax-article',
+        [
+          { id: 'test-tag-1', nameFr: 'React', nameEn: 'React' },
+          { id: 'test-tag-2', nameFr: 'TypeScript', nameEn: 'TypeScript' },
+        ],
+        { complexity: 'intermediate', status: 'published' },
+      );
 
       const results = await db
         .select()
@@ -170,22 +177,9 @@ describe('Taxonomy Integration Tests', () => {
     });
 
     it('should cascade delete articleTags when article is deleted', async () => {
-      await db.insert(articles).values({
-        id: 'test-tax-article',
-        complexity: 'beginner',
-        status: 'draft',
-      });
-
-      await db.insert(tags).values({
-        id: 'test-tag-1',
-        nameFr: 'Test',
-        nameEn: 'Test',
-      });
-
-      await db.insert(articleTags).values({
-        articleId: 'test-tax-article',
-        tagId: 'test-tag-1',
-      });
+      await setupArticleWithTags(db, 'test-tax-article', [
+        { id: 'test-tag-1', nameFr: 'Test', nameEn: 'Test' },
+      ]);
 
       // Delete article
       await db.delete(articles).where(eq(articles.id, 'test-tax-article'));
@@ -200,22 +194,9 @@ describe('Taxonomy Integration Tests', () => {
     });
 
     it('should cascade delete articleTags when tag is deleted', async () => {
-      await db.insert(articles).values({
-        id: 'test-tax-article',
-        complexity: 'beginner',
-        status: 'draft',
-      });
-
-      await db.insert(tags).values({
-        id: 'test-tag-1',
-        nameFr: 'Test',
-        nameEn: 'Test',
-      });
-
-      await db.insert(articleTags).values({
-        articleId: 'test-tax-article',
-        tagId: 'test-tag-1',
-      });
+      await setupArticleWithTags(db, 'test-tax-article', [
+        { id: 'test-tag-1', nameFr: 'Test', nameEn: 'Test' },
+      ]);
 
       // Delete tag
       await db.delete(tags).where(eq(tags.id, 'test-tag-1'));
@@ -230,22 +211,9 @@ describe('Taxonomy Integration Tests', () => {
     });
 
     it('should prevent duplicate article-tag pairs', async () => {
-      await db.insert(articles).values({
-        id: 'test-tax-article',
-        complexity: 'beginner',
-        status: 'draft',
-      });
-
-      await db.insert(tags).values({
-        id: 'test-tag-1',
-        nameFr: 'Test',
-        nameEn: 'Test',
-      });
-
-      await db.insert(articleTags).values({
-        articleId: 'test-tax-article',
-        tagId: 'test-tag-1',
-      });
+      await setupArticleWithTags(db, 'test-tax-article', [
+        { id: 'test-tag-1', nameFr: 'Test', nameEn: 'Test' },
+      ]);
 
       // Try to insert duplicate - should fail (composite PK)
       await expect(
