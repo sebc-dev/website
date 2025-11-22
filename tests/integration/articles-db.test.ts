@@ -61,6 +61,11 @@ describe('Articles Integration Tests', () => {
       .delete(article_translations)
       .where(eq(article_translations.articleId, 'test-article-1'));
     await db.delete(articles).where(eq(articles.id, 'test-article-1'));
+    await db.delete(articles).where(eq(articles.id, 'filter-status-test'));
+    await db
+      .delete(article_translations)
+      .where(eq(article_translations.id, 'trans-lang-filter'));
+    await db.delete(articles).where(eq(articles.id, 'filter-lang-test'));
     await db.delete(categories).where(eq(categories.id, 'test-cat-int'));
   });
 
