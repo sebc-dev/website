@@ -13,28 +13,19 @@ import {
   article_translations,
   articles,
   categories,
-  type Complexity,
-  type Status,
 } from '@/lib/server/db/schema';
 
 import { getTestDb } from './setup';
 
 // Helper functions to reduce duplication
 function createArticle(
-  overrides?: Partial<{
-    id: string;
-    categoryId: string | null;
-    complexity: Complexity;
-    status: Status;
-    publishedAt: Date | null;
-    coverImage: string | null;
-  }>,
-) {
+  overrides: Partial<typeof articles.$inferInsert> = {},
+): typeof articles.$inferInsert {
   return {
     id: 'test-article-1',
     categoryId: null,
-    complexity: 'beginner' as const,
-    status: 'draft' as const,
+    complexity: 'beginner',
+    status: 'draft',
     publishedAt: null,
     coverImage: null,
     ...overrides,
@@ -42,22 +33,12 @@ function createArticle(
 }
 
 function createTranslation(
-  overrides?: Partial<{
-    id: string;
-    articleId: string;
-    language: 'fr' | 'en';
-    title: string;
-    slug: string;
-    excerpt: string;
-    seoTitle: string;
-    seoDescription: string;
-    contentMdx: string;
-  }>,
-) {
+  overrides: Partial<typeof article_translations.$inferInsert> = {},
+): typeof article_translations.$inferInsert {
   return {
     id: 'trans-1',
     articleId: 'test-article-1',
-    language: 'fr' as const,
+    language: 'fr',
     title: 'Test Title',
     slug: 'test-slug',
     excerpt: 'Test excerpt',
