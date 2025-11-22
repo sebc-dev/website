@@ -331,7 +331,7 @@ describe('Articles Integration Tests', () => {
             contentMdx: 'Test',
           }),
         ),
-      ).rejects.toThrow();
+      ).rejects.toThrow(/UNIQUE constraint failed/i);
     });
 
     it('should enforce unique article-language constraint', async () => {
@@ -365,7 +365,7 @@ describe('Articles Integration Tests', () => {
             contentMdx: 'Test',
           }),
         ),
-      ).rejects.toThrow();
+      ).rejects.toThrow(/UNIQUE constraint failed/i);
     });
   });
 
