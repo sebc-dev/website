@@ -295,7 +295,7 @@ export default function HomePage() {
         Could be activated by changing gradient colors if needed
       */}
       <div
-        className='via-accent/20 absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent to-transparent'
+        className='via-accent/20 absolute right-0 bottom-0 left-0 h-px bg-gradient-to-r from-transparent to-transparent'
         aria-hidden='true'
       />
     </div>
