@@ -30,10 +30,31 @@ export default function globalSetup() {
     console.log(result);
     console.log('✅ Migrations applied successfully');
   } catch (error: unknown) {
-    const execError = error as { stdout?: string; stderr?: string };
     console.error('❌ Failed to apply migrations');
-    if (execError.stdout) console.error('stdout:', execError.stdout);
-    if (execError.stderr) console.error('stderr:', execError.stderr);
+
+    if (error instanceof Error) {
+      const execError = error as Error & {
+        stdout?: Buffer | string;
+        stderr?: Buffer | string;
+      };
+
+      if (execError.stdout) {
+        const stdout =
+          execError.stdout instanceof Buffer
+            ? execError.stdout.toString()
+            : execError.stdout;
+        console.error('stdout:', stdout);
+      }
+
+      if (execError.stderr) {
+        const stderr =
+          execError.stderr instanceof Buffer
+            ? execError.stderr.toString()
+            : execError.stderr;
+        console.error('stderr:', stderr);
+      }
+    }
+
     throw error;
   }
 }
