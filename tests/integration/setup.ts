@@ -7,65 +7,65 @@
  * @see https://developers.cloudflare.com/workers/wrangler/api/#getplatformproxy
  */
 
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { afterAll, beforeAll } from 'vitest';
-import { getPlatformProxy, type PlatformProxy } from 'wrangler';
+import path from "path";
+import { fileURLToPath } from "url";
+import { afterAll, beforeAll } from "vitest";
+import { getPlatformProxy, type PlatformProxy } from "wrangler";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Platform proxy instance
 let platformProxy: PlatformProxy<{
-  DB: D1Database;
-  ASSETS: Fetcher;
-  NEXT_INC_CACHE_R2_BUCKET: R2Bucket;
+	DB: D1Database;
+	ASSETS: Fetcher;
+	NEXT_INC_CACHE_R2_BUCKET: R2Bucket;
 }>;
 
 // Export env for use in tests
 export let testEnv: {
-  DB: D1Database;
-  ASSETS: Fetcher;
-  NEXT_INC_CACHE_R2_BUCKET: R2Bucket;
+	DB: D1Database;
+	ASSETS: Fetcher;
+	NEXT_INC_CACHE_R2_BUCKET: R2Bucket;
 };
 
 beforeAll(async () => {
-  const rootDir = path.resolve(__dirname, '../..');
+	const rootDir = path.resolve(__dirname, "../..");
 
-  console.log('🚀 Starting integration test setup...');
+	console.log("🚀 Starting integration test setup...");
 
-  // Initialize platform proxy (migrations applied in globalSetup)
-  console.log('🔌 Initializing Cloudflare platform proxy...');
-  try {
-    platformProxy = await getPlatformProxy({
-      configPath: path.join(rootDir, 'wrangler.jsonc'),
-      persist: true, // Persist data between test runs
-    });
+	// Initialize platform proxy (migrations applied in globalSetup)
+	console.log("🔌 Initializing Cloudflare platform proxy...");
+	try {
+		platformProxy = await getPlatformProxy({
+			configPath: path.join(rootDir, "wrangler.jsonc"),
+			persist: true, // Persist data between test runs
+		});
 
-    testEnv = platformProxy.env;
-    console.log('✅ Platform proxy initialized successfully');
-  } catch (error) {
-    console.error('❌ Failed to initialize platform proxy:', error);
-    throw error;
-  }
+		testEnv = platformProxy.env;
+		console.log("✅ Platform proxy initialized successfully");
+	} catch (error) {
+		console.error("❌ Failed to initialize platform proxy:", error);
+		throw error;
+	}
 });
 
 afterAll(async () => {
-  // Clean up platform proxy
-  if (platformProxy) {
-    console.log('🧹 Cleaning up platform proxy...');
-    await platformProxy.dispose();
-  }
+	// Clean up platform proxy
+	if (platformProxy) {
+		console.log("🧹 Cleaning up platform proxy...");
+		await platformProxy.dispose();
+	}
 });
 
 /**
  * Helper to get the test database instance
  */
 export function getTestDb() {
-  if (!testEnv?.DB) {
-    throw new Error(
-      'Test environment not initialized. Ensure tests are run with the integration config.',
-    );
-  }
-  return testEnv.DB;
+	if (!testEnv?.DB) {
+		throw new Error(
+			"Test environment not initialized. Ensure tests are run with the integration config.",
+		);
+	}
+	return testEnv.DB;
 }
