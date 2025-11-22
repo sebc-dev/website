@@ -27,7 +27,7 @@
     "test:e2e": "playwright test --config config/playwright.config.ts",
     "test:e2e:ui": "playwright test --ui --config config/playwright.config.ts",
     "test:e2e:debug": "playwright test --debug --config config/playwright.config.ts",
-    "test:integration": "vitest --run tests/integration --config config/vitest.config.ts",
+    "test:integration": "vitest run --config config/vitest.integration.config.ts",
     "db:check": "dotenv -e .env -- node -e \"['CLOUDFLARE_ACCOUNT_ID','CLOUDFLARE_DATABASE_ID','CLOUDFLARE_API_TOKEN'].forEach(k => { if (!process.env[k] || process.env[k].trim() === '') throw new Error('Missing or empty: ' + k) })\"",
     "db:generate": "npm run db:check && dotenv -e .env -- drizzle-kit generate --config config/drizzle.config.ts",
     "db:migrate:local": "wrangler d1 migrations apply DB --local",
