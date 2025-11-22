@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitest/config';
+import { coverageConfigDefaults, defineConfig } from 'vitest/config';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -22,10 +22,9 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
       exclude: [
-        'node_modules/',
+        ...coverageConfigDefaults.exclude,
         '.next/',
         '.stryker-tmp/',
-        'tests/',
         '**/*.config.{ts,js}',
         '**/types.ts',
         '**/*.d.ts',
