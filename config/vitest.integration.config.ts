@@ -18,7 +18,6 @@ export default defineConfig({
     hookTimeout: 30000,
     // Sequential execution to avoid D1 database conflicts
     fileParallelism: false,
-    maxWorkers: 1,
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
