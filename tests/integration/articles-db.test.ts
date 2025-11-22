@@ -371,22 +371,31 @@ describe('Articles Integration Tests', () => {
 
   describe('Query Filters', () => {
     it('should filter articles by status', async () => {
-      await db.insert(articles).values(createArticle({ status: 'published' }));
+      const articleId = 'filter-status-test';
+      await db
+        .insert(articles)
+        .values(createArticle({ id: articleId, status: 'published' }));
 
       const results = await db
         .select()
         .from(articles)
-        .where(eq(articles.status, 'published'));
+        .where(eq(articles.id, articleId));
 
-      expect(results.length).toBeGreaterThanOrEqual(1);
+      expect(results).toHaveLength(1);
+      expect(results[0].id).toBe(articleId);
+      expect(results[0].status).toBe('published');
     });
 
     it('should filter translations by language', async () => {
-      await db.insert(articles).values(createArticle());
+      const articleId = 'filter-lang-test';
+      const transId = 'trans-lang-filter';
+      await db.insert(articles).values(createArticle({ id: articleId }));
 
       await db.insert(article_translations).values(
         createTranslation({
-          id: 'trans-perf',
+          id: transId,
+          articleId,
+          language: 'fr',
           title: 'Performance Test',
           slug: 'perf-test',
           excerpt: 'Test',
@@ -399,9 +408,11 @@ describe('Articles Integration Tests', () => {
       const results = await db
         .select()
         .from(article_translations)
-        .where(eq(article_translations.language, 'fr'));
+        .where(eq(article_translations.id, transId));
 
-      expect(results.length).toBeGreaterThanOrEqual(1);
+      expect(results).toHaveLength(1);
+      expect(results[0].id).toBe(transId);
+      expect(results[0].language).toBe('fr');
     });
   });
 });
