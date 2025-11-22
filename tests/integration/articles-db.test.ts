@@ -336,7 +336,7 @@ describe('Articles Integration Tests', () => {
             contentMdx: 'Test',
           }),
         ),
-      ).rejects.toThrow();
+      ).rejects.toThrow(/Failed query:.*article_translations/);
     });
 
     it('should enforce unique article-language constraint', async () => {
@@ -370,7 +370,7 @@ describe('Articles Integration Tests', () => {
             contentMdx: 'Test',
           }),
         ),
-      ).rejects.toThrow();
+      ).rejects.toThrow(/Failed query:.*article_translations/);
     });
   });
 
