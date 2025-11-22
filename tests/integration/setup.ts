@@ -10,7 +10,7 @@
 import { execSync } from 'child_process';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { afterAll,beforeAll } from 'vitest';
+import { afterAll, beforeAll } from 'vitest';
 import { getPlatformProxy, type PlatformProxy } from 'wrangler';
 
 const __filename = fileURLToPath(import.meta.url);
