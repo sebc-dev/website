@@ -5,7 +5,7 @@ import { defaultLocale, type Locale, locales } from './config';
 type Messages = Record<string, unknown>;
 
 async function loadMessages(locale: string): Promise<Messages> {
-  const imported = (await import(`../../messages/${locale}.json`)) as {
+  const imported = (await import(`../messages/${locale}.json`)) as {
     default: Messages;
   };
   return imported.default;
