@@ -282,6 +282,40 @@ describe('Articles Integration Tests', () => {
         ),
       ).rejects.toThrow();
     });
+
+    it('should enforce unique article-language constraint', async () => {
+      await db.insert(articles).values(createArticle());
+
+      // First French translation
+      await db.insert(article_translations).values(
+        createTranslation({
+          id: 'trans-fr-1',
+          language: 'fr',
+          title: 'Premier Titre',
+          slug: 'premier-titre',
+          excerpt: 'Test',
+          seoTitle: 'Test',
+          seoDescription: 'Test',
+          contentMdx: 'Test',
+        }),
+      );
+
+      // Try to insert second French translation for same article - should fail
+      await expect(
+        db.insert(article_translations).values(
+          createTranslation({
+            id: 'trans-fr-2',
+            language: 'fr', // Same language as first!
+            title: 'Deuxième Titre',
+            slug: 'deuxieme-titre', // Different slug
+            excerpt: 'Test',
+            seoTitle: 'Test',
+            seoDescription: 'Test',
+            contentMdx: 'Test',
+          }),
+        ),
+      ).rejects.toThrow();
+    });
   });
 
   describe('Query Filters', () => {
