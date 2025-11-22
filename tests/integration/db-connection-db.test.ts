@@ -20,7 +20,7 @@ describe('D1 Database Connection Integration Tests', () => {
     db = drizzle(d1);
   });
 
-  it('should create database instance and connect successfully', () => {
+  it('should create database instance', () => {
     expect(db).toBeDefined();
     expect(typeof db).toBe('object');
   });
