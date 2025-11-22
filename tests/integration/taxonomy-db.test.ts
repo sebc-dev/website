@@ -72,6 +72,7 @@ describe('Taxonomy Integration Tests', () => {
       .where(eq(articleTags.articleId, 'test-article-with-cat'));
     await db.delete(articles).where(eq(articles.id, 'test-tax-article'));
     await db.delete(articles).where(eq(articles.id, 'test-article-with-cat'));
+    await db.delete(articles).where(eq(articles.id, 'test-article-no-cat'));
     await db.delete(tags).where(eq(tags.id, 'test-tag-1'));
     await db.delete(tags).where(eq(tags.id, 'test-tag-2'));
     await db.delete(categories).where(eq(categories.id, 'test-tax-cat'));
@@ -289,6 +290,23 @@ describe('Taxonomy Integration Tests', () => {
 
       expect(results).toHaveLength(1);
       expect(results[0].id).toBe('test-tax-article');
+    });
+
+    it('should allow article with null categoryId', async () => {
+      await db.insert(articles).values({
+        id: 'test-article-no-cat',
+        categoryId: null,
+        complexity: 'beginner',
+        status: 'draft',
+      });
+
+      const results = await db
+        .select()
+        .from(articles)
+        .where(eq(articles.id, 'test-article-no-cat'));
+
+      expect(results).toHaveLength(1);
+      expect(results[0].categoryId).toBeNull();
     });
 
     it('should prevent category deletion when referenced by articles', async () => {
