@@ -4,7 +4,7 @@
  * These tests interact with a real D1 database instance via getPlatformProxy.
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterAll } from 'vitest';
 import { drizzle } from 'drizzle-orm/d1';
 import { eq } from 'drizzle-orm';
 import { getTestDb } from './setup';
@@ -19,6 +19,13 @@ describe('Categories Integration Tests', () => {
 
     // Clean up test data before each test
     // We delete test categories but preserve canonical ones
+    await db.delete(categories).where(eq(categories.id, 'test-cat-1'));
+  });
+
+  afterAll(async () => {
+    // Final cleanup to ensure no residual test data remains
+    const d1 = getTestDb();
+    const db = drizzle(d1);
     await db.delete(categories).where(eq(categories.id, 'test-cat-1'));
   });
 
