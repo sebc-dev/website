@@ -10,7 +10,7 @@ export default defineConfig({
   test: {
     environment: 'node',
     root: rootDir,
-    globalSetup: [path.resolve(__dirname, '../tests/integration/globalSetup.ts')],
+    globalSetup: ['./tests/integration/globalSetup.ts'],
     setupFiles: [path.resolve(__dirname, '../tests/integration/setup.ts')],
     include: ['tests/integration/**/*-db.test.ts'],
     globals: true,
