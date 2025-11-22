@@ -21,7 +21,7 @@
     "validate:all": "pnpm validate:env && pnpm validate:packages && pnpm tsc --noEmit",
     "test": "vitest --config config/vitest.config.ts",
     "test:run": "vitest run --config config/vitest.config.ts",
-    "test:ui": "vitest --ui --config config/vitest.config.ts",
+    "test:ui": "vitest --ui --coverage --config config/vitest.config.ts",
     "test:coverage": "vitest --coverage --config config/vitest.config.ts",
     "test:watch": "vitest --watch --config config/vitest.config.ts",
     "test:e2e": "playwright test --config config/playwright.config.ts",
