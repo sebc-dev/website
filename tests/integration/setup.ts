@@ -11,6 +11,10 @@ import { beforeAll, afterAll } from 'vitest';
 import { getPlatformProxy, type PlatformProxy } from 'wrangler';
 import { execSync } from 'child_process';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Platform proxy instance
 let platformProxy: PlatformProxy<{
