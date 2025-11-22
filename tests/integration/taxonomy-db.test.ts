@@ -226,7 +226,7 @@ describe('Taxonomy Integration Tests', () => {
           articleId: 'test-tax-article',
           tagId: 'test-tag-1',
         }),
-      ).rejects.toThrow();
+      ).rejects.toThrow(/Failed query:.*article_tags/);
     });
   });
 
