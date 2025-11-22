@@ -4,11 +4,13 @@
  * Tests real database connectivity with Cloudflare D1 via getPlatformProxy.
  */
 
-import { describe, expect, it, beforeEach } from 'vitest';
-import { drizzle } from 'drizzle-orm/d1';
 import { sql } from 'drizzle-orm';
-import { getTestDb } from './setup';
+import { drizzle } from 'drizzle-orm/d1';
+import { beforeEach,describe, expect, it } from 'vitest';
+
 import { getDb } from '@/lib/server/db';
+
+import { getTestDb } from './setup';
 
 describe('D1 Database Connection Integration Tests', () => {
   let db: ReturnType<typeof drizzle>;
@@ -18,7 +20,7 @@ describe('D1 Database Connection Integration Tests', () => {
     db = drizzle(d1);
   });
 
-  it('should create database instance and connect successfully', async () => {
+  it('should create database instance and connect successfully', () => {
     const d1 = getTestDb();
     const dbInstance = getDb({ DB: d1 });
 

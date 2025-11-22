@@ -5,17 +5,19 @@
  * with Cloudflare D1 via getPlatformProxy.
  */
 
-import { describe, expect, it, beforeEach } from 'vitest';
-import { drizzle } from 'drizzle-orm/d1';
 import { eq } from 'drizzle-orm';
-import { getTestDb } from './setup';
+import { drizzle } from 'drizzle-orm/d1';
+import { beforeEach,describe, expect, it } from 'vitest';
+
 import {
-  articles,
   article_translations,
+  articles,
   categories,
   type Complexity,
   type Status,
 } from '@/lib/server/db/schema';
+
+import { getTestDb } from './setup';
 
 // Helper functions to reduce duplication
 function createArticle(
@@ -150,10 +152,10 @@ describe('Articles Integration Tests', () => {
 
       expect(results[0].createdAt).toBeDefined();
       expect(results[0].updatedAt).toBeDefined();
-      expect(results[0].createdAt!.getTime()).toBeGreaterThanOrEqual(
+      expect(results[0].createdAt.getTime()).toBeGreaterThanOrEqual(
         beforeInsert.getTime() - 1000,
       );
-      expect(results[0].createdAt!.getTime()).toBeLessThanOrEqual(
+      expect(results[0].createdAt.getTime()).toBeLessThanOrEqual(
         afterInsert.getTime() + 1000,
       );
     });
@@ -237,10 +239,10 @@ describe('Articles Integration Tests', () => {
 
       expect(results[0].createdAt).toBeDefined();
       expect(results[0].updatedAt).toBeDefined();
-      expect(results[0].createdAt!.getTime()).toBeGreaterThanOrEqual(
+      expect(results[0].createdAt.getTime()).toBeGreaterThanOrEqual(
         beforeInsert.getTime() - 1000,
       );
-      expect(results[0].createdAt!.getTime()).toBeLessThanOrEqual(
+      expect(results[0].createdAt.getTime()).toBeLessThanOrEqual(
         afterInsert.getTime() + 1000,
       );
     });
