@@ -3,12 +3,6 @@ name: Mutation Testing (Stryker)
 on:
   pull_request:
     branches: [main, develop]
-    paths:
-      # Fichiers critiques qui déclenchent mutation testing
-      - 'src/app/admin/**'
-      - 'src/lib/server/**'
-      - 'src/lib/utils/**'
-      - 'src/lib/utils.ts'
   push:
     branches: [main, develop]
   schedule:
