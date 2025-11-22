@@ -5,16 +5,18 @@
  * with Cloudflare D1 via getPlatformProxy.
  */
 
-import { describe, expect, it, beforeEach } from 'vitest';
+import { eq } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/d1';
-import { eq, and } from 'drizzle-orm';
-import { getTestDb } from './setup';
+import { beforeEach,describe, expect, it } from 'vitest';
+
 import {
+  articles,
+  articleTags,
   categories,
   tags,
-  articleTags,
-  articles,
 } from '@/lib/server/db/schema';
+
+import { getTestDb } from './setup';
 
 // Helper to setup article with tags for testing
 type TagConfig = {

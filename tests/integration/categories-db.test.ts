@@ -4,11 +4,13 @@
  * These tests interact with a real D1 database instance via getPlatformProxy.
  */
 
-import { describe, it, expect, beforeEach, afterAll } from 'vitest';
-import { drizzle } from 'drizzle-orm/d1';
 import { eq } from 'drizzle-orm';
+import { drizzle } from 'drizzle-orm/d1';
+import { afterAll,beforeEach, describe, expect, it } from 'vitest';
+
+import { categories } from '@/lib/server/db/schema';
+
 import { getTestDb } from './setup';
-import { categories, type Category } from '@/lib/server/db/schema';
 
 describe('Categories Integration Tests', () => {
   let db: ReturnType<typeof drizzle>;
