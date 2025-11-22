@@ -20,6 +20,7 @@ export default function globalSetup() {
     const result = execSync('npx wrangler d1 migrations apply DB --local', {
       cwd: rootDir,
       encoding: 'utf-8',
+      timeout: 60000,
       env: {
         ...process.env,
         CI: 'true',
