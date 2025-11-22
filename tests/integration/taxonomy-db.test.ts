@@ -27,7 +27,10 @@ async function setupArticleWithTags(
   db: ReturnType<typeof drizzle>,
   articleId: string,
   tagConfigs: TagConfig[],
-  articleOptions?: { complexity?: string; status?: string },
+  articleOptions?: {
+    complexity?: 'beginner' | 'intermediate' | 'advanced';
+    status?: 'draft' | 'published';
+  },
 ) {
   const { complexity = 'beginner', status = 'draft' } = articleOptions || {};
 
