@@ -28,8 +28,7 @@ import { devices, expect, test } from '@playwright/test';
  *
  * @param browser - Playwright Browser instance
  * @param cookieValue - The invalid cookie value to test
- * @param options - Optional configuration
- * @param options.assertCookie - Whether to assert the cookie was updated to a valid value
+ * @param options - Optional configuration with assertCookie to check if cookie was updated
  * @returns The browser context (caller must close it)
  */
 async function testInvalidLocaleCookie(

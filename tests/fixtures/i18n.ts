@@ -17,11 +17,13 @@ import { type Page, test as base } from '@playwright/test';
  * Useful for testing cookie-based language detection.
  *
  * @example
- * test('should detect language from cookie', async \\{ pageWithLocale \\} => {
+ * ```typescript
+ * test('should detect language from cookie', async ({ pageWithLocale }) => {
  *   const page = await pageWithLocale('en');
  *   await page.goto('/');
  *   await expect(page).toHaveURL('/en/');
  * });
+ * ```
  */
 export type I18nFixtures = {
   pageWithLocale: (locale: string) => Promise<Page>;
