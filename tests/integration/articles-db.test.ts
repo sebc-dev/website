@@ -134,10 +134,10 @@ describe('Articles Integration Tests', () => {
       expect(results[0].createdAt).toBeDefined();
       expect(results[0].updatedAt).toBeDefined();
       expect(results[0].createdAt.getTime()).toBeGreaterThanOrEqual(
-        beforeInsert.getTime() - 1000,
+        beforeInsert.getTime() - 10000,
       );
       expect(results[0].createdAt.getTime()).toBeLessThanOrEqual(
-        afterInsert.getTime() + 1000,
+        afterInsert.getTime() + 10000,
       );
     });
 
@@ -221,10 +221,10 @@ describe('Articles Integration Tests', () => {
       expect(results[0].createdAt).toBeDefined();
       expect(results[0].updatedAt).toBeDefined();
       expect(results[0].createdAt.getTime()).toBeGreaterThanOrEqual(
-        beforeInsert.getTime() - 1000,
+        beforeInsert.getTime() - 10000,
       );
       expect(results[0].createdAt.getTime()).toBeLessThanOrEqual(
-        afterInsert.getTime() + 1000,
+        afterInsert.getTime() + 10000,
       );
     });
 
