@@ -98,7 +98,9 @@ describe('Articles Integration Tests', () => {
     });
 
     it('should update article status from draft to published', async () => {
-      await db.insert(articles).values(createArticle({ complexity: 'intermediate' }));
+      await db
+        .insert(articles)
+        .values(createArticle({ complexity: 'intermediate' }));
 
       const publishedAt = new Date();
       await db
@@ -116,7 +118,9 @@ describe('Articles Integration Tests', () => {
     });
 
     it('should delete an article', async () => {
-      await db.insert(articles).values(createArticle({ complexity: 'advanced' }));
+      await db
+        .insert(articles)
+        .values(createArticle({ complexity: 'advanced' }));
 
       await db.delete(articles).where(eq(articles.id, 'test-article-1'));
 
@@ -142,7 +146,9 @@ describe('Articles Integration Tests', () => {
       });
 
       // Create article with category FK
-      await db.insert(articles).values(createArticle({ categoryId: 'test-cat-int' }));
+      await db
+        .insert(articles)
+        .values(createArticle({ categoryId: 'test-cat-int' }));
 
       const results = await db
         .select()
@@ -182,7 +188,9 @@ describe('Articles Integration Tests', () => {
     it('should support multiple translations for same article', async () => {
       await db
         .insert(articles)
-        .values(createArticle({ complexity: 'intermediate', status: 'published' }));
+        .values(
+          createArticle({ complexity: 'intermediate', status: 'published' }),
+        );
 
       // French translation
       await db.insert(article_translations).values(
