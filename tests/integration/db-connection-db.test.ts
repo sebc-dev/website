@@ -21,11 +21,8 @@ describe('D1 Database Connection Integration Tests', () => {
   });
 
   it('should create database instance and connect successfully', () => {
-    const d1 = getTestDb();
-    const dbInstance = getDb({ DB: d1 });
-
-    expect(dbInstance).toBeDefined();
-    expect(typeof dbInstance).toBe('object');
+    expect(db).toBeDefined();
+    expect(typeof db).toBe('object');
   });
 
   it('should execute a simple query on D1', async () => {
