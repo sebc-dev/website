@@ -132,6 +132,32 @@ describe('Articles Integration Tests', () => {
       expect(results).toHaveLength(0);
     });
 
+    it('should auto-generate createdAt and updatedAt timestamps', async () => {
+      const beforeInsert = new Date();
+
+      await db.insert(articles).values({
+        id: 'test-article-1',
+        complexity: 'beginner',
+        status: 'draft',
+      });
+
+      const results = await db
+        .select()
+        .from(articles)
+        .where(eq(articles.id, 'test-article-1'));
+
+      const afterInsert = new Date();
+
+      expect(results[0].createdAt).toBeDefined();
+      expect(results[0].updatedAt).toBeDefined();
+      expect(results[0].createdAt!.getTime()).toBeGreaterThanOrEqual(
+        beforeInsert.getTime() - 1000,
+      );
+      expect(results[0].createdAt!.getTime()).toBeLessThanOrEqual(
+        afterInsert.getTime() + 1000,
+      );
+    });
+
     it('should link article to category via foreign key', async () => {
       // Create category first
       await db.insert(categories).values({
@@ -183,6 +209,40 @@ describe('Articles Integration Tests', () => {
       expect(results[0].language).toBe('fr');
       expect(results[0].title).toBe('Titre de Test');
       expect(results[0].slug).toBe('titre-de-test');
+    });
+
+    it('should auto-generate timestamps for translations', async () => {
+      await db.insert(articles).values(createArticle());
+
+      const beforeInsert = new Date();
+
+      await db.insert(article_translations).values({
+        id: 'trans-timestamps',
+        articleId: 'test-article-1',
+        language: 'fr',
+        title: 'Test Timestamps',
+        slug: 'test-timestamps',
+        excerpt: 'Test',
+        seoTitle: 'Test',
+        seoDescription: 'Test',
+        contentMdx: '# Test',
+      });
+
+      const results = await db
+        .select()
+        .from(article_translations)
+        .where(eq(article_translations.id, 'trans-timestamps'));
+
+      const afterInsert = new Date();
+
+      expect(results[0].createdAt).toBeDefined();
+      expect(results[0].updatedAt).toBeDefined();
+      expect(results[0].createdAt!.getTime()).toBeGreaterThanOrEqual(
+        beforeInsert.getTime() - 1000,
+      );
+      expect(results[0].createdAt!.getTime()).toBeLessThanOrEqual(
+        afterInsert.getTime() + 1000,
+      );
     });
 
     it('should support multiple translations for same article', async () => {
