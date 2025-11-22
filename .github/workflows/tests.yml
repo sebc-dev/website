@@ -48,8 +48,11 @@ jobs:
       - name: Lint code
         run: pnpm lint
 
-      - name: Run unit & integration tests
+      - name: Run unit tests
         run: pnpm test:run
+
+      - name: Run integration tests
+        run: pnpm test:integration
 
       - name: Generate coverage report
         if: always()
