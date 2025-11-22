@@ -7,7 +7,6 @@
  * @see https://developers.cloudflare.com/workers/wrangler/api/#getplatformproxy
  */
 
-import { execSync } from 'child_process';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { afterAll, beforeAll } from 'vitest';
@@ -35,24 +34,7 @@ beforeAll(async () => {
 
   console.log('🚀 Starting integration test setup...');
 
-  // 1. Apply D1 migrations
-  console.log('📦 Applying D1 migrations...');
-  try {
-    execSync('npx wrangler d1 migrations apply DB --local', {
-      stdio: 'inherit',
-      cwd: rootDir,
-      env: {
-        ...process.env,
-        CI: 'true', // Force non-interactive mode
-        NO_D1_WARNING: 'true',
-      },
-    });
-  } catch (error) {
-    console.error('❌ Failed to apply migrations:', error);
-    throw error;
-  }
-
-  // 2. Initialize platform proxy
+  // Initialize platform proxy (migrations applied in globalSetup)
   console.log('🔌 Initializing Cloudflare platform proxy...');
   try {
     platformProxy = await getPlatformProxy({
