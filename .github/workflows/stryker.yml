@@ -1,0 +1,101 @@
+name: Mutation Testing (Stryker)
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      # Fichiers critiques qui déclenchent mutation testing
+      - 'src/app/admin/**'
+      - 'src/lib/server/**'
+      - 'src/lib/utils/**'
+      - 'src/lib/utils.ts'
+  push:
+    branches: [main, develop]
+  schedule:
+    - cron: '0 2 * * 1' # Lundi 2h du matin (hebdomadaire)
+  workflow_dispatch: # Permettre exécution manuelle
+
+permissions:
+  contents: read
+  pull-requests: write
+  actions: read
+  checks: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  mutation-testing:
+    name: Mutation Testing
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run mutation testing
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT_NAME" = "schedule" ]; then
+            # Mutation testing complet hebdomadaire
+            echo "🧬 Running comprehensive mutation testing..."
+            pnpm test:mutation
+          else
+            # Mutation testing sur fichiers critiques seulement
+            echo "🧬 Running critical paths mutation testing..."
+            pnpm test:mutation:critical
+          fi
+
+      - name: Upload mutation report
+        if: always()
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        with:
+          name: mutation-report-${{ github.run_id }}
+          path: reports/mutation/html
+          retention-days: 30
+
+      - name: Track mutation score metrics
+        if: always()
+        continue-on-error: true
+        run: |
+          # Check if Stryker report exists
+          if [ -f "reports/mutation/stryker-report.json" ]; then
+            bash scripts/track-mutation-score.sh
+          else
+            echo "⚠ Stryker report not found - skipping mutation score tracking"
+          fi
+
+      - name: Upload mutation metrics
+        if: always()
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        with:
+          name: mutation-metrics-${{ github.run_number }}
+          path: .mutation-metrics/
+          retention-days: 30
+
+      - name: Comment mutation results on PR
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '⚠️ **Mutation Testing Failed**\n\nThe mutation testing job has failed. This indicates that some of your tests may not be adequately validating the code changes.\n\nCheck the [mutation report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) for details.'
+            })
