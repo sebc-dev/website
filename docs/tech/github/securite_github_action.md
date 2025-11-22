@@ -28,7 +28,7 @@ Considérons la configuration vulnérable suivante, identifiée fréquemment dan
 
 YAML
 
-\- name: Vérifier le titre de la PR  
+- name: Vérifier le titre de la PR  
  run: |  
  title="${{ github.event.pull\_request.title }}"  
  if \[\[ $title \=\~ ^octocat \]\]; then  
@@ -51,7 +51,7 @@ L'implémentation sécurisée de l'exemple précédent se présente ainsi :
 
 YAML
 
-\- name: Vérifier le titre de la PR  
+- name: Vérifier le titre de la PR  
  env:  
  TITLE: ${{ github.event.pull\_request.title }}  
  run: |  
@@ -144,7 +144,7 @@ permissions:
  contents: read
 
 steps:  
- \- name: Configurer les Identifiants AWS  
+ - name: Configurer les Identifiants AWS  
  uses: aws-actions/configure-aws-credentials@v4  
  with:  
  role-to-assume: arn:aws:iam::123456789012:role/mon-role-github  
@@ -159,14 +159,14 @@ Les organisations doivent appliquer le principe de **Moindre Privilège** en dé
 
 YAML
 
-\# Bonne Pratique : Définition explicite des permissions minimales  
+# Bonne Pratique : Définition explicite des permissions minimales  
 permissions:  
  contents: read  
  pull-requests: write \# Uniquement si nécessaire pour commenter
 
 Cette pratique limite drastiquement le "rayon d'explosion" (blast radius) si le jeton est récupéré par un attaquant.17
 
-## **5\. Sécurité de la Chaîne d'Approvisionnement : Le Dilemme des Dépendances**
+## **5 Sécurité de la Chaîne d'Approvisionnement : Le Dilemme des Dépendances**
 
 Un workflow GitHub Actions est rarement un script autonome. Il est un assemblage d'Actions tierces (dépendances) tirées de la Marketplace GitHub. Cela introduit un risque majeur de chaîne d'approvisionnement (Supply Chain Risk). Si le mainteneur d'une Action populaire est compromis, ou s'il vend l'Action à un acteur malveillant, la mise à jour se propage instantanément à tous les consommateurs utilisant des tags mutables.
 
@@ -181,7 +181,9 @@ La seule méthode garantissant l'immuabilité est d'épingler les Actions à leu
 
 YAML
 
-\- uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 \# v3.6.0
+- uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 
+
+# v3.6.0
 
 L'épinglage assure que même si le tag v3 est détourné ou le dépôt compromis, le workflow continue d'utiliser la version connue et vérifiée du code.20
 

@@ -145,7 +145,7 @@ function KeyRow({
           {copied && <span className='text-accent ml-1 text-xs'>copied!</span>}
         </div>
         {hasParameters && (
-          <span className='text-xs italic text-zinc-500'>(parameterized)</span>
+          <span className='text-xs text-zinc-500 italic'>(parameterized)</span>
         )}
       </div>
 

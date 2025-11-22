@@ -31,3 +31,6 @@ docs/specs/**/validation/*.md
 pnpm-lock.yaml
 package-lock.json
 yarn.lock
+
+# Markdown files - disable formatting to preserve custom formatting
+**/*.md
