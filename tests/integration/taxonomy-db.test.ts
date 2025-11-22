@@ -67,10 +67,15 @@ describe('Taxonomy Integration Tests', () => {
     await db
       .delete(articleTags)
       .where(eq(articleTags.articleId, 'test-tax-article'));
+    await db
+      .delete(articleTags)
+      .where(eq(articleTags.articleId, 'test-article-with-cat'));
     await db.delete(articles).where(eq(articles.id, 'test-tax-article'));
+    await db.delete(articles).where(eq(articles.id, 'test-article-with-cat'));
     await db.delete(tags).where(eq(tags.id, 'test-tag-1'));
     await db.delete(tags).where(eq(tags.id, 'test-tag-2'));
     await db.delete(categories).where(eq(categories.id, 'test-tax-cat'));
+    await db.delete(categories).where(eq(categories.id, 'test-cat-delete'));
   });
 
   describe('Tags CRUD Operations', () => {
