@@ -17,6 +17,12 @@ export default defineConfig({
     hookTimeout: 30000,
     // Sequential execution to avoid D1 database conflicts
     fileParallelism: false,
+    pool: 'forks',
+    poolOptions: {
+      forks: {
+        singleFork: true,
+      },
+    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
