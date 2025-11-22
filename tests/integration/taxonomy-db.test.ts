@@ -285,5 +285,30 @@ describe('Taxonomy Integration Tests', () => {
       expect(results).toHaveLength(1);
       expect(results[0].id).toBe('test-tax-article');
     });
+
+    it('should prevent category deletion when referenced by articles', async () => {
+      await db.insert(categories).values({
+        id: 'test-cat-delete',
+        key: 'delete-test',
+        nameFr: 'Delete Test',
+        nameEn: 'Delete Test',
+        slugFr: 'delete-test',
+        slugEn: 'delete-test',
+        icon: 'Trash',
+        color: '#FF0000',
+      });
+
+      await db.insert(articles).values({
+        id: 'test-article-with-cat',
+        categoryId: 'test-cat-delete',
+        complexity: 'intermediate',
+        status: 'draft',
+      });
+
+      // Attempt to delete category - should fail due to FK constraint
+      await expect(
+        db.delete(categories).where(eq(categories.id, 'test-cat-delete')),
+      ).rejects.toThrow(/Failed query:.*categories/);
+    });
   });
 });
