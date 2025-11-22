@@ -33,8 +33,8 @@ import {
   startTimer,
 } from '@/lib/i18n/performance';
 import { handleRootPathRedirect } from '@/lib/i18n/redirect';
-import type { Locale } from '@/src/i18n';
-import { defaultLocale, routing } from '@/src/i18n';
+import type { Locale } from '@/i18n';
+import { defaultLocale, routing } from '@/i18n';
 
 /**
  * Detects the locale from the URL pathname prefix
@@ -143,7 +143,7 @@ export function detectLocaleFromURL(pathname: string): Locale | undefined {
  * // Returns: ['fr'] (en with q=0 is ignored)
  */
 export function parseAcceptLanguage(headerValue: string): string[] {
-  if (!headerValue || typeof headerValue !== 'string') {
+  if (!headerValue) {
     return [];
   }
 
@@ -243,7 +243,7 @@ export function parseAcceptLanguage(headerValue: string): string[] {
  * // Returns: undefined (missing cookie)
  */
 export function getLocaleFromCookie(cookieValue?: string): Locale | undefined {
-  if (!cookieValue || typeof cookieValue !== 'string') {
+  if (!cookieValue) {
     return undefined;
   }
 
