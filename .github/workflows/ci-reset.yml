@@ -1,0 +1,44 @@
+name: CI Status Reset
+
+on:
+  pull_request:
+    branches: [main, develop]
+
+permissions:
+  statuses: write
+
+jobs:
+  reset-status:
+    name: Reset CI Status
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+
+    steps:
+      - name: Reset CI status to pending
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        with:
+          script: |
+            const contexts = [
+              'CI Summary',
+              'Format Check',
+              'Lint',
+              'TypeScript',
+              'Architecture',
+              'Unit & Integration Tests',
+              'Build',
+              'Security Audit',
+              'Shellcheck'
+            ];
+
+            for (const statusContext of contexts) {
+              await github.rest.repos.createCommitStatus({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                sha: context.payload.pull_request.head.sha,
+                state: 'pending',
+                context: statusContext,
+                description: 'Waiting for manual CI trigger'
+              });
+            }
+
+            console.log('CI statuses reset to pending');
