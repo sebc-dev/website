@@ -19,6 +19,7 @@ on:
 # Permissions minimales (principe du moindre privilège)
 permissions:
   contents: read
+  statuses: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -61,6 +62,20 @@ jobs:
       - name: Run ${{ matrix.name }}
         run: pnpm ${{ matrix.command }}
 
+      - name: Update commit status
+        if: always()
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        with:
+          script: |
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: '${{ job.status }}' === 'success' ? 'success' : 'failure',
+              context: '${{ matrix.name }}',
+              description: '${{ job.status }}'
+            });
+
   # ============================================================================
   # Tests Unitaires et d'Intégration
   # ============================================================================
@@ -100,6 +115,20 @@ jobs:
           path: coverage/
           retention-days: 7
 
+      - name: Update commit status
+        if: always()
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        with:
+          script: |
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: '${{ job.status }}' === 'success' ? 'success' : 'failure',
+              context: 'Unit & Integration Tests',
+              description: '${{ job.status }}'
+            });
+
   # ============================================================================
   # Security Audit
   # ============================================================================
@@ -124,6 +153,20 @@ jobs:
       - name: Run security audit
         run: pnpm audit --prod --audit-level=high
 
+      - name: Update commit status
+        if: always()
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        with:
+          script: |
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: '${{ job.status }}' === 'success' ? 'success' : 'failure',
+              context: 'Security Audit',
+              description: '${{ job.status }}'
+            });
+
   # ============================================================================
   # Shell Scripts Validation (Shellcheck)
   # ============================================================================
@@ -142,6 +185,20 @@ jobs:
         with:
           scandir: './scripts'
           severity: warning
+
+      - name: Update commit status
+        if: always()
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        with:
+          script: |
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: '${{ job.status }}' === 'success' ? 'success' : 'failure',
+              context: 'Shellcheck',
+              description: '${{ job.status }}'
+            });
 
   # Dead Code Detection: See .github/workflows/knip.yml
 
@@ -190,6 +247,20 @@ jobs:
             exit 1
           fi
 
+      - name: Update commit status
+        if: always()
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        with:
+          script: |
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: '${{ job.status }}' === 'success' ? 'success' : 'failure',
+              context: 'Build',
+              description: '${{ job.status }}'
+            });
+
   # ============================================================================
   # CI Summary
   # ============================================================================
@@ -234,3 +305,17 @@ jobs:
 
           echo ""
           echo "CI Pipeline succeeded"
+
+      - name: Update commit status
+        if: always()
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        with:
+          script: |
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: '${{ job.status }}' === 'success' ? 'success' : 'failure',
+              context: 'CI Summary',
+              description: '${{ job.status }}'
+            });
