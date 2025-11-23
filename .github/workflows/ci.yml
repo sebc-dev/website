@@ -201,7 +201,8 @@ jobs:
     name: CI Summary
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    needs: [static-checks, unit-tests, security-audit, shellcheck, dead-code, build]
+    needs:
+      [static-checks, unit-tests, security-audit, shellcheck, dead-code, build]
     if: always()
 
     steps:
