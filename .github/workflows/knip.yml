@@ -1,0 +1,44 @@
+# Dead Code Detection with Knip
+# Manual workflow - run via GitHub Actions UI or gh workflow run knip.yml
+
+name: Dead Code Detection (Knip)
+
+on:
+  workflow_dispatch:
+    inputs:
+      strict:
+        description: 'Run in strict mode (fail on any issue)'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  knip:
+    name: Find Dead Code
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+
+      - name: Setup environment
+        uses: ./.github/actions/setup-environment
+        with:
+          install-pnpm: 'true'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Find dead code
+        run: pnpm dlx knip
+        continue-on-error: ${{ inputs.strict == false }}
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Dead Code Detection Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Run \`pnpm dlx knip\` locally to see detailed results." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "To fix issues, see the analysis in the related GitHub issue." >> $GITHUB_STEP_SUMMARY
