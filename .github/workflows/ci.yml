@@ -3,8 +3,20 @@ name: CI
 on:
   pull_request:
     branches: [main, develop]
-  push:
-    branches: [main, develop]
+  workflow_dispatch:
+    inputs:
+      jobs:
+        description: 'Jobs à exécuter'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - static-checks
+          - unit-tests
+          - build
+          - security-audit
+          - shellcheck
 
 # Permissions minimales (principe du moindre privilège)
 permissions:
@@ -22,6 +34,7 @@ jobs:
     name: ${{ matrix.name }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    if: ${{ github.event_name == 'pull_request' || inputs.jobs == 'all' || inputs.jobs == 'static-checks' }}
     strategy:
       fail-fast: false
       matrix:
@@ -57,6 +70,7 @@ jobs:
     name: Unit & Integration Tests
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    if: ${{ github.event_name == 'pull_request' || inputs.jobs == 'all' || inputs.jobs == 'unit-tests' }}
 
     steps:
       - name: Checkout
@@ -95,6 +109,7 @@ jobs:
     name: Security Audit
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    if: ${{ github.event_name == 'pull_request' || inputs.jobs == 'all' || inputs.jobs == 'security-audit' }}
 
     steps:
       - name: Checkout
@@ -118,6 +133,7 @@ jobs:
     name: Shellcheck
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    if: ${{ github.event_name == 'pull_request' || inputs.jobs == 'all' || inputs.jobs == 'shellcheck' }}
 
     steps:
       - name: Checkout
@@ -162,6 +178,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     needs: [static-checks, unit-tests]
+    if: ${{ always() && (github.event_name == 'pull_request' || inputs.jobs == 'all' || inputs.jobs == 'build') && (needs.static-checks.result == 'success' || needs.static-checks.result == 'skipped') && (needs.unit-tests.result == 'success' || needs.unit-tests.result == 'skipped') }}
 
     steps:
       - name: Checkout
@@ -214,13 +231,19 @@ jobs:
           echo "  Shellcheck: ${{ needs.shellcheck.result }}"
           echo "  Build: ${{ needs.build.result }}"
 
-          if [ "${{ needs.static-checks.result }}" != "success" ] || \
-             [ "${{ needs.unit-tests.result }}" != "success" ] || \
-             [ "${{ needs.build.result }}" != "success" ]; then
-            echo ""
-            echo "CI Pipeline failed"
-            exit 1
-          fi
+          # Check critical jobs (allow skipped for manual runs)
+          for job in "static-checks" "unit-tests" "build"; do
+            result="${{ needs.static-checks.result }}"
+            case $job in
+              "unit-tests") result="${{ needs.unit-tests.result }}" ;;
+              "build") result="${{ needs.build.result }}" ;;
+            esac
+            if [ "$result" != "success" ] && [ "$result" != "skipped" ]; then
+              echo ""
+              echo "CI Pipeline failed: $job = $result"
+              exit 1
+            fi
+          done
 
           # Non-blocking checks (warnings)
           if [ "${{ needs.security-audit.result }}" != "success" ]; then

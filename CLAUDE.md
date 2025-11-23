@@ -70,6 +70,24 @@ See: `/docs/specs/epics/epic_1/refactoring_e2e/STORY_E2E_CLOUDFLARE_REFACTOR.md`
 - Vitest: `pnpm test <filename>` or use `.only` in test files
 - Playwright: `pnpm test:e2e <test-file-path>` or use `.only` in spec files
 
+### CI Pipeline (Manual Trigger)
+
+La CI ne se lance pas automatiquement sur les push, uniquement sur les PRs. Pour lancer manuellement :
+
+```bash
+# Tout le pipeline
+gh workflow run ci.yml
+
+# Jobs spécifiques
+gh workflow run ci.yml -f jobs=static-checks   # Format, Lint, TypeScript, Architecture
+gh workflow run ci.yml -f jobs=unit-tests      # Tests unitaires et intégration
+gh workflow run ci.yml -f jobs=build           # Build complet
+gh workflow run ci.yml -f jobs=security-audit  # Audit de sécurité
+gh workflow run ci.yml -f jobs=shellcheck      # Validation scripts shell
+```
+
+Ou via GitHub : **Actions > CI > Run workflow**
+
 ## Architecture
 
 ### Project Structure
