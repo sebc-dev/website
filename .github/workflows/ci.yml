@@ -283,8 +283,8 @@ jobs:
 
           # Check critical jobs (allow skipped for manual runs)
           for job in "static-checks" "unit-tests" "build"; do
-            result="${{ needs.static-checks.result }}"
             case $job in
+              "static-checks") result="${{ needs.static-checks.result }}" ;;
               "unit-tests") result="${{ needs.unit-tests.result }}" ;;
               "build") result="${{ needs.build.result }}" ;;
             esac
