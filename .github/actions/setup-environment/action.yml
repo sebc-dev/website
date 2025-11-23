@@ -1,0 +1,34 @@
+name: 'Setup Environment'
+description: 'Checkout code and setup Node.js environment with optional pnpm'
+
+inputs:
+  node-version:
+    description: 'Node.js version to use'
+    required: false
+    default: '20'
+  install-pnpm:
+    description: 'Whether to install pnpm'
+    required: false
+    default: 'false'
+  pnpm-version:
+    description: 'pnpm version to install'
+    required: false
+    default: '9'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+
+    - name: Setup pnpm
+      if: inputs.install-pnpm == 'true'
+      uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+      with:
+        version: ${{ inputs.pnpm-version }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: ${{ inputs.install-pnpm == 'true' && 'pnpm' || '' }}

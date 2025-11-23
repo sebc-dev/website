@@ -26,15 +26,11 @@ jobs:
   validate-env-vars:
     name: Validate Environment Variables
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-        with:
-          node-version: '20'
+      - name: Setup environment
+        uses: ./.github/actions/setup-environment
 
       - name: Run environment variables validation
         run: node scripts/validate-env-vars.cjs
@@ -48,15 +44,11 @@ jobs:
   validate-dependency-placement:
     name: Validate Dependency Placement
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-        with:
-          node-version: '20'
+      - name: Setup environment
+        uses: ./.github/actions/setup-environment
 
       - name: Check for runtime imports in devDependencies
         run: |
@@ -114,10 +106,11 @@ jobs:
   validate-wrangler:
     name: Validate Wrangler Configuration
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - name: Setup environment
+        uses: ./.github/actions/setup-environment
 
       - name: Validate Wrangler Configuration
         run: bash scripts/validate-wrangler-config.sh
@@ -131,21 +124,13 @@ jobs:
   validate-typescript:
     name: Validate TypeScript
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@fe02b34f77f8bc703788d5817da081398fad5dd2 # v4.0.0
+      - name: Setup environment
+        uses: ./.github/actions/setup-environment
         with:
-          version: 9
-
-      - name: Setup Node.js
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-        with:
-          node-version: '20'
-          cache: 'pnpm'
+          install-pnpm: 'true'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -162,6 +147,7 @@ jobs:
   validation-summary:
     name: Validation Summary
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     needs:
       - validate-env-vars
       - validate-dependency-placement
