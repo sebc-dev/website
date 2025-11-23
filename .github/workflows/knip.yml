@@ -12,6 +12,10 @@ on:
         default: false
         type: boolean
 
+# Permissions minimales (principe du moindre privilège)
+permissions:
+  contents: read
+
 jobs:
   knip:
     name: Find Dead Code
