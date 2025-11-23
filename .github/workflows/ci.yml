@@ -239,6 +239,7 @@ jobs:
         run: |
           bash scripts/validate-cloudflare-output.sh || EXIT_CODE=$?
           EXIT_CODE=${EXIT_CODE:-0}
+          echo "Validation exit code: $EXIT_CODE (0=success, 1=critical, 2=warnings)"
 
           if [ $EXIT_CODE -eq 2 ]; then
             echo "Validation completed with warnings (expected for Cloudflare Dashboard config)"
