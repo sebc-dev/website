@@ -43,6 +43,11 @@ jobs:
         run: |
           echo "## Dead Code Detection Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Run \`pnpm dlx knip\` locally to see detailed results." >> $GITHUB_STEP_SUMMARY
+          echo "### View Details" >> $GITHUB_STEP_SUMMARY
+          echo "- [Full logs for this run]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)" >> $GITHUB_STEP_SUMMARY
+          echo "- Run \`pnpm dlx knip\` locally for detailed output" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "To fix issues, see the analysis in the related GitHub issue." >> $GITHUB_STEP_SUMMARY
+          echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
+          echo "1. Review the 'Find dead code' step logs above for specific files/exports" >> $GITHUB_STEP_SUMMARY
+          echo "2. Remove unused exports, files, or dependencies as indicated" >> $GITHUB_STEP_SUMMARY
+          echo "3. If intentional, add entries to \`knip.config.ts\` ignore patterns" >> $GITHUB_STEP_SUMMARY
