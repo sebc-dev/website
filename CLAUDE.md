@@ -92,6 +92,22 @@ Ou via GitHub : **Actions > CI > Run workflow**
 **Note** : Pour que la CI soit requise pour merger, configurer dans GitHub :
 Settings > Branches > Branch protection rules > Require status checks
 
+### Dead Code Detection (Knip)
+
+Knip is available as a separate manual workflow for detecting unused code:
+
+```bash
+# Default mode (warnings only, job succeeds)
+gh workflow run knip.yml
+
+# Strict mode (job fails on any dead code found)
+gh workflow run knip.yml -f strict=true
+```
+
+The `strict` input controls the `pnpm dlx knip` step's `continue-on-error` behavior:
+- `strict=false` (default): Knip runs and reports issues but the job succeeds
+- `strict=true`: Knip failures cause the job to fail
+
 ## Architecture
 
 ### Project Structure
