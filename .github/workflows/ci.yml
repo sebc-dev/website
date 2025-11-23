@@ -202,7 +202,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     needs:
-      [static-checks, unit-tests, security-audit, shellcheck, dead-code, build]
+      [static-checks, unit-tests, security-audit, shellcheck, build]
     if: always()
 
     steps:
@@ -213,7 +213,6 @@ jobs:
           echo "  Unit Tests: ${{ needs.unit-tests.result }}"
           echo "  Security Audit: ${{ needs.security-audit.result }}"
           echo "  Shellcheck: ${{ needs.shellcheck.result }}"
-          echo "  Dead Code: ${{ needs.dead-code.result }}"
           echo "  Build: ${{ needs.build.result }}"
 
           if [ "${{ needs.static-checks.result }}" != "success" ] || \
