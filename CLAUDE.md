@@ -72,7 +72,8 @@ See: `/docs/specs/epics/epic_1/refactoring_e2e/STORY_E2E_CLOUDFLARE_REFACTOR.md`
 
 ### CI Pipeline (Manual Trigger)
 
-La CI ne se lance pas automatiquement sur les push, uniquement sur les PRs. Pour lancer manuellement :
+La CI est **100% manuelle** - elle ne se lance jamais automatiquement (ni sur push, ni sur PR).
+Configurer les **branch protection rules** sur GitHub pour exiger le passage de la CI avant merge.
 
 ```bash
 # Tout le pipeline
@@ -87,6 +88,9 @@ gh workflow run ci.yml -f jobs=shellcheck      # Validation scripts shell
 ```
 
 Ou via GitHub : **Actions > CI > Run workflow**
+
+**Note** : Pour que la CI soit requise pour merger, configurer dans GitHub :
+Settings > Branches > Branch protection rules > Require status checks
 
 ## Architecture
 
