@@ -12,10 +12,8 @@
     "!src/lib/server/**/*.test.ts",
     "!src/lib/server/**/*.spec.ts",
     "!src/lib/server/db/schema.ts",
-    "src/app/admin/actions.ts",
-    "src/lib/utils/**/*.ts",
-    "!src/lib/utils/**/*.test.ts",
-    "!src/lib/utils/**/*.spec.ts",
+    "!src/lib/server/db/index.ts",
+    "src/lib/utils.ts",
     "!**/__tests__/**"
   ],
   "mutator": {
