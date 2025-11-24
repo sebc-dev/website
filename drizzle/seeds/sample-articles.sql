@@ -1,8 +1,9 @@
 -- Sample article seed data for testing and development
 -- This file contains 1 sample article with 2 translations (FR + EN)
+-- Uses INSERT OR REPLACE to be idempotent (safe to run multiple times)
 
 -- Insert sample article
-INSERT INTO articles (id, category_id, complexity, status, published_at, cover_image, created_at, updated_at)
+INSERT OR REPLACE INTO articles (id, category_id, complexity, status, published_at, cover_image, created_at, updated_at)
 VALUES (
   'test-article-1',
   NULL,
@@ -15,7 +16,7 @@ VALUES (
 );
 
 -- Insert French translation
-INSERT INTO article_translations (id, article_id, language, title, slug, excerpt, seo_title, seo_description, content_mdx, created_at, updated_at)
+INSERT OR REPLACE INTO article_translations (id, article_id, language, title, slug, excerpt, seo_title, seo_description, content_mdx, created_at, updated_at)
 VALUES (
   'test-translation-fr-1',
   'test-article-1',
@@ -41,7 +42,7 @@ Vous pouvez ajouter n''importe quel contenu Markdown ici.',
 );
 
 -- Insert English translation
-INSERT INTO article_translations (id, article_id, language, title, slug, excerpt, seo_title, seo_description, content_mdx, created_at, updated_at)
+INSERT OR REPLACE INTO article_translations (id, article_id, language, title, slug, excerpt, seo_title, seo_description, content_mdx, created_at, updated_at)
 VALUES (
   'test-translation-en-1',
   'test-article-1',
