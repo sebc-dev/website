@@ -12,6 +12,7 @@ on:
 # Principe de Moindre Privilège (Section 4.3)
 permissions:
   contents: read
+  statuses: write
 
 jobs:
   test:
@@ -70,3 +71,17 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
+
+      - name: Update commit status
+        if: always()
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        with:
+          script: |
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state: '${{ job.status }}' === 'success' ? 'success' : 'failure',
+              context: 'E2E Tests',
+              description: '${{ job.status }}'
+            });
