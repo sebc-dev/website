@@ -1,11 +1,11 @@
 import { getRequestConfig } from 'next-intl/server';
 
-import { defaultLocale, type Locale, locales } from './config';
+import { defaultLocale, type Locale, locales } from '../src/i18n/config';
 
 type Messages = Record<string, unknown>;
 
 async function loadMessages(locale: string): Promise<Messages> {
-  const imported = (await import(`../messages/${locale}.json`)) as {
+  const imported = (await import(`../src/messages/${locale}.json`)) as {
     default: Messages;
   };
   return imported.default;

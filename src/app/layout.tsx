@@ -110,13 +110,13 @@ export const metadata: Metadata = {
  * - CSS variables minimize duplicate theme definitions
  * - Minimal layout shift due to early font specification
  */
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='fr' className='dark'>
+    <html lang='fr' className='dark' suppressHydrationWarning>
       {/* Dark theme applied at root level for entire application */}
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
