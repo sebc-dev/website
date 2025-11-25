@@ -5,12 +5,13 @@
  * - Visual elements (title, badge, descriptions)
  * - Internationalization (French/English content)
  * - Responsive behavior
- * - Accessibility basics
+ * - Accessibility basics and WCAG compliance
  *
  * @see src/app/[locale]/page.tsx
  */
 
 import { expect, test } from './fixtures/i18n';
+import { AxeBuilder } from '@axe-core/playwright';
 
 test.describe('Homepage - Coming Soon Landing Page', () => {
   test.describe('French Version (Default)', () => {
@@ -150,6 +151,44 @@ test.describe('Homepage - Coming Soon Landing Page', () => {
       const mainText = page.locator('p');
       expect(await mainText.count()).toBeGreaterThan(0);
       await expect(mainText.first()).toBeVisible();
+    });
+
+    test('should pass comprehensive accessibility audit (French)', async ({
+      page,
+    }) => {
+      await page.goto('/fr/');
+      // Wait for page to be fully loaded and interactive
+      await page.waitForLoadState('networkidle');
+
+      // Run accessibility audit using AxeBuilder
+      // Exclude known issues to be fixed:
+      // - meta-viewport: maximum-scale=1 should be removed from viewport meta tag
+      // - region: Content should be wrapped in semantic landmarks (e.g., <main>)
+      const results = await new AxeBuilder({ page })
+        .disableRules(['meta-viewport', 'region'])
+        .analyze();
+
+      // Assert no violations found (excluding known issues)
+      expect(results.violations).toHaveLength(0);
+    });
+
+    test('should pass comprehensive accessibility audit (English)', async ({
+      page,
+    }) => {
+      await page.goto('/en/');
+      // Wait for page to be fully loaded and interactive
+      await page.waitForLoadState('networkidle');
+
+      // Run accessibility audit using AxeBuilder
+      // Exclude known issues to be fixed:
+      // - meta-viewport: maximum-scale=1 should be removed from viewport meta tag
+      // - region: Content should be wrapped in semantic landmarks (e.g., <main>)
+      const results = await new AxeBuilder({ page })
+        .disableRules(['meta-viewport', 'region'])
+        .analyze();
+
+      // Assert no violations found (excluding known issues)
+      expect(results.violations).toHaveLength(0);
     });
   });
 
