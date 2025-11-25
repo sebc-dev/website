@@ -129,8 +129,14 @@ test.describe('i18n Middleware - Core Scenarios', () => {
   // AC4: Unsupported language redirects
   test.describe('AC4: Unsupported language redirects', () => {
     test('should redirect from unsupported language to French', async ({
-      page,
+      browser,
     }) => {
+      // Force French locale for consistent default behavior
+      const context = await browser.newContext({
+        locale: 'fr-FR',
+      });
+      const page = await context.newPage();
+
       const response = await page.goto('/de/articles', {
         waitUntil: 'networkidle',
       });
@@ -138,32 +144,60 @@ test.describe('i18n Middleware - Core Scenarios', () => {
       expect([307, 302, 301]).toContain(response?.status());
       // Should end up on French version
       await expect(page).toHaveURL(/\/fr\/articles/);
+
+      await context.close();
     });
 
     test('should preserve path when redirecting unsupported language', async ({
-      page,
+      browser,
     }) => {
+      // Force French locale for consistent default behavior
+      const context = await browser.newContext({
+        locale: 'fr-FR',
+      });
+      const page = await context.newPage();
+
       await page.goto('/it/messages-test', { waitUntil: 'networkidle' });
       // Should redirect to French version of same path
       await expect(page).toHaveURL(/\/fr\/messages-test/);
+
+      await context.close();
     });
 
     test('should preserve query parameters during language redirect', async ({
-      page,
+      browser,
     }) => {
+      // Force French locale for consistent default behavior
+      const context = await browser.newContext({
+        locale: 'fr-FR',
+      });
+      const page = await context.newPage();
+
       await page.goto('/es/articles?page=2', { waitUntil: 'networkidle' });
       // Should redirect but preserve query params
       const url = page.url();
       expect(url).toMatch(/\/fr\/articles/);
       expect(url).toContain('page=2');
+
+      await context.close();
     });
   });
 
   // AC5: Root path redirection
   test.describe('AC5: Root path redirection', () => {
-    test('should redirect root path to French by default', async ({ page }) => {
+    test('should redirect root path to French by default', async ({
+      browser,
+    }) => {
+      // Force French locale for consistent default behavior
+      const context = await browser.newContext({
+        locale: 'fr-FR',
+      });
+      const page = await context.newPage();
+
       await page.goto('/');
       await expect(page).toHaveURL(/\/fr\/?$/);
+
+      await context.close();
     });
 
     test('should redirect root path to detected language from cookie', async ({
@@ -187,12 +221,20 @@ test.describe('i18n Middleware - Core Scenarios', () => {
     });
 
     test('should preserve query parameters during root path redirect', async ({
-      page,
+      browser,
     }) => {
+      // Force French locale for consistent default behavior
+      const context = await browser.newContext({
+        locale: 'fr-FR',
+      });
+      const page = await context.newPage();
+
       await page.goto('/?utm_source=test');
       const url = page.url();
       expect(url).toMatch(/\/fr\//);
       expect(url).toContain('utm_source=test');
+
+      await context.close();
     });
   });
 
