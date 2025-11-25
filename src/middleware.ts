@@ -479,6 +479,37 @@ export function middleware(request: NextRequest): NextResponse {
     method: request.method,
   });
 
+  // Step 0: Handle invalid locale prefixes early
+  // If the URL starts with a 2-letter code that's NOT a supported locale,
+  // remove it and redirect to the correct locale
+  const segments = pathname.split('/');
+  const firstSegment = segments[1];
+
+  if (firstSegment && firstSegment.length === 2 && !validateLocale(firstSegment)) {
+    // This is an invalid locale prefix, remove it and redirect
+    const detectedLocale = detectLocale(request);
+    const cleanPath = '/' + segments.slice(2).join('/'); // Remove invalid segment
+    const newPath = `/${detectedLocale}${cleanPath}`;
+
+    const url = request.nextUrl.clone();
+    url.pathname = newPath;
+
+    const response = NextResponse.redirect(url, 307);
+    response.cookies.set('NEXT_LOCALE', detectedLocale, LOCALE_COOKIE_OPTIONS);
+
+    const redirectDuration = endTimer(middlewareTimer);
+
+    logger.info('Invalid locale redirect', {
+      from: pathname,
+      to: newPath,
+      invalidLocale: firstSegment,
+      detectedLocale,
+      duration: redirectDuration,
+    });
+
+    return response;
+  }
+
   // Step 1: Detect the appropriate locale from all sources
   // This uses our custom detection hierarchy: URL → cookie → header → default
   const detectedLocale = detectLocale(request);
