@@ -4,6 +4,17 @@ import { getMessages, setRequestLocale } from 'next-intl/server';
 
 import type { Locale } from '@/i18n';
 import { locales } from '@/i18n';
+import { Geist, Geist_Mono } from 'next/font/google';
+
+const geistSans = Geist({
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
+});
+
+const geistMono = Geist_Mono({
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
+});
 
 /**
  * Generate static params for all supported locales
@@ -27,10 +38,11 @@ interface LocaleLayoutProps {
  * - Validates the locale parameter against supported locales
  * - Sets the request locale for server components
  * - Provides NextIntlClientProvider for client components
+ * - Renders the HTML element with dynamic lang attribute based on locale
  * - Returns 404 for invalid locale parameters
  *
- * The layout does not include HTML/body tags as those are in the root layout.
- * It serves as a validation and context-setting layer for i18n.
+ * The HTML/body structure is now here (moved from root layout) to support
+ * dynamic lang attributes per locale, preventing hydration mismatches.
  */
 export default async function LocaleLayout({
   children,
@@ -50,8 +62,14 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <NextIntlClientProvider messages={messages}>
-      {children}
-    </NextIntlClientProvider>
+    <html lang={locale} className='dark' suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <NextIntlClientProvider messages={messages}>
+          {children}
+        </NextIntlClientProvider>
+      </body>
+    </html>
   );
 }
