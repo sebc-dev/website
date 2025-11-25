@@ -87,5 +87,18 @@
     "placeholder": "Rechercher les articles...",
     "readingDuration": "Durée de lecture",
     "sort": "Trier par"
+  },
+  "home": {
+    "badge": "En développement",
+    "subtitle": "Un laboratoire d'apprentissage public",
+    "descriptionPrefix": "À l'intersection de l'",
+    "descriptionMiddle": ", de l'",
+    "descriptionSuffix": " et de l'",
+    "ai": "IA",
+    "ux": "UX",
+    "engineering": "ingénierie logicielle",
+    "launchLabel": "Lancement prévu",
+    "launchDate": "Fin Novembre 2025",
+    "tagline": "Blog technique • Articles • Guides"
   }
 }

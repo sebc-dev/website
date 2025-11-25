@@ -11,5 +11,4 @@ export {
   useRouter,
 } from './routing';
 
-// Per-request config using Next.js 15 async requestLocale API (locale detection for incoming requests)
-export { default as getRequestConfig } from './request';
+// Note: getRequestConfig is in /config/i18n.ts (configured in next.config.ts)

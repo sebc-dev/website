@@ -1,6 +1,7 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
+@layer base {
 /* ============================================
    PRIMITIVE TOKENS - Valeurs de base réutilisables
    ============================================ */
@@ -176,6 +177,7 @@
   --sidebar-accent-foreground: var(--neutral-500);
   --sidebar-border: var(--neutral-dark-400);
   --sidebar-ring: var(--color-primary-light);
+}
 }
 
 /* ============================================

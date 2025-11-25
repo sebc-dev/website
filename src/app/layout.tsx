@@ -88,42 +88,28 @@ export const metadata: Metadata = {
  * RootLayout Component
  *
  * The root layout component for the entire application. Provides:
- * - Dark theme application via `className='dark'` on HTML element
  * - Font variable initialization (Geist Sans and Mono)
  * - Global styling context through globals.css
- * - Language setting (French: lang='fr')
  *
- * Accessibility:
- * - Language properly set to 'fr' for French content
- * - Semantic HTML structure maintained
- * - CSS variables for theming accessible to all child components
- * - Font smoothing enabled via `antialiased` Tailwind class
- *
- * Styling:
- * - Dark theme class applied globally (className='dark')
- * - This enables Tailwind's dark mode for all descendants
- * - Custom Geist font variables for consistent typography
- * - Antialiasing for improved text rendering (especially in Safari)
+ * Note: The <html> element is now in the localized layout (src/app/[locale]/layout.tsx)
+ * to support dynamic lang attribute based on the active locale. This prevents hydration
+ * mismatches when switching between locales.
  *
  * Performance:
  * - Font loading optimized via next/font/google
  * - CSS variables minimize duplicate theme definitions
  * - Minimal layout shift due to early font specification
  */
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='fr' className='dark'>
-      {/* Dark theme applied at root level for entire application */}
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {/* CSS variables available: --font-geist-sans, --font-geist-mono */}
-        {children}
-      </body>
-    </html>
+    <>
+      {/* Font variables and global styles are inherited by all child components */}
+      {/* Dark theme and HTML structure are provided by the localized layout */}
+      {children}
+    </>
   );
 }

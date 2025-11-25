@@ -26,10 +26,12 @@ export default async function globalSetup(): Promise<void> {
     // execSync('rm -rf .wrangler/state/v3', { encoding: 'utf-8' });
 
     // Step 1: Apply migrations
+    // Pipe "y" to bypass interactive confirmation prompts (required for CI)
     console.log('   📋 Application des migrations D1...');
-    execSync('pnpm wrangler d1 migrations apply DB --local', {
+    execSync('echo "y" | pnpm wrangler d1 migrations apply DB --local', {
       stdio: 'inherit',
       encoding: 'utf-8',
+      shell: '/bin/bash',
     });
 
     // Step 2: Seed categories
